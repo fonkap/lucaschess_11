@@ -49,4 +49,3 @@ See the file "copying.txt" for details.
 
 
 
-"# lc_11" 

@@ -1,5 +1,5 @@
 DEBUG = False
-VERSION = "11.00.01"
+VERSION = "11.00.02"
 
 import os
 import sys

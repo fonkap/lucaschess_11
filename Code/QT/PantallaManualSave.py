@@ -73,8 +73,8 @@ class WManualSave(QTVarios.WDialogo):
         ##
         self.em_solucion = Controles.EM(self, siHTML=False).altoMinimo(40).capturaCambios(self.reset_partida)
         ##
-        self.bt_solucion = Controles.PB(self, "   " + _("Save solucion"), self.savesolucion, plano=False).ponIcono(Iconos.Grabar(), 24)
-        self.bt_editar = Controles.PB(self, "   " + _("Editar"), self.editar_solucion, plano=False).ponIcono(Iconos.PlayGame())
+        self.bt_solucion = Controles.PB(self, "   " + _("Save solution"), self.savesolucion, plano=False).ponIcono(Iconos.Grabar(), 24)
+        self.bt_editar = Controles.PB(self, "   " + _("Edit"), self.editar_solucion, plano=False).ponIcono(Iconos.PlayGame())
         ly = Colocacion.V().control(self.em_solucion).control(self.bt_editar)
         gb = Controles.GB(self, _("Solution"), ly)
         ###
@@ -138,11 +138,11 @@ class WManualSave(QTVarios.WDialogo):
         ##
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("PDT", _("Evaluation"), 100, siCentrado=True)
-        oColumnas.nueva("PGN", _("solucion"), 360)
+        oColumnas.nueva("PGN", _("Solution"), 360)
         self.grid_analysis = Grid.Grid(self, oColumnas, siSelecFilas=True)
         self.registrarGrid(self.grid_analysis)
         ##
-        lb_analysis_help = Controles.LB(self, _("Double click to send analysis line to solucion"))
+        lb_analysis_help = Controles.LB(self, _("Double click to send analysis line to solution"))
         ###
         ly_lin1 = Colocacion.H().control(self.bt_start).control(self.bt_stop).control(lb_engine).control(self.cb_engine)
         ly_lin1.relleno(1).control(lb_multipv).control(self.sb_multipv)
@@ -367,7 +367,7 @@ class WManualSave(QTVarios.WDialogo):
         self.stop()
         fen = XVoyager.xVoyagerFEN(self, self.configuracion, self.posicion.fen())
         if fen is not None:
-            self.em_solucion.texto("")
+            self.em_solucion.ponTexto("")
             self.posicion.leeFen(fen)
 
             self.tablero.ponPosicion(self.posicion)
