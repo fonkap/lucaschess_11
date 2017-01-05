@@ -5,7 +5,7 @@ from Code import XMotorRespuesta
 from Code.Constantes import *
 
 class GestorMotor:
-    def __init__(self, procesador, confMotor):
+    def __init__(self, procesador, confMotor, direct = False):
         self.procesador = procesador
 
         self.motor = None
@@ -17,6 +17,11 @@ class GestorMotor:
         self.priority = XMotor.PRIORITY_NORMAL
 
         self.dispatching = None
+
+        self.direct = direct
+
+    def set_direct(self):
+        self.direct = True
 
     def opciones(self, tiempoJugada, profundidad, siMultiPV):
         self.motorTiempoJugada = tiempoJugada
@@ -68,7 +73,10 @@ class GestorMotor:
         exe = self.confMotor.ejecutable()
         args = self.confMotor.argumentos()
         liUCI = self.confMotor.liUCI
-        self.motor = XMotor.XMotor(self.nombre, exe, liUCI, self.nMultiPV, priority=self.priority, args = args)
+        if self.direct:
+            self.motor = XMotor.DirectMotor(self.nombre, exe, liUCI, self.nMultiPV, args=args)
+        else:
+            self.motor = XMotor.XMotor(self.nombre, exe, liUCI, self.nMultiPV, priority=self.priority, args = args)
         if self.confMotor.siDebug:
             self.motor.siDebug = True
             self.motor.nomDebug = self.confMotor.nomDebug

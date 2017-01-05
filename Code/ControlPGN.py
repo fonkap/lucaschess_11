@@ -158,8 +158,10 @@ class ControlPGN:
             rival = self.gestor.libro.nombre
         elif tipoJuego in (kJugFics, kJugFide):
             rival = self.gestor.nombreObj
-        else:
-            rival = self.gestor.xrival.nombre
+        elif self.gestor.xrival:  # foncap change
+            rival = self.gestor.xrival.nombre  # foncap change
+        else:  # foncap change
+            rival = ""  # foncap change
 
         jugador = self.gestor.configuracion.jugador
         resultado = self.gestor.resultado

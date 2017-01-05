@@ -50,10 +50,6 @@ elif nArgs >= 2:
         import Code.Init
         Code.Init.init()
 
-    elif arg == "-sound":
-        import Code.RunSound
-        Code.RunSound.run(sys.argv[2])
-
     elif arg == "-kibitzer":
         import Code.RunKibitzer
         Code.RunKibitzer.run(sys.argv[2])

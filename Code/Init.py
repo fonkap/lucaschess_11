@@ -16,7 +16,6 @@ from Code import Sonido
 from Code.QT import Gui
 
 def init():
-    # Needed for feedback
     if not DEBUG:
         try:
             ferr = open("bug.log", "at")

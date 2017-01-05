@@ -31,6 +31,7 @@ class WRun(QTVarios.WDialogo):
         self.sts = sts
         self.ngroup = -1
         self.xengine = procesador.creaGestorMotor(work.configEngine(), work.seconds * 1000, work.depth)
+        self.xengine.set_direct( )
         self.playing = False
         self.configuracion = procesador.configuracion
         dic = self.configuracion.leeVariables("STSRUN")
@@ -57,7 +58,7 @@ class WRun(QTVarios.WDialogo):
 
         self.dworks = self.read_works()
         self.calc_max()
-        for x in range(len(self.sts.works)):
+        for x in range(len(self.sts.works)-1, -1, -1):
             work = self.sts.works.getWork(x)
             if work != self.work:
                 key = "OTHER%d" % x
@@ -516,11 +517,12 @@ class WUnSTS(QTVarios.WDialogo):
             self.wkNew(work.clone())
 
     def wkRemove(self):
-        fila = self.grid.recno()
-        if fila >= 0:
-            work = self.sts.getWork(fila)
-            if QTUtil2.pregunta(self, _X(_("Delete %1?"), work.ref)):
-                self.sts.removeWork(fila)
+        li = self.grid.recnosSeleccionados()
+        if li:
+            if QTUtil2.pregunta(self, _("Do you want to delete all selected records?")):
+                li.reverse()
+                for fila in li:
+                    self.sts.removeWork(fila)
                 self.sts.save()
                 self.grid.refresh()
 

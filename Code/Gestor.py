@@ -1375,7 +1375,7 @@ class Gestor:
         elif resp == "pgnfichero":
             self.salvaPGN()
 
-        elif resp.startswith("fen") or resp.starswith("fns"):
+        elif resp.startswith("fen") or resp.startswith("fns"):
             extension = resp[:3]
             si_fichero = resp.endswith("fichero")
             self.salvaFEN_FNS(extension, si_fichero)

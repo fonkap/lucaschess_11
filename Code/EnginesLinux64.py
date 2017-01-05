@@ -11,7 +11,6 @@ def leeRivales():
     def mas(cm):
         dicRivales[cm.clave] = cm
 
-
     ConfigMotor = BaseConfig.ConfigMotor
 
     cm = ConfigMotor("cheng", "Martin Sedlák", "4 ver 0.39", "http://www.vlasak.biz/cheng")
@@ -25,7 +24,6 @@ def leeRivales():
     cm.ordenUCI("Hash", "32")
     cm.elo = 1930
     mas(cm)
-
 
     cm = ConfigMotor("critter", "Richard Vida", "1.6a", "http://www.vlasak.biz/critter/")
     cm.path = "critter-16a-64bit"

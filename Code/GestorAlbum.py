@@ -92,7 +92,6 @@ class GestorAlbum(Gestor.Gestor):
             aplazamiento = self.reinicio
             aplazamiento["TIPOJUEGO"] = self.tipoJuego
             aplazamiento["JUGADAS"] = self.partida.guardaEnTexto()
-            print aplazamiento
 
             self.configuracion.graba(aplazamiento)
             self.pantalla.accept()

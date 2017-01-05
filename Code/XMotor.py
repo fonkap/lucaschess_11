@@ -452,3 +452,184 @@ class XMotor:
         self.work_ok("stop")
         self.pondering = False
 
+class DirectMotor(QtCore.QProcess):
+    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=None, args = []):
+        QtCore.QProcess.__init__(self)
+
+        absexe = os.path.abspath(exe)
+        direxe = os.path.abspath(os.path.dirname(exe))
+        self.setWorkingDirectory(direxe)
+        self.start(absexe, args, mode=QtCore.QIODevice.ReadWrite)
+        self.waitForStarted()
+        self.nMultiPV = nMultiPV
+        self.lockAC = True
+        self.pid = self.pid()
+        if VarGen.isWindows:
+            hp, ht, self.pid, dt = struct.unpack("PPII", self.pid.asstring(16))
+
+        # Control de lectura
+        self._buffer = ""
+
+        self.siDebug = False
+        self.nomDebug = nombre
+
+        self.connect(self, QtCore.SIGNAL("readyReadStandardOutput()"), self._lee)
+
+        self.guiDispatch = None
+        self.ultDispatch = 0
+        self.minDispatch = 1.0 #segundos
+        self.whoDispatch = nombre
+        self.siBlancas = True
+
+        # Configuramos
+        self.nombre = nombre
+        self.uci = self.orden_uci()
+
+        if liOpcionesUCI:
+            for opcion, valor in liOpcionesUCI:
+                if valor is None:  # button en motores externos
+                    self.orden_ok("setoption name %s" % opcion)
+                else:
+                    if type(valor) == bool:
+                        valor = str(valor).lower()
+                    self.orden_ok("setoption name %s value %s" % (opcion, valor))
+        if nMultiPV:
+            self.ponMultiPV(nMultiPV)
+
+    def ponGuiDispatch(self, guiDispatch, whoDispatch=None):
+        self.guiDispatch = guiDispatch
+        if whoDispatch is not None:
+            self.whoDispatch = whoDispatch
+
+    def ponMultiPV(self, nMultiPV):
+        self.orden_ok("setoption name MultiPV value %s" % nMultiPV)
+
+    def flush(self):
+        self.readAllStandardOutput()
+        self._buffer = ""
+
+    def buffer(self):
+        self._lee()
+        resp = self._buffer
+        self._buffer = ""
+        return resp
+
+    def apagar(self):
+        self.write("stop\n")
+        self.waitForReadyRead(90)
+        self.cerrar()
+
+    def cerrar(self):
+        if self.pid:
+            try:
+                os.kill(self.pid, signal.SIGTERM)
+            except:
+                self.close()
+            self.pid = None
+
+    def _lee(self):
+        x = str(self.readAllStandardOutput())
+        if x:
+            self._buffer += x
+            if self.siDebug:
+                prlk(x)
+            return True
+        return False
+
+    def escribe(self, linea):
+        self.write(str(linea) + "\n")
+        if self.siDebug:
+            prlkn(self.nomDebug, "W", linea)
+
+    def dispatch(self):
+        QtCore.QCoreApplication.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
+        if self.guiDispatch:
+            tm = time.time()
+            if tm-self.ultDispatch < self.minDispatch:
+                return True
+            self.ultDispatch = tm
+            mrm = XMotorRespuesta.MRespuestaMotor(self.nombre, self.siBlancas)
+            if self._buffer.endswith("\n"):
+                b = self._buffer
+            else:
+                n = self._buffer.rfind("\n")
+                b = self._buffer[:-n + 1] if n > 1 else ""
+            mrm.dispatch(b)
+            mrm.ordena()
+            rm = mrm.mejorMov()
+            rm.whoDispatch = self.whoDispatch
+            if not self.guiDispatch(rm):
+                return False
+        return True
+
+    def espera(self, txt, msStop, siStop=True):
+        iniTiempo = time.time()
+        stop = False
+        tamBuffer = len(self._buffer)
+        while True:
+            if tamBuffer != len(self._buffer):
+                tamBuffer = len(self._buffer)
+                if txt in self._buffer:
+                    if self._buffer.endswith("\n"):
+                        self.dispatch()
+                        return True
+
+            if not self.dispatch():
+                return False
+
+            queda = msStop - int((time.time() - iniTiempo) * 1000)
+            if queda <= 0:
+                if stop:
+                    return True
+                if siStop:
+                    self.escribe("stop")
+                msStop += 2000
+                stop = True
+            self.waitForReadyRead(90)
+
+    def orden_ok(self, orden):
+        self.escribe(orden)
+        self.escribe("isready")
+        self.espera("readyok", 1000)
+        return self.buffer()
+
+    def orden_uci(self):
+        self.escribe("uci")
+        self.espera("uciok", 5000)
+        return self.buffer()
+
+    def orden_bestmove(self, orden, msMaxTiempo):
+        self.flush()
+        self.escribe(orden)
+        self.espera("bestmove", msMaxTiempo, siStop=True)
+        return self.buffer()
+
+    def bestmove_fen(self, fen, maxTiempo, maxProfundidad):
+        self.orden_ok("position fen %s" % fen)
+        self.siBlancas = siBlancas = "w" in fen
+        return self._mejorMov(maxTiempo, maxProfundidad, siBlancas)
+
+    def _mejorMov(self, maxTiempo, maxProfundidad, siBlancas):
+        env = "go"
+        if maxProfundidad:
+            env += " depth %d" % maxProfundidad
+        elif maxTiempo:
+            env += " movetime %d" % maxTiempo
+
+        msTiempo = 10000
+        if maxTiempo:
+            msTiempo = maxTiempo
+        elif maxProfundidad:
+            msTiempo = int(maxProfundidad * msTiempo / 3.0)
+
+        resp = self.orden_bestmove(env, msTiempo)
+        if not resp:
+            return None
+
+        mrm = XMotorRespuesta.MRespuestaMotor(self.nombre, siBlancas)
+        for linea in resp.split("\n"):
+            mrm.dispatch(linea.strip())
+        mrm.maxTiempo = maxTiempo
+        mrm.maxProfundidad = maxProfundidad
+        mrm.ordena()
+        return mrm
