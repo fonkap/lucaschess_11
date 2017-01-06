@@ -49,10 +49,6 @@ cyrano|4|2033|7945
 daydreamer|2|1358|6362
 daydreamer|3|1381|6984
 daydreamer|4|1629|7462
-deepfish|1|1354|6531
-deepfish|2|1621|7560
-deepfish|3|1887|8013
-deepfish|4|2100|8622
 discocheck|1|1131|6351
 discocheck|2|1380|6591
 discocheck|3|1613|7064

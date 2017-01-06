@@ -42,6 +42,9 @@ extern char NAMEPZ[16];
 extern Bitmap BLACK_SQUARES;
 extern Bitmap WHITE_SQUARES;
 
+extern Bitmap FILA_MASK[64];
+extern Bitmap COLUMNA_MASK[64];
+
 extern int PAWNPOS_W[64];
 extern int KNIGHTPOS_W[64];
 extern int BISHOPPOS_W[64];
@@ -98,6 +101,8 @@ extern int max_time;
 
 extern bool is_personality;
 
+extern bool use_book;
+
 
 extern int ST_PAWNPOS_W[64];
 extern int ST_KNIGHTPOS_W[64];
@@ -113,6 +118,10 @@ extern int ST_ROOKPOS_B[64];
 extern int ST_QUEENPOS_B[64];
 extern int ST_KINGPOS_B[64];
 extern int ST_KINGPOS_ENDGAME_B[64];
+
+extern int MS1BTABLE[256];
+
+extern FILE * flog;
 
 
 

@@ -1,6 +1,8 @@
 from Code import VarGen
-if VarGen.isLinux:
-    import Code.EnginesLinux as Engines
+if VarGen.isLinux32:
+    import Code.EnginesLinux32 as Engines
+elif VarGen.isLinux64:
+    import Code.EnginesLinux64 as Engines
 else:
     import Code.EnginesWindows as Engines
 

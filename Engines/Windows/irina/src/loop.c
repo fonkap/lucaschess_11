@@ -12,7 +12,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION    "0.12"
+#define VERSION "0.15"
 
 
 void begin(void)
@@ -53,6 +53,13 @@ void loop(void)
     char file[256];
     int num;
 
+    set_ownbookfile("irina.bin");
+    set_ownbook(true);
+
+    #ifdef LOG
+        open_log();
+    #endif
+
     for (;;)
     {
         if (!fgets(s, 2048, stdin))
@@ -64,6 +71,9 @@ void loop(void)
             #endif
             continue;
         }
+        #ifdef LOG
+            fprintf(flog, "REC:%s\n", s);
+        #endif
         if (SCAN("uci"))
         {
             printf("id name Irina %s\n", VERSION);
@@ -72,11 +82,28 @@ void loop(void)
             printf("option name Personality type combo default Irina var Irina var Steven var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Material var Random var Capture var Advance\n");
             printf("option name Min Time type spin default 0 min 0 max 99\n");
             printf("option name Max Time type spin default 0 min 0 max 99\n");
+            printf("option name OwnBook type check default true\n");
+            printf("option name OwnBookFile type string default irina.bin\n");
             printf("uciok\n");
+            #ifdef LOG
+                fprintf(flog, "id name Irina %s\n", VERSION);
+                fprintf(flog, "id author Lucas Monge\n");
+                fprintf(flog, "option name Hash type spin min 2 max 1024 default 32\n");
+                fprintf(flog, "option name Personality type combo default Irina var Irina var Steven var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Material var Random var Capture var Advance\n");
+                fprintf(flog, "option name Min Time type spin default 0 min 0 max 99\n");
+                fprintf(flog, "option name Max Time type spin default 0 min 0 max 99\n");
+                fprintf(flog, "option name OwnBook type check default true\n");
+                fprintf(flog, "option name OwnBookFile type string default irina.bin\n");
+                fprintf(flog, "uciok\n");
+            #endif
+
         }
         else if (SCAN("isready"))
         {
             printf("readyok\n");
+            #ifdef LOG
+                fprintf(flog, "readyok\n");
+            #endif
         }
         else if (SCAN("stop"))
         {
@@ -90,6 +117,9 @@ void loop(void)
         {
             board_fen(s);
             printf("%s\n", s);
+            #ifdef LOG
+                fprintf(flog, "%s\n", s);
+            #endif
         }
         else if (SCAN("test"))
         {
@@ -108,6 +138,7 @@ void loop(void)
         }
         else if (SCAN("ucinewgame"))
         {
+            open_book();
             continue;
         }
         else if (SCAN("position"))
@@ -121,9 +152,12 @@ void loop(void)
         else if (SCAN("setoption name"))
         {
             set_option(s);
-
         }
     }
+    close_book();
+    #ifdef LOG
+        close_log();
+    #endif
 }
 
 
@@ -255,7 +289,10 @@ void go(char *line)
         {
             movetime = wtime + movestogo * winc;
         }
-        movetime /= movestogo * 11 / 10;
+        movetime = movetime*9/(movestogo*10);
+        #ifdef LOG
+            fprintf(flog, "movetime=%d\n", movetime);
+        #endif
     }
     if (!depth)
     {
@@ -345,6 +382,14 @@ void set_option(char *line)
     else if(strcmp(name, "Hash") == 0)
     {
         set_hash( value );
+    }
+    else if(strcmp(name, "OwnBook") == 0)
+    {
+        set_ownbook( strcmp(value, "true") == 0 );
+    }
+    else if(strcmp(name, "OwnBookFile") == 0)
+    {
+        set_ownbookfile( value );
     }
     /* setoption name <id> [value <x>]
     	this is sent to the engine when the user wants to change the internal parameters

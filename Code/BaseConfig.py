@@ -212,6 +212,12 @@ class ConfigMotorBase:
     def ordenUCI(self, comando, valor):
         self.liUCI.append((comando, valor))
 
+    def removeUCI(self, del_comando):
+        for n, (comando, valor) in enumerate(self.liUCI):
+            if comando == del_comando:
+                del self.liUCI[n]
+                return
+
     def winboard(self):
         self.siUCI = False
 

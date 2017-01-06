@@ -7,11 +7,14 @@
 // util.c
 unsigned int bit_count(Bitmap bitmap);
 unsigned int first_one(Bitmap bitmap);
+unsigned int last_one(Bitmap bitmap);
 int ah_pos(char *ah);
 Bitmap get_ms(void);
 int bioskey(void);
 char *move2str(Move move, char *str_dest);
 char *strip(char *txt);
+void show_bitmap(Bitmap bm);
+
 
 
 // perft.c
@@ -83,5 +86,17 @@ void time_test( Bitmap mstime );
 // evalst.c
 void init_data_steven(void);
 int eval_steven(void);
+
+// book.c
+bool using_book(void);
+void set_ownbook( bool ok );
+void set_ownbookfile( char * name );
+void close_book( void );
+void open_book();
+bool check_book( char * fen, char * move );
+
+// log.c
+void open_log();
+void close_log();
 
 #endif

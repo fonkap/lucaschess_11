@@ -240,14 +240,14 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("deepfish", "Tord Romstad, Marco Costalba, Joona Kiiski, fork by Marco Zerbinati", "7 32bit", "https://github.com/Zerbinati/DeepFishMZ")
-    cm.path = "windows/DeepFishMZ 32.exe"
-    cm.path_64 = "windows/DeepFishMZ 64 BMI2.exe", "7 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.0 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017_32bit.exe"
+    cm.path_64 = "McBrain_2017_x64_bmi2.exe", "1.0 64bit bmi2"
     cm.elo = 3200
-    cm.ordenUCI("Ponder", "false")
+    cm.ordenUCI("Study", "true")
     cm.ordenUCI("Hash", "64")
     cm.ordenUCI("Threads", "1")
-    cm.ponMultiPV(20, 500)
+    cm.ponMultiPV(20, 256)
     mas(cm)
 
     cm = ConfigMotor("gull", "Vadim Demichev", "3 32bit", "https://sourceforge.net/projects/gullchess/")
@@ -278,6 +278,7 @@ def dicMotoresFixedElo():
     for nm, desde, hasta in (
             ("rodent", 600, 2600),
             ("amyan", 1000, 2400),
+            ("mcbrain", 800, 2800),
             ("rhetoric", 1300, 2600),
             ("cheng", 800, 2500),
             ("greko", 1600, 2400),
@@ -289,6 +290,8 @@ def dicMotoresFixedElo():
             cm = d[nm].clona()
             if elo not in dic:
                 dic[elo] = []
+            if nm == "mcbrain":
+                cm.removeUCI("Study")
             cm.ordenUCI("UCI_Elo", str(elo))
             cm.ordenUCI("UCI_LimitStrength", "true")
             cm.nombre += " (%d)" % elo

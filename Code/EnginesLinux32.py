@@ -149,7 +149,7 @@ def leeRivales():
     cm.elo = 2900
     mas(cm)
 
-    cm = ConfigMotor("irina", "Lucas Monge", "0.12", "")
+    cm = ConfigMotor("irina", "Lucas Monge", "0.15", "")
     cm.path = "irina"
     cm.elo = 1200
     mas(cm)
@@ -160,6 +160,17 @@ def leeRivales():
     cm.ordenUCI("Hash", "64")
     mas(cm)
 
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.0", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017"
+    cm.elo = 3200
+    cm.ordenUCI("Study", "true")
+    cm.ordenUCI("Hash", "64")
+    cm.ordenUCI("Threads", "1")
+    cm.ponMultiPV(20, 256)
+    mas(cm)
+
+
+
     return dicRivales
 
 def dicMotoresFixedElo():
@@ -168,12 +179,15 @@ def dicMotoresFixedElo():
     for nm, desde, hasta in (
             ("cheng", 800, 2500),
             ("greko", 1600, 2400),
+            ("mcbrain", 800, 2800),
             ("discocheck", 1500, 2700),
     ):
         for elo in range(desde, hasta + 100, 100):
             cm = d[nm].clona()
             if elo not in dic:
                 dic[elo] = []
+            if nm == "mcbrain":
+                cm.removeUCI("Study")
             cm.ordenUCI("UCI_Elo", str(elo))
             cm.ordenUCI("UCI_LimitStrength", "true")
             cm.clave += " (%d)" % elo
