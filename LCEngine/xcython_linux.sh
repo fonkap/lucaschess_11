@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 rm LCEngine.so
 
 x=$(pwd)
@@ -13,5 +14,5 @@ then
 else
 	folder=32
 fi
-cp LCEngine.so ../Engines/Linux$folder
-cp libirina.so ../Engines/Linux$folder
+cp LCEngine.so ../Engines/Linux$folder/_tools
+cp libirina.so ../Engines/Linux$folder/_tools
