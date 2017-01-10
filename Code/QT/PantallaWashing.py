@@ -99,14 +99,15 @@ class WWashing(QTVarios.WDialogo):
 
         else:
             plant = "<tr><td align=\"right\">%s:</td><td><b>%s</b></td></tr>"
+            plantverde = "<tr><td align=\"right\">%s:</td><td style=\"color:green;\"><b>%s</b></td></tr>"
             html = "<h2><center>%s %d/%d</center></h2><br><table cellpadding=\"4\">"
             for x in range(8):
-                html += plant
+                html += plantverde if x == 2 else plant
             html += "</table>"
             html = html % ( _("Washing"), self.washing.numEngines(), self.washing.totalEngines(procesador.configuracion),
                             _("Engine"), eng.nombre,
                             _("Elo"), eng.elo,
-                            _("Task"), eng.lbState(),
+                            "<b>%s</b>"% _("Task"), eng.lbState(),
                             _("Color"), _("White") if eng.color else _("Black"),
                             _("Hints"), "%d/%d"%(eng.hints_current, eng.hints),
                             _("Games"), eng.games,

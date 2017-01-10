@@ -3,124 +3,16 @@ import signal
 import struct
 import time
 
-import psutil
-
 from PyQt4 import QtCore
 
 from Code import VarGen
 from Code.Constantes import *
 from Code import XMotorRespuesta
+from Code import EngineThread
 
-DEBUG = False
-tdbg = [time.time()]
-
-def xpr(line):
-    if DEBUG:
-        t = time.time()
-        prlk("%0.04f %s" % (t - tdbg[0], line))
-        tdbg[0] = t
-    return True
-
-def xprli(li):
-    if DEBUG:
-        t = time.time()
-        dif = t - tdbg[0]
-        for line in li:
-            prlk("%0.04f %s\n" % (dif, line))
-        tdbg[0] = t
-    return True
-
-if DEBUG:
-    xpr("DEBUG XMOTOR")
-
-if VarGen.isLinux:
-    PRIORITY_NORMAL = 0
-    PRIORITY_LOW, PRIORITY_VERYLOW = 10, 20
-    PRIORITY_HIGH, PRIORITY_VERYHIGH = -10, -20
-else:
-    PRIORITY_NORMAL                  = psutil.NORMAL_PRIORITY_CLASS
-    PRIORITY_LOW, PRIORITY_VERYLOW   = psutil.BELOW_NORMAL_PRIORITY_CLASS, psutil.IDLE_PRIORITY_CLASS
-    PRIORITY_HIGH, PRIORITY_VERYHIGH = psutil.ABOVE_NORMAL_PRIORITY_CLASS, psutil.HIGH_PRIORITY_CLASS
-
-class Engine(QtCore.QThread):
-    def __init__(self, exe, priority, args):
-        QtCore.QThread.__init__(self)
-        self.pid = None
-        self.exe = os.path.abspath(exe)
-        self.direxe = os.path.dirname(exe)
-        self.priority = priority
-        self.working = True
-        self.mutex = QtCore.QMutex()
-        self.libuffer = []
-        self.lastline = ""
-        self.starting = True
-        self.args = args if args else []
-
-    def cerrar(self):
-        self.working = False
-        self.wait()
-
-    def put_line(self, line):
-        assert xpr("put>>> %s\n" % line)
-        self.process.write(line +"\n")
-
-    def get_lines(self):
-        self.mutex.lock()
-        li = self.libuffer
-        self.libuffer = []
-        self.mutex.unlock()
-        assert xprli(li)
-        return li
-
-    def hay_datos(self):
-        return len(self.libuffer) > 0
-
-    def reset(self):
-        self.mutex.lock()
-        self.libuffer = []
-        self.lastline = ""
-        self.mutex.unlock()
-
-    def close(self):
-        self.working = False
-        self.wait()
-
-    def run(self):
-        self.process = QtCore.QProcess()
-        self.process.setWorkingDirectory(self.direxe)
-        self.process.start(self.exe, self.args, mode=QtCore.QIODevice.ReadWrite)
-        self.process.waitForStarted()
-        self.pid = self.process.pid()
-        if VarGen.isWindows:
-            hp, ht, self.pid, dt = struct.unpack("PPII", self.pid.asstring(16))
-        if self.priority != PRIORITY_NORMAL:
-            p = psutil.Process(self.pid)
-            p.nice(self.priority)
-
-        self.starting = False
-        while self.working:
-            if self.process.waitForReadyRead(90):
-                x = str(self.process.readAllStandardOutput())
-                if x:
-                    self.mutex.lock()
-                    if self.lastline:
-                        x = self.lastline + x
-                    self.lastline = ""
-                    sifdl = x.endswith("\n")
-                    li = x.split("\n")
-                    if not sifdl:
-                        self.lastline = li[-1]
-                        li = li[:-1]
-                    self.libuffer.extend(li)
-                    if len(self.libuffer) > 2000:
-                        self.libuffer = self.libuffer[1000:]
-                    self.mutex.unlock()
-        self.put_line("quit")
-        self.process.kill()
-        self.process.close()
 
 class XMotor:
-    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=PRIORITY_NORMAL, args=[]):
+    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=EngineThread.PRIORITY_NORMAL, args=[]):
         self.nombre = nombre
 
         self.ponder = False
@@ -138,14 +30,14 @@ class XMotor:
         if not os.path.isfile(exe):
             return
 
-        self.engine = Engine(exe, priority, args)
+        self.engine = EngineThread.EnginePOP(exe, priority, args)
         self.engine.start()
 
-        time.sleep(0.01)
-        n = 100
-        while self.engine.starting and n:
-            time.sleep(0.1 if n > 50 else 0.3)
-            n-= 1
+        # time.sleep(0.01)
+        # n = 100
+        # while self.engine.starting and n:
+        #     time.sleep(0.1 if n > 50 else 0.2)
+        #     n-= 1
 
         self.lockAC = True
         self.pid = self.engine.pid
@@ -451,6 +343,7 @@ class XMotor:
     def stop_ponder(self):
         self.work_ok("stop")
         self.pondering = False
+
 
 class DirectMotor(QtCore.QProcess):
     def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=None, args = []):

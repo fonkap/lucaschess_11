@@ -281,5 +281,5 @@ class Gestor60(Gestor.Gestor):
 
         self.pantalla.base.pgn.goto(fila, 0)
 
-    def pgnInformacion(self, fila, clave):
+    def pgnInformacion(self):
         pass  # Para anular el efecto del boton derecho

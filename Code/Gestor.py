@@ -540,7 +540,7 @@ class Gestor:
         if self.configuracion.siSuenaJugada:
             if self.partida.numJugadas():
                 jg = self.partida.jugada(-1)
-                self.runSound.playLista(jg.listaSonidos())
+                self.runSound.playLista(jg.listaSonidos(), siEsperar=True)
         elif self.configuracion.siSuenaBeep:
             self.runSound.playBeep()
 
@@ -688,7 +688,7 @@ class Gestor:
             nj -= 1
         return numJugadas, nj, fila, siBlancas
 
-    def pgnInformacion(self, fila, clave):
+    def pgnInformacion(self):
         if self.informacionActivable:
             self.pantalla.activaInformacionPGN()
             self.ponVista()
@@ -765,7 +765,7 @@ class Gestor:
         elif siAlt:
             self.nonDistract = self.pantalla.base.nonDistractMode(self.nonDistract)
         else:
-            self.pgnInformacion(None, None)
+            self.pgnInformacion()
         self.pantalla.ajustaTam()
 
     def boardRightMouse(self, siShift, siControl, siAlt):

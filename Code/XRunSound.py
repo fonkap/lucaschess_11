@@ -15,6 +15,7 @@ PLAY_SINESPERA = "N"
 STOP = "S"
 TERMINAR = "T"
 
+
 class Orden:
     def __init__(self):
         self.clave = ""
@@ -26,6 +27,7 @@ class Orden:
     def bloqueEnvio(self):
         self.dv["__CLAVE__"] = self.clave
         return self.dv
+
 
 class RunReplay:
     def __init__(self):
@@ -124,6 +126,7 @@ class RunReplay:
         p.terminate()
 
         return orden
+
 
 class IO(QtCore.QThread):
     def __init__(self):

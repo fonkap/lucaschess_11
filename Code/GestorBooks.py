@@ -323,8 +323,8 @@ class GestorBooks(Gestor.Gestor):
 
         jg.comentario = comentario
 
-    def pgnInformacion(self, fila, clave):
-        posJugada, jg = self.pgn.jugada(fila, clave)
+    def pgnInformacion(self):
+        posJugada, jg = self.jugadaActiva()
         if jg:
             fen = jg.posicionBase.fen()
             lista = self.libro.miraListaJugadas(fen)
@@ -336,7 +336,7 @@ class GestorBooks(Gestor.Gestor):
                     return
                 siEditar = resp[0] is None
             if siEditar:
-                Gestor.Gestor.pgnInformacion(self, fila, clave)
+                Gestor.Gestor.pgnInformacion(self)
             else:
                 # Eliminamos todas las jugadas desde esta hasta el final
                 numpos = jg.numpos

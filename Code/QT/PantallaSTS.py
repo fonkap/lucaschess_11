@@ -22,7 +22,7 @@ from Code import VarGen
 
 class WRun(QTVarios.WDialogo):
     def __init__(self, wParent, sts, work, procesador):
-        titulo = "%s - %s" % (sts.name, work.ref)
+        titulo = "%s - %s - %s" % (sts.name, work.ref, work.pathToExe())
         icono = Iconos.STS()
         extparam = "runsts"
         QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
@@ -262,7 +262,7 @@ class WWork(QtGui.QDialog):
 
         self.work = work
 
-        self.setWindowTitle(sts.name)
+        self.setWindowTitle(work.pathToExe())
         self.setWindowIcon(Iconos.Motor())
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
 
@@ -599,8 +599,8 @@ class WSTS(QTVarios.WDialogo):
         self.registrarGrid(self.grid)
 
         lb = Controles.LB(self,
-                          '<a href="https://sites.google.com/site/strategictestsuite/about-1">%s</a>  %s: <b>Dan Corbit & Swaminathan</b>' % (
-                              _("More info"), _("Authors")))
+                          'STS %s: <b>Dan Corbit & Swaminathan</b> <a href="https://sites.google.com/site/strategictestsuite/about-1">%s</a>' % (
+                              _("Authors"), _("More info")))
 
         # Layout
         layout = Colocacion.V().control(tb).control(self.grid).control(lb).margen(8)

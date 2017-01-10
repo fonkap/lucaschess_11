@@ -2,6 +2,7 @@ import LCEngine
 
 from Code import XMotor
 from Code import XMotorRespuesta
+from Code import EngineThread
 from Code.Constantes import *
 
 class GestorMotor:
@@ -14,7 +15,7 @@ class GestorMotor:
         self.clave = confMotor.clave
         self.nMultiPV = 0
 
-        self.priority = XMotor.PRIORITY_NORMAL
+        self.priority = EngineThread.PRIORITY_NORMAL
 
         self.dispatching = None
 

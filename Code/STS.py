@@ -233,6 +233,9 @@ class Work:
     def configEngine(self):
         return MotoresExternos.ConfigMotor(self.me)
 
+    def pathToExe(self):
+        return self.me.exe
+
     def setResult(self, ngroup, nfen, a1h8, ts):
         resoultGroup = self.results.resoultGroup(ngroup)
         resoultGroup.elem(nfen, a1h8)

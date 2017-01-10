@@ -4,7 +4,7 @@ from Code.QT import Iconos
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code import Util
-from Code import XMotor
+from Code import EngineThread
 
 SEPARADOR = (None, None)
 
@@ -23,7 +23,7 @@ def leeDicParametros(configuracion):
     alm.dpbrilliancies = dic.get("DPBRILLIANCIES", 7)
     alm.desdeelfinal = dic.get("DESDEELFINAL", False)
     alm.multiPV = dic.get("MULTIPV", "PD")
-    alm.priority = dic.get("PRIORITY", XMotor.PRIORITY_NORMAL)
+    alm.priority = dic.get("PRIORITY", EngineThread.PRIORITY_NORMAL)
 
     alm.libro = dic.get("LIBRO", None)
 
@@ -137,11 +137,11 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
 
     # Priority
     liGen.append(SEPARADOR)
-    li = [(_("Normal"), XMotor.PRIORITY_NORMAL),
-          (_("Low"), XMotor.PRIORITY_LOW),
-          (_("Very low"), XMotor.PRIORITY_VERYLOW),
-          (_("High"), XMotor.PRIORITY_HIGH),
-          (_("Very high"), XMotor.PRIORITY_VERYHIGH)
+    li = [(_("Normal"), EngineThread.PRIORITY_NORMAL),
+          (_("Low"), EngineThread.PRIORITY_LOW),
+          (_("Very low"), EngineThread.PRIORITY_VERYLOW),
+          (_("High"), EngineThread.PRIORITY_HIGH),
+          (_("Very high"), EngineThread.PRIORITY_VERYHIGH)
           ]
     config = FormLayout.Combobox(_("Process priority"), li)
     liGen.append((config, alm.priority))

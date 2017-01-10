@@ -19,11 +19,11 @@ QUALIFICATIONS = (
 )
 
 def qualification(seconds):
-    if seconds is None:
-        txt, ico, secs = QUALIFICATIONS[-1]
-    else:
-        for txt, ico, secs in QUALIFICATIONS[:-1]:
-            if seconds < secs:
+    txt, ico, secs = QUALIFICATIONS[-1]
+    if seconds is not None:
+        for xtxt, xico, xsecs in QUALIFICATIONS[:-1]:
+            if seconds < xsecs:
+                txt, ico = xtxt, xico
                 break
     return _F(txt), ico
 
@@ -96,6 +96,7 @@ class TOL_Line:
 
     def total_moves(self):
         return len(self.limoves)
+
 
 class TOL_level:
     def __init__(self, lines_per_block, num_level):
@@ -230,6 +231,7 @@ class TurnOnLights:
 
         return cat
 
+
 def read_tol(name, title, folder, li_tam_blocks):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % name)
     tol = Util.recuperaVar(filepath)
@@ -240,16 +242,28 @@ def read_tol(name, title, folder, li_tam_blocks):
     # for num_level, level in enumerate(tol.levels):
     #     for theme_blocks in level.themes_blocks:
     #         for block in theme_blocks:
-    #             tm = random.randint(6, 55-5*num_level)
-    #             block.new_result(tm*1.0/10.0)
+    #             # tm = random.randint(6, 55-5*num_level)
+    #             block.new_result(3)
     # write_tol(tol)
 
     return tol
+
 
 def write_tol(tol):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % tol.name)
     Util.guardaVar(filepath, tol)
 
+
 def remove_tol(tol):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % tol.name)
     Util.borraFichero(filepath)
+
+
+def numColorMinimum(tol):
+    num = tol.levels[tol.work_level].num_level+1
+    if num >= 3:
+        num = 3
+    return num, tol.work_level == tol.num_levels-1
+
+
+

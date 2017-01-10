@@ -58,6 +58,7 @@ from Code import Util
 from Code import VarGen
 from Code import XGestorMotor
 from Code import XMotor
+from Code import EngineThread
 from Code.Constantes import *
 
 class Procesador:
@@ -299,7 +300,7 @@ class Procesador:
             self.xanalyzer.terminar()
         self.creaXAnalyzer()
 
-    def creaGestorMotor(self, confMotor, tiempo, nivel, siMultiPV=False, priority=XMotor.PRIORITY_NORMAL):
+    def creaGestorMotor(self, confMotor, tiempo, nivel, siMultiPV=False, priority=EngineThread.PRIORITY_NORMAL):
         xgestor = XGestorMotor.GestorMotor(self, confMotor)
         xgestor.opciones(tiempo, nivel, siMultiPV)
         xgestor.setPriority(priority)
