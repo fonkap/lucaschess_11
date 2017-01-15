@@ -336,6 +336,10 @@ class Partida:
         for jugada in self.liJugadas:
             jugada.borraCV()
 
+    def remove_analysis(self):
+        for jg in self.liJugadas:
+            jg.analisis = None
+
 def pv_san(fen, pv):
     p = Partida(fen=fen)
     p.leerPV(pv)

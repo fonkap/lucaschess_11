@@ -406,7 +406,7 @@ class GestorPartida(Gestor.Gestor):
                 self.reiniciar(dic)
 
     def controlTeclado(self, nkey):
-        if nkey in Qt.Key_V:  # V
+        if nkey == Qt.Key_V:  # V
             self.paste(QTUtil.traePortapapeles())
 
     def listHelpTeclado(self):

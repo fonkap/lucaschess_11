@@ -122,7 +122,6 @@ class WTurnOnLights(QTVarios.WDialogo):
                 self.guardarVideo()
                 self.accept()
 
-
     def colors(self):
         menu = QTVarios.LCMenu(self)
         d =  {  "0": Iconos.Gris32(),

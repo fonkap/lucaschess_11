@@ -37,14 +37,18 @@ def leeDicParametros(configuracion):
 
     alm.showGraphs = dic.get("SHOWGRAPHS", True)
 
+    alm.stability = dic.get("STABILITY", False)
+    alm.st_centipawns = dic.get("ST_CENTIPAWNS", 5)
+    alm.st_depths = dic.get("ST_DEPTHS", 3)
+
+
     return alm
 
 def formBlundersBrilliancies(alm, configuracion):
     liBlunders = [SEPARADOR]
 
-    liBlunders.append((
-        FormLayout.Editbox(_("Is considered wrong move when the loss of points is greater than"), tipo=int, ancho=50),
-        alm.kblunders))
+    liBlunders.append((FormLayout.Editbox(_("Is considered wrong move when the loss of points is greater than"),
+                                          tipo=int, ancho=50), alm.kblunders))
     liBlunders.append(SEPARADOR)
 
     def fileNext(base, ext):
@@ -202,11 +206,20 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
 
         liBlunders, liBrilliancies = formBlundersBrilliancies(alm, configuracion)
 
+        liST = [SEPARADOR]
+        liST.append((_("Activate") + ":", alm.stability))
+        liST.append(SEPARADOR)
+        liST.append((FormLayout.Spinbox(_("Last depths to control same bestmove"), 2, 10, 40), alm.st_depths))
+        liST.append(SEPARADOR)
+        liST.append((FormLayout.Spinbox(_("Maximum difference among last evaluations"), 0, 99999, 60), alm.st_centipawns))
+
+
         lista = []
         lista.append((liGen, _("General options"), ""))
         lista.append((liVar, _("Variants"), ""))
         lista.append((liBlunders, _("Wrong moves"), ""))
         lista.append((liBrilliancies, _("Brilliancies"), ""))
+        lista.append((liST, _("Stability control"), ""))
 
     else:
         lista = liGen
@@ -250,7 +263,7 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
         accion, liResp = resultado
 
         if siModoAmpliado:
-            liGen, liVar, liBlunders, liBrilliancies = liResp
+            liGen, liVar, liBlunders, liBrilliancies, liST = liResp
         else:
             liGen = liResp
 
@@ -272,25 +285,15 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
             alm.desdeelfinal = liGen[10]
             alm.showGraphs = liGen[11]
 
-            alm.masvariantes = liVar[0]
-            alm.limitemasvariantes = liVar[1]
-            alm.mejorvariante = liVar[2]
-            alm.infovariante = liVar[3]
-            alm.siPDT = liVar[4]
-            alm.unmovevariante = liVar[5]
+            (alm.masvariantes, alm.limitemasvariantes, alm.mejorvariante, alm.infovariante,
+                alm.siPDT, alm.unmovevariante) = liVar
 
-            alm.kblunders = liBlunders[0]
-            alm.tacticblunders = liBlunders[1]
-            alm.pgnblunders = liBlunders[2]
-            alm.oriblunders = liBlunders[3]
-            alm.bmtblunders = liBlunders[4]
+            (alm.kblunders, alm.tacticblunders, alm.pgnblunders, alm.oriblunders, alm.bmtblunders) = liBlunders
 
-            alm.dpbrilliancies = liBrilliancies[0]
-            alm.ptbrilliancies = liBrilliancies[1]
-            alm.fnsbrilliancies = liBrilliancies[2]
-            alm.pgnbrilliancies = liBrilliancies[3]
-            alm.oribrilliancies = liBrilliancies[4]
-            alm.bmtbrilliancies = liBrilliancies[5]
+            (alm.dpbrilliancies, alm.ptbrilliancies, alm.fnsbrilliancies, alm.pgnbrilliancies,
+                alm.oribrilliancies, alm.bmtbrilliancies) = liBrilliancies
+
+            (alm.stability, alm.st_depths, alm.st_centipawns) = liST
 
         dic = {}
         for x in dir(alm):

@@ -255,7 +255,6 @@ class VentanaMultiPV(QtGui.QDialog):
             QTUtil.ponPortapapeles(resp)
             QTUtil2.mensajeTemporal(self, _("The line selected is saved to the clipboard"), 0.7)
 
-
     def guardarVideo(self):
         dic = {}
 

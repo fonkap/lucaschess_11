@@ -492,9 +492,11 @@ class BookGuide:
         dbf = SQLDBF.DBF(self.conexion, self.tablaDatos, select)
         dnag = {"!!": 3, "!": 1, "?": 2, "??": 4, "!?": 5, "?!": 6}
 
-        for n, g in enumerate(PGNreader.readGames(ficheroPGN)):
+        n = 0
+        liReg = []
 
-            if not dlTmp.actualiza(n + 1, erroneos, duplicados, importados):
+        for n, g in enumerate(PGNreader.readGames(ficheroPGN), 1):
+            if not dlTmp.actualiza(n, erroneos, duplicados, importados):
                 break
             if g.erroneo:
                 erroneos += 1

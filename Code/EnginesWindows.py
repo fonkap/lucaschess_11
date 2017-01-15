@@ -86,7 +86,7 @@ def leeRivales():
     cm.ordenUCI("OwnBook", "false")
     mas(cm)
 
-    cm = ConfigMotor("hamsters", "Alessandro Scotti", "0.5", "https://chessprogramming.wikispaces.com/Alessandro+Scotti")
+    cm = ConfigMotor("hamsters", "Alessandro Scotti", "0.7.1", "https://chessprogramming.wikispaces.com/Alessandro+Scotti")
     cm.path = "Hamsters.exe"
     cm.elo = 2487
     cm.ordenUCI("OwnBook", "false")
@@ -110,7 +110,7 @@ def leeRivales():
     cm.ordenUCI("Hash", "32")
     mas(cm)
 
-    cm = ConfigMotor("amyan", "Antonio Dieguez R.", "1.62", "http://www.pincha.cl/amyan/amyane.html")
+    cm = ConfigMotor("amyan", "Antonio Dieguez R.", "1.72", "http://www.pincha.cl/amyan/amyane.html")
     cm.path = "amyan.exe"
     cm.elo = 2545
     mas(cm)

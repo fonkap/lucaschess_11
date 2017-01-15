@@ -234,7 +234,7 @@ class WMuestra(QtGui.QWidget):
         oColumnas = Columnas.ListaColumnas()
         siFigurinesPGN = VarGen.configuracion.figurinesPGN
         oColumnas.nueva("JUGADAS", "%d %s" % (len(self.listaRM), _("Moves")), 120, siCentrado=True,
-                        edicion=Delegados.EtiquetaPGN(True if siFigurinesPGN else None))
+                        edicion=Delegados.EtiquetaPGN(um.jg.siBlancas() if siFigurinesPGN else None))
         self.wrm = Grid.Grid(self, oColumnas, siLineas=False)
 
         self.wrm.tipoLetra(puntos=9)

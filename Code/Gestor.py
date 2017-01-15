@@ -881,7 +881,7 @@ class Gestor:
             return
 
         # siShift, siControl, siAlt = QTUtil.kbdPulsado() # Antes de que analice
-        jg, siBlancas, siUltimo, tam_lj, pos = self.dameJugadaEn(fila, clave)
+        jg, siBlancas, siUltimo, tam_lj, pos_jg = self.dameJugadaEn(fila, clave)
         if not jg:
             return
 
@@ -892,22 +892,48 @@ class Gestor:
                         (self.tipoJuego in [kJugElo, kJugMicElo] and not self.siCompetitivo)):
                 if siUltimo or self.ayudas == 0:
                     return
-                maxRecursion = tam_lj - pos - 3  # %#
+                maxRecursion = tam_lj - pos_jg - 3  # %#
             else:
                 maxRecursion = 9999
 
         if not (hasattr(jg, "analisis") and jg.analisis):
             me = QTUtil2.mensEspera.inicio(self.pantalla, _("Analyzing the move...."), posicion="ad")
-            mrm, pos = self.xtutor.analizaJugada(jg, self.xtutor.motorTiempoJugada, self.xtutor.motorProfundidad)
+            mrm, pos = self.xtutor.analizaJugadaPartida(self.partida, pos_jg, self.xtutor.motorTiempoJugada, self.xtutor.motorProfundidad)
             jg.analisis = mrm, pos
             me.final()
 
-        Analisis.muestraAnalisis(self.procesador, self.xtutor, jg, self.tablero.siBlancasAbajo, maxRecursion, pos)
+        Analisis.muestraAnalisis(self.procesador, self.xtutor, jg, self.tablero.siBlancasAbajo, maxRecursion, pos_jg)
         self.ponVista()
 
     def analizar(self):
         Analisis.analizaPartida(self)
         self.refresh()
+
+    def borrar(self):
+        separador = FormLayout.separador
+        li_del = [separador]
+        li_del.append(separador)
+        li_del.append((_("Variants") + ":", False))
+        li_del.append(separador)
+        li_del.append((_("Ratings") + ":", False))
+        li_del.append(separador)
+        li_del.append((_("Comments") + ":", False))
+        li_del.append(separador)
+        li_del.append((_("Analysis") + ":", False))
+        resultado = FormLayout.fedit(li_del, title=_("Remove"), parent=self.pantalla, icon=Iconos.Delete())
+        if resultado:
+            variants, ratings, comments, analysis = resultado[1]
+            for jg in self.partida.liJugadas:
+                if variants:
+                    jg.variantes = ""
+                if ratings:
+                    jg.critica = ""
+                    jg.criticaDirecta = ""
+                if comments:
+                    jg.comentario = ""
+                if analysis:
+                    jg.analisis = None
+            self.refresh()
 
     def cambiaRival(self, nuevo):
         self.procesador.cambiaRival(nuevo)
@@ -1283,6 +1309,9 @@ class Gestor:
                     submenu.opcion("analizar_grafico", _("Show graphics"), Iconos.Estadisticas())
                 menu.separador()
 
+                menu.opcion("borrar", _("Remove"), Iconos.Delete())
+                menu.separador()
+
         # Pelicula
         if siJugadas:
             menu.opcion("pelicula", _("Replay game"), Iconos.Pelicula())
@@ -1345,6 +1374,9 @@ class Gestor:
 
         elif resp == "analizar_grafico":
             self.showAnalisis()
+
+        elif resp == "borrar":
+            self.borrar()
 
         elif resp == "pelicula":
             self.pelicula()

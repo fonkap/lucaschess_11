@@ -169,8 +169,6 @@ def leeRivales():
     cm.ponMultiPV(20, 256)
     mas(cm)
 
-
-
     return dicRivales
 
 def dicMotoresFixedElo():

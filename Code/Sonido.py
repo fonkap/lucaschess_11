@@ -194,7 +194,6 @@ class TallerSonido:
 
         self.centesimas = centHasta - centDesde
 
-
 class Replay:
     def __init__(self):
         self.io = XRunSound.IO()

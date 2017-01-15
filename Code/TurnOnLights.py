@@ -97,7 +97,6 @@ class TOL_Line:
     def total_moves(self):
         return len(self.limoves)
 
-
 class TOL_level:
     def __init__(self, lines_per_block, num_level):
         self.themes_blocks = []
@@ -231,7 +230,6 @@ class TurnOnLights:
 
         return cat
 
-
 def read_tol(name, title, folder, li_tam_blocks):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % name)
     tol = Util.recuperaVar(filepath)
@@ -248,22 +246,17 @@ def read_tol(name, title, folder, li_tam_blocks):
 
     return tol
 
-
 def write_tol(tol):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % tol.name)
     Util.guardaVar(filepath, tol)
 
-
 def remove_tol(tol):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % tol.name)
     Util.borraFichero(filepath)
-
 
 def numColorMinimum(tol):
     num = tol.levels[tol.work_level].num_level+1
     if num >= 3:
         num = 3
     return num, tol.work_level == tol.num_levels-1
-
-
 

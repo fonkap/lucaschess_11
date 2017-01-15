@@ -997,8 +997,10 @@ class Tablero(QtGui.QGraphicsView):
         self.init_kb_buffer()
 
     def ponPosicion(self, posicion):
+        self.borraMovibles()
         if self.director:
             self.director.cambiadaPosicion(posicion)
+
         self.ponPosicionBase(posicion)
 
     def ponPosicionBase(self, posicion):
@@ -1107,9 +1109,13 @@ class Tablero(QtGui.QGraphicsView):
 
         siBlancasAbajo = self.siBlancasAbajo
 
+        atajosRaton = self.atajosRaton
+
         self.crea()
         if not siBlancasAbajo:
             self.intentaRotarTablero(None)
+
+        self.atajosRaton = atajosRaton
 
         if ap:
             self.activaColor(apc)

@@ -215,12 +215,12 @@ class XMotor:
         self.mrm.ordena()
         return self.mrm
 
-    def set_game_position(self, partida):
+    def set_game_position(self, partida, njg=99999):
         posInicial = "startpos" if partida.siFenInicial() else "fen %s" % partida.iniPosicion.fen()
-        li = [jg.movimiento().lower() for jg in partida.liJugadas]
+        li = [jg.movimiento().lower() for n, jg in enumerate(partida.liJugadas) if n < njg]
         moves = " moves %s" % (" ".join(li)) if li else ""
         self.work_ok("position %s%s" % (posInicial, moves))
-        self.is_white = partida.siBlancas()
+        self.is_white = partida.siBlancas() if njg > 9000 else partida.jugada(njg).siBlancas()
 
     def set_fen_position(self, fen):
         self.work_ok("position fen %s" % fen)
@@ -274,6 +274,35 @@ class XMotor:
         time.sleep(0.1)
         return self.ac_estado()
 
+    def analysis_stable(self, partida, njg, ktime, kdepth, is_savelines, st_centipawns, st_depths):
+        self.set_game_position(partida, njg)
+        self.reset()
+        if is_savelines:
+            self.mrm.save_lines()
+        self.put_line("go infinite")
+        def lee():
+            for line in self.get_lines():
+                self.mrm.dispatch(line)
+            self.mrm.ordena()
+            return self.mrm.mejorMov()
+        ok_time = False if ktime else True
+        ok_depth = False if kdepth else True
+        while self.guiDispatch(None):
+            rm = lee()
+            if not ok_time:
+                ok_time = rm.time >= ktime
+            if not ok_depth:
+                ok_depth = rm.depth >= kdepth
+            if ok_time and ok_depth:
+                break
+            time.sleep(0.1)
+
+        while not self.mrm.is_stable(st_centipawns, st_depths) and self.guiDispatch(None):
+            time.sleep(0.1)
+            lee()
+        self.put_line("stop")
+        return self.mrm
+
     def ponGuiDispatch(self, guiDispatch, whoDispatch=None):
         self.guiDispatch = guiDispatch
         if whoDispatch is not None:
@@ -294,7 +323,6 @@ class XMotor:
     def order_uci(self):
         self.reset()
         self.put_line("uci")
-        # self.put_line("isready")
         li, self.uci_ok = self.wait_list("uciok", 10000)
         self.uci_lines = [x for x in li if x.startswith("id ") or x.startswith("option name")] if self.uci_ok else []
 
@@ -307,6 +335,10 @@ class XMotor:
     def bestmove_game(self, partida, max_time, max_depth):
         self.set_game_position(partida)
         return self.seek_bestmove(max_time, max_depth, False)
+
+    def bestmove_game_jg(self, partida, njg, max_time, max_depth, is_savelines=False):
+        self.set_game_position(partida, njg)
+        return self.seek_bestmove(max_time, max_depth, is_savelines)
 
     def bestmove_fen(self, fen, max_time, max_depth, is_savelines=False):
         self.set_fen_position(fen)

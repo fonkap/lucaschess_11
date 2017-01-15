@@ -54,17 +54,17 @@ else:
 #         self.lastline = ""
 #         self.starting = True
 #         self.args = args if args else []
-#
+
 #     def cerrar(self):
 #         self.working = False
 #         self.wait()
-#
+
 #     def put_line(self, line):
 #         assert xpr("put>>> %s\n" % line)
 #         self.mutex_in.lock()
 #         self.process.write(line +"\n")
 #         self.mutex_in.unlock()
-#
+
 #     def get_lines(self):
 #         self.mutex_out.lock()
 #         li = self.libuffer
@@ -72,20 +72,20 @@ else:
 #         self.mutex_out.unlock()
 #         assert xprli(li)
 #         return li
-#
+
 #     def hay_datos(self):
 #         return len(self.libuffer) > 0
-#
+
 #     def reset(self):
 #         self.mutex_out.lock()
 #         self.libuffer = []
 #         self.lastline = ""
 #         self.mutex_out.unlock()
-#
+
 #     def close(self):
 #         self.working = False
 #         self.wait()
-#
+
 #     def run(self):
 #         self.process = QtCore.QProcess()
 #         self.process.setWorkingDirectory(self.direxe)
@@ -97,7 +97,7 @@ else:
 #         if self.priority != PRIORITY_NORMAL:
 #             p = psutil.Process(self.pid)
 #             p.nice(self.priority)
-#
+
 #         self.starting = False
 #         while self.working:
 #             if self.process.waitForReadyRead(100):
@@ -175,10 +175,12 @@ class EnginePOP(object):
             stdout.close()
 
     def start(self):
-        startupinfo = subprocess.STARTUPINFO()
         if VarGen.isWindows:
+            startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             startupinfo.wShowWindow = subprocess.SW_HIDE
+        else:
+            startupinfo = None
         self.process = subprocess.Popen(self.args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, cwd=self.direxe,
                                          startupinfo=startupinfo, shell=False)
 

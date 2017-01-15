@@ -102,10 +102,6 @@ class LineaTextoUTF8(QtGui.QItemDelegate):
         editor.setGeometry(option.rect)
 
 class EtiquetaPGN(QtGui.QStyledItemDelegate):
-    """
-    Delegado para la muestra con html
-    """
-
     def __init__(self, siBlancas, siAlineacion=False, siFondo=False):
         self.siBlancas = siBlancas  # None = no hacer
         self.siFigurinesPGN = siBlancas is not None

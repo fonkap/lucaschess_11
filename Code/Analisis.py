@@ -28,6 +28,10 @@ class AnalizaPartida:
         self.depth = alm.depth
         self.siVariantes = (not is_massiv) and alm.masvariantes
 
+        self.stability = alm.stability
+        self.st_centipawns = alm.st_centipawns
+        self.st_depths = alm.st_depths
+
         # Asignacion de variables para blunders:
         # kblunders: puntos de perdida para considerar un blunder
         # tacticblunders: folder donde guardar tactic
@@ -310,15 +314,14 @@ FILESW=%s:100
         self.siBMTblunders = False
         self.siBMTbrilliancies = False
 
-        siBP2 = hasattr(tmpBP, "bp2")  # Para diferenciar el analisis de una partida que usa una progressbar unica del
-
-        # analisis de muchas, que usa doble
+        siBP2 = hasattr(tmpBP, "bp2")   # Para diferenciar el analisis de una partida que usa una progressbar unica del
+                                        # analisis de muchas, que usa doble
 
         def guiDispatch(rm):
             return not tmpBP.siCancelado()
 
-        self.xgestor.ponGuiDispatch(guiDispatch)  # Dispatch del motor, si esta puesto a 4 minutos por ejemplo que
-        # compruebe si se ha indicado que se cancele.
+        self.xgestor.ponGuiDispatch(guiDispatch)    # Dispatch del motor, si esta puesto a 4 minutos por ejemplo que
+                                                    # compruebe si se ha indicado que se cancele.
 
         siBlunders = self.kblunders > 0
         siBrilliancies = self.fnsbrilliancies or self.pgnbrilliancies or self.bmtbrilliancies
@@ -346,7 +349,7 @@ FILESW=%s:100
                         if siA:
                             if jugador.endswith(uno):
                                 si = True
-                            if siZ:  # form apara poner siA y siZ
+                            if siZ:  # form para poner siA y siZ
                                 si = uno in jugador
                         elif siZ:
                             if jugador.startswith(uno):
@@ -442,8 +445,11 @@ FILESW=%s:100
                     continue
 
             # -# Procesamos
-            resp = self.xgestor.analizaJugada(jg, self.tiempo, depth=self.depth, brDepth=self.dpbrilliancies,
-                                              brPuntos=self.ptbrilliancies)
+            resp = self.xgestor.analizaJugadaPartida(partida, njg, self.tiempo, depth=self.depth,
+                                                     brDepth=self.dpbrilliancies, brPuntos=self.ptbrilliancies,
+                                                     stability=self.stability,
+                                                     st_centipawns=self.st_centipawns,
+                                                     st_depths=self.st_depths)
             if not resp:
                 self.xgestor.quitaGuiDispatch()
                 return
