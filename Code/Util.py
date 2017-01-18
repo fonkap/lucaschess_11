@@ -1139,7 +1139,6 @@ class Timekeeper:
             self._begin = None
             return time.time() - b
 
-
 class OpenCodec:
     def __init__(self, path):
         with open(path) as f:
@@ -1157,7 +1156,6 @@ class OpenCodec:
 
     def __exit__(self, xtype, value, traceback):
         self.f.close()
-
 
 def txt_encoding(txt):
     u = chardet.universaldetector.UniversalDetector()

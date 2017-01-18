@@ -10,7 +10,6 @@ from Code.Constantes import *
 from Code import XMotorRespuesta
 from Code import EngineThread
 
-
 class XMotor:
     def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=EngineThread.PRIORITY_NORMAL, args=[]):
         self.nombre = nombre
@@ -375,7 +374,6 @@ class XMotor:
     def stop_ponder(self):
         self.work_ok("stop")
         self.pondering = False
-
 
 class DirectMotor(QtCore.QProcess):
     def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=None, args = []):

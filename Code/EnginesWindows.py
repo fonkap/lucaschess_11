@@ -75,20 +75,9 @@ def leeRivales():
     cm.elo = 2396
     mas(cm)
 
-    cm = ConfigMotor("greko", "Vladimir Medvedev", "12.9", "http://sourceforge.net/projects/greko")
-    cm.path = "12/GreKo.exe"
-    cm.elo = 2508
-    mas(cm)
-
     cm = ConfigMotor("pawny", "Mincho Georgiev", "0.3.1", "http://pawny.netii.net/")
     cm.path = "windows/pawny_0.3.1_x86.exe"
     cm.elo = 2484
-    cm.ordenUCI("OwnBook", "false")
-    mas(cm)
-
-    cm = ConfigMotor("hamsters", "Alessandro Scotti", "0.7.1", "https://chessprogramming.wikispaces.com/Alessandro+Scotti")
-    cm.path = "Hamsters.exe"
-    cm.elo = 2487
     cm.ordenUCI("OwnBook", "false")
     mas(cm)
 
@@ -108,11 +97,6 @@ def leeRivales():
     cm.elo = 2532
     cm.ordenUCI("Ponder", "false")
     cm.ordenUCI("Hash", "32")
-    mas(cm)
-
-    cm = ConfigMotor("amyan", "Antonio Dieguez R.", "1.72", "http://www.pincha.cl/amyan/amyane.html")
-    cm.path = "amyan.exe"
-    cm.elo = 2545
     mas(cm)
 
     cm = ConfigMotor("alaric", "Peter Fendrich", "707", "http://alaric.fendrich.se/index.html")
@@ -188,14 +172,6 @@ def leeRivales():
     cm.ponMultiPV(20, 32)
     mas(cm)
 
-    cm = ConfigMotor("toga", "WHMoweryJr,Thomas Gaksch,Fabien Letouzey", "deepTogaNPS 1.9.6",
-                     "http://www.computerchess.info/tdbb/phpBB3/viewtopic.php?f=9&t=357")
-    cm.path = "DeepToga1.9.6nps.exe"
-    cm.elo = 2843
-    cm.ordenUCI("Hash", "32")
-    cm.ponMultiPV(20, 40)
-    mas(cm)
-
     cm = ConfigMotor("komodo", "Don Dailey, Larry Kaufman, Mark Lefler", "8 32bit", "http://komodochess.com/")
     cm.path = "komodo-8-32bit.exe"
     cm.path_64 = "komodo-8-64bit.exe", "8 64bit"
@@ -268,6 +244,30 @@ def leeRivales():
     cm.path_64 = "RodentII_x64.exe", "0.9.64 64bit"
     cm.elo = 2912
     cm.ordenUCI("Hash", "64")
+    mas(cm)
+
+    cm = ConfigMotor("amyan", "Antonio Dieguez R.", "1.62", "http://www.pincha.cl/amyan/amyane.html")
+    cm.path = "amyan.exe"
+    cm.elo = 2545
+    mas(cm)
+
+    cm = ConfigMotor("hamsters", "Alessandro Scotti", "0.7.1", "https://chessprogramming.wikispaces.com/Alessandro+Scotti")
+    cm.path = "Hamsters.exe"
+    cm.elo = 2487
+    cm.ordenUCI("OwnBook", "false")
+    mas(cm)
+
+    cm = ConfigMotor("toga", "WHMoweryJr,Thomas Gaksch,Fabien Letouzey", "deepTogaNPS 1.9.6",
+                     "http://www.computerchess.info/tdbb/phpBB3/viewtopic.php?f=9&t=357")
+    cm.path = "DeepToga1.9.6nps.exe"
+    cm.elo = 2843
+    cm.ordenUCI("Hash", "32")
+    cm.ponMultiPV(20, 40)
+    mas(cm)
+
+    cm = ConfigMotor("greko", "Vladimir Medvedev", "12.9", "http://sourceforge.net/projects/greko")
+    cm.path = "12/GreKo.exe"
+    cm.elo = 2508
     mas(cm)
 
     return dicRivales

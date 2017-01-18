@@ -1,10 +1,10 @@
 import os
-import struct
+# import struct
 import time
 
 import psutil
 
-from PyQt4 import QtCore
+# from PyQt4 import QtCore
 
 from Code import VarGen
 from Code.Constantes import *
@@ -136,6 +136,9 @@ class EnginePOP(object):
         self.args = [self.exe, ]
         if args:
             self.args.extend(args)
+
+        if VarGen.isLinux and self.exe.lower().endswith(".exe"):
+            self.args.insert(0, "/usr/bin/wine")
 
     def cerrar(self):
         self.working = False

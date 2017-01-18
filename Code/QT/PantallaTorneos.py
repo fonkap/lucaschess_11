@@ -189,7 +189,7 @@ class WUnTorneo(QTVarios.WDialogo):
                 self.btPosicionPegar).relleno()
 
         # Norman Pollock
-        lbNorman = Controles.LB(self, '%s(<a href="http://www.hoflink.com/~npollock/40H.html">?</a>): ' %
+        lbNorman = Controles.LB(self, '%s(<a href="https://komodochess.com/pub/40H-pgn-utilities">?</a>): ' %
                                 _("Initial position from Norman Pollock openings database"))
         self.chbNorman = Controles.CHB(self, " ", self.torneo.norman())
 

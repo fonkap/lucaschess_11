@@ -6,7 +6,6 @@ from Code import Partida
 from Code import VarGen
 from Code.Constantes import *
 
-
 class RespuestaMotor:
     def __init__(self, nombre, si_blancas):
         self.nombre = nombre
@@ -230,10 +229,8 @@ class RespuestaMotor:
         rm.texto2base(self.base2texto())
         return rm
 
-
 st_uci_claves = {"multipv", "depth", "seldepth", "score", "time", "nodes", "pv", "hashfull", "tbhits", "nps",
                      "currmove", "currmovenumber", "cpuload", "string", "refutation", "currline"}
-
 
 class MRespuestaMotor:
     def __init__(self, nombre, siBlancas):
@@ -327,7 +324,6 @@ class MRespuestaMotor:
 
         rm = self.dicMultiPV[kMulti]
         rm.sinInicializar = False
-
 
         if "depth" in dClaves:
             depth = int(dClaves["depth"].strip())

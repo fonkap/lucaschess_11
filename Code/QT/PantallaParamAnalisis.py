@@ -41,7 +41,6 @@ def leeDicParametros(configuracion):
     alm.st_centipawns = dic.get("ST_CENTIPAWNS", 5)
     alm.st_depths = dic.get("ST_DEPTHS", 3)
 
-
     return alm
 
 def formBlundersBrilliancies(alm, configuracion):
@@ -212,7 +211,6 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
         liST.append((FormLayout.Spinbox(_("Last depths to control same bestmove"), 2, 10, 40), alm.st_depths))
         liST.append(SEPARADOR)
         liST.append((FormLayout.Spinbox(_("Maximum difference among last evaluations"), 0, 99999, 60), alm.st_centipawns))
-
 
         lista = []
         lista.append((liGen, _("General options"), ""))
