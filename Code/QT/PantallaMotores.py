@@ -279,6 +279,8 @@ class WMotor(QtGui.QDialog):
         lbElo = Controles.LB(self, "ELO" + ": ")
         self.sbElo = Controles.SB(self, motorExterno.elo, 0, 4000)
 
+        lbExe = Controles.LB(self, motorExterno.exe)
+
         if siTorneo:
             lbDepth = Controles.LB(self, _("Maximum depth") + ": ")
             self.sbDepth = Controles.SB(self, motorExterno.depth(), 0, 50)
@@ -315,9 +317,10 @@ class WMotor(QtGui.QDialog):
         ly.controld(lbAlias, 0, 0).control(self.edAlias, 0, 1)
         ly.controld(lbInfo, 1, 0).control(self.emInfo, 1, 1)
         ly.controld(lbElo, 2, 0).control(self.sbElo, 2, 1)
+        ly.controlc(lbExe, 3, 0, 1, 2)
 
         if siTorneo:
-            ly.otro(lyTorneo, 3, 0, 1, 2)
+            ly.otro(lyTorneo, 4, 0, 1, 2)
 
         layout = Colocacion.V().control(tb).espacio(30).otro(ly).control(scrollArea)
         self.setLayout(layout)

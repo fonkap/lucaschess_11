@@ -57,15 +57,6 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    if VarGen.isWine:
-        cm = ConfigMotor("toga", "WHMoweryJr,Thomas Gaksch,Fabien Letouzey", "deepTogaNPS 1.9.6",
-                         "http://www.computerchess.info/tdbb/phpBB3/viewtopic.php?f=9&t=357")
-        cm.path = "DeepToga1.9.6nps.exe"
-        cm.elo = 2843
-        cm.ordenUCI("Hash", "32")
-        cm.ponMultiPV(20, 40)
-        mas(cm)
-
     cm = ConfigMotor("greko", "Vladimir Medvedev", "10.2", "http://sourceforge.net/projects/greko")
     cm.path = "Linux/GreKo-102-64-ja"
     cm.elo = 2480

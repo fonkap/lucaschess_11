@@ -137,7 +137,7 @@ class EnginePOP(object):
         if args:
             self.args.extend(args)
 
-        if VarGen.isLinux and self.exe.lower().endswith(".exe"):
+        if VarGen.isLinux and VarGen.isWine and self.exe.lower().endswith(".exe"):
             self.args.insert(0, "/usr/bin/wine")
 
     def cerrar(self):
