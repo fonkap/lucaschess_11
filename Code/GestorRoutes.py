@@ -307,7 +307,7 @@ class GestorRoutesPlay(GestorRoutes):
         self.pantalla.ponToolBar(liOpciones)
         jgUlt = self.partida.last_jg()
 
-        siwin = jgUlt.siBlancas() == self.siJugamosConBlancas
+        siwin = (jgUlt.siBlancas() == self.siJugamosConBlancas) and (not jgUlt.siTablas()) and (not jgUlt.siAhogado)
         if siwin:
             if self.route.end_playing():
                 QTUtil2.mensaje(self.pantalla, _("Congratulations, you have completed the game."))
@@ -555,7 +555,12 @@ class GestorRoutesEndings(GestorRoutes):
         self.siJuegaHumano = False
         self.estado = kFinJuego
         self.refresh()
-        if self.warnings <= self.max_warnings:
+        jgUlt = self.partida.last_jg()
+
+        if jgUlt.siTablas():
+            QTUtil2.mensaje(self.pantalla, _("Draw") + "<br>" + _("You must repeat the puzzle."))
+            self.inicio(self.route)
+        elif self.warnings <= self.max_warnings:
             liOpciones = [k_mainmenu, k_utilidades]
             self.pantalla.ponToolBar(liOpciones)
             QTUtil2.mensaje(self.pantalla, _("Done"))
