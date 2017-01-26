@@ -297,7 +297,7 @@ class WSummary(QtGui.QWidget):
         name = os.path.basename(self.dbGames.nomFichero)[:-4]
         maxdepth = self.dbGames.depthStat()
         depth = maxdepth
-        minGames = min(self.dbGames.reccountTotal() * 10 / 100, 5)
+        minGames = min(self.dbGames.all_reccount() * 10 / 100, 5)
         pointview = 2
         inicio = 0
         mov = self.movActivo()

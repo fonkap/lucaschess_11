@@ -345,7 +345,7 @@ class TreeSTAT:
                     pv = (pvPrevio + " " + wm).strip()
                     cpN = cp.copia()
                     cpN.moverPV(wm)
-                    f.write("%s|%s|%s\n" % (alm.XPV, wm, cpN.fen()))
+                    f.write("%s|%s|%s\n" % (pv2xpv(pv), wm, cpN.fen()))
                     todos(pv, depth + 1, cpN)
 
         def todos(pvPrevio, depth, cp):
@@ -363,7 +363,7 @@ class TreeSTAT:
                     pv = (pvPrevio + " " + alm.move).strip()
                     cpN = cp.copia()
                     cpN.moverPV(wm)
-                    f.write("%s|%s|%s\n" % (alm.XPV, wm, cpN.fen()))
+                    f.write("%s|%s|%s\n" % (pv2xpv(pv), wm, cpN.fen()))
                     fm2 = cpN.fenM2()
                     if fm2 not in stFenM2:  # Para que no se repitan los movimientos de los transpositions
                         stFenM2.add(fm2)

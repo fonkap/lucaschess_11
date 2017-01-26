@@ -14,7 +14,7 @@ from Code.QT import FormLayout
 from Code.QT import Grid
 from Code.QT import Iconos
 from Code.QT import PantallaBooks
-from Code.QT import PantallaParamAnalisis
+from Code.QT import PantallaAnalisisParam
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
@@ -462,7 +462,7 @@ class WElegir(QTVarios.WDialogo):
         liSeleccionadas = self.grid.recnosSeleccionados()
         nSeleccionadas = len(liSeleccionadas)
 
-        alm = PantallaParamAnalisis.paramAnalisisMasivo(self, self.gestor.configuracion, nSeleccionadas > 1)
+        alm = PantallaAnalisisParam.paramAnalisisMasivo(self, self.gestor.configuracion, nSeleccionadas > 1)
         if alm:
 
             if alm.siVariosSeleccionados:

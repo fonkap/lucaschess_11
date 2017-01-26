@@ -72,6 +72,8 @@ class Tablero(QtGui.QGraphicsView):
         self.siPermitidoResizeExterno = False
         self.mensajero = None
 
+        self.si_borraMovibles = True
+
         self.kb_buffer = []
 
     def init_kb_buffer(self):
@@ -997,11 +999,12 @@ class Tablero(QtGui.QGraphicsView):
         self.init_kb_buffer()
 
     def ponPosicion(self, posicion):
-        self.borraMovibles()
         if self.director:
             self.director.cambiadaPosicion(posicion)
 
         self.ponPosicionBase(posicion)
+        if self.si_borraMovibles:
+            self.borraMovibles()
 
     def ponPosicionBase(self, posicion):
         self.ultPosicion = posicion
@@ -1115,8 +1118,6 @@ class Tablero(QtGui.QGraphicsView):
         if not siBlancasAbajo:
             self.intentaRotarTablero(None)
 
-        self.atajosRaton = atajosRaton
-
         if ap:
             self.activaColor(apc)
             self.ponIndicador(apc)
@@ -1124,6 +1125,8 @@ class Tablero(QtGui.QGraphicsView):
         if siFlecha:
             # self.ponFlechaSC( self.ultMovFlecha[0], self.ultMovFlecha[1])
             self.resetFlechaSC()
+
+        self.atajosRaton = atajosRaton
         self.init_kb_buffer()
 
     def blindfoldQuitar(self):

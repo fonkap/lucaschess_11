@@ -60,7 +60,8 @@ class Jugada:
         return self.posicion.fenBase()
 
     def siTablas(self):
-        return self.siTablasRepeticion or self.siTablas50 or self.siTablasFaltaMaterial or self.siTablasAcuerdo
+        return self.siTablasRepeticion or self.siTablas50 or self.siTablasFaltaMaterial or self.siTablasAcuerdo \
+               or self.siAhogado
 
     def pv2dgt(self):
         return self.posicionBase.pv2dgt(self.desde, self.hasta, self.coronacion)

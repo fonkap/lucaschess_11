@@ -270,6 +270,42 @@ def leeRivales():
     cm.elo = 2508
     mas(cm)
 
+    cm = ConfigMotor("delfi", "Fabio Cavicchio", "5.4", "http://www.msbsoftware.it/delfi/")
+    cm.path = "delfi.exe"
+    cm.elo = 2686
+    mas(cm)
+
+    cm = ConfigMotor("smartthink", "Sergei S. Markoff", "1.97", "http://genes1s.net/smarthink.php")
+    cm.path = "SmarThink_v197_x32.exe"
+    cm.nombre = "SmartThink"
+    cm.elo = 2970
+    mas(cm)
+
+    cm = ConfigMotor("monarch", "Steve Maughan", "1.7", "http://www.monarchchess.com/")
+    cm.path = "Monarch(v1.7).exe"
+    cm.elo = 2100
+    mas(cm)
+
+    cm = ConfigMotor("andscacs", "Daniel José Queraltó", "0.8932n", "http://www.andscacs.com/")
+    cm.path = "andscacs32.exe"
+    cm.elo = 3150
+    mas(cm)
+
+    cm = ConfigMotor("arminius", "Volker Annus", "2017-01-01", "http://www.nnuss.de/Hermann/Arminius2017-01-01.zip")
+    cm.path = "Arminius2017-01-01-32Bit.exe"
+    cm.elo = 2662
+    mas(cm)
+
+    cm = ConfigMotor("wildcat", "Igor Korshunov", "8", "http://www.igorkorshunov.narod.ru/WildCat")
+    cm.path = "WildCat_8.exe"
+    cm.elo = 2627
+    mas(cm)
+
+    cm = ConfigMotor("demolito", "Lucas Braesch", "32bit", "https://github.com/lucasart/Demolito")
+    cm.path = "demolito_32bit_old.exe"
+    cm.elo = 2627
+    mas(cm)
+
     return dicRivales
 
 def dicMotoresFixedElo():
@@ -285,6 +321,8 @@ def dicMotoresFixedElo():
             ("hamsters", 1000, 2000),
             ("rybka", 1200, 2400),
             ("ufim", 700, 2000),
+            ("delfi", 1000, 2600),
+
     ):
         for elo in range(desde, hasta + 100, 100):
             cm = d[nm].clona()

@@ -10,7 +10,7 @@ from Code.QT import Colocacion
 from Code.QT import Controles
 from Code.QT import FormLayout
 from Code.QT import Iconos
-from Code.QT import PantallaParamAnalisis
+from Code.QT import PantallaAnalisisParam
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
@@ -920,7 +920,7 @@ class PantallaArbol(QTVarios.WDialogo):
 
     def nuevoAnalisis(self, lm):
         fen = lm.partidaBase.ultPosicion.fen()
-        alm = PantallaParamAnalisis.paramAnalisis(self, VarGen.configuracion, False, siTodosMotores=True)
+        alm = PantallaAnalisisParam.paramAnalisis(self, VarGen.configuracion, False, siTodosMotores=True)
         if alm is None:
             return
         confMotor = VarGen.configuracion.buscaMotor(alm.motor)

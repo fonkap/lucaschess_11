@@ -24,7 +24,7 @@ def xprli(li):
         t = time.time()
         dif = t - tdbg[0]
         for line in li:
-            prlk("%0.04f %s\n" % (dif, line))
+            prlk("%0.04f %s" % (dif, line))
         tdbg[0] = t
     return True
 

@@ -1,5 +1,6 @@
 # -*- coding: latin-1 -*-
 
+
 import collections
 import random
 
@@ -17,6 +18,7 @@ class ThanksTo:
         d["Training"] = _("Training")
         d["Engines-1"] = "%s/1" % _("Engines")
         d["Engines-2"] = "%s/2" % _("Engines")
+        d["Engines-3"] = "%s/3" % _("Engines")
         d["Games"] = _("Games")
         d["Programming"] = _("Programming")
         d["Dedicated"] = _("Dedicated to")
@@ -41,7 +43,7 @@ class ThanksTo:
             ["Umko 0.7", "Borko Boskovic", "http://umko.sourceforge.net/"],
             ["Garbochess 2.20", "Gary Linscott", "http://forwardcoding.com/projects/chess/chess.html"],
             ["Ufim 8.02", "Niyas Khasanov", "http://wbec-ridderkerk.nl/html/details1/Ufim.html"],
-            ["Amyan 1.72", "Antonio Dieguez R.", "http://www.pincha.cl/amyan/amyane.html"],
+            ["Amyan 1.62", "Antonio Dieguez R.", "http://www.pincha.cl/amyan/amyane.html"],
             ["Alaric 707", "Peter Fendrich", "http://alaric.fendrich.se/index.html"],
             ["Cyrano 06B17", "Harald Johnsen", "http://sites.estvideo.net/tipunch/cyrano/"],
             ["Daydreamer 1.75 JA", "Aaron Becker", "http://github.com/AaronBecker/daydreamer/downloads"],
@@ -62,16 +64,20 @@ class ThanksTo:
             ["Stockfish 8", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
             ["MacBrain 1.0", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
             ["Gull 3", "Vadim Demichev", "https://sourceforge.net/projects/gullchess/"],
+            ["Delfi 5.4", "Fabio Cavicchio", "http://www.msbsoftware.it/delfi/"],
+            ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
+            ["Monarch 1.7", "Steve Maughan", "http://www.monarchchess.com/"],
+            ["Andscacs 0.8932n", "Daniel José Queraltó", "http://www.andscacs.com/"],
+            ["Arminius 2017-01-01", "Volker Annus", "http://www.nnuss.de/Hermann/Arminius2017-01-01.zip"],
+            ["WildCat", "Igor Korshunov", "http://www.igorkorshunov.narod.ru/WildCat"],
+            ["Demolito", "Lucas Braesch", "https://github.com/lucasart/Demolito"],
         ]
         li.sort(key=lambda x: x[0])
-        # Gaia y godel con dos puntos
-        # for n, a, u in li:
-        #     k = n.split(" ")[0].lower()
-        #     p rint '                                    ( "%s", "%s", "%s", "%s" ),'%(k,a,n,u)
-        if bloque == "1":
-            return li[:len(li) / 2]
-        else:
-            return li[len(li) / 2:]
+        n = len(li)
+        x = n/3
+        bl = [0, x, 2*x, len(li)]
+        nbl = int(bloque)
+        return li[bl[nbl-1]:bl[nbl]]
 
     def texto(self, clave):
         if "-" in clave:
@@ -109,6 +115,11 @@ class ThanksTo:
             txt += "</b></td>"
             txt += "</tr>"
             return txt
+
+        # Version 11
+        liBase = ["Alfonso Solbes", "Max Aloyau"]
+        liResto = []
+        txt += version(11, liBase, liResto)
 
         # Version 10
         liBase = ["Remes", "Max Aloyau", "Alfonso Solbes"]

@@ -83,7 +83,9 @@ def activar():
     dgt = None
     for path in ("",
                  "C:/Program Files (x86)/DGT Projects/",
-                 "C:/Program Files (x86)/Common Files/DGT Projects/"):
+                 "C:/Program Files (x86)/Common Files/DGT Projects/",
+                 "C:/Program Files/DGT Projects/"
+                 ):
         try:
             dgt = ctypes.WinDLL(path + "DGTEBDLL.dll")
             break

@@ -9,7 +9,7 @@ from Code.QT import Controles
 from Code.QT import Delegados
 from Code.QT import Grid
 from Code.QT import Iconos
-from Code.QT import PantallaParamAnalisis
+from Code.QT import PantallaAnalisisParam
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
@@ -540,7 +540,7 @@ class WAnalisis(QTVarios.WDialogo):
             delattr(self, "timer")
 
     def crear(self):
-        alm = PantallaParamAnalisis.paramAnalisis(self, VarGen.configuracion, False, siTodosMotores=True)
+        alm = PantallaAnalisisParam.paramAnalisis(self, VarGen.configuracion, False, siTodosMotores=True)
         if alm:
             um = self.mAnalisis.creaMuestra(self, alm)
             self.crearMuestra(um)

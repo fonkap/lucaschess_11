@@ -273,7 +273,7 @@ class XMotor:
         time.sleep(0.1)
         return self.ac_estado()
 
-    def analysis_stable(self, partida, njg, ktime, kdepth, is_savelines, st_centipawns, st_depths):
+    def analysis_stable(self, partida, njg, ktime, kdepth, is_savelines, st_centipawns, st_depths, st_timelimit):
         self.set_game_position(partida, njg)
         self.reset()
         if is_savelines:
@@ -296,8 +296,11 @@ class XMotor:
                 break
             time.sleep(0.1)
 
-        while not self.mrm.is_stable(st_centipawns, st_depths) and self.guiDispatch(None):
+        if st_timelimit == 0:
+            st_timelimit = 999999
+        while not self.mrm.is_stable(st_centipawns, st_depths) and self.guiDispatch(None) and st_timelimit > 0.0:
             time.sleep(0.1)
+            st_timelimit -= 0.1
             lee()
         self.put_line("stop")
         return self.mrm

@@ -48,6 +48,7 @@ class WInfomove(QtGui.QWidget):
         self.tablero.crea()
         self.tablero.ponerPiezasAbajo(True)
         self.tablero.ponMensajero(self.mueveHumano)
+        self.tablero.si_borraMovibles = False
         self.cpActual = ControlPosicion.ControlPosicion()
         self.historia = None
         self.posHistoria = None
@@ -154,7 +155,6 @@ class WInfomove(QtGui.QWidget):
         pass
 
     def ponMovimiento(self, move):
-
         if self.movActual:
             self.movActual.graphics(self.tablero.exportaMovibles())
 

@@ -57,7 +57,6 @@ from Code import Routes
 from Code import Util
 from Code import VarGen
 from Code import XGestorMotor
-from Code import XMotor
 from Code import EngineThread
 from Code.Constantes import *
 
@@ -144,9 +143,9 @@ class Procesador:
                 elif comandoL.endswith(".lcg"):
                     self.externDatabase(comando)
                     return
-                elif comandoL.endswith(".lcf"):
-                    self.externDatabaseFEN(comando)
-                    return
+                # elif comandoL.endswith(".lcf"):
+                #     self.externDatabaseFEN(comando)
+                #     return
                 elif comandoL.endswith(".bmt"):
                     self.inicio()
                     self.externBMT(comando)

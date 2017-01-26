@@ -1,5 +1,3 @@
-from PyQt4 import QtGui
-
 from Code import TurnOnLights
 from Code.QT import Colocacion
 from Code.QT import Columnas

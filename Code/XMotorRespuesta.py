@@ -262,6 +262,9 @@ class MRespuestaMotor:
         self.maxProfundidad = maxProfundidad
 
     def dispatch(self, linea):
+        if "bound" in linea and ("lowerbound" in linea or "upperbound" in linea):
+            return
+
         if linea.startswith("info ") and " pv " in linea:
             self.miraPV(linea[5:])
 
