@@ -570,6 +570,7 @@ class Tablero(QtGui.QGraphicsView):
 
     def showKeys(self):
         liKeys = [
+            (_("ALT") + "-F", _("Flip the board")),
             (_("CTRL") + "-C", _("Copy FEN to clipboard")),
             ("I", _("Copy board as image to clipboard")),
             (_("CTRL") + "-I", _("Copy board as image to clipboard") + " (%s)" % _("without border")),

@@ -71,6 +71,7 @@ class ThanksTo:
             ["Arminius 2017-01-01", "Volker Annus", "http://www.nnuss.de/Hermann/Arminius2017-01-01.zip"],
             ["WildCat", "Igor Korshunov", "http://www.igorkorshunov.narod.ru/WildCat"],
             ["Demolito", "Lucas Braesch", "https://github.com/lucasart/Demolito"],
+            ["Hannibal 1.7", "Samuel N. Hamilton and Edsel G. Apostol", "http://sites.google.com/site/edapostol/hannibal"],
         ]
         li.sort(key=lambda x: x[0])
         n = len(li)

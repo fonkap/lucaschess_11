@@ -306,6 +306,11 @@ def leeRivales():
     cm.elo = 2627
     mas(cm)
 
+    cm = ConfigMotor("hannibal", "Samuel N. Hamilton and Edsel G. Apostol", "1.7", "http://sites.google.com/site/edapostol/hannibal")
+    cm.path = "Hannibal1.7w32.exe"
+    cm.elo = 3050
+    mas(cm)
+
     return dicRivales
 
 def dicMotoresFixedElo():
@@ -321,7 +326,7 @@ def dicMotoresFixedElo():
             ("hamsters", 1000, 2000),
             ("rybka", 1200, 2400),
             ("ufim", 700, 2000),
-            ("delfi", 1000, 2600),
+            ("delfi", 1000, 1000),
 
     ):
         for elo in range(desde, hasta + 100, 100):

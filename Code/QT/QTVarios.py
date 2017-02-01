@@ -182,21 +182,15 @@ class DragBanda(QtGui.QWidget):
 
         drag.exec_(QtCore.Qt.MoveAction)
 
-class WDialogo(QtGui.QDialog):
-    def __init__(self, pantalla, titulo, icono, extparam):
-
-        assert len(titulo) == 0 or pantalla is not None
-
-        super(WDialogo, self).__init__(pantalla)
-
-        self.setWindowTitle(titulo)
-        self.setWindowIcon(icono)
-        flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
-        self.setWindowFlags(flags)
-
+class WSave():
+    def __init__(self, titulo, icono, flag, extparam):
         self.ficheroVideo = VarGen.configuracion.plantillaVideo % extparam
         self.liGrids = []
         self.liSplitters = []
+        self.setWindowTitle(titulo)
+        self.setWindowIcon(icono)
+        flags = flag | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
+        self.setWindowFlags(flags)
 
     def closeEvent(self, event):
         self.guardarVideo()
@@ -208,7 +202,6 @@ class WDialogo(QtGui.QDialog):
         self.liSplitters.append((splitter, name))
 
     def guardarVideo(self, dicExten=None):
-
         dic = {} if dicExten is None else dicExten
 
         pos = self.pos()
@@ -288,6 +281,20 @@ class WDialogo(QtGui.QDialog):
                 self.resize(anchoDefecto, altoDefecto)
 
         return False
+
+class WDialogo(QtGui.QDialog, WSave):
+    def __init__(self, pantalla, titulo, icono, extparam):
+        QtGui.QDialog.__init__(self, pantalla)
+        WSave.__init__(self, titulo, icono, QtCore.Qt.Dialog, extparam)
+
+class WWidget(QtGui.QWidget, WSave):
+    def __init__(self, pantalla, titulo, icono, extparam):
+        QtGui.QWidget.__init__(self, pantalla)
+        WSave.__init__(self, titulo, icono, QtCore.Qt.Widget, extparam)
+
+    def accept(self):
+        self.guardarVideo()
+        self.close()
 
 class BlancasNegras(QtGui.QDialog):
     def __init__(self, parent):

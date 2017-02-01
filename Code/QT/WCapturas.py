@@ -61,8 +61,12 @@ class CapturaLista(QtGui.QWidget):
         for color in (True, False):
             ly = dlayout[color] = Colocacion.V().margen(0)
             for pieza, numero in self.li:
-                if not color:
-                    pieza = pieza.lower()
+                if self.tipoMaterial == "M":
+                    if color:
+                        pieza = pieza.lower()
+                else:
+                    if not color:
+                        pieza = pieza.lower()
                 for i in range(numero):
                     ly.control(self.dic[pieza][i])
         ly0, ly1 = dlayout[siBlancasAbajo], dlayout[not siBlancasAbajo]
@@ -110,6 +114,17 @@ class CapturaLista(QtGui.QWidget):
                         if vD < 0:
                             pieza = pieza.lower()
                             vD = -vD
+                        liDif.append((pieza, vD))
+            elif tipo == "M":
+                for pieza in cPiezas:
+                    vW = dicCapturas[pieza]
+                    vB = dicCapturas[pieza.lower()]
+                    vD = vW - vB
+                    if vD != 0:
+                        if vD < 0:
+                            vD = -vD
+                        else:
+                            pieza = pieza.lower()
                         liDif.append((pieza, vD))
             else:
                 for pieza in cPiezas:

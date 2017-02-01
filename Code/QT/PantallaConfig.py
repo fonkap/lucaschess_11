@@ -160,7 +160,7 @@ def opciones(parent, configuracion):
     liT.append((_("Show cursor when engine is thinking") + ":", configuracion.cursorThinking))
     liT.append(separador)
     liT.append((_("Enable captured material window by default") + ":", configuracion.siActivarCapturas))
-    liMat = [configuracion.tipoMaterial, ("D", _("Difference material")), ("C", _("Captured material at beginning"))]
+    liMat = [configuracion.tipoMaterial, ("D", _("Difference material")), ("C", _("Captured material at beginning")), ("M", _("Material advantage"))]
     liT.append((_("Show material") + ":", liMat))
     liT.append(separador)
     liT.append((_("Enable information panel by default") + ":", configuracion.siActivarInformacion))

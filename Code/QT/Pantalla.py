@@ -15,7 +15,7 @@ class EstadoWindow:
         self.fullscreen = x == QtCore.Qt.WindowFullScreen
         self.active = x == QtCore.Qt.WindowActive
 
-class Pantalla(QTVarios.WDialogo):
+class Pantalla(QTVarios.WWidget):
     def __init__(self, gestor, owner=None):
 
         self.gestor = gestor
@@ -23,7 +23,7 @@ class Pantalla(QTVarios.WDialogo):
         titulo = ""
         icono = Iconos.Aplicacion64()
         extparam = "main"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        QTVarios.WWidget.__init__(self, owner, titulo, icono, extparam)
 
         self.setBackgroundRole(QtGui.QPalette.Light)
         # self.setStyleSheet( "QToolButton { padding: 2px;}" )
@@ -132,7 +132,7 @@ class Pantalla(QTVarios.WDialogo):
         self.base.ponGestor(gestor)
 
     def muestra(self):
-        flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
+        flags = QtCore.Qt.Widget | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
         if self.onTop:
             flags |= QtCore.Qt.WindowStaysOnTopHint
 
