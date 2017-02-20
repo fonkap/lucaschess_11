@@ -15,15 +15,12 @@ class EstadoWindow:
         self.fullscreen = x == QtCore.Qt.WindowFullScreen
         self.active = x == QtCore.Qt.WindowActive
 
-class Pantalla(QTVarios.WWidget):
+
+
+class Pantalla():
     def __init__(self, gestor, owner=None):
 
-        self.gestor = gestor
-
-        titulo = ""
-        icono = Iconos.Aplicacion64()
-        extparam = "main"
-        QTVarios.WWidget.__init__(self, owner, titulo, icono, extparam)
+        self.owner = owner
 
         self.setBackgroundRole(QtGui.QPalette.Light)
         # self.setStyleSheet( "QToolButton { padding: 2px;}" )
@@ -132,7 +129,8 @@ class Pantalla(QTVarios.WWidget):
         self.base.ponGestor(gestor)
 
     def muestra(self):
-        flags = QtCore.Qt.Widget | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
+        flags = QtCore.Qt.Dialog if self.owner else QtCore.Qt.Widget
+        flags |= QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
         if self.onTop:
             flags |= QtCore.Qt.WindowStaysOnTopHint
 
@@ -381,3 +379,26 @@ class Pantalla(QTVarios.WWidget):
         else:
             QtGui.QApplication.restoreOverrideCursor()
         self.refresh()
+
+
+class PantallaWidget(QTVarios.WWidget, Pantalla):
+    def __init__(self, gestor, owner=None):
+        self.gestor = gestor
+
+        titulo = ""
+        icono = Iconos.Aplicacion64()
+        extparam = "main"
+        QTVarios.WWidget.__init__(self, owner, titulo, icono, extparam)
+        Pantalla.__init__(self, gestor, owner)
+
+
+class PantallaDialog(QTVarios.WDialogo, Pantalla):
+    def __init__(self, gestor, owner=None):
+        self.gestor = gestor
+
+        titulo = ""
+        icono = Iconos.Aplicacion64()
+        extparam = "maind"
+        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        Pantalla.__init__(self, gestor, owner)
+

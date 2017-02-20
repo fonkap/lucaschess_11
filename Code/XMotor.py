@@ -11,7 +11,7 @@ from Code import XMotorRespuesta
 from Code import EngineThread
 
 class XMotor:
-    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=EngineThread.PRIORITY_NORMAL, args=[]):
+    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=EngineThread.PRIORITY_NORMAL, args=None):
         self.nombre = nombre
 
         self.ponder = False
@@ -25,6 +25,8 @@ class XMotor:
         self.whoDispatch = nombre
         self.uci_ok = False
         self.pid = None
+
+        self.uci_lines = []
 
         if not os.path.isfile(exe):
             return
@@ -43,17 +45,26 @@ class XMotor:
 
         self.order_uci()
 
+        txt_uci_analysemode = "UCI_AnalyseMode"
+        uci_analysemode = False
+
         if liOpcionesUCI:
             for opcion, valor in liOpcionesUCI:
                 if type(valor) == bool:
                     valor = str(valor).lower()
                 self.set_option(opcion, valor)
+                if opcion == txt_uci_analysemode:
+                    uci_analysemode = True
                 if opcion.lower() == "ponder":
                     self.ponder = valor == "true"
 
         self.nMultiPV = nMultiPV
         if nMultiPV:
             self.ponMultiPV(nMultiPV)
+            if not uci_analysemode:
+                for line in self.uci_lines:
+                    if "UCI_AnalyseMode" in line:
+                        self.set_option("UCI_AnalyseMode", "true")
 
     def get_lines(self):
         return self.engine.get_lines()

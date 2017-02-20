@@ -103,6 +103,8 @@ class ED(QtGui.QLineEdit):
         else:
             if decimales is None:
                 decimales = self.decimales
+            else:
+                self.decimales = decimales
             self.setValidator(QtGui.QDoubleValidator(desde, hasta, decimales, self))
         self.setAlignment(QtCore.Qt.AlignRight)
         self.ponFloat(valor)

@@ -257,6 +257,7 @@ def genIndexes(partida, alm):
     efficientmobility = {True: 0.0, False: 0.0}
     piecesactivity = {True: 0.0, False: 0.0}
     exchangetendency = {True: 0.0, False: 0.0}
+    elo = {True: 0.0, False: 0.0}
     n = {True: 0, False: 0}
     for jg in partida.liJugadas:
         if hasattr(jg, "analisis"):
@@ -283,8 +284,10 @@ def genIndexes(partida, alm):
                 piecesactivity[siB] += jg.piecesactivity
                 n[siB] += 1
                 exchangetendency[siB] += jg.exchangetendency
+                elo[siB] += jg.elo
 
     t = n[True] + n[False]
+    eloT = (elo[True]+elo[False])/t if t else 0
     for x in (True, False):
         b1 = n[x]
         if b1:
@@ -294,6 +297,7 @@ def genIndexes(partida, alm):
             efficientmobility[x] = efficientmobility[x] * 1.0 / b1
             piecesactivity[x] = piecesactivity[x] * 1.0 / b1
             exchangetendency[x] = exchangetendency[x] * 1.0 / b1
+            elo[x] = elo[x] * 1.0 / b1
         if t:
             domination[x] = domination[x] * 100.0 / t
     complexityT = (complexity[True] + complexity[False]) / 2.0
@@ -330,6 +334,7 @@ def genIndexes(partida, alm):
     txt += plantillaC % (_("Pieces activity"), xac(piecesactivity[True]), xac(piecesactivity[False]), xac(piecesactivityT))
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txt += plantillaL % ( "%", alm.porcW, prc, alm.porcB, prc, alm.porcT, prc)
+    txt += plantillaC % ( _("Elo perfomance"), int(elo[True]), int(elo[False]), int(eloT))
 
     txtHTML = '<table border="1" cellpadding="5" cellspacing="1" >%s%s</table>' % (cab, txt)
     # Analisis.csv_formula(partida)

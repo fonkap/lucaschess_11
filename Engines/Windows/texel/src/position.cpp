@@ -1,6 +1,6 @@
 /*
     Texel - A UCI chess engine.
-    Copyright (C) 2012-2014  Peter Österlund, peterosterlund2@gmail.com
+    Copyright (C) 2012-2015  Peter Österlund, peterosterlund2@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include <iostream>
 #include <cassert>
 
+U8 Position::castleSqMask[64];
+
 U64 Position::psHashKeys[Piece::nPieceTypes][64];
 U64 Position::whiteHashKey;
 U64 Position::castleHashKeys[16];
@@ -52,6 +54,16 @@ Position::staticInitialize() {
         epHashKeys[f] = getRandomHashVal(rndNo++);
     for (size_t mc = 0; mc < COUNT_OF(moveCntKeys); mc++)
         moveCntKeys[mc] = getRandomHashVal(rndNo++);
+
+    for (int i = 0; i < 64; i++)
+        castleSqMask[i] = ((1 << A1_CASTLE) | (1 << H1_CASTLE) |
+                           (1 << A8_CASTLE) | (1 << H8_CASTLE));
+    castleSqMask[A1] &= ~(1 << A1_CASTLE);
+    castleSqMask[E1] &= ~((1 << A1_CASTLE) | (1 << H1_CASTLE));
+    castleSqMask[H1] &= ~(1 << H1_CASTLE);
+    castleSqMask[A8] &= ~(1 << A8_CASTLE);
+    castleSqMask[E8] &= ~((1 << A8_CASTLE) | (1 << H8_CASTLE));
+    castleSqMask[H8] &= ~(1 << H8_CASTLE);
 }
 
 
@@ -70,7 +82,6 @@ Position::Position() {
     halfMoveClock = 0;
     fullMoveCounter = 1;
     computeZobristHash();
-    wKingSq_ = bKingSq_ = -1;
     wMtrl_ = bMtrl_ = -::kV;
     wMtrlPawns_ = bMtrlPawns_ = 0;
 }
@@ -121,8 +132,6 @@ Position::setPiece(int square, int piece) {
                 wMtrlPawns_ += pVal;
                 pHashKey ^= psHashKeys[Piece::WPAWN][square];
             }
-            if (piece == Piece::WKING)
-                wKingSq_ = square;
         } else {
             bMtrl_ += pVal;
             blackBB_ |= sqMask;
@@ -130,8 +139,6 @@ Position::setPiece(int square, int piece) {
                 bMtrlPawns_ += pVal;
                 pHashKey ^= psHashKeys[Piece::BPAWN][square];
             }
-            if (piece == Piece::BKING)
-                bKingSq_ = square;
         }
     }
 
@@ -197,16 +204,6 @@ Position::makeMove(const Move& move, UndoInfo& ui) {
             }
         }
 
-        if ((pieceTypeBB(Piece::WKING, Piece::BKING) & fromMask) != 0) {
-            if (wtm) {
-                setCastleMask(castleMask & ~(1 << A1_CASTLE));
-                setCastleMask(castleMask & ~(1 << H1_CASTLE));
-            } else {
-                setCastleMask(castleMask & ~(1 << A8_CASTLE));
-                setCastleMask(castleMask & ~(1 << H8_CASTLE));
-            }
-        }
-
         // Perform move
         setPiece(move.from(), Piece::EMPTY);
         // Handle promotion
@@ -226,41 +223,16 @@ Position::makeMove(const Move& move, UndoInfo& ui) {
             } else if (move.to() == k0 - 2) { // O-O-O
                 movePieceNotPawn(k0 - 4, k0 - 1);
             }
-            if (wtm) {
-                setCastleMask(castleMask & ~(1 << A1_CASTLE));
-                setCastleMask(castleMask & ~(1 << H1_CASTLE));
-            } else {
-                setCastleMask(castleMask & ~(1 << A8_CASTLE));
-                setCastleMask(castleMask & ~(1 << H8_CASTLE));
-            }
         }
 
         // Perform move
         movePieceNotPawn(move.from(), move.to());
     }
-    if (wtm) {
-        // Update castling rights when rook moves
-        if ((BitBoard::maskCorners & fromMask) != 0) {
-            if (p == Piece::WROOK)
-                removeCastleRights(move.from());
-        }
-        if ((BitBoard::maskCorners & (1ULL << move.to())) != 0) {
-            if (capP == Piece::BROOK)
-                removeCastleRights(move.to());
-        }
-    } else {
-        fullMoveCounter++;
-        // Update castling rights when rook moves
-        if ((BitBoard::maskCorners & fromMask) != 0) {
-            if (p == Piece::BROOK)
-                removeCastleRights(move.from());
-        }
-        if ((BitBoard::maskCorners & (1ULL << move.to())) != 0) {
-            if (capP == Piece::WROOK)
-                removeCastleRights(move.to());
-        }
-    }
 
+    setCastleMask(getCastleMask() & castleSqMask[move.from()] & castleSqMask[move.to()]);
+
+    if (!wtm)
+        fullMoveCounter++;
     whiteMove = !wtm;
 }
 
@@ -327,13 +299,9 @@ Position::movePieceNotPawn(int from, int to) {
     if (Piece::isWhite(piece)) {
         whiteBB_ &= ~sqMaskF;
         whiteBB_ |= sqMaskT;
-        if (piece == Piece::WKING)
-            wKingSq_ = to;
     } else {
         blackBB_ &= ~sqMaskF;
         blackBB_ |= sqMaskT;
-        if (piece == Piece::BKING)
-            bKingSq_ = to;
     }
 
     psScore1_[piece] += Evaluate::psTab1[piece][to] - Evaluate::psTab1[piece][from];
@@ -369,6 +337,9 @@ Position::deSerialize(const SerializeData& data) {
     whiteBB_ = blackBB_ = 0;
     wMtrl_ = bMtrl_ = -::kV;
     wMtrlPawns_ = bMtrlPawns_ = 0;
+    U64 hash = 0;
+    pHashKey = 0;
+    matId = {};
     for (int i = 0; i < 4; i++) {
         int sq0 = i * 16;
         U64 v = data.v[i];
@@ -378,24 +349,27 @@ Position::deSerialize(const SerializeData& data) {
             int square = sq0 + sq;
             squares[square] = piece;
 
+            U64 key = psHashKeys[piece][square];
+            hash ^= key;
             const U64 sqMask = 1ULL << square;
             pieceTypeBB_[piece] |= sqMask;
             if (piece != Piece::EMPTY) {
+                matId.addPiece(piece);
                 int pVal = ::pieceValue[piece];
                 if (Piece::isWhite(piece)) {
                     wMtrl_ += pVal;
                     whiteBB_ |= sqMask;
-                    if (piece == Piece::WPAWN)
+                    if (piece == Piece::WPAWN) {
                         wMtrlPawns_ += pVal;
-                    if (piece == Piece::WKING)
-                        wKingSq_ = square;
+                        pHashKey ^= key;
+                    }
                 } else {
                     bMtrl_ += pVal;
                     blackBB_ |= sqMask;
-                    if (piece == Piece::BPAWN)
+                    if (piece == Piece::BPAWN) {
                         bMtrlPawns_ += pVal;
-                    if (piece == Piece::BKING)
-                        bKingSq_ = square;
+                        pHashKey ^= key;
+                    }
                 }
             }
             psScore1_[piece] += Evaluate::psTab1[piece][square];
@@ -415,7 +389,11 @@ Position::deSerialize(const SerializeData& data) {
     flags >>= 4;
     whiteMove = (flags & 1) != 0;
 
-    computeZobristHash();
+    if (whiteMove)
+        hash ^= whiteHashKey;
+    hash ^= castleHashKeys[castleMask];
+    hash ^= epHashKeys[(epSquare >= 0) ? getX(epSquare) + 1 : 0];
+    hashKey = hash;
 }
 
 // ----------------------------------------------------------------------------

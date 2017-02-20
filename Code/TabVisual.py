@@ -116,7 +116,9 @@ class GT_Item(GTarea):
     def nombre(self, nombre=None):
         if nombre is not None:
             self._nombre = nombre
-        return self._nombre if self._nombre else self._itemSC.bloqueDatos.nombre
+        if self._nombre:
+            return self._nombre
+        return self._nombre if self._nombre else getattr(self._itemSC.bloqueDatos, "nombre", "")
 
     def coordina(self):
         if self.xitemSCOwner:

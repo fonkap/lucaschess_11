@@ -112,7 +112,7 @@ class Procesador:
                 xkibitzer.terminar()
 
     def iniciarGUI(self):
-        self.pantalla = Pantalla.Pantalla(self)
+        self.pantalla = Pantalla.PantallaWidget(self)
         self.pantalla.ponGestor(self)  # antes que muestra
         self.pantalla.muestra()
 
@@ -326,7 +326,25 @@ class Procesador:
         menu.opcion(("competition", None), _("Competition"), Iconos.NuevaPartida())
         menu.separador()
 
-        menu.opcion(("elo", None), _("Elo-Rating"), Iconos.Elo())
+        submenu = menu.submenu(_("Elo-Rating"), Iconos.Elo())
+        submenu.opcion(("lucaselo",0), "%s (%d)" % (_("Lucas-Elo"), self.configuracion.elo), Iconos.Elo())
+        submenu.separador()
+        if VarGen.isWindows or VarGen.isWine:
+            submenu.opcion(("micelo",0), "%s (%d)" % (_("Tourney-Elo"), self.configuracion.michelo), Iconos.EloTimed())
+            submenu.separador()
+        fics = self.configuracion.fics
+        menuf = submenu.submenu("%s (%d)" % (_("Fics-Elo"), fics), Iconos.Fics())
+        rp = QTVarios.rondoPuntos()
+        for elo in range(900, 2800, 100):
+            if (elo == 900) or (0 <= (elo + 99 - fics) <= 400 or 0 <= (fics - elo) <= 400):
+                menuf.opcion(("fics", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
+        submenu.separador()
+        fide = self.configuracion.fide
+        menuf = submenu.submenu("%s (%d)" % (_("Fide-Elo"), fide), Iconos.Fide())
+        for elo in range(1500, 2700, 100):
+            if (elo == 1500) or (0 <= (elo + 99 - fide) <= 400 or 0 <= (fide - elo) <= 400):
+                menuf.opcion(("fide", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
+
         menu.separador()
 
         # Principiantes ----------------------------------------------------------------------------------------
@@ -369,13 +387,24 @@ class Procesador:
             elif tipo == "competition":
                 self.competicion()
 
-            elif tipo == "elo":
-                self.elo()
+            elif tipo == "lucaselo":
+                self.lucaselo(True)
+
+            elif tipo == "micelo":
+                self.micelo(True)
+
+            elif tipo == "fics":
+                self.ficselo(True, rival)
+
+            elif tipo == "fide":
+                self.fideelo(True, rival)
 
             elif tipo == "person":
                 self.playPerson(rival)
+
             elif tipo == "animales":
                 self.albumAnimales(rival)
+
             elif tipo == "vehicles":
                 self.albumVehicles(rival)
 
@@ -990,7 +1019,7 @@ class ProcesadorVariantes(Procesador):
 
         self.siPresentacion = False
 
-        self.pantalla = Pantalla.Pantalla(self, wpantalla)
+        self.pantalla = Pantalla.PantallaDialog(self, wpantalla)
         self.pantalla.ponGestor(self)
 
         self.tablero = self.pantalla.tablero

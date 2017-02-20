@@ -1,6 +1,6 @@
 /*
     Texel - A UCI chess engine.
-    Copyright (C) 2012-2014  Peter Österlund, peterosterlund2@gmail.com
+    Copyright (C) 2012-2016  Peter Österlund, peterosterlund2@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -85,13 +85,14 @@ private:
                       bool upperBound, bool lowerBound, const std::vector<Move>& pv,
                       int multiPVIndex, U64 tbHits) override;
 
-        void notifyStats(U64 nodes, int nps, U64 tbHits, int time) override;
+        void notifyStats(U64 nodes, int nps, int hashFull, U64 tbHits, int time) override;
 
     private:
         std::ostream& os;
     };
 
-    void startThread(int minTimeLimit, int maxTimeLimit, int maxDepth, int maxNodes);
+    void startThread(int minTimeLimit, int maxTimeLimit, int earlyStopPercentage,
+                     int maxDepth, int maxNodes);
 
     void stopThread();
 
@@ -121,7 +122,7 @@ private:
     ParallelData pd;
     KillerTable kt;
     History ht;
-    std::shared_ptr<Evaluate::EvalHashTables> et;
+    std::unique_ptr<Evaluate::EvalHashTables> et;
     TreeLogger treeLog;
 
     Position pos;
@@ -133,6 +134,7 @@ private:
 
     int minTimeLimit;
     int maxTimeLimit;
+    int earlyStopPercentage;
     int maxDepth;
     int maxNodes;
     std::vector<Move> searchMoves;

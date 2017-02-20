@@ -1,6 +1,5 @@
 # -*- coding: latin-1 -*-
 
-
 import collections
 import random
 
@@ -60,12 +59,12 @@ class ThanksTo:
             ["Komodo 8 32bit", "Don Dailey, Larry Kaufman, Mark Lefler", "http://komodochess.com/"],
             ["Rybka 2.3.2a 32-bit", "Vasik Rajlich", "http://rybkachess.com/"],
             ["Critter 1.6a 32bits", "Richard Vida", "http://www.vlasak.biz/critter/"],
-            ["Texel 1.05", "Peter Österlund", "http://web.comhem.se/petero2home/javachess/index.html#texel"],
+            ["Texel 1.07", "Peter Österlund", "http://web.comhem.se/petero2home/javachess/index.html#texel"],
             ["Stockfish 8", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
-            ["MacBrain 1.0", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
+            ["MacBrain 1.2", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
             ["Gull 3", "Vadim Demichev", "https://sourceforge.net/projects/gullchess/"],
             ["Delfi 5.4", "Fabio Cavicchio", "http://www.msbsoftware.it/delfi/"],
-            ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
+            # ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
             ["Monarch 1.7", "Steve Maughan", "http://www.monarchchess.com/"],
             ["Andscacs 0.8932n", "Daniel José Queraltó", "http://www.andscacs.com/"],
             ["Arminius 2017-01-01", "Volker Annus", "http://www.nnuss.de/Hermann/Arminius2017-01-01.zip"],

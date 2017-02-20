@@ -2,7 +2,7 @@
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
   Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
   Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad
-  Copyright (C) 2015-2016 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
+  Copyright (C) 2015-2017 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ namespace {
     {1, 1, 0, 0, 0, 0, 1 ,1},
     {1, 0, 0, 0, 0, 1, 1 ,1},
   };
-
+	
   const size_t HalfDensitySize = std::extent<decltype(HalfDensity)>::value;
 
 
@@ -214,9 +214,8 @@ void Search::clear() {
 
   for (Thread* th : Threads)
   {
-      th->history.clear();
       th->counterMoves.clear();
-      th->fromTo.clear();
+      th->history.clear();
       th->counterMoveHistory.clear();
       th->resetCalls = true;
   }
@@ -268,20 +267,20 @@ void MainThread::search() {
 
 	if (Options["UCI_Limit_Strength"])
 	{
-
+		
 		int uci_elo = (Options["UCI_Elo"]);
  	int lower_elo = uci_elo - 75;
 		int upper_elo = uci_elo + 75;
-
+		
 		int use_rating = rand() % (upper_elo - lower_elo +1 ) + lower_elo;
 		int NodesToSearch   = pow(1.0069555500567,(((use_rating)/1200) -1 )
 								  + (use_rating - 1200)) * 64 ;
 		Limits.nodes = NodesToSearch;
-
+		
 		if (Options["UCI_Elo_Delay"])
 		std::this_thread::sleep_for (std::chrono::seconds(Time.optimum()/1000));
 	}
-
+	
 	if (rootMoves.empty())
 	{
 		rootMoves.push_back(RootMove(MOVE_NONE));
@@ -292,7 +291,7 @@ void MainThread::search() {
 	else//start cerebeluum
 	{
 		Move bookMove = MOVE_NONE;
-
+		
 		if (!Limits.infinite && !Limits.mate)
 		bookMove = tzbook.probe2(rootPos);
 		if (bookMove && std::count(rootMoves.begin(), rootMoves.end(), bookMove))
@@ -304,7 +303,7 @@ void MainThread::search() {
 			for (Thread* th : Threads)
 			if (th != this)
 			th->start_searching();
-
+			
 			Thread::search(); // Let's start searching!
 		}
 	}//cerebellum
@@ -347,8 +346,7 @@ void MainThread::search() {
           Depth depthDiff = th->completedDepth - bestThread->completedDepth;
           Value scoreDiff = th->rootMoves[0].score - bestThread->rootMoves[0].score;
 
-          if (   (depthDiff > 0 && scoreDiff >= 0)
-              || (scoreDiff > 0 && depthDiff >= 0))
+          if (scoreDiff > 0 && depthDiff >= 0)
               bestThread = th;
       }
   }
@@ -512,16 +510,15 @@ void Thread::search() {
 
       // If skill level is enabled and time is up, pick a sub-optimal best move
       if (skill.enabled() && skill.time_to_pick(rootDepth))
-        {
           skill.pick_best(multiPV);
-        }
+	  
 	  if (Options["Fast_Play"])
 	  {
 		  if ( Time.elapsed() > Time.optimum() / 256
 			  && ( abs(bestValue) > 12300 ||  abs(bestValue) >= VALUE_MATE_IN_MAX_PLY ))
 		  Signals.stop = true;
 	  }
-
+	  
 	  // Have we found a "mate in x"?
 	  if (   Limits.mate
 		  && bestValue >= VALUE_MATE_IN_MAX_PLY
@@ -689,7 +686,7 @@ namespace {
         && (ttValue >= beta ? (tte->bound() & BOUND_LOWER)
                             : (tte->bound() & BOUND_UPPER)))
     {
-        // If ttMove is quiet, update killers, history, counter move on TT hit
+        // If ttMove is quiet, update move sorting heuristics on TT hit
         if (ttValue >= beta && ttMove)
         {
             if (!pos.capture_or_promotion(ttMove))
@@ -926,7 +923,8 @@ moves_loop: // When in check search starts from here
       moveCountPruning =   depth < 16 * ONE_PLY
                         && moveCount >= FutilityMoveCounts[improving][depth / ONE_PLY];
 
-      // Step 12. Extend checks
+      // Step 12. Extensions
+      // Extend checks
       if (    givesCheck
           && !moveCountPruning
           &&  pos.see_ge(move, VALUE_ZERO))
@@ -952,7 +950,7 @@ moves_loop: // When in check search starts from here
               extension = ONE_PLY;
       }
 
-      // Update the current move (this must be done after singular extension search)
+      // Calculate new depth for this move
       newDepth = depth - ONE_PLY + extension;
 
       // Step 13. Pruning at shallow depth
@@ -1004,6 +1002,7 @@ moves_loop: // When in check search starts from here
           continue;
       }
 
+      // Update the current move (this must be done after singular extension search)
       ss->currentMove = move;
       ss->counterMoves = &thisThread->counterMoveHistory[moved_piece][to_sq(move)];
 
@@ -1033,12 +1032,11 @@ moves_loop: // When in check search starts from here
                        && !pos.see_ge(make_move(to_sq(move), from_sq(move)),  VALUE_ZERO))
                   r -= 2 * ONE_PLY;
 
-              ss->history = thisThread->history[moved_piece][to_sq(move)]
-                           +    (cmh  ? (*cmh )[moved_piece][to_sq(move)] : VALUE_ZERO)
-                           +    (fmh  ? (*fmh )[moved_piece][to_sq(move)] : VALUE_ZERO)
-                           +    (fmh2 ? (*fmh2)[moved_piece][to_sq(move)] : VALUE_ZERO)
-                           +    thisThread->fromTo.get(~pos.side_to_move(), move)
-                           -    8000; // Correction factor
+              ss->history =  (cmh  ? (*cmh )[moved_piece][to_sq(move)] : VALUE_ZERO)
+                           + (fmh  ? (*fmh )[moved_piece][to_sq(move)] : VALUE_ZERO)
+                           + (fmh2 ? (*fmh2)[moved_piece][to_sq(move)] : VALUE_ZERO)
+                           + thisThread->history.get(~pos.side_to_move(), move)
+                           - 8000; // Correction factor
 
               // Decrease/increase reduction by comparing opponent's stat score
               if (ss->history > VALUE_ZERO && (ss-1)->history < VALUE_ZERO)
@@ -1054,7 +1052,7 @@ moves_loop: // When in check search starts from here
 /*The "Study" option looks Stockfish to look at more positions per search depth, but Stockfish will play
 weaker overall.  It also sets the "MultiPV" option to 256 to allow Stockfiish to look at more nodes per
 depth and may help in analysis.  Stockfish will play  weaker using the Study, it is for analysis. .*/
-
+		  
 		  if ( ( ss->ply < depth / 2 - ONE_PLY) && Options["Study"] )
 		    r = DEPTH_ZERO;
 
@@ -1176,7 +1174,7 @@ depth and may help in analysis.  Stockfish will play  weaker using the Study, it
     else if (bestMove)
     {
 
-        // Quiet best move: update killers, history and countermoves
+        // Quiet best move: update move sorting heuristics
         if (!pos.capture_or_promotion(bestMove))
             update_stats(pos, ss, bestMove, quietsSearched, quietCount, bonus(depth));
 
@@ -1462,8 +1460,7 @@ depth and may help in analysis.  Stockfish will play  weaker using the Study, it
   }
 
 
-  // update_stats() updates killers, history, countermove and countermove plus
-  // follow-up move history when a new quiet best move is found.
+  // update_stats() updates move sorting heuristics when a new quiet best move is found
 
   void update_stats(const Position& pos, Stack* ss, Move move,
                     Move* quiets, int quietsCnt, Value bonus) {
@@ -1476,8 +1473,7 @@ depth and may help in analysis.  Stockfish will play  weaker using the Study, it
 
     Color c = pos.side_to_move();
     Thread* thisThread = pos.this_thread();
-    thisThread->fromTo.update(c, move, bonus);
-    thisThread->history.update(pos.moved_piece(move), to_sq(move), bonus);
+    thisThread->history.update(c, move, bonus);
     update_cm_stats(ss, pos.moved_piece(move), to_sq(move), bonus);
 
     if ((ss-1)->counterMoves)
@@ -1489,8 +1485,7 @@ depth and may help in analysis.  Stockfish will play  weaker using the Study, it
     // Decrease all the other played quiet moves
     for (int i = 0; i < quietsCnt; ++i)
     {
-        thisThread->fromTo.update(c, quiets[i], -bonus);
-        thisThread->history.update(pos.moved_piece(quiets[i]), to_sq(quiets[i]), -bonus);
+        thisThread->history.update(c, quiets[i], -bonus);
         update_cm_stats(ss, pos.moved_piece(quiets[i]), to_sq(quiets[i]), -bonus);
     }
   }

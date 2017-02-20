@@ -9,8 +9,6 @@ from Code import VarGen
 
 DGT_ON = "DGT.ON"
 
-# Interface
-
 def activarSegunON_OFF(dispatch):
     if siON():
         if VarGen.dgt is None:
@@ -62,7 +60,6 @@ def log(cad):
     log.close()
 
 # CALLBACKS
-
 def registerStatusFunc(dato):
     envia("status", dato)
     return 1
@@ -78,13 +75,13 @@ def registerBlackMoveInputFunc(dato):
     return envia("blackMove", _dgt2pv(dato))
 
 # Activar/desactivar/reactivar
-
 def activar():
     dgt = None
     for path in ("",
                  "C:/Program Files (x86)/DGT Projects/",
                  "C:/Program Files (x86)/Common Files/DGT Projects/",
                  "C:/Program Files/DGT Projects/"
+                 "C:/Program Files/Common Files/DGT Projects/",
                  ):
         try:
             dgt = ctypes.WinDLL(path + "DGTEBDLL.dll")
@@ -145,7 +142,6 @@ def desactivar():
         VarGen.dgtDispatch = None
 
 # Funciones directas en la DGT
-
 def showDialog():
     if VarGen.dgt:
         dgt = VarGen.dgt
@@ -173,7 +169,6 @@ def writeClocks(wclock, bclock):
         dgt._DGTDLL_SetNRun(wclock, bclock, 0)
 
 # Utilidades para la trasferencia de datos
-
 def _dgt2fen(dato):
     n = 0
     ndato = len(dato)
@@ -219,7 +214,6 @@ def _dgt2pv(dato):
     return dato[1:3] + dato[4:6]
 
 # Lo mismo, de otra forma
-
 def xdgt2fen(xdgt):
     liD = xdgt.split(" ")
     dgt = liD[0]

@@ -163,7 +163,7 @@ class Work:
         self.me = None
         self.ref = ""
         self.info = ""
-        self.seconds = 0
+        self.seconds = 0.0
         self.depth = 3
         self.ini = 0
         self.end = 99

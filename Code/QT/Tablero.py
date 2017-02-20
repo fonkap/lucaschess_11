@@ -222,6 +222,11 @@ class Tablero(QtGui.QGraphicsView):
     def sizeHint(self):
         return QtCore.QSize(self.ancho + 6, self.ancho + 6)
 
+    def xremoveItem(self, item):
+        scene = item.scene()
+        if scene:
+            scene.removeItem(item)
+
     def keyPressEvent(self, event):
         k = event.key()
         m = int(event.modifiers())
@@ -773,7 +778,7 @@ class Tablero(QtGui.QGraphicsView):
     def reset(self, confTablero):
         self.confTablero = confTablero
         for item in self.escena.items():
-            self.escena.removeItem(item)
+            self.xremoveItem(item)
             del item
         self.crea()
 
@@ -1012,7 +1017,7 @@ class Tablero(QtGui.QGraphicsView):
         self.siActivasPiezas = False
         for x in self.liPiezas:
             if x[2]:
-                self.escena.removeItem(x[1])
+                self.xremoveItem(x[1])
 
         self.liPiezas = []
         casillas = posicion.casillas
@@ -1024,7 +1029,7 @@ class Tablero(QtGui.QGraphicsView):
         self.setFocus()
         self.ponIndicador(posicion.siBlancas)
         if self.flechaSC:
-            self.escena.removeItem(self.flechaSC)
+            self.xremoveItem(self.flechaSC)
             del self.flechaSC
             self.flechaSC = None
             self.quitaFlechas()
@@ -1196,7 +1201,7 @@ class Tablero(QtGui.QGraphicsView):
         npieza = self.buscaPieza(posA1H8)
         if npieza >= 0:
             piezaSC = self.liPiezas[npieza][1]
-            self.escena.removeItem(piezaSC)
+            self.xremoveItem(piezaSC)
             self.liPiezas[npieza][2] = False
             self.escena.update()
 
@@ -1208,7 +1213,7 @@ class Tablero(QtGui.QGraphicsView):
                 pieza = x[1].bloquePieza
                 if pieza.fila == fila and pieza.columna == columna and pieza.pieza == tipo:
                     piezaSC = self.liPiezas[num][1]
-                    self.escena.removeItem(piezaSC)
+                    self.xremoveItem(piezaSC)
                     self.liPiezas[num][2] = False
                     self.escena.update()
                     return
@@ -1459,7 +1464,7 @@ class Tablero(QtGui.QGraphicsView):
 
     def quitaFlechas(self):
         for flecha in self.liFlechas:
-            self.escena.removeItem(flecha)
+            self.xremoveItem(flecha)
             flecha.hide()
             del flecha
         self.liFlechas = []
@@ -1670,12 +1675,12 @@ class Tablero(QtGui.QGraphicsView):
         for k, uno in self.dicMovibles.items():
             if uno == itemSC:
                 del self.dicMovibles[k]
-                self.escena.removeItem(uno)
+                self.xremoveItem(uno)
                 return
 
     def borraMovibles(self):
         for k, uno in self.dicMovibles.items():
-            self.escena.removeItem(uno)
+            self.xremoveItem(uno)
         self.dicMovibles = collections.OrderedDict()
 
     def bloqueaRotacion(self, siBloquea):  # se usa en la presentacion para que no rote
@@ -1983,11 +1988,10 @@ class TableroVisual(Tablero):
         for k, uno in self.dicMovibles.items():
             if uno == itemSC:
                 del self.dicMovibles[k]
-                self.escena.removeItem(uno)
+                self.xremoveItem(uno)
                 return
 
     def mousePressEvent(self, event):
-
         siDerecho = event.button() == QtCore.Qt.RightButton
 
         # Determinamos cual mover
@@ -2030,7 +2034,7 @@ class TableroVisual(Tablero):
                     else:
                         k = dicLi[n]
                         del self.dicMovibles[k]
-                        self.escena.removeItem(uno)
+                        self.xremoveItem(uno)
                 break
 
             Tablero.mousePressEvent(self, event)
@@ -2092,7 +2096,7 @@ class TableroVisual(Tablero):
     def copiaPosicionDe(self, otroTablero):
         for x in self.liPiezas:
             if x[2]:
-                self.escena.removeItem(x[1])
+                self.xremoveItem(x[1])
         self.liPiezas = []
         for cpieza, piezaSC, siActiva in otroTablero.liPiezas:
             if siActiva:

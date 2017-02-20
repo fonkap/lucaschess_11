@@ -66,6 +66,9 @@ namespace {
     else if (token == "fen")
         while (is >> token && token != "moves")
             fen += token + " ";
+	else if (token == "f")
+		while (is >> token && token != "moves")
+			fen += token + " ";
     else
         return;
 
@@ -91,7 +94,7 @@ namespace {
     is >> token; // Consume "name" token
 
     // Read option name (can contain spaces)
-    while (is >> token && token != "value")
+    while (is >> token && token != "value" )
         name += string(" ", name.empty() ? 0 : 1) + token;
 
     // Read option value (can contain spaces)
@@ -127,11 +130,14 @@ namespace {
         else if (token == "binc")      is >> limits.inc[BLACK];
         else if (token == "movestogo") is >> limits.movestogo;
         else if (token == "depth")     is >> limits.depth;
+	    else if (token == "d")         is >> limits.depth;
         else if (token == "nodes")     is >> limits.nodes;
         else if (token == "movetime")  is >> limits.movetime;
+	    else if (token == "mt")        is >> limits.movetime;
         else if (token == "mate")      is >> limits.mate;
         else if (token == "infinite")  limits.infinite = 1;
-        else if (token == "ponder")    limits.ponder = 1;
+	    else if (token == "i")         limits.infinite = 1;
+		else if (token == "ponder")    limits.ponder = 1;
 
     Threads.start_thinking(pos, States, limits);
   }
@@ -158,8 +164,9 @@ void UCI::loop(int argc, char* argv[]) {
   do {
       if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input or EOF
           cmd = "quit";
-
-      istringstream is(cmd);
+	  else if (token == "q")
+		  cmd = "quit";
+		  istringstream is(cmd);
 
       token.clear(); // getline() could return empty or blank line
       is >> skipws >> token;
@@ -192,12 +199,19 @@ void UCI::loop(int argc, char* argv[]) {
       }
       else if (token == "isready")    sync_cout << "readyok" << sync_endl;
       else if (token == "go")         go(pos, is);
+	  else if (token == "g")          go(pos, is);	  
+	  
+	  else if (token == "q")          cmd = "quit";
+	  
       else if (token == "position")   position(pos, is);
+	  else if (token == "p")          position(pos, is);
       else if (token == "setoption")  setoption(is);
+	  else if (token == "so")         setoption(is);
 
       // Additional custom non-UCI commands, useful for debugging
       else if (token == "flip")       pos.flip();
       else if (token == "bench")      benchmark(pos, is);
+	  else if (token == "b")          benchmark(pos, is);
       else if (token == "d")          sync_cout << pos << sync_endl;
       else if (token == "eval")       sync_cout << Eval::trace(pos) << sync_endl;
       else if (token == "perft")
@@ -214,7 +228,7 @@ void UCI::loop(int argc, char* argv[]) {
       else
           sync_cout << "Unknown command: " << cmd << sync_endl;
 
-  } while (token != "quit" && argc == 1); // Passed args have one-shot behaviour
+  } while (token != "quit" && token != "q"   && argc == 1); // Passed args have one-shot behaviour
 
   Threads.main()->wait_for_search_finished();
 }

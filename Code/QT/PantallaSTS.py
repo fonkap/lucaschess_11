@@ -282,7 +282,7 @@ class WWork(QtGui.QDialog):
         self.sbDepth = Controles.SB(self, work.depth, 0, 50)
 
         lbSeconds = Controles.LB(self, _("Maximum seconds to think") + ": ")
-        self.sbSeconds = Controles.SB(self, work.seconds, 0, 9999)
+        self.sbSeconds = Controles.ED(self).tipoFloat(float(work.seconds), decimales=3).anchoFijo(60)
 
         lbSample = Controles.LB(self, _("Sample") + ": ")
         self.sbIni = Controles.SB(self, work.ini + 1, 1, 100).capturaCambiado(self.changeSample)
@@ -363,7 +363,7 @@ class WWork(QtGui.QDialog):
         self.work.ref = self.edRef.texto()
         self.work.info = self.emInfo.texto()
         self.work.depth = self.sbDepth.valor()
-        self.work.seconds = self.sbSeconds.valor()
+        self.work.seconds = self.sbSeconds.textoFloat()
         self.work.ini = self.sbIni.valor() - 1
         self.work.end = self.sbEnd.valor() - 1
         me = self.work.me

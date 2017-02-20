@@ -51,7 +51,7 @@ class RunReplay:
 
             return self.play(io, li)
 
-        elif orden.clave in TERMINAR:
+        elif orden.clave == TERMINAR:
             sys.exit(1)
 
         return None
@@ -98,7 +98,10 @@ class RunReplay:
         frames = "".join(li)
 
         if not frames:
-            return None
+            if 'MC' not in liClaves:
+                return self.play(io, ('MC',))
+            else:
+                return None
 
         p = pyaudio.PyAudio()
         stream = p.open(format=xformat, channels=channels, rate=rate, output=True)

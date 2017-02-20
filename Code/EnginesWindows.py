@@ -198,7 +198,7 @@ def leeRivales():
     cm.ponMultiPV(20, 100)
     mas(cm)
 
-    cm = ConfigMotor("texel", "Peter Österlund", "1.05 32bit", "http://web.comhem.se/petero2home/javachess/index.html#texel")
+    cm = ConfigMotor("texel", "Peter Österlund", "1.07a6 32bit", "http://web.comhem.se/petero2home/javachess/index.html#texel")
     cm.path = "texel32old.exe"
     cm.elo = 3100
     cm.ordenUCI("Hash", "32")
@@ -216,9 +216,9 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.0 32bit", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017_32bit.exe"
-    cm.path_64 = "McBrain_2017_x64_bmi2.exe", "1.0 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.2 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017_v12_32bit_old.exe"
+    cm.path_64 = "McBrain_2017_v12_x64_bmi2.exe", "1.2 64bit bmi2"
     cm.elo = 3200
     cm.ordenUCI("Study", "true")
     cm.ordenUCI("Hash", "64")
@@ -275,12 +275,12 @@ def leeRivales():
     cm.elo = 2686
     mas(cm)
 
-    cm = ConfigMotor("smartthink", "Sergei S. Markoff", "1.97", "http://genes1s.net/smarthink.php")
-    cm.path = "SmarThink_v197_x32.exe"
-    cm.nombre = "SmartThink"
-    cm.elo = 2970
-    mas(cm)
-
+    # cm = ConfigMotor("smartthink", "Sergei S. Markoff", "1.97", "http://genes1s.net/smarthink.php")
+    # cm.path = "SmarThink_v197_x32.exe"
+    # cm.nombre = "SmartThink"
+    # cm.elo = 2970
+    # mas(cm)
+    #
     cm = ConfigMotor("monarch", "Steve Maughan", "1.7", "http://www.monarchchess.com/")
     cm.path = "Monarch(v1.7).exe"
     cm.elo = 2100

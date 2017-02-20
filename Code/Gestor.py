@@ -1234,7 +1234,7 @@ class Gestor:
         liSon.append(separador)
         liSon.append((_("Activate sounds with our moves") + ":", self.configuracion.siSuenaNuestro))
         liSon.append(separador)
-        resultado = FormLayout.fedit(liSon, title=_("Sounds"), parent=self.pantalla, anchoMinimo=200,
+        resultado = FormLayout.fedit(liSon, title=_("Sounds"), parent=self.pantalla, anchoMinimo=250,
                                      icon=Iconos.S_Play())
         if resultado:
             self.configuracion.siSuenaBeep, self.configuracion.siSuenaResultados, \

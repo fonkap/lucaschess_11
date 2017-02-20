@@ -35,6 +35,7 @@ def paramPelicula(configuracion, parent):
     else:
         return None
 
+
 class Pelicula:
     def __init__(self, gestor, segundos, siInicio, siPGN):
         self.gestor = gestor
@@ -130,6 +131,8 @@ class Pelicula:
         self.tablero.ponPosicion(jg.posicion)
 
         # self.gestor.pgnMueve( fila, jg.posicion.siBlancas )
+
+        self.gestor.ponVista()
 
         cpu.reset()
         cpu.duerme(self.segundos / self.rapidez)
