@@ -74,8 +74,43 @@ def lanzaGUI(procesador):
 
     # Estilo
     app.setStyle(QtGui.QStyleFactory.create(configuracion.estilo))
-    app.setPalette(QtGui.QApplication.style().standardPalette())
+
+    if configuracion.background is None:
+        app.setPalette(QtGui.QApplication.style().standardPalette())
+    else:
+        palette = QtGui.QPalette()
+        color = QtGui.QColor(configuracion.background)
+        palette.setColor(QtGui.QPalette.Window, color)
+        # palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.darkMagenta)
+        # palette.setColor(QtGui.QPalette.Base, QtCore.Qt.darkGreen)
+        # palette.setColor(QtGui.QPalette.Button, QtCore.Qt.gray)
+        # palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
+
+        # palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
+        # palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
+        # palette.setColor(QtGui.QPalette.Base, QtGui.QColor(25, 25, 25))
+        # palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53, 53, 53))
+        # palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.white)
+        # palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
+        # palette.setColor(QtGui.QPalette.Text, QtCore.Qt.white)
+        # palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53, 53, 53))
+        # palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
+        # palette.setColor(QtGui.QPalette.BrightText, QtCore.Qt.red)
+        # palette.setColor(QtGui.QPalette.Link, QtGui.QColor(42, 130, 218))
+# QtGui.QPalette.Window	10	A general background color.
+# QtGui.QPalette.WindowText	0	A general foreground color.
+# QtGui.QPalette.Base	9	Used mostly as the background color for text entry widgets, but can also be used for other painting - such as the background of combobox drop down lists and toolbar handles. It is usually white or another light color.
+# QtGui.QPalette.AlternateBase	16	Used as the alternate background color in views with alternating row colors (see QAbstractItemView::setAlternatingRowColors()).
+# QtGui.QPalette.ToolTipBase	18	Used as the background color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
+# QtGui.QPalette.ToolTipText	19	Used as the foreground color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
+# QtGui.QPalette.Text	6	The foreground color used with Base. This is usually the same as the WindowText, in which case it must provide good contrast with Window and Base.
+# QtGui.QPalette.Button	1	The general button background color. This background can be different from Window as some styles require a different background color for buttons.
+# QtGui.QPalette.ButtonText	8	A foreground color used with the Button color.
+# QtGui.QPalette.BrightText	7	A text color that is very different from WindowText, and contrasts well with e.g. Dark. Typically used for text that needs to be drawn where Text or WindowText would give poor contrast, such as on pressed push buttons. Note that text colors can be used for things other than just words; text colors are usually used for text, but it's quite common to use the text color roles for lines, icons, etc.
+        app.setPalette(palette)
+
     app.setEffectEnabled(QtCore.Qt.UI_AnimateMenu)
+
     # QtGui.QFontDatabase.addApplicationFont('IntFiles/ChessAlpha2.ttf') # TODO
 
     if configuracion.familia:

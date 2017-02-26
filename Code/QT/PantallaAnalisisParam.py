@@ -209,7 +209,7 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
         liST = [SEPARADOR]
         liST.append((_("Activate") + ":", alm.stability))
         liST.append(SEPARADOR)
-        liST.append((FormLayout.Spinbox(_("Last depths to control same bestmove"), 2, 10, 40), alm.st_depths))
+        liST.append((FormLayout.Spinbox(_("Last depths to control same best move"), 2, 10, 40), alm.st_depths))
         liST.append(SEPARADOR)
         liST.append((FormLayout.Spinbox(_("Maximum difference among last evaluations"), 0, 99999, 60), alm.st_centipawns))
         liST.append(SEPARADOR)

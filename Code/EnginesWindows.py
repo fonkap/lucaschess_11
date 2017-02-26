@@ -251,7 +251,7 @@ def leeRivales():
     cm.elo = 2545
     mas(cm)
 
-    cm = ConfigMotor("hamsters", "Alessandro Scotti", "0.7.1", "https://chessprogramming.wikispaces.com/Alessandro+Scotti")
+    cm = ConfigMotor("hamsters", "Alessandro Scotti", "0.5", "https://chessprogramming.wikispaces.com/Alessandro+Scotti")
     cm.path = "Hamsters.exe"
     cm.elo = 2487
     cm.ordenUCI("OwnBook", "false")

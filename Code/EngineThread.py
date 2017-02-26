@@ -1,10 +1,8 @@
 import os
-# import struct
+
 import time
 
 import psutil
-
-# from PyQt4 import QtCore
 
 from Code import VarGen
 from Code.Constantes import *

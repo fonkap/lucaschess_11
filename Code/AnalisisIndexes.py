@@ -258,6 +258,8 @@ def genIndexes(partida, alm):
     piecesactivity = {True: 0.0, False: 0.0}
     exchangetendency = {True: 0.0, False: 0.0}
     elo = {True: 0.0, False: 0.0}
+    elo_real = {True: 0.0, False: 0.0}
+    nfactor = {True: 0, False: 0}
     n = {True: 0, False: 0}
     for jg in partida.liJugadas:
         if hasattr(jg, "analisis"):
@@ -285,9 +287,15 @@ def genIndexes(partida, alm):
                 n[siB] += 1
                 exchangetendency[siB] += jg.exchangetendency
                 elo[siB] += jg.elo
+                nf = jg.elo_factor
+                elo_real[siB] += jg.elo_real*nf
+                nfactor[siB] += nf
+
 
     t = n[True] + n[False]
     eloT = (elo[True]+elo[False])/t if t else 0
+    tfactor = nfactor[True] + nfactor[False]
+    eloT_real = (elo_real[True]+elo_real[False])/tfactor if tfactor else 0
     for x in (True, False):
         b1 = n[x]
         if b1:
@@ -298,6 +306,7 @@ def genIndexes(partida, alm):
             piecesactivity[x] = piecesactivity[x] * 1.0 / b1
             exchangetendency[x] = exchangetendency[x] * 1.0 / b1
             elo[x] = elo[x] * 1.0 / b1
+            elo_real[x] = elo_real[x]*1.0/nfactor[x] if nfactor[x] else 0.0
         if t:
             domination[x] = domination[x] * 100.0 / t
     complexityT = (complexity[True] + complexity[False]) / 2.0
@@ -334,7 +343,8 @@ def genIndexes(partida, alm):
     txt += plantillaC % (_("Pieces activity"), xac(piecesactivity[True]), xac(piecesactivity[False]), xac(piecesactivityT))
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txt += plantillaL % ( "%", alm.porcW, prc, alm.porcB, prc, alm.porcT, prc)
-    txt += plantillaC % ( _("Elo perfomance"), int(elo[True]), int(elo[False]), int(eloT))
+    # txt += plantillaC % ( _("Elo perfomance"), int(elo[True]), int(elo[False]), int(eloT))
+    txt += plantillaC % ( _("Elo perfomance"), int(elo_real[True]), int(elo_real[False]), int(eloT_real))
 
     txtHTML = '<table border="1" cellpadding="5" cellspacing="1" >%s%s</table>' % (cab, txt)
     # Analisis.csv_formula(partida)

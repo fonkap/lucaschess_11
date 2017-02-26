@@ -1,4 +1,4 @@
-from PyQt4.QtCore import Qt
+from PyQt4 import QtGui, QtCore
 
 from Code import DGT
 from Code.QT import FormLayout
@@ -42,32 +42,45 @@ def opciones(parent, configuracion):
     liEng.append((_("Do not work in background when possible") + ":", configuracion.notbackground))
 
     # Aspect
-    liAsp = [separador]
+    liAsp = []
 
     liAsp.append((_("By default") + ":", False))
+    liAsp.append(separador)
 
+    ## background
+    background_defecto = str(QtGui.QApplication.style().standardPalette().color(QtGui.QPalette.Background).name())
+    config = FormLayout.Colorbox(_("General background"), 20, 20, siSTR=True)
+    background = configuracion.background
+    if not background:
+        background = background_defecto
+
+    liAsp.append((config, background))
+    liAsp.append(separador)
+
+    ## font general
     liAsp.append((FormLayout.FontCombobox(_("Font")), configuracion.familia))
+    liAsp.append(separador)
 
-    # Menus
+    ## Menus
     liAsp.append((None, _("Menus") + ":"))
     liAsp.append((FormLayout.Spinbox(_("Font size"), 5, 64, 60), configuracion.puntosMenu))
     liAsp.append((_("Bold") + ":", configuracion.boldMenu))
 
-    # Toolbars
+    ## Toolbars
     liAsp.append(separador)
     liAsp.append((None, _("Toolbars") + ":"))
     liAsp.append((FormLayout.Spinbox(_("Font size"), 5, 64, 60), configuracion.puntosTB))
     liAsp.append((_("Bold") + ":", configuracion.boldTB))
     li = (
-            (_("Only display the icon"), Qt.ToolButtonIconOnly),
-            (_("Only display the text"), Qt.ToolButtonTextOnly),
-            (_("The text appears beside the icon"), Qt.ToolButtonTextBesideIcon),
-            (_("The text appears under the icon"), Qt.ToolButtonTextUnderIcon)
+            (_("Only display the icon"), QtCore.Qt.ToolButtonIconOnly),
+            (_("Only display the text"), QtCore.Qt.ToolButtonTextOnly),
+            (_("The text appears beside the icon"), QtCore.Qt.ToolButtonTextBesideIcon),
+            (_("The text appears under the icon"), QtCore.Qt.ToolButtonTextUnderIcon)
     )
     config = FormLayout.Combobox(_("Icons"), li)
     liAsp.append((config, configuracion.iconsTB))
 
-    # PGN table
+    ## PGN table
     liAsp.append(separador)
     liAsp.append((None, _("PGN table") + ":"))
     liAsp.append((FormLayout.Spinbox(_("Width"), 283, 1000, 70), configuracion.anchoPGN))
@@ -189,15 +202,17 @@ def opciones(parent, configuracion):
 
         porDefecto = liAsp[0]
         if porDefecto:
-            liAsp = "", 11, False, 11, False, 283, 22, 10, False, True, 10
+            liAsp = background_defecto, "", 11, False, 11, False,  QtCore.Qt.ToolButtonTextUnderIcon, 283, 22, 10, False, True, 10
         else:
             del liAsp[0]
 
-        (configuracion.familia, configuracion.puntosMenu, configuracion.boldMenu,
+        (configuracion.background, configuracion.familia, configuracion.puntosMenu, configuracion.boldMenu,
             configuracion.puntosTB, configuracion.boldTB, configuracion.iconsTB,
             configuracion.anchoPGN, configuracion.altoFilaPGN, configuracion.puntosPGN,
             configuracion.siNomPiezasEN, configuracion.figurinesPGN,
             configuracion.tamFontRotulos) = liAsp
+        if configuracion.background == background_defecto:
+            configuracion.background = None
 
         if configuracion.familia == "System":
             configuracion.familia = ""

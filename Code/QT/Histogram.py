@@ -331,18 +331,19 @@ class Histogram(QtGui.QGraphicsView):
                 painter.drawLine(left, t, right, t)
 
         # Barras de los puntos perdidos
-        n = max(serie.step / 2.0 - 2, 4)/2.0
-        color = QtGui.QColor("#FFCECE")
-        painter.setBrush(QtGui.QBrush(color))
-        painter.setPen(color)
-        for p in serie.liPoints:
-            if p.rlostp:
-                y = bottom - p.rlostp * serie.factor
-                rect = QtCore.QRectF(p.rx-n, bottom-1, n*2, y+2)
-                painter.drawRect(rect)
-                p.rect_lost = rect
+        if self.owner.valorShowLostPoints():
+            n = max(serie.step / 2.0 - 2, 4)/2.0
+            color = QtGui.QColor("#FFCECE")
+            painter.setBrush(QtGui.QBrush(color))
+            painter.setPen(color)
+            for p in serie.liPoints:
+                if p.rlostp:
+                    y = bottom - p.rlostp * serie.factor
+                    rect = QtCore.QRectF(p.rx-n, bottom-1, n*2, y+2)
+                    painter.drawRect(rect)
+                    p.rect_lost = rect
 
-        painter.setBrush(QtGui.QBrush())
+            painter.setBrush(QtGui.QBrush())
 
         # Lineas que unen los puntos
         pen = painter.pen()
@@ -422,10 +423,14 @@ def genHistograms(partida, sicentipawns):
             pts0 = mrm.liMultiPV[0].puntosABS_5()
             lostp_abs = pts0 - pts
 
-            elo = int(eval(eloformula.replace("xlost", str(lostp_abs))))
-            if elo < 1000:
-                elo = 1000
+            elo_base = int(eval(eloformula.replace("xlost", str(lostp_abs))))
+            jg.elo_real = max(elo_base, 0)
+            elo = max(elo_base, 1000)
             jg.elo = elo
+
+            li = list({rm.puntosABS_5() for rm in mrm.liMultiPV})
+            li.sort(reverse=True)
+            jg.elo_factor = len(li)
 
             porc = jg.porcentaje = 100 - lostp_abs if lostp_abs < 100 else 0
             porcT += porc

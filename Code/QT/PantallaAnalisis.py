@@ -27,6 +27,7 @@ class WAnalisisGraph(QTVarios.WDialogo):
         self.alm = alm
         self.procesador = gestor.procesador
         self.gestor = gestor
+        self.configuracion = gestor.configuracion
         self.siPawns = not gestor.procesador.configuracion.centipawns
         self.muestraAnalisis = muestraAnalisis
         self.colorWhite = QTUtil.qtColorRGB(231, 244, 254)
@@ -76,7 +77,8 @@ class WAnalisisGraph(QTVarios.WDialogo):
 
         self.rbShowValues = Controles.RB(self, _("Values"), rutina=self.cambiadoShow).activa(True)
         self.rbShowElo = Controles.RB(self, _("Elo perfomance"), rutina=self.cambiadoShow)
-        ly_rb = Colocacion.H().espacio(40).control(self.rbShowValues).espacio(20).control(self.rbShowElo).relleno(1)
+        self.chbShowLostPoints = Controles.CHB(self, _("Show lost points"), self.getShowLostPoints()).capturaCambiado(self, self.showLostPointsChanged)
+        ly_rb = Colocacion.H().espacio(40).control(self.rbShowValues).espacio(20).control(self.rbShowElo).espacio(30).control(self.chbShowLostPoints).relleno(1)
 
         layout = Colocacion.G()
         layout.controlc(tabGrid, 0, 0)
@@ -109,6 +111,19 @@ class WAnalisisGraph(QTVarios.WDialogo):
         self.tabGrid.setFixedHeight(self.tablero.height())
         self.adjustSize()
 
+    def valorShowLostPoints(self):
+        # Llamada desde histogram
+        return self.chbShowLostPoints.valor()
+
+    def showLostPointsChanged(self):
+        dic = {"SHOWLOSTPOINTS":self.valorShowLostPoints()}
+        self.configuracion.escVariables("ANALISIS_GRAPH", dic)
+        self.cambiadoShow()
+
+    def getShowLostPoints(self):
+        dic = self.configuracion.leeVariables("ANALISIS_GRAPH")
+        return dic.get("SHOWLOSTPOINTS", True) if dic else True
+
     def cambiadoShow(self):
         self.tabChanged(self.tabGrid.currentIndex())
 
@@ -119,14 +134,14 @@ class WAnalisisGraph(QTVarios.WDialogo):
 
     def tabChanged(self, ntab):
         QtGui.QApplication.processEvents()
-        if ntab <= 2:
-            tab_vis = ntab
-            if self.rbShowElo.isChecked():
-                tab_vis += 3
-            for n in range(6):
-                self.htotal[n].setVisible(n == tab_vis)
-            self.adjustSize()
-            self.tabActive = ntab
+        tab_vis = 0 if ntab == 3 else ntab
+        if self.rbShowElo.isChecked():
+            tab_vis += 3
+        for n in range(6):
+            self.htotal[n].setVisible(False)
+        self.htotal[tab_vis].setVisible(True)
+        self.adjustSize()
+        self.tabActive = ntab
 
     def gridCambiadoRegistro(self, grid, fila, columna):
         self.gridBotonIzquierdo(grid, fila, columna)

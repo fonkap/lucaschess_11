@@ -159,6 +159,8 @@ class Configuracion:
 
         self.checkforupdate = False
 
+        self.background = None
+
         self.grupos = BaseConfig.Grupos(self)
         self.grupos.nuevo("TarraschToy", 0, 1999, 0)
         self.grupos.nuevo("Bikjump", 2000, 2400, 600)
@@ -513,6 +515,7 @@ class Configuracion:
         dic["BMI2"] = self.bmi2
 
         dic["CHECKFORUPDATE"] = self.checkforupdate
+        dic["BACKGROUND"] = self.background
 
         for clave, rival in self.dicRivales.iteritems():
             dic["RIVAL_%s" % clave] = rival.graba()
@@ -636,6 +639,7 @@ class Configuracion:
                     self.bmi2 = False
 
                 self.checkforupdate = dg("CHECKFORUPDATE", self.checkforupdate)
+                self.background = dg("BACKGROUND", self.background)
 
                 for k in dic.keys():
                     if k.startswith("RIVAL_"):
