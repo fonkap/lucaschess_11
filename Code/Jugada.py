@@ -6,6 +6,7 @@ from Code import VarGen
 
 NOABANDONO, ABANDONO, ABANDONORIVAL = "N", "S", "R"
 
+
 class Jugada:
     def __init__(self):
         self.analisis = None
@@ -368,6 +369,7 @@ class Jugada:
         self.comentario = ""
         self.critica = ""
         self.criticaDirecta = ""
+
 
 def dameJugada(posicionBase, desde, hasta, coronacion):
     posicion = posicionBase.copia()

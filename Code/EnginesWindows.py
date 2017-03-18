@@ -4,6 +4,7 @@ import collections
 
 from Code import BaseConfig
 
+
 def leeRivales():
     dicRivales = collections.OrderedDict()
 
@@ -216,9 +217,9 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.2 32bit", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017_v12_32bit_old.exe"
-    cm.path_64 = "McBrain_2017_v12_x64_bmi2.exe", "1.2 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.3 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017_v13_x32_old.exe"
+    cm.path_64 = "McBrain_2017_v13_x64_bmi2.exe", "1.3 64bit bmi2"
     cm.elo = 3200
     cm.ordenUCI("Study", "true")
     cm.ordenUCI("Hash", "64")
@@ -280,7 +281,7 @@ def leeRivales():
     # cm.nombre = "SmartThink"
     # cm.elo = 2970
     # mas(cm)
-    #
+
     cm = ConfigMotor("monarch", "Steve Maughan", "1.7", "http://www.monarchchess.com/")
     cm.path = "Monarch(v1.7).exe"
     cm.elo = 2100
@@ -312,6 +313,7 @@ def leeRivales():
     mas(cm)
 
     return dicRivales
+
 
 def dicMotoresFixedElo():
     d = leeRivales()

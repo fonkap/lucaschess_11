@@ -16,6 +16,7 @@ from Code.QT import QTVarios
 from Code.QT import Tablero
 from Code.QT import Histogram
 
+
 class WAnalisisGraph(QTVarios.WDialogo):
     def __init__(self, wowner, gestor, alm, muestraAnalisis):
         titulo = _("Result of analysis")
@@ -229,9 +230,11 @@ class WAnalisisGraph(QTVarios.WDialogo):
     def closeEvent(self, event):
         self.guardarVideo()
 
+
 def showGraph(wowner, gestor, alm, muestraAnalisis):
     w = WAnalisisGraph(wowner, gestor, alm, muestraAnalisis)
     w.exec_()
+
 
 class WMuestra(QtGui.QWidget):
     def __init__(self, owner, um):
@@ -419,6 +422,7 @@ class WMuestra(QtGui.QWidget):
                 self.um.grabarBase(partida, rm, resp)
             self.um.ponVistaGestor()
 
+
 class WAnalisis(QTVarios.WDialogo):
     def __init__(self, mAnalisis, ventana, siBlancas, siLibre, siGrabar, muestraInicial):
         titulo = _("Analysis")
@@ -574,6 +578,7 @@ class WAnalisis(QTVarios.WDialogo):
         if alm:
             um = self.mAnalisis.creaMuestra(self, alm)
             self.crearMuestra(um)
+
 
 class WAnalisisVariantes(QtGui.QDialog):
     def __init__(self, oBase, ventana, segundosPensando, siBlancas, cPuntos, maxRecursion):

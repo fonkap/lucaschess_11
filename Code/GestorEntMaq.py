@@ -22,6 +22,7 @@ from Code import VarGen
 from Code import XMotorRespuesta
 from Code.Constantes import *
 
+
 class GestorEntMaq(Gestor.Gestor):
     def inicio(self, dic, aplazamiento=None, siPrimeraJugadaHecha=False):
         if aplazamiento:
@@ -45,6 +46,10 @@ class GestorEntMaq(Gestor.Gestor):
         self.siRivalConBlancas = not siBlancas
 
         self.cm = dic["RIVAL"].get("CM", None)
+        if self.cm:
+            if hasattr(self.cm, "icono"):
+                delattr(self.cm, "icono") # problem with configuracion.escVariables and saving qt variables
+
 
         self.siAtras = dic["ATRAS"]
 
@@ -307,7 +312,7 @@ class GestorEntMaq(Gestor.Gestor):
             self.seguir()
 
         elif clave == k_ayudaMover:
-            self.analizaTutorFinal()
+            self.analizaFinal()
             self.ayudaMover(999)
 
         elif clave == k_reiniciar:
@@ -440,17 +445,21 @@ class GestorEntMaq(Gestor.Gestor):
             self.saveSummary()
             self.ponFinJuego()
         else:
-            if self.siAnalizando:
-                self.siAnalizando = False
-                self.xtutor.ac_final(-1)
+            self.analizaTerminar()
             self.pantalla.activaJuego(False, False)
             self.quitaCapturas()
             self.procesador.inicio()
 
         return False
 
+    def analizaTerminar(self):
+        if self.siAnalizando:
+            self.siAnalizando = False
+            self.xtutor.ac_final(-1)
+
     def atras(self):
         if self.partida.numJugadas():
+            self.analizaTerminar()
             if self.ayudas:
                 self.ayudas -= 1
             self.ponAyudasEM()
@@ -458,7 +467,6 @@ class GestorEntMaq(Gestor.Gestor):
             if not self.fen:
                 self.listaAperturasStd.asignaApertura(self.partida)
             self.ponteAlFinal()
-            self.siAnalizadoTutor = False
             self.reOpenBook()
             self.refresh()
             self.siguienteJugada()
@@ -511,7 +519,7 @@ class GestorEntMaq(Gestor.Gestor):
             self.summary[njug] = {}
         self.summary[njug][key] = value
 
-    def analizaTutorInicio(self):
+    def analizaInicio(self):
         self.siAnalizando = False
         self.siAnalizadoTutor = False
         if self.aperturaObl or not self.siTutorActivado or self.ayudasPGN <= 0:
@@ -538,7 +546,7 @@ class GestorEntMaq(Gestor.Gestor):
                         self.guiDispatch(rm)
                         QtCore.QTimer.singleShot(1000, self.analizaSiguiente)
 
-    def analizaTutorFinal(self):
+    def analizaFinal(self):
         estado = self.siAnalizando
         self.siAnalizando = False
         if self.siAnalizadoTutor or not self.siTutorActivado or self.ayudasPGN <= 0:
@@ -627,7 +635,7 @@ class GestorEntMaq(Gestor.Gestor):
 
     def juegaHumano(self, siBlancas):
         self.siJuegaHumano = True
-        self.analizaTutorInicio()
+        self.analizaInicio()
 
         self.relojStart(True)
         self.timekeeper.start()
@@ -706,7 +714,7 @@ class GestorEntMaq(Gestor.Gestor):
             return False
 
     def sigueHumanoAnalisis(self):
-        self.analizaTutorInicio()
+        self.analizaInicio()
         Gestor.Gestor.sigueHumano(self)
 
     def mueveHumano(self, desde, hasta, coronacion=None):
@@ -761,7 +769,7 @@ class GestorEntMaq(Gestor.Gestor):
             self.sigueHumano()
             return False
 
-        self.analizaTutorFinal()  # tiene que acabar siempre
+        self.analizaFinal()  # tiene que acabar siempre
         if not siElegido and self.siTutorActivado:
             rmUser, n = self.mrmTutor.buscaRM(movimiento)
             if not rmUser:
@@ -774,17 +782,19 @@ class GestorEntMaq(Gestor.Gestor):
             pointsBest, pointsUser = self.mrmTutor.difPointsBest(movimiento)
             self.setSummary("POINTSBEST", pointsBest)
             self.setSummary("POINTSUSER", pointsUser)
-            if (pointsBest - pointsUser) > 0:
+            difpts = self.configuracion.tutorDifPts
+            difporc = self.configuracion.tutorDifPorc
+            if self.mrmTutor.mejorRMQue(rmUser, difpts, difporc):
                 if not jg.siJaqueMate:
                     siTutor = True
                     if self.chance:
                         num = self.mrmTutor.numMejorMovQue(movimiento)
                         if num:
                             rmTutor = self.mrmTutor.rmBest()
-                            rmUser, n = self.mrmTutor.buscaRM(movimiento)
                             menu = QTVarios.LCMenu(self.pantalla)
                             submenu = menu.submenu(_("There are %d best moves") % num, Iconos.Motor())
-                            submenu.opcion("tutor", "%s (%s)" % (_("Show tutor"), rmTutor.abrTextoBase()), Iconos.Tutor())
+                            submenu.opcion("tutor", "%s (%s)" % (_("Show tutor"), rmTutor.abrTextoBase()),
+                                           Iconos.Tutor())
                             submenu.separador()
                             submenu.opcion("try", _("Try again"), Iconos.Atras())
                             submenu.separador()
@@ -1023,6 +1033,11 @@ class GestorEntMaq(Gestor.Gestor):
         dic = PantallaEntMaq.cambioRival(self.pantalla, self.configuracion, self.reinicio)
 
         if dic:
+            dr = dic["RIVAL"]
+            rival = dr["CM"]
+            if hasattr(rival, "icono"):
+                delattr(rival, "icono")
+
             Util.guardaDIC(dic, self.configuracion.ficheroEntMaquina)
             for k, v in dic.iteritems():
                 self.reinicio[k] = v
@@ -1038,8 +1053,6 @@ class GestorEntMaq(Gestor.Gestor):
 
             self.nAjustarFuerza = dic["AJUSTAR"]
 
-            dr = dic["RIVAL"]
-            rival = dr["CM"]
             r_t = dr["TIEMPO"] * 100  # Se guarda en decimas -> milesimas
             r_p = dr["PROFUNDIDAD"]
             if r_t <= 0:
@@ -1050,6 +1063,7 @@ class GestorEntMaq(Gestor.Gestor):
                 r_t = 1000
 
             dr["RESIGN"] = self.resignPTS
+            self.xrival.terminar()
             self.xrival = self.procesador.creaGestorMotor(rival, r_t, r_p, self.nAjustarFuerza != kAjustarMejor)
 
             self.xrival.siBlancas = not siBlancas

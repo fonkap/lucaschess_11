@@ -16,6 +16,7 @@ from Code import Routes
 from Code import VarGen
 from Code.Constantes import *
 
+
 class GR_Engine:
     def __init__(self, procesador, nlevel):
         self._label = "%s - %s %d" % (_("Engine"), _("Level"), nlevel)
@@ -102,6 +103,7 @@ toga 1236 1495 1928 2132"""
             mas(engine, 4, d4)
         return d
 
+
 class GestorRoutes(Gestor.Gestor):
     def inicio(self, route):
         self.route = route
@@ -141,6 +143,7 @@ class GestorRoutes(Gestor.Gestor):
         self.refresh()
 
         self.ponPosicionDGT()
+
 
 class GestorRoutesPlay(GestorRoutes):
     def inicio(self, route):
@@ -352,6 +355,7 @@ class GestorRoutesPlay(GestorRoutes):
         resp += "\n" + self.partida.pgnBase() + " " + result
 
         return resp
+
 
 class GestorRoutesEndings(GestorRoutes):
     def inicio(self, route):
@@ -576,6 +580,7 @@ class GestorRoutesEndings(GestorRoutes):
         resp += "\n" + self.partida.pgnBase()
 
         return resp
+
 
 class GestorRoutesTactics(GestorRoutes):
     def inicio(self, route):

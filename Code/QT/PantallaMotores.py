@@ -19,6 +19,7 @@ from Code.QT import FormLayout
 from Code import Util
 from Code import VarGen
 
+
 class WMotores(QTVarios.WDialogo):
     def __init__(self, owner, ficheroMExternos):
 
@@ -251,6 +252,7 @@ class WMotores(QTVarios.WDialogo):
             self.grid.gobottom(0)
             self.grabar()
 
+
 class WMotor(QtGui.QDialog):
     def __init__(self, wParent, listaMotores, motorExterno, siTorneo=False):
 
@@ -365,6 +367,7 @@ class WMotor(QtGui.QDialog):
 
         self.accept()
 
+
 def genOpcionesME(owner, motorExterno):
     fil = 0
     col = 0
@@ -404,6 +407,7 @@ def genOpcionesME(owner, motorExterno):
 
     return scrollArea
 
+
 def saveOpcionesME(motorExterno):
     for opcion in motorExterno.liOpciones:
         tipo = opcion.tipo
@@ -419,6 +423,7 @@ def saveOpcionesME(motorExterno):
         elif tipo == "button":
             valor = control.isChecked()
         opcion.valor = valor
+
 
 def selectEngine(wowner):
     """
@@ -442,6 +447,7 @@ def selectEngine(wowner):
         QTUtil2.mensaje(wowner, _X(_("The file %1 does not correspond to a UCI engine type."), exeMotor))
         return None
     return me
+
 
 class WEligeMotorElo(QTVarios.WDialogo):
     def __init__(self, gestor, elo, titulo, icono, tipo):
@@ -654,6 +660,7 @@ class WEligeMotorElo(QTVarios.WDialogo):
 
         return valor
 
+
 def eligeMotorElo(gestor, elo):
     titulo = _("Lucas-Elo") + ". " + _("Choose the opponent")
     icono = Iconos.Elo()
@@ -663,6 +670,7 @@ def eligeMotorElo(gestor, elo):
     else:
         return None
 
+
 def eligeMotorMicElo(gestor, elo):
     titulo = _("Club players competition") + ". " + _("Choose the opponent")
     icono = Iconos.EloTimed()
@@ -671,6 +679,7 @@ def eligeMotorMicElo(gestor, elo):
         return w.resultado
     else:
         return None
+
 
 def eligeMotorEntMaq(pantalla):
     titulo = _("Choose the opponent")

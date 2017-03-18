@@ -21,6 +21,7 @@ from Code import VarGen
 
 SIN_VALORACION, MUY_MALO, MALO, BUENO, MUY_BUENO, INTERESANTE, DUDOSA = (0, 4, 2, 1, 3, 5, 6)
 
+
 class UnMove:
     def __init__(self, listaMovesPadre, pv, dicCache):
 
@@ -125,6 +126,7 @@ class UnMove:
 
         if self.listaMovesHijos:
             self.listaMovesHijos.guardaCache()
+
 
 class ListaMoves:
     def __init__(self, moveOwner, fen, dbCache):
@@ -274,6 +276,7 @@ class ListaMoves:
                 return mv
         mov.siOculto = False  # Por si acaso
         return mov
+
 
 class TreeMoves(QtGui.QTreeWidget):
     def __init__(self, owner, procesador):
@@ -640,6 +643,7 @@ class TreeMoves(QtGui.QTreeWidget):
             mov = None
         return mov
 
+
 class WMoves(QtGui.QWidget):
     def __init__(self, owner, procesador):
         QtGui.QWidget.__init__(self)
@@ -717,6 +721,7 @@ class WMoves(QtGui.QWidget):
             return
         self.tree.mostrarOcultar(mov.item, mov)
 
+
 class InfoMove(QtGui.QWidget):
     def __init__(self, siBlancasAbajo):
         QtGui.QWidget.__init__(self)
@@ -783,6 +788,7 @@ class InfoMove(QtGui.QWidget):
     def muestra(self, mov):
         self.movActual = mov
         self.ponValores()
+
 
 class PantallaArbol(QTVarios.WDialogo):
     def __init__(self, wParent, partida, nj, procesador):

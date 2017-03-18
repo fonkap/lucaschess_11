@@ -9,12 +9,14 @@ from Code.Constantes import *
 
 DEBUG = False
 
+
 def xpr(line):
     if DEBUG:
         t = time.time()
         prlk("%0.04f %s" % (t - tdbg[0], line))
         tdbg[0] = t
     return True
+
 
 def xprli(li):
     if DEBUG:
@@ -42,6 +44,7 @@ else:
 import subprocess
 import threading
 import collections
+
 
 class EnginePOP(object):
     def __init__(self, exe, priority, args):

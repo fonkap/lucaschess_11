@@ -18,7 +18,6 @@ from Code.QT import Iconos
 from Code.QT import PantallaAnalisis
 from Code.QT import PantallaArbol
 from Code.QT import PantallaArbolBook
-from Code.QT import PantallaColores
 from Code.QT import PantallaSavePGN
 from Code.QT import PantallaTutor
 from Code.QT import Pelicula
@@ -31,6 +30,7 @@ from Code import VarGen
 from Code import XKibitzers
 from Code import XRun
 from Code.Constantes import *
+
 
 class Gestor:
     def __init__(self, procesador):
@@ -743,7 +743,7 @@ class Gestor:
     def ponInfoPorDefecto(self):
         self.informacionActivable = True
         if self.configuracion.siActivarInformacion:
-            self.pantalla.activaInformacionPGN()
+            self.pantalla.activaInformacionPGN(True)
             self.ponVista()
 
     def ponCapInfoPorDefecto(self):
@@ -1117,8 +1117,6 @@ class Gestor:
         menuVista.opcion("vista_pgn", _("PGN information"), Iconos.InformacionPGNUno())
         menuVista.separador()
         menuVista.opcion("vista_capturas", _("Captured material"), Iconos.Capturas())
-        menuVista.separador()
-        menuVista.opcion("vista_colorpgn", _("Colors") + " - " + _("PGN"), Iconos.Temas())
         menu.separador()
 
         # DGT
@@ -1189,9 +1187,6 @@ class Gestor:
                 elif resp == "capturas":
                     self.pantalla.activaCapturas()
                     self.ponVista()
-                elif resp == "colorpgn":
-                    PantallaColores.cambiaColoresPGN(self.pantalla, self.configuracion)
-                    self.pantalla.base.pgnRefresh()
 
             elif resp == "dgt":
                 DGT.cambiarON_OFF()

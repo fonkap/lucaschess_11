@@ -11,6 +11,7 @@ from Code.QT import QTUtil2
 from Code import Util
 from Code.Constantes import *
 
+
 class Control60:
     def __init__(self, gestor, siJugador):
 
@@ -84,6 +85,7 @@ class Control60:
             self.guardar()
 
         return mensaje, siRecord
+
 
 class Gestor60(Gestor.Gestor):
     def inicio(self, siJugador):

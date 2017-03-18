@@ -2,6 +2,7 @@ from Code.QT import FormLayout
 from Code.QT import Iconos
 from Code.Constantes import *
 
+
 def paramPelicula(configuracion, parent):
 
     nomVar = "PARAMPELICULA"

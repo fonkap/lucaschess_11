@@ -5,6 +5,7 @@ import random
 
 from Code import Util
 
+
 class ThanksTo:
     def __init__(self):
         d = self.dic = collections.OrderedDict()
@@ -61,7 +62,7 @@ class ThanksTo:
             ["Critter 1.6a 32bits", "Richard Vida", "http://www.vlasak.biz/critter/"],
             ["Texel 1.07", "Peter Österlund", "http://web.comhem.se/petero2home/javachess/index.html#texel"],
             ["Stockfish 8", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
-            ["MacBrain 1.2", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
+            ["McBrain 1.3", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
             ["Gull 3", "Vadim Demichev", "https://sourceforge.net/projects/gullchess/"],
             ["Delfi 5.4", "Fabio Cavicchio", "http://www.msbsoftware.it/delfi/"],
             # ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
@@ -117,7 +118,7 @@ class ThanksTo:
             return txt
 
         # Version 11
-        liBase = ["Alfonso Solbes", "Max Aloyau"]
+        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico"]
         liResto = []
         txt += version(11, liBase, liResto)
 

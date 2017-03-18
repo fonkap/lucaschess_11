@@ -6,6 +6,7 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code import VarGen
 
+
 class Analisis:
     def __init__(self, wowner, bookGuide, dispatchAnalisis, procesador):
         self.pantalla = wowner

@@ -60,6 +60,7 @@ from Code import XGestorMotor
 from Code import EngineThread
 from Code.Constantes import *
 
+
 class Procesador:
     """
     Vinculo entre pantalla y gestores
@@ -505,22 +506,9 @@ class Procesador:
         menu1 = menu.submenu(_("Colors"), Iconos.Colores())
         menu1.opcion(self.editaColoresTablero, _("Main board"), Iconos.EditarColores())
         menu1.separador()
-        menu1.opcion(self.cambiaColoresPGN, _("PGN"), Iconos.Vista())
+        menu1.opcion(self.cambiaColores, _("General"), Iconos.Vista())
         menu.separador()
 
-        menu1 = menu.submenu(_("Change board size"), Iconos.TamTablero())
-        menu1.opcion(self.size_main, _("Main board"), Iconos.PuntoVerde())
-        menu1.separador()
-        menu2 = menu1.submenu(_("Tutor board"), Iconos.PuntoAzul())
-        for txt, size in ((_("Large"), 64),
-                          (_("Medium"), 48),
-                          (_("Medium-small"), 32),
-                          (_("Small"), 24),
-                          (_("Very small"), 16)):
-            menu2.opcion((self.size_tutor, size), txt, Iconos.PuntoNaranja())
-            menu2.separador()
-
-        menu.separador()
         menu1 = menu.submenu(_("Sound"), Iconos.SoundTool())
         menu1.opcion(self.sonidos, _("Custom sounds"), Iconos.S_Play())
         menu.separador()
@@ -556,16 +544,9 @@ class Procesador:
         w = PantallaColores.WColores(self.tablero)
         w.exec_()
 
-    def cambiaColoresPGN(self):
-        PantallaColores.cambiaColoresPGN(self.pantalla, self.configuracion)
-
-    def size_main(self):
-        self.tablero.cambiaSize()
-
-    def size_tutor(self, tam):
-        confTablero = self.configuracion.confTablero("TUTOR", 16)
-        confTablero.anchoPieza(tam)
-        confTablero.guardaEnDisco()
+    def cambiaColores(self):
+        if PantallaColores.cambiaColores(self.pantalla, self.configuracion):
+            self.reiniciar()
 
     def sonidos(self):
         w = PantallaSonido.WSonidos(self)
@@ -698,8 +679,8 @@ class Procesador:
 
         menu1 = menu.submenu(_("Database"), Iconos.Database())
         menu1.opcion("database", _("Complete games"), Iconos.DatabaseC())
-        # menu1.separador()
-        # menu1.opcion("databaseFEN", _("Positions"), Iconos.DatabaseF()) # TODO
+        menu1.separador()
+        menu1.opcion("databaseFEN", _("Positions"), Iconos.DatabaseF()) # TODO
         menu.separador()
 
         menu.opcion("manual_save", _("Save positions to FNS/PGN"), Iconos.ManualSave())
@@ -1005,6 +986,7 @@ class Procesador:
     # def saveAsJSON(self, estado, partida, pgn):
     #     dic = GestorSolo.pgn_json(estado, pgn)
     #     return dic
+
 
 class ProcesadorVariantes(Procesador):
 

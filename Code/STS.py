@@ -5,6 +5,7 @@ from Code import MotoresExternos
 from Code import Util
 from Code import VarGen
 
+
 class Elem:
     def __init__(self, linea):
         self._fen, results = linea.strip().split("|")
@@ -45,6 +46,7 @@ class Elem:
                 xpt = pt
         return xpt, xa1h8
 
+
 class Group:
     def __init__(self, name, lines):
         self._name = name
@@ -63,6 +65,7 @@ class Group:
     def points(self, nelem, a1h8):
         elem = self._liElem[nelem]
         return elem.points(a1h8)
+
 
 class Groups:
     def __init__(self, txt=None):
@@ -99,6 +102,7 @@ class Groups:
     def fen(self, ngroup, nfen):
         return self.lista[ngroup].element(nfen)
 
+
 class ResultGroup:
     def __init__(self):
         self._dicElem = {}
@@ -127,6 +131,7 @@ class ResultGroup:
             tt += t
             tp += p
         return tt, tp
+
 
 class Results:
     def __init__(self, ngroups):
@@ -157,6 +162,7 @@ class Results:
 
     def resoultGroup(self, ngroup):
         return self._liResultGroups[ngroup]
+
 
 class Work:
     def __init__(self, ngroups):
@@ -241,6 +247,7 @@ class Work:
         resoultGroup.elem(nfen, a1h8)
         self.workTime += ts
 
+
 class Works:
     def __init__(self):
         self.lista = []
@@ -287,6 +294,7 @@ class Works:
             return True
         else:
             return False
+
 
 class STS:
     def __init__(self, name):

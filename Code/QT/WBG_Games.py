@@ -5,6 +5,8 @@ from PyQt4 import QtGui, QtCore
 
 from Code import Partida
 from Code import DBgames
+from Code import TrListas
+from Code import Util
 from Code.QT import Colocacion
 from Code.QT import Columnas
 from Code.QT import Controles
@@ -14,8 +16,8 @@ from Code.QT import PantallaBooks
 from Code.QT import PantallaPGN
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
-from Code import TrListas
-from Code import Util
+from Code.QT import PantallaSolo
+
 
 class WGames(QtGui.QWidget):
     def __init__(self, procesador, winBookGuide, dbGames, wsummary, siMoves=True):
@@ -219,6 +221,7 @@ class WGames(QtGui.QWidget):
                 QTUtil2.mensError(self, _("This game already exists."))
             else:
                 self.actualiza(True)
+                self.grid.goto(recno, 0)
 
     def tw_nuevo(self):
         recno = None
@@ -320,6 +323,8 @@ class WGames(QtGui.QWidget):
         submenu.opcion(self.tg_importar_PGN, _("A PGN file"), Iconos.FichPGN())
         submenu.separador()
         submenu.opcion(self.tg_importar_DB, _("Other database"), Iconos.DatabaseC())
+        submenu.separador()
+        submenu.opcion(self.tg_importar_pks, _("A PKS file"), Iconos.JuegaSolo())
         menu.separador()
 
         submenu = menu.submenu(_("Export to"), Iconos.DatabaseMas())
@@ -337,10 +342,37 @@ class WGames(QtGui.QWidget):
         menu1.opcion(self.tw_uti_pmerge, _("Merge two books in one"), ico)
         submenu.separador()
         submenu.opcion(self.tw_uti_tactic, _("Create tactics training"), icoT)
+        submenu.separador()
+        submenu.opcion(self.tw_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
 
         resp = menu.lanza()
         if resp:
             resp()
+
+    def tg_importar_pks(self):
+        path_pks = QTUtil2.leeFichero(self, self.configuracion.dirJS, "pks")
+        if path_pks:
+            direc = os.path.dirname(path_pks)
+            if direc != self.configuracion.dirJS:
+                self.configuracion.dirJS = direc
+                self.configuracion.graba()
+
+            mens_error = self.dbGames.insert_pks(path_pks)
+            if mens_error:
+                QTUtil2.mensError(self, mens_error)
+                return
+            self.actualiza(True)
+            self.grid.gobottom(0)
+
+    def tw_massive_change_tags(self):
+        resp = PantallaSolo.massive_change_tags(self, self.configuracion, len(self.grid.recnosSeleccionados()))
+        if resp:
+            recno = self.grid.recno()
+            liTags, overwrite, si_all = resp
+            liRegistros = range(self.dbGames.reccount()) if si_all else self.grid.recnosSeleccionados()
+            self.dbGames.massive_change_tags(liTags, liRegistros, overwrite)
+            self.actualiza(True)
+            self.grid.goto(recno, 0)
 
     def tw_uti_pcreate(self):
         PantallaBooks.polyglotCrear(self)
@@ -481,7 +513,7 @@ class WGames(QtGui.QWidget):
                 try:
                     fpgn = codecs.open(pathPGN, modo, 'utf-8', 'ignore')
                 except:
-                    QTUtil2.mensError(self, "%s : %s\n" % (_("Unable to save"), pathPGN.replace("/", "\\")))
+                    QTUtil2.mensError(self, "%s : %s\n" % (_("Unable to save"), pathPGN))
                     return
 
                 pb = QTUtil2.BarraProgreso1(self, _("Exporting..."))
@@ -501,7 +533,7 @@ class WGames(QtGui.QWidget):
 
                 fpgn.close()
                 pb.cerrar()
-                QTUtil2.mensaje(self, _X(_("Saved to %1"), pathPGN.replace("/", "\\")))
+                QTUtil2.mensaje(self, _X(_("Saved to %1"), pathPGN))
 
     def tg_importar_PGN(self):
         path = QTVarios.select_pgn(self)
@@ -528,18 +560,6 @@ class WGames(QtGui.QWidget):
 
         self.actualiza(True)
         self.wsummary.reset()
-
-    def tg_importarFEN(self):
-        # Elegimos el fichero PGN
-        path = QTVarios.select_pgn(self)
-        if not path:
-            return None
-
-        dlTmp = QTVarios.ImportarFicheroPGN(self)
-        dlTmp.show()
-        self.dbGames.leerPGN(path, dlTmp)
-
-        self.actualiza(True)
 
     def changeDBgames(self, pathFich):
         self.configuracion.ficheroDBgames = pathFich

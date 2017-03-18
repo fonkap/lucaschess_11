@@ -16,6 +16,7 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code.QT import WBG_Comun
 
+
 class WSummary(QtGui.QWidget):
     def __init__(self, procesador, winBookGuide, dbGames, siMoves=True):
         QtGui.QWidget.__init__(self)
@@ -262,11 +263,12 @@ class WSummary(QtGui.QWidget):
         recno = self.grid.recno()
         if recno >= 0:
             dic = self.liMoves[recno]
-            pv = dic["pv"]
-            if pv.count(" ") > 0:
-                pv = "%s %s" % (self.pvBase, dic["pvmove"])  # transposition case
-            self.actualizaPV(pv)
-            self.cambiaInfoMove()
+            if "pv" in dic:
+                pv = dic["pv"]
+                if pv.count(" ") > 0:
+                    pv = "%s %s" % (self.pvBase, dic["pvmove"])  # transposition case
+                self.actualizaPV(pv)
+                self.cambiaInfoMove()
 
     def ponPV(self, pvMirar):
         if not pvMirar:

@@ -28,7 +28,7 @@ ifeq ($(KERNEL),Linux)
 endif
 
 ### Executable name
-EXE = McBrain_2017
+EXE = McBrain_2017-v1.3
 
 ### Installation dir definitions
 PREFIX = /usr/local
@@ -450,7 +450,7 @@ install:
 
 #clean all
 clean: objclean profileclean
-	@rm -f .depend *~ core
+	@rm -f .depend *~ core 
 
 # clean binaries and objects
 objclean:

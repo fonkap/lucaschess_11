@@ -8,6 +8,7 @@ from Code import EngineThread
 
 SEPARADOR = (None, None)
 
+
 def leeDicParametros(configuracion):
     fichero = configuracion.ficheroAnalisis
     dic = Util.recuperaVar(fichero)
@@ -43,6 +44,7 @@ def leeDicParametros(configuracion):
     alm.st_timelimit = dic.get("ST_TIMELIMIT", 5)
 
     return alm
+
 
 def formBlundersBrilliancies(alm, configuracion):
     liBlunders = [SEPARADOR]
@@ -100,6 +102,7 @@ def formBlundersBrilliancies(alm, configuracion):
     liBrilliancies.append((_X(_("Add to the training %1 with the name"), eti) + ":", ""))
 
     return liBlunders, liBrilliancies
+
 
 def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
     alm = leeDicParametros(configuracion)
@@ -305,6 +308,7 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
         return alm
     else:
         return None
+
 
 def paramAnalisisMasivo(parent, configuracion, siVariosSeleccionados):
     alm = leeDicParametros(configuracion)

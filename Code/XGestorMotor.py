@@ -5,6 +5,7 @@ from Code import XMotorRespuesta
 from Code import EngineThread
 from Code.Constantes import *
 
+
 class GestorMotor:
     def __init__(self, procesador, confMotor, direct = False):
         self.procesador = procesador

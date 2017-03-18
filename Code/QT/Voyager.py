@@ -1,13 +1,13 @@
 import os
-import sys
 
 from PIL import Image
 from PyQt4 import QtCore, QtGui
 
-from Code import Configuracion
 from Code import ControlPosicion
 from Code import Jugada
 from Code import Partida
+from Code import Util
+from Code import VarGen
 from Code.QT import Colocacion
 from Code.QT import Columnas
 from Code.QT import Controles
@@ -15,21 +15,20 @@ from Code.QT import Delegados
 from Code.QT import FormLayout
 from Code.QT import Grid
 from Code.QT import Iconos
-from Code.QT import Piezas
+from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code.QT import Tablero
-from Code import RunScanner
-from Code import Util
-from Code import VarGen
-from Code import XRun
+from Code.QT import Scanner
 
 MODO_POSICION, MODO_PARTIDA = range(2)
+
 
 def hamming_distance(string, other_string):
     # Adaptation from https://github.com/bunchesofdonald/photohash, MIT license
     """ Computes the hamming distance between two strings. """
     return sum(map(lambda x: 0 if x[0] == x[1] else 1, zip(string, other_string)))
+
 
 def average_hash(img, hash_size=8):
     # Adaptation from https://github.com/bunchesofdonald/photohash, MIT license
@@ -45,13 +44,14 @@ def average_hash(img, hash_size=8):
     hashformat = "0{hashlength}x".format(hashlength=hash_size ** 2 // 4)
     return int(bits, 2).__format__(hashformat)
 
-class WPosicion(QtGui.QWidget):
-    def __init__(self, wparent, cpu):
-        self.cpu = cpu
-        self.posicion = cpu.partida.iniPosicion
-        self.configuracion = configuracion = cpu.configuracion
 
-        self.is_game = cpu.is_game
+class WPosicion(QtGui.QWidget):
+    def __init__(self, wparent, is_game, partida):
+        self.partida = partida
+        self.posicion = partida.iniPosicion
+        self.configuracion = configuracion = VarGen.configuracion
+
+        self.is_game = is_game
 
         self.wparent = wparent
 
@@ -99,7 +99,7 @@ class WPosicion(QtGui.QWidget):
 
         self.edFullMoves, lbFullMoves = QTUtil2.spinBoxLB(self, 1, 1, 999, etiqueta=_("Fullmove number"), maxTam=50)
 
-        self.vars_scanner = RunScanner.Scanner_vars(self.configuracion.carpetaScanners)
+        self.vars_scanner = Scanner.Scanner_vars(self.configuracion.carpetaScanners)
 
         self.lb_scanner = Controles.LB(self)
 
@@ -377,39 +377,35 @@ class WPosicion(QtGui.QWidget):
         self.edMovesPawn.setValue(self.posicion.movPeonCap)
 
     def scanner(self):
-        self.wparent.showMinimized()
+        pos = QTUtil.escondeWindow(self.wparent)
         seguir = True
-        if self.chb_scanner_ask.valor() and not QTUtil2.pregunta(None, _("Bring the window to scan to front"), etiSi=_("Capture"), etiNo=_("Cancel"), si_top=True):
+        if self.chb_scanner_ask.valor() and not QTUtil2.pregunta(None, _("Bring the window to scan to front"),
+                                                                 etiSi=_("Capture"), etiNo=_("Cancel"), si_top=True):
             seguir = False
         if seguir:
-            fdb = self.configuracion.ficheroTemporal("png")
-
-            popen = XRun.run_lucas("-scanner", fdb, self.configuracion.carpetaScanners)
-
+            fich_png = self.configuracion.ficheroTemporal("png")
             if not self.is_scan_init:
                 self.scanner_init()
                 self.is_scan_init = True
 
-            popen.wait()
+            sc = Scanner.Scanner(self.configuracion.carpetaScanners, fich_png)
+            sc.exec_()
 
             self.vars_scanner.read()
             self.vars_scanner.tolerance = self.sb_scanner_tolerance.valor()  # releemos la variable
 
-            if os.path.isfile(fdb):
-                if Util.tamFichero(fdb):
-                    self.scanner_read_png(fdb)
-                    self.pixmap = QtGui.QPixmap(fdb)
+            if os.path.isfile(fich_png):
+                if Util.tamFichero(fich_png):
+                    self.scanner_read_png(fich_png)
+                    self.pixmap = QtGui.QPixmap(fich_png)
                     tc = self.tablero.anchoCasilla * 8
                     pm = self.pixmap.scaled(tc, tc)
-                    self.wparent.showNormal()  # needed to maintain position
                     self.lb_scanner.ponImagen(pm)
                     self.lb_scanner.show()
                     self.gb_scanner.show()
                     self.scanner_deduce()
 
-        self.wparent.activateWindow()
-        self.wparent.showNormal()
-        self.wparent.setFocus()
+        self.wparent.move(pos)
         self.setFocus()
 
     def scanner_read_png(self, fdb):
@@ -531,7 +527,6 @@ class WPosicion(QtGui.QWidget):
             return
 
     def scanner_init(self):
-
         scanner = self.vars_scanner.scanner
         self.scanner_reread(scanner)
 
@@ -612,13 +607,13 @@ class WPosicion(QtGui.QWidget):
 
         event.ignore()
 
+
 class WPGN(QtGui.QWidget):
-    def __init__(self, wparent, cpu):
-        self.cpu = cpu
-        self.partida = self.cpu.partida
+    def __init__(self, wparent, partida):
+        self.partida = partida
 
         self.wparent = wparent
-        self.configuracion = configuracion = cpu.configuracion
+        self.configuracion = configuracion = VarGen.configuracion
         QtGui.QWidget.__init__(self, wparent)
 
         liAcciones = (
@@ -758,26 +753,28 @@ class WPGN(QtGui.QWidget):
         else:
             return xjug(b)
 
-class Voyager(QtGui.QDialog):
-    def __init__(self, cpu):
-        QtGui.QDialog.__init__(self)
 
-        self.cpu = cpu
-        self.is_game = cpu.is_game
-        self.partida = cpu.partida
+class Voyager(QTVarios.WDialogo):
+    def __init__(self, owner, is_game, partida):
 
+        titulo = _("Voyager 2") if is_game else _("Start position")
+        icono = Iconos.Voyager() if is_game else Iconos.Datos()
+        QTVarios.WDialogo.__init__(self, owner, titulo, icono, "voyager")
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint)
 
-        self.setWindowTitle(_("Voyager 2") if self.is_game else _("Start position"))
-        self.setWindowIcon(Iconos.Voyager() if self.is_game else Iconos.Datos())
+        self.is_game = is_game
+        self.partida = partida
+        self.resultado = None
 
-        self.wPos = WPosicion(self, cpu)
-        self.wPGN = WPGN(self, cpu)
+        self.wPos = WPosicion(self, is_game, partida)
+        self.wPGN = WPGN(self, partida)
 
         ly = Colocacion.V().control(self.wPos).control(self.wPGN).margen(0)
         self.setLayout(ly)
 
         self.ponModo(MODO_PARTIDA if self.is_game else MODO_POSICION)
+
+        self.recuperarVideo(siTam=False)
 
     def ponModo(self, modo):
         self.modo = modo
@@ -794,61 +791,32 @@ class Voyager(QtGui.QDialog):
         self.wPGN.limpia()
 
     def save(self):
-        self.cierra(self.partida.guardaEnTexto() if self.is_game else self.partida.iniPosicion.fen())
+        self.resultado = self.partida.guardaEnTexto() if self.is_game else self.partida.iniPosicion.fen()
+        self.guardarVideo()
         self.accept()
 
     def cancelar(self):
-        self.cierra(None)
-        self.accept()
+        self.guardarVideo()
+        self.reject()
 
-    def cierra(self, valor):
-        self.cpu.setRaw(valor)
 
-    def closeEvent(self, event):
-        self.cierra(None)
-        event.accept()
+def voyagerFEN(wowner, fen, si_esconde=True):
+    if si_esconde:
+        pos = QTUtil.escondeWindow(wowner)
+    partida = Partida.Partida(fen=fen)
+    dlg = Voyager(wowner, False, partida)
+    resp = dlg.resultado if dlg.exec_() else None
+    if si_esconde:
+        wowner.move(pos)
+        wowner.show()
+    return resp
 
-class CPU:
-    def __init__(self, fdb):
-        self.fdb = fdb
-        self.getRaw()
-        VarGen.todasPiezas = Piezas.TodasPiezas()
-        VarGen.configuracion = self.configuracion
 
-    def getRaw(self):
-        db = Util.DicRaw(self.fdb)
-        self.configuracion = Configuracion.Configuracion(db["USER"])
-        self.configuracion.lee()
-        self.configuracion.leeConfTableros()
-        self.is_game = db["MODO_PARTIDA"]
-        if self.is_game:
-            self.partida = Partida.Partida()
-            txt = db["PARTIDA"]
-            if txt:
-                self.partida.recuperaDeTexto(txt)
-        else:
-            self.partida = Partida.Partida(fen=db["FEN"])
-        db.close()
+def voyagerPartida(wowner, partida):
+    pos = QTUtil.escondeWindow(wowner)
+    dlg = Voyager(wowner, True, partida)
+    resp = dlg.resultado if dlg.exec_() else None
+    wowner.move(pos)
+    wowner.show()
+    return resp
 
-    def setRaw(self, txt):
-        db = Util.DicRaw(self.fdb)
-        db["RESULT"] = txt
-        db.close()
-
-    def run(self):
-        app = QtGui.QApplication([])
-
-        app.setStyle(QtGui.QStyleFactory.create("CleanLooks"))
-        QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
-
-        w = Voyager(self)
-        w.exec_()
-
-def run(fdb):
-    ferr = open("./bug.voyager", "at")
-    sys.stderr = ferr
-
-    cpu = CPU(fdb)
-    cpu.run()
-
-    ferr.close()

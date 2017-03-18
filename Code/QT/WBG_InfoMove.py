@@ -10,6 +10,7 @@ from Code.QT import QTVarios
 from Code.QT import Tablero
 from Code import VarGen
 
+
 class LBPGN(Controles.LB):
     def mouseReleaseEvent(self, event):
         Controles.LB.mousePressEvent(self, event)
@@ -30,6 +31,7 @@ class LBPGN(Controles.LB):
                 txt = "".join(li)[:n + 1].strip()
                 pos = txt.count(" ")
                 self.colocate(pos)
+
 
 class WInfomove(QtGui.QWidget):
     def __init__(self, winBookGuide, siMoves=True):
@@ -287,11 +289,11 @@ class WInfomove(QtGui.QWidget):
         self.tablero.desactivaTodas()
 
     def MoverInicio(self):
-        self.colocatePartida(-1)
         if self.usoNormal:
             self.posHistoria = -1
             posicion = ControlPosicion.ControlPosicion().posInicial()
         else:
+            # self.colocatePartida(-1)
             self.posJugada = -1
             posicion = self.partida.iniPosicion
         self.tablero.ponPosicion(posicion)

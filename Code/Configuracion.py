@@ -27,6 +27,7 @@ NIVELBAK = 1
 LCFILEFOLDER = "./lc.folder"
 LCBASEFOLDER = "./UsrData"
 
+
 def activeFolder():
     if os.path.isfile(LCFILEFOLDER):
         f = open(LCFILEFOLDER)
@@ -36,8 +37,10 @@ def activeFolder():
             return x
     return LCBASEFOLDER
 
+
 def isDefaultFolder():
     return activeFolder() == os.path.abspath(LCBASEFOLDER)
+
 
 def changeFolder(nueva):
     if nueva:
@@ -48,6 +51,7 @@ def changeFolder(nueva):
         f.close()
     else:
         Util.borraFichero(LCFILEFOLDER)
+
 
 class Configuracion:
     def __init__(self, user):
@@ -159,7 +163,7 @@ class Configuracion:
 
         self.checkforupdate = False
 
-        self.background = None
+        self.palette = {}
 
         self.grupos = BaseConfig.Grupos(self)
         self.grupos.nuevo("TarraschToy", 0, 1999, 0)
@@ -515,7 +519,7 @@ class Configuracion:
         dic["BMI2"] = self.bmi2
 
         dic["CHECKFORUPDATE"] = self.checkforupdate
-        dic["BACKGROUND"] = self.background
+        dic["PALETTE"] = self.palette
 
         for clave, rival in self.dicRivales.iteritems():
             dic["RIVAL_%s" % clave] = rival.graba()
@@ -639,7 +643,7 @@ class Configuracion:
                     self.bmi2 = False
 
                 self.checkforupdate = dg("CHECKFORUPDATE", self.checkforupdate)
-                self.background = dg("BACKGROUND", self.background)
+                self.palette = dg("PALETTE", self.palette)
 
                 for k in dic.keys():
                     if k.startswith("RIVAL_"):

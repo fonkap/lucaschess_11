@@ -2,6 +2,7 @@ import LCEngine
 
 from Code import VarGen
 
+
 def calc_formula(cual, cp, mrm):  # , limit=200.0):
     f = open("./IntFiles/Formulas/%s.formula" % cual, "rb")
     formula = f.read()
@@ -75,6 +76,7 @@ def calc_formula(cual, cp, mrm):  # , limit=200.0):
     except:
         return 0.0
 
+
 def lb_levels(x):
     if x < 0:
         txt = _("Extremely low")
@@ -92,89 +94,117 @@ def lb_levels(x):
         txt = _("Extreme")
     return txt
 
+
 def txt_levels(x):
     return "%s (%.02f%%)" % (lb_levels(x), x)
+
 
 def txt_formula(titulo, funcion, cp, mrm):
     x = funcion(cp, mrm)
     return "%s: %s" % (titulo, txt_levels(x))
 
+
 def tp_formula(titulo, funcion, cp, mrm):
     x = funcion(cp, mrm)
     return titulo, x, lb_levels(x)
 
+
 def calc_complexity(cp, mrm):
     return calc_formula("complexity", cp, mrm)
+
 
 def get_complexity(cp, mrm):
     return txt_formula(_("Complexity"), calc_complexity, cp, mrm)
 
+
 def tp_complexity(cp, mrm):
     return tp_formula(_("Complexity"), calc_complexity, cp, mrm)
+
 
 def calc_winprobability(cp, mrm):
     return calc_formula("winprobability", cp, mrm)  # , limit=100.0)
 
+
 def get_winprobability(cp, mrm):
     return txt_formula(_("Win probability"), calc_winprobability, cp, mrm)
+
 
 def tp_winprobability(cp, mrm):
     return tp_formula(_("Win probability"), calc_winprobability, cp, mrm)
 
+
 def calc_narrowness(cp, mrm):
     return calc_formula("narrowness", cp, mrm)
+
 
 def get_narrowness(cp, mrm):
     return txt_formula(_("Narrowness"), calc_narrowness, cp, mrm)
 
+
 def tp_narrowness(cp, mrm):
     return tp_formula(_("Narrowness"), calc_narrowness, cp, mrm)
+
 
 def calc_efficientmobility(cp, mrm):
     x = calc_formula("efficientmobility", cp, mrm)
     return x
 
+
 def get_efficientmobility(cp, mrm):
     return txt_formula(_("Efficient mobility"), calc_efficientmobility, cp, mrm)
+
 
 def tp_efficientmobility(cp, mrm):
     return tp_formula(_("Efficient mobility"), calc_efficientmobility, cp, mrm)
 
+
 def calc_piecesactivity(cp, mrm):
     return calc_formula("piecesactivity", cp, mrm)
+
 
 def get_piecesactivity(cp, mrm):
     return txt_formula(_("Pieces activity"), calc_piecesactivity, cp, mrm)
 
+
 def tp_piecesactivity(cp, mrm):
     return tp_formula(_("Pieces activity"), calc_piecesactivity, cp, mrm)
+
 
 def calc_exchangetendency(cp, mrm):
     return calc_formula("simplification", cp, mrm)
 
+
 def get_exchangetendency(cp, mrm):
     return txt_formula(_("Exchange tendency"), calc_exchangetendency, cp, mrm)
+
 
 def tp_exchangetendency(cp, mrm):
     return tp_formula(_("Exchange tendency"), calc_exchangetendency, cp, mrm)
 
+
 def calc_positionalpressure(cp, mrm):
     return calc_formula("positionalpressure", cp, mrm)
+
 
 def get_positionalpressure(cp, mrm):
     return txt_formula(_("Positional pressure"), calc_positionalpressure, cp, mrm)
 
+
 def tp_positionalpressure(cp, mrm):
     return tp_formula(_("Positional pressure"), calc_positionalpressure, cp, mrm)
+
 
 def calc_materialasymmetry(cp, mrm):
     return calc_formula("materialasymmetry", cp, mrm)
 
+
 def get_materialasymmetry(cp, mrm):
     return txt_formula(_("Material asymmetry"), calc_materialasymmetry, cp, mrm)
 
+
 def tp_materialasymmetry(cp, mrm):
     return tp_formula(_("Material asymmetry"), calc_materialasymmetry, cp, mrm)
+
 
 def calc_gamestage(cp, mrm):
     return calc_formula("gamestage", cp, mrm)
@@ -227,6 +257,7 @@ def calc_gamestage(cp, mrm):
 # def get_test5(cp, mrm):
 #     return txt_formula("Test 5", calc_test5, cp, mrm)
 
+
 def get_gamestage(cp, mrm):
     xgst = calc_gamestage(cp, mrm)
     if xgst >= 50:
@@ -246,8 +277,10 @@ def get_gamestage(cp, mrm):
            5: _("Endgame")}
     return dic[gst]
 
+
 def tp_gamestage(cp, mrm):
     return _("Game stage"), calc_gamestage(cp, mrm), get_gamestage(cp, mrm)
+
 
 def genIndexes(partida, alm):
     average = {True: 0, False: 0}
@@ -291,9 +324,7 @@ def genIndexes(partida, alm):
                 elo_real[siB] += jg.elo_real*nf
                 nfactor[siB] += nf
 
-
     t = n[True] + n[False]
-    eloT = (elo[True]+elo[False])/t if t else 0
     tfactor = nfactor[True] + nfactor[False]
     eloT_real = (elo_real[True]+elo_real[False])/tfactor if tfactor else 0
     for x in (True, False):

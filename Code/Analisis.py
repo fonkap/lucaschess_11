@@ -13,6 +13,7 @@ from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code import Util
 
+
 class AnalizaPartida:
     def __init__(self, procesador, alm, is_massiv, li_moves=None):
         self.procesador = procesador
@@ -522,6 +523,7 @@ FILESW=%s:100
 
         self.xgestor.quitaGuiDispatch()
 
+
 class UnaMuestra:
     def __init__(self, mAnalisis, mrm, posElegida, numero, xmotor):
 
@@ -565,7 +567,7 @@ class UnaMuestra:
             pv1 = rm.pv.split(" ")[0]
             desde = pv1[:2]
             hasta = pv1[2:4]
-            coronacion = pv1[4] if len(pv1) == 5 else None
+            coronacion = pv1[4].lower() if len(pv1) == 5 else None
 
             txt = rm.abrTextoBase()
             if txt:
@@ -687,6 +689,7 @@ class UnaMuestra:
     def ponVistaGestor(self):
         self.mAnalisis.procesador.gestor.ponVista()
 
+
 class MuestraAnalisis:
     def __init__(self, procesador, jg, maxRecursion, posJugada):
 
@@ -730,6 +733,7 @@ class MuestraAnalisis:
         self.liMuestras.append(um)
         return um
 
+
 def muestraAnalisis(procesador, xtutor, jg, siBlancas, maxRecursion, posJugada, pantalla=None, siGrabar=True):
     pantalla = procesador.pantalla if pantalla is None else pantalla
 
@@ -751,6 +755,7 @@ def muestraAnalisis(procesador, xtutor, jg, siBlancas, maxRecursion, posJugada, 
         xmotor = uno.xmotor
         if not xtutor or xmotor.clave != xtutor.clave:
             xmotor.terminar()
+
 
 class AnalisisVariantes:
     def __init__(self, owner, xtutor, jg, siBlancas, cPuntosBase, maxRecursion=100000):
@@ -916,6 +921,7 @@ class AnalisisVariantes:
         jg = self.partidaTutor.jugada(self.posTutor)
         pts = self.rm.texto()
         AnalisisVariantes(self.w, self.xtutor, jg, self.siBlancas, pts, maxRecursion)
+
 
 def analizaPartida(gestor):
     partida = gestor.partida

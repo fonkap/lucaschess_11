@@ -10,6 +10,7 @@ from Code.QT import WBG_Games
 from Code.QT import WBG_InfoMove
 from Code.QT import WBG_Summary
 
+
 class WBDatabase(QTVarios.WDialogo):
     def __init__(self, wParent, procesador):
 

@@ -23,10 +23,12 @@ from Code import Util
 from Code import VarGen
 from Code.Constantes import *
 
+
 class RegKB:
     def __init__(self, key, flags):
         self.key = key
         self.flags = flags
+
 
 class Tablero(QtGui.QGraphicsView):
     def __init__(self, parent, confTablero, siMenuVisual=True):
@@ -653,7 +655,7 @@ class Tablero(QtGui.QGraphicsView):
             menucol.separador()
             liTemas = Util.recuperaVar(VarGen.configuracion.ficheroTemas)
             if liTemas:
-                import Code.QT.PantallaColores as PantallaColores
+                from Code.QT import PantallaColores
 
                 PantallaColores.ponMenuTemas(menucol, liTemas, "tt_")
                 menucol.separador()
@@ -664,7 +666,7 @@ class Tablero(QtGui.QGraphicsView):
             resp = menucol.lanza()
             if resp:
                 if resp == "editar":
-                    import Code.QT.PantallaColores as PantallaColores
+                    from Code.QT import PantallaColores
 
                     w = PantallaColores.WColores(self)
                     w.exec_()
@@ -726,8 +728,7 @@ class Tablero(QtGui.QGraphicsView):
             if self.director:
                 self.director.show()
             else:
-                import Code.QT.PantallaTabDirector as PantallaTabDirector
-
+                from Code.QT import PantallaTabDirector
                 self.director = PantallaTabDirector.WTabDirector(self)
                 self.director.show()
 
@@ -1724,6 +1725,7 @@ class Tablero(QtGui.QGraphicsView):
 
         return "/".join(lineas) + " " + resto
 
+
 class WTamTablero(QtGui.QDialog):
     def __init__(self, tablero):
 
@@ -1858,6 +1860,7 @@ class WTamTablero(QtGui.QDialog):
         if self.confTablero.siBase:
             self.tablero.permitidoResizeExterno(self.confTablero.siBase)
 
+
 class PosTablero(Tablero):
     def activaTodas(self):
         for pieza, piezaSC, siActiva in self.liPiezas:
@@ -1934,6 +1937,7 @@ class PosTablero(Tablero):
             event.setDropAction(QtCore.Qt.IgnoreAction)
         event.ignore()
 
+
 class TableroEstatico(Tablero):
     def mousePressEvent(self, event):
         pos = event.pos()
@@ -1960,6 +1964,7 @@ class TableroEstatico(Tablero):
         self.pantalla.pulsadaCelda(c + f)
 
         Tablero.mousePressEvent(self, event)
+
 
 class TableroVisual(Tablero):
     EVENTO_DERECHO, EVENTO_DERECHO_PIEZA, EVENTO_DROP, EVENTO_BORRAR, EVENTO_FUNCION = range(5)
@@ -2136,6 +2141,7 @@ class TableroVisual(Tablero):
         Tablero.ponPosicion(self, posicion)
         self.baseCasillasSC.setAcceptDrops(True)
         self.activaTodas()
+
 
 class TableroDirector(TableroVisual):
     def keyPressEvent(self, event):

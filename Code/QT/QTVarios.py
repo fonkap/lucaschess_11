@@ -14,6 +14,7 @@ from Code.QT import QTUtil2
 from Code import Util
 from Code import VarGen
 
+
 class DragUna(Controles.LB):
     def __init__(self, owner, pmVacio):
         self.owner = owner
@@ -39,6 +40,7 @@ class DragUna(Controles.LB):
         else:
             if eb == QtCore.Qt.LeftButton:
                 self.owner.startDrag(self)
+
 
 class DragBanda(QtGui.QWidget):
     def __init__(self, owner, liElem, ancho, margen=None):
@@ -182,6 +184,7 @@ class DragBanda(QtGui.QWidget):
 
         drag.exec_(QtCore.Qt.MoveAction)
 
+
 class WSave():
     def __init__(self, titulo, icono, flag, extparam):
         self.ficheroVideo = VarGen.configuracion.plantillaVideo % extparam
@@ -282,10 +285,12 @@ class WSave():
 
         return False
 
+
 class WDialogo(QtGui.QDialog, WSave):
     def __init__(self, pantalla, titulo, icono, extparam):
         QtGui.QDialog.__init__(self, pantalla)
         WSave.__init__(self, titulo, icono, QtCore.Qt.Dialog, extparam)
+
 
 class WWidget(QtGui.QWidget, WSave):
     def __init__(self, pantalla, titulo, icono, extparam):
@@ -295,6 +300,7 @@ class WWidget(QtGui.QWidget, WSave):
     def accept(self):
         self.guardarVideo()
         self.close()
+
 
 class BlancasNegras(QtGui.QDialog):
     def __init__(self, parent):
@@ -319,11 +325,13 @@ class BlancasNegras(QtGui.QDialog):
         self.resultado = False
         self.accept()
 
+
 def blancasNegras(owner):
     w = BlancasNegras(owner)
     if w.exec_():
         return w.resultado
     return None
+
 
 class BlancasNegrasTiempo(QtGui.QDialog):
     def __init__(self, parent):
@@ -374,11 +382,13 @@ class BlancasNegrasTiempo(QtGui.QDialog):
         self.color = False
         self.accept()
 
+
 def blancasNegrasTiempo(owner):
     w = BlancasNegrasTiempo(owner)
     if w.exec_():
         return w.resultado()
     return None
+
 
 class Tiempo(QtGui.QDialog):
     def __init__(self, parent, minMinutos, minSegundos, maxMinutos, maxSegundos):
@@ -413,11 +423,13 @@ class Tiempo(QtGui.QDialog):
 
         return minutos, segundos
 
+
 def tiempo(owner, minMinutos=1, minSegundos=0, maxMinutos=999, maxSegundos=999):
     w = Tiempo(owner, minMinutos, minSegundos, maxMinutos, maxSegundos)
     if w.exec_():
         return w.resultado()
     return None
+
 
 def lyBotonesMovimiento(owner, clave, siLibre=True, siMas=False, siTiempo=True,
                         siGrabar=False, siGrabarTodos=False, siJugar=False, rutina=None, tamIcon=16,
@@ -463,6 +475,7 @@ def lyBotonesMovimiento(owner, clave, siLibre=True, siMas=False, siTiempo=True,
     ly = Colocacion.H().relleno().control(tb).relleno()
     return ly, tb
 
+
 class LCNumero(QtGui.QWidget):
     def __init__(self, maxdigits):
         QtGui.QWidget.__init__(self)
@@ -490,6 +503,7 @@ class LCNumero(QtGui.QWidget):
         for x in range(n, len(self.liLB)):
             self.liLB[x].hide()
 
+
 class TwoImages(QtGui.QLabel):
     def __init__(self, pmTrue, pmFalse):
         self.pm = {True: pmTrue, False: pmFalse}
@@ -507,6 +521,7 @@ class TwoImages(QtGui.QLabel):
     def mousePressEvent(self, event):
         self.valor(not self._valor)
 
+
 def svg2ico(svg, tam):
     pm = QtGui.QPixmap(tam, tam)
     pm.fill(QtCore.Qt.transparent)
@@ -519,11 +534,13 @@ def svg2ico(svg, tam):
     ico = QtGui.QIcon(pm)
     return ico
 
+
 def fsvg2ico(fsvg, tam):
     f = codecs.open(fsvg, "r", 'utf-8', 'ignore')
     svg = f.read()
     f.close()
     return svg2ico(svg, tam)
+
 
 def svg2pm(svg, tam):
     pm = QtGui.QPixmap(tam, tam)
@@ -536,11 +553,13 @@ def svg2pm(svg, tam):
     painter.end()
     return pm
 
+
 def fsvg2pm(fsvg, tam):
     f = codecs.open(fsvg, "r", 'utf-8', 'ignore')
     svg = f.read()
     f.close()
     return svg2pm(svg, tam)
+
 
 def iconoTema(tema, tam):
     svg = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -879,6 +898,7 @@ def iconoTema(tema, tam):
 
     return svg2ico(svg, tam)
 
+
 class LBPieza(Controles.LB):
     def __init__(self, owner, pieza, tablero, tam):
         self.pieza = pieza
@@ -891,6 +911,7 @@ class LBPieza(Controles.LB):
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self.owner.startDrag(self)
+
 
 class ListaPiezas(QtGui.QWidget):
     def __init__(self, owner, lista, tablero, tam=None, margen=None):
@@ -942,17 +963,20 @@ class ListaPiezas(QtGui.QWidget):
 
         drag.exec_(QtCore.Qt.MoveAction)
 
+
 def rondoPuntos():
     nico = Util.Rondo(Iconos.PuntoAmarillo(), Iconos.PuntoNaranja(), Iconos.PuntoVerde(), Iconos.PuntoAzul(),
                       Iconos.PuntoMagenta(), Iconos.PuntoRojo())
     nico.shuffle()
     return nico
 
+
 def rondoColores():
     nico = Util.Rondo(Iconos.Amarillo(), Iconos.Naranja(), Iconos.Verde(), Iconos.Azul(), Iconos.Magenta(),
                       Iconos.Rojo())
     nico.shuffle()
     return nico
+
 
 class LCMenu(Controles.Menu):
     def __init__(self, parent, puntos=None):
@@ -973,6 +997,7 @@ class LCMenu(Controles.Menu):
         # sc = QtGui.QStyleFactory().create(VarGen.configuracion.estilo)
         # sc.pixelMetric = pixelMetric
         # menu.setStyle(sc)
+
 
 class ImportarFichero(QtGui.QDialog):
     def __init__(self, parent, titulo, siErroneos, icono):
@@ -997,7 +1022,7 @@ class ImportarFichero(QtGui.QDialog):
         self.lbRotDuplicados = Controles.LB(self, _("Duplicated") + ":").ponFuente(f)
         self.lbDuplicados = Controles.LB(self, "0").ponFuente(f)
 
-        lbRotImportados = Controles.LB(self, _("Imported") + ":").ponFuente(f)
+        self.lbRotImportados = lbRotImportados = Controles.LB(self, _("Imported") + ":").ponFuente(f)
         self.lbImportados = Controles.LB(self, "0").ponFuente(f)
 
         self.btCancelarSeguir = Controles.PB(self, _("Cancel"), self.cancelar, plano=False).ponIcono(Iconos.Delete())
@@ -1026,6 +1051,9 @@ class ImportarFichero(QtGui.QDialog):
     def cancelar(self):
         self.siCancelado = True
         self.ponContinuar()
+
+    def ponExportados(self):
+        self.lbRotImportados.ponTexto(_("Exported") + ":")
 
     def ponSaving(self):
         self.btCancelarSeguir.setDisabled(True)
@@ -1056,13 +1084,16 @@ class ImportarFichero(QtGui.QDialog):
         QTUtil.refreshGUI()
         return not self.siCancelado
 
+
 class ImportarFicheroPGN(ImportarFichero):
     def __init__(self, parent):
         ImportarFichero.__init__(self, parent, _("PGN file"), True, Iconos.PGN())
 
+
 class ImportarFicheroFNS(ImportarFichero):
     def __init__(self, parent):
         ImportarFichero.__init__(self, parent, _("FNS file"), True, Iconos.Fichero())
+
 
 class ImportarFicheroDB(ImportarFichero):
     def __init__(self, parent):
@@ -1070,6 +1101,7 @@ class ImportarFicheroDB(ImportarFichero):
 
     def actualiza(self, leidos, duplicados, importados):
         return ImportarFichero.actualiza(self, leidos, 0, duplicados, importados)
+
 
 class MensajeFics(QtGui.QDialog):
     def __init__(self, parent, mens):
@@ -1115,6 +1147,7 @@ class MensajeFics(QtGui.QDialog):
         self.siFinalizado = True
         QTUtil.refreshGUI()
 
+
 class MensajeFide(QtGui.QDialog):
     def __init__(self, parent, mens):
         QtGui.QDialog.__init__(self, parent)
@@ -1159,6 +1192,7 @@ class MensajeFide(QtGui.QDialog):
         self.siFinalizado = True
         QTUtil.refreshGUI()
 
+
 def select_pgn(wowner):
     configuracion = VarGen.configuracion
     path = QTUtil2.leeFichero(wowner, configuracion.dirPGN, "pgn")
@@ -1169,6 +1203,7 @@ def select_pgn(wowner):
             configuracion.graba()
     return path
 
+
 def select_ext(wowner, ext):
     configuracion = VarGen.configuracion
     path = QTUtil2.leeFichero(wowner, configuracion.dirSalvados, ext)
@@ -1178,6 +1213,7 @@ def select_ext(wowner, ext):
             configuracion.dirSalvados = carpeta
             configuracion.graba()
     return path
+
 
 def list_irina():
     return (

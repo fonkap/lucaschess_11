@@ -1,10 +1,11 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtCore
 
 from Code import DGT
 from Code.QT import FormLayout
 from Code.QT import Iconos
 from Code import Util
 from Code.Constantes import *
+
 
 def opciones(parent, configuracion):
     separador = (None, None)
@@ -45,16 +46,6 @@ def opciones(parent, configuracion):
     liAsp = []
 
     liAsp.append((_("By default") + ":", False))
-    liAsp.append(separador)
-
-    ## background
-    background_defecto = str(QtGui.QApplication.style().standardPalette().color(QtGui.QPalette.Background).name())
-    config = FormLayout.Colorbox(_("General background"), 20, 20, siSTR=True)
-    background = configuracion.background
-    if not background:
-        background = background_defecto
-
-    liAsp.append((config, background))
     liAsp.append(separador)
 
     ## font general
@@ -202,18 +193,14 @@ def opciones(parent, configuracion):
 
         porDefecto = liAsp[0]
         if porDefecto:
-            liAsp = background_defecto, "", 11, False, 11, False,  QtCore.Qt.ToolButtonTextUnderIcon, 283, 22, 10, False, True, 10
+            liAsp = "", 11, False, 11, False,  QtCore.Qt.ToolButtonTextUnderIcon, 283, 22, 10, False, True, 10
         else:
             del liAsp[0]
-
-        (configuracion.background, configuracion.familia, configuracion.puntosMenu, configuracion.boldMenu,
+        (configuracion.familia, configuracion.puntosMenu, configuracion.boldMenu,
             configuracion.puntosTB, configuracion.boldTB, configuracion.iconsTB,
             configuracion.anchoPGN, configuracion.altoFilaPGN, configuracion.puntosPGN,
             configuracion.siNomPiezasEN, configuracion.figurinesPGN,
             configuracion.tamFontRotulos) = liAsp
-        if configuracion.background == background_defecto:
-            configuracion.background = None
-
         if configuracion.familia == "System":
             configuracion.familia = ""
 
@@ -246,6 +233,7 @@ def opciones(parent, configuracion):
         return True
     else:
         return False
+
 
 def opcionesPrimeraVez(parent, configuracion):
     separador = (None, None)

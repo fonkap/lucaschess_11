@@ -25,6 +25,7 @@ makePV = LCEngine.makePV
 num2move = LCEngine.num2move
 move2num = LCEngine.move2num
 
+
 class TreeSTAT:
     def __init__(self, nomFichero, depth=None):
         self.nomFichero = nomFichero
@@ -44,6 +45,8 @@ class TreeSTAT:
         cursor = self._conexion.cursor()
         cursor.execute("pragma table_info(STATS)")
         if not cursor.fetchall():
+            cursor.execute("PRAGMA page_size = 4096")
+            cursor.execute("PRAGMA synchronous = NORMAL")
             if depth is None:
                 depth = self.defaultDepth
             sql = "CREATE TABLE STATS( HASHFEN INT, W INT, B INT, D INT, O INT, RFATHER INT, XMOVE INT );"
@@ -60,8 +63,6 @@ class TreeSTAT:
             cursor.execute(sql, ("DEPTH", str(depth)))
 
             self._conexion.commit()
-            cursor.execute("PRAGMA synchronous = NORMAL")
-            cursor.execute("PRAGMA page_size = 8192")
         else:
             sql = "SELECT VALUE FROM CONFIG WHERE KEY= ?"
             cursor.execute(sql, ("DEPTH",))
@@ -388,6 +389,7 @@ class TreeSTAT:
         f.close()
         return fich
 
+
 class DBgames:
     def __init__(self, nomFichero):
         self.nomFichero = Util.dirRelativo(nomFichero)
@@ -428,6 +430,9 @@ class DBgames:
         atexit.register(self.close)
 
         self.rowidReader = Util.RowidReader(self.nomFichero, self.tabla)
+
+    def reset_cache(self):
+        self.cache = {}
 
     def addcache(self, rowid, reg):
         if len(self.cache) > self.maxcache:
@@ -498,6 +503,8 @@ class DBgames:
         cursor.close()
 
         if not liCampos:
+            cursor = self._conexion.cursor()
+            cursor.execute("PRAGMA page_size = 4096")
             sql = "CREATE TABLE %s (" % self.tabla
             sql += "XPV VARCHAR NOT NULL PRIMARY KEY,"
             for field in self.liCamposBase:
@@ -505,7 +512,6 @@ class DBgames:
             for field in self.liCamposBLOB:
                 sql += "%s BLOB,"% field
             sql = sql[:-1] + " );"
-            cursor = self._conexion.cursor()
             cursor.execute(sql)
             cursor.close()
 
@@ -876,9 +882,18 @@ class DBgames:
         self._cursor.execute("SELECT %s FROM %s WHERE rowid =%d" % (select, self.tabla, rowid))
         return self._cursor.fetchone()
 
+    def leeRegAllRecno(self, recno):
+        raw = self.leeAllRecno(recno)
+        alm = Util.Almacen()
+        for campo in self.liCamposAll:
+            setattr(alm, campo, raw[campo])
+        return alm, raw
+
     def leePartidaRecno(self, recno):
         raw = self.leeAllRecno(recno)
+        return self.leePartidaRaw(raw)
 
+    def leePartidaRaw(self, raw):
         p = Partida.PartidaCompleta()
         xpgn = raw["PGN"]
         rtags = None
@@ -1002,6 +1017,8 @@ class DBgames:
         self.dbSTAT.append(pvAnt, resAnt, -1)
         self.dbSTAT.append(pvNue, resNue, +1)
 
+        del self.cache[rowid]
+
         return True
 
     def inserta(self, partidaCompleta):
@@ -1035,3 +1052,59 @@ class DBgames:
 
     def guardaPartidaRecno(self, recno, partidaCompleta):
         return self.inserta(partidaCompleta) if recno is None else self.modifica(recno, partidaCompleta)
+
+    def massive_change_tags(self, li_tags_change, liRegistros, overwrite):
+        dtag = Util.SymbolDict({tag:val for tag, val in li_tags_change})
+
+        for recno in liRegistros:
+            alm, raw = self.leeRegAllRecno(recno)
+
+            for tag in ("EVENT","SITE","DATE","WHITE","BLACK","RESULT","ECO","WHITEELO","BLACKELO"):
+                if tag in dtag:
+                    ant = getattr(alm, tag.upper())
+                    if (ant and overwrite) or not ant:
+                        setattr(alm, tag.upper(), dtag[tag])
+
+            p = self.leePartidaRaw(raw)
+
+            st_tag_ant_upper = set()
+            for n, (tag, val) in enumerate(p.liTags):
+                if overwrite:
+                    if tag in dtag:
+                        p.liTags[n] = [tag, dtag[tag]]
+                st_tag_ant_upper.add(tag.upper())
+
+            for tag_new in dtag:
+                if tag_new.upper() not in st_tag_ant_upper:
+                    p.liTags.append([tag_new, dtag[tag_new]])
+
+            rowid = self.liRowids[recno]
+            pgn = {"FULLGAME": p.save()}
+            xpgn = Util.var2blob(pgn)
+            sql = "UPDATE GAMES SET EVENT=?, SITE=?, DATE=?, WHITE=?, BLACK=?, RESULT=?, " \
+                  "ECO=?, WHITEELO=?, BLACKELO=?, PGN=? WHERE ROWID = %d" % rowid
+            self._cursor.execute(sql, (alm.EVENT, alm.SITE, alm.DATE, alm.WHITE, alm.BLACK, alm.RESULT,
+                                       alm.ECO, alm.WHITEELO, alm.BLACKELO, xpgn))
+
+        self._conexion.commit()
+
+        self.reset_cache()
+
+    def insert_pks(self, path_pks):
+        f = open(path_pks, "rb")
+        txt = f.read()
+        f.close()
+        dic = Util.txt2dic(txt)
+        fen = dic.get("FEN")
+        if fen:
+            return _("This pks file is not a complete game")
+
+        liTags = dic.get("liPGN", [])
+
+        partidaCompleta = Partida.PartidaCompleta(liTags=liTags)
+        partidaCompleta.recuperaDeTexto(dic["PARTIDA"])
+
+        if not self.inserta(partidaCompleta):
+            return _("This game already exists.")
+
+        return None

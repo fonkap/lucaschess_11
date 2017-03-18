@@ -14,6 +14,7 @@ from Code.SQL import Base
 from Code import Util
 from Code.Constantes import *
 
+
 class GestorFideFics(Gestor.Gestor):
     def selecciona(self, tipo):
         if tipo == "Fics":
@@ -493,6 +494,7 @@ class GestorFideFics(Gestor.Gestor):
 
     def atras(self):
         if self.partida.numJugadas() > 2:
+            self.analizaFinal()
             ndel = self.partida.anulaUltimoMovimiento(self.siJugamosConBlancas)
             self.listaAperturasStd.asignaApertura(self.partida)
             self.posJugadaObj -= ndel

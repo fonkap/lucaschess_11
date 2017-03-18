@@ -20,6 +20,7 @@ from Code import STS
 from Code import Util
 from Code import VarGen
 
+
 class WRun(QTVarios.WDialogo):
     def __init__(self, wParent, sts, work, procesador):
         titulo = "%s - %s - %s" % (sts.name, work.ref, work.pathToExe())
@@ -256,6 +257,7 @@ class WRun(QTVarios.WDialogo):
             for key, r in self.dworks.iteritems():
                 r.labels[ng].is_max = key in st
 
+
 class WWork(QtGui.QDialog):
     def __init__(self, wParent, sts, work):
         super(WWork, self).__init__(wParent)
@@ -371,6 +373,7 @@ class WWork(QtGui.QDialog):
         for n, group in enumerate(self.liGroups):
             self.work.liGroupActive[n] = group.valor()
         self.accept()
+
 
 class WUnSTS(QTVarios.WDialogo):
     def __init__(self, wParent, sts, procesador):
@@ -564,6 +567,7 @@ class WUnSTS(QTVarios.WDialogo):
             self.grid.refresh()
             self.grid.gotop()
 
+
 class WSTS(QTVarios.WDialogo):
     def __init__(self, wParent, procesador):
 
@@ -719,6 +723,7 @@ class WSTS(QTVarios.WDialogo):
                 sts = STS.STS(nombre)
                 self.reread()
                 self.trabajar(sts)
+
 
 def sts(procesador, parent):
     w = WSTS(parent, procesador)

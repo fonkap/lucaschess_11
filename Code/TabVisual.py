@@ -5,11 +5,13 @@ from Code.QT import TabTipos
 from Code import TrListas
 from Code import Util
 
+
 class PFlecha(TabTipos.Flecha):
     def __init__(self):
         TabTipos.Flecha.__init__(self)
         self.nombre = ""
         self.id = None
+
 
 class PMarco(TabTipos.Marco):
     def __init__(self):
@@ -17,11 +19,13 @@ class PMarco(TabTipos.Marco):
         self.nombre = ""
         self.id = None
 
+
 class PSVG(TabTipos.SVG):
     def __init__(self):
         TabTipos.SVG.__init__(self)
         self.nombre = ""
         self.id = None
+
 
 class PMarker(TabTipos.Marker):
     def __init__(self):
@@ -30,6 +34,7 @@ class PMarker(TabTipos.Marker):
         self.id = None
 
 TP_FLECHA, TP_MARCO, TP_TEXTO, TP_SVG, TP_MARKER, TP_JUGADA, TP_POSICION, TP_PIEZACREA, TP_PIEZAMUEVE, TP_PIEZABORRA, TP_SONIDO = "F", "M", "T", "S", "X", "J", "PO", "PC", "PM", "PB", "SO"
+
 
 class GTarea:
     def __init__(self, tp):
@@ -85,6 +90,7 @@ class GTarea:
                 valor = getattr(reg, atr)
                 setattr(self, atr, valor)
 
+
 class GT_Item(GTarea):
     def __init__(self, tp):
         GTarea.__init__(self, tp)
@@ -132,6 +138,7 @@ class GT_Item(GTarea):
                 self.xitemSCOwner.reset()
             self.xitemSCOwner.escena.update()
 
+
 class GT_Texto(GT_Item):
     def __init__(self):
         GT_Item.__init__(self, TP_TEXTO)
@@ -154,6 +161,7 @@ class GT_Texto(GT_Item):
             return self._tam
         return self._tam
 
+
 class GT_Flecha(GT_Item):
     def __init__(self):
         GT_Item.__init__(self, TP_FLECHA)
@@ -165,6 +173,7 @@ class GT_Flecha(GT_Item):
         bd = self._itemSC.bloqueDatos
         return bd.a1h8
 
+
 class GT_Marco(GT_Item):
     def __init__(self):
         GT_Item.__init__(self, TP_MARCO)
@@ -175,6 +184,7 @@ class GT_Marco(GT_Item):
     def info(self):
         bd = self._itemSC.bloqueDatos
         return bd.a1h8
+
 
 class GT_SVG(GT_Item):
     def __init__(self):
@@ -192,6 +202,7 @@ class GT_SVG(GT_Item):
 
         return "(%.02f,%.02f)-(%.02f,%.02f)" % (f(p.x), f(p.y), f(p.ancho), f(p.alto))
 
+
 class GT_Marker(GT_Item):
     def __init__(self):
         GT_Item.__init__(self, TP_MARKER)
@@ -202,6 +213,7 @@ class GT_Marker(GT_Item):
     def info(self):
         bd = self._itemSC.bloqueDatos
         return bd.a1h8
+
 
 class GT_Posicion(GTarea):
     def __init__(self):
@@ -225,6 +237,7 @@ class GT_Posicion(GTarea):
     def info(self):
         return self._fen if self._fen else ""
 
+
 class GT_PiezaMueve(GTarea):
     def __init__(self):
         GTarea.__init__(self, TP_PIEZAMUEVE)
@@ -242,6 +255,7 @@ class GT_PiezaMueve(GTarea):
 
     def info(self):
         return self._desde + " -> " + self._hasta
+
 
 class GT_PiezaCrea(GTarea):
     def __init__(self):
@@ -266,6 +280,7 @@ class GT_PiezaCrea(GTarea):
         pz = TrListas.letterPiece(self._pieza)
         return (pz if pz.isupper() else pz.lower()) + " -> " + self._desde
 
+
 class GT_PiezaBorra(GTarea):
     def __init__(self):
         GTarea.__init__(self, TP_PIEZABORRA)
@@ -288,6 +303,7 @@ class GT_PiezaBorra(GTarea):
     def info(self):
         pz = TrListas.letterPiece(self._pieza)
         return (pz if pz.isupper() else pz.lower()) + " -> " + self._desde
+
 
 class GT_Jugada(GTarea):
     def __init__(self):
@@ -325,6 +341,7 @@ class GT_Jugada(GTarea):
                 else:
                     valor = getattr(reg, atr)
                     setattr(self, atr, valor)
+
 
 class Guion:
     def __init__(self):

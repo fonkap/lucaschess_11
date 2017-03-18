@@ -14,6 +14,7 @@ import Code.SQL.DBF as SQLDBF
 from Code import Util
 from Code import VarGen
 
+
 class UnMove:
     def __init__(self, bookGuide, father):
         self.bookGuide = bookGuide
@@ -249,6 +250,7 @@ class UnMove:
             return
         self.readedEXT = True
         self.bookGuide.readEXT(self)
+
 
 class BookGuide:
     def __init__(self, wowner, nomFichero=None):
@@ -860,6 +862,7 @@ class BookGuide:
         uno(rt)
 
         return liT
+
 
 class DBanalisis:
     def __init__(self):

@@ -7,6 +7,7 @@ from Code.QT import QTVarios
 from Code.QT import WBase
 from Code.QT import WInformacion
 
+
 class EstadoWindow:
     def __init__(self, x):
         self.noEstado = x == QtCore.Qt.WindowNoState
@@ -14,7 +15,6 @@ class EstadoWindow:
         self.maximizado = x == QtCore.Qt.WindowMaximized
         self.fullscreen = x == QtCore.Qt.WindowFullScreen
         self.active = x == QtCore.Qt.WindowActive
-
 
 
 class Pantalla():
@@ -304,10 +304,6 @@ class Pantalla():
                 self.informacionPGN.splitter.setSizes(sizes)
                 break
 
-    def quitaChat(self):
-        self.chat.hide()
-        self.ajustaTamH()
-
     def ponCapturas(self, dic, jg, apertura):
         self.capturas.pon(dic, jg, apertura)
 
@@ -391,6 +387,12 @@ class PantallaWidget(QTVarios.WWidget, Pantalla):
         QTVarios.WWidget.__init__(self, owner, titulo, icono, extparam)
         Pantalla.__init__(self, gestor, owner)
 
+    def accept(self):
+        self.close()
+
+    def reject(self):
+        self.close()
+
 
 class PantallaDialog(QTVarios.WDialogo, Pantalla):
     def __init__(self, gestor, owner=None):
@@ -401,4 +403,3 @@ class PantallaDialog(QTVarios.WDialogo, Pantalla):
         extparam = "maind"
         QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
         Pantalla.__init__(self, gestor, owner)
-

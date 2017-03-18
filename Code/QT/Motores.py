@@ -16,6 +16,7 @@ from Code.QT import QTVarios
 
 INTERNO, EXTERNO, MICGM, MICPER, FIXED, IRINA, ELO = range(7)
 
+
 class Motores:
     def __init__(self, configuracion):
         self.configuracion = configuracion

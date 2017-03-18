@@ -1,10 +1,10 @@
 import os
-import sys
 
 from PyQt4 import QtCore, QtGui
 
 from Code.QT import QTUtil
 from Code import Util
+
 
 class Scanner_vars:
     def __init__(self, folder_scanners):
@@ -29,13 +29,14 @@ class Scanner_vars:
         }
         Util.dic8iniBase(self.fich_vars, dic)
 
-class Scanner(QtGui.QWidget):
-    def __init__(self, cpu):
-        QtGui.QWidget.__init__(self)
 
-        self.cpu = cpu
+class Scanner(QtGui.QDialog):
+    def __init__(self, folder_scanners, fich_png):
+        QtGui.QDialog.__init__(self)
 
-        self.vars = Scanner_vars(cpu.folder_scanners)
+        self.vars = Scanner_vars(folder_scanners)
+
+        self.fich_png = fich_png
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setWindowOpacity(self.vars.opacity)
@@ -47,12 +48,19 @@ class Scanner(QtGui.QWidget):
         self.x = self.y = self.width = 0
 
     def quit(self, ok):
+        self.hide()
         if ok:
             self.vars.write()
             rect = QtCore.QRect(self.x, self.y, self.width, self.width)
+            desktop = QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId(), 0, 0,
+                                               QTUtil.anchoEscritorio(), QTUtil.altoEscritorio())
+            selected_pixmap = desktop.copy(rect)
+            selected_pixmap = selected_pixmap.scaled(256, 256, transformMode=QtCore.Qt.SmoothTransformation)
+            selected_pixmap.save(self.fich_png)
         else:
-            rect = None
-        self.cpu.end(rect)
+            with open(self.fich_png, "wb") as q:
+                q.write("")
+        self.close()
 
     def paintEvent(self, event):
         if self.path:
@@ -175,35 +183,3 @@ class Scanner(QtGui.QWidget):
                 self.setPathW()
 
         event.ignore()
-
-class CPU:
-    def __init__(self, fich_png, folder_scanners):
-        self.fich_png = fich_png
-        self.folder_scanners = folder_scanners
-
-    def end(self, rect):
-        self.scanner.close()
-        if rect:
-            desktop = QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId(), 0, 0,
-                                               QTUtil.anchoEscritorio(), QTUtil.altoEscritorio())
-            selected_pixmap = desktop.copy(rect)
-            selected_pixmap = selected_pixmap.scaled(256, 256, transformMode=QtCore.Qt.SmoothTransformation)
-            selected_pixmap.save(self.fich_png)
-        else:
-            with open(self.fich_png, "wb") as q:
-                q.write("")
-
-    def run(self):
-        app = QtGui.QApplication(sys.argv)
-        self.scanner = Scanner(self)
-        self.scanner.show()
-        app.exec_()
-
-def run(fdb, folder_scanners):
-    ferr = open("./bug.scanner", "at")
-    sys.stderr = ferr
-
-    cpu = CPU(fdb, folder_scanners)
-    cpu.run()
-
-    ferr.close()

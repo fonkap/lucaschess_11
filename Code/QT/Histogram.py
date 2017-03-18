@@ -1,8 +1,16 @@
 # coding=utf-8
 
+import os
+
 from PyQt4 import QtCore, QtGui
 
 from Code import Util
+from Code import VarGen
+from Code.QT import QTUtil
+from Code.QT import QTUtil2
+from Code.QT import QTVarios
+from Code.QT import Iconos
+
 
 class HSerie:
     def __init__(self, siPawns):
@@ -57,6 +65,7 @@ class HSerie:
             ry_elo = -(point.elo-self.minimum_elo)*self.factor_elo
             point.set_rxy(rx, ry, ry_elo)
 
+
 class HPoint:
     def __init__(self, nummove, value, lostp, lostp_abs, tooltip, elo):
         self.nummove = nummove
@@ -98,6 +107,7 @@ class HPoint:
 
     def clone(self):
         return HPoint(self.nummove, self.value, self.lostp, self.lostp_abs, self.tooltip, self.elo)
+
 
 class GraphPoint(QtGui.QGraphicsItem):
     def __init__(self, histogram, point, si_values):
@@ -144,6 +154,7 @@ class GraphPoint(QtGui.QGraphicsItem):
 
     def mouseDoubleClickEvent(self, event):
         self.histogram.dispatch_enter(self.point.gridPos)
+
 
 class GraphToolTip(QtGui.QGraphicsItem):
     def __init__(self, graph):
@@ -193,6 +204,7 @@ class GraphToolTip(QtGui.QGraphicsItem):
         painter.setBrush(QtGui.QBrush(QtGui.QColor("#F1EDED")))
         painter.drawRect(self.xrect)
         painter.drawText( self.xrect, QtCore.Qt.AlignCenter, self.texto)
+
 
 class Histogram(QtGui.QGraphicsView):
     def __init__(self, owner, hserie, grid, ancho, si_values):
@@ -386,6 +398,24 @@ class Histogram(QtGui.QGraphicsView):
             if p.rlostp:
                 if p.rect_lost.contains(ep):
                     self.dispatch(p.gridPos)
+        if event.button() == QtCore.Qt.RightButton:
+            menu = QTVarios.LCMenu(self)
+            menu.opcion("clip", _("Copy to clipboard"), Iconos.Clip())
+            menu.separador()
+            menu.opcion("file", _("Save") + " png", Iconos.GrabarFichero())
+            resp = menu.lanza()
+            if resp:
+                pm = QtGui.QPixmap.grabWidget(self)
+                if resp == "clip":
+                    QTUtil.ponPortapapeles(pm, tipo="p")
+                else:
+                    configuracion = VarGen.configuracion
+                    path = QTUtil2.salvaFichero(self, _("File to save"), configuracion.dirSalvados,
+                                                "%s PNG (*.png)" % _("File"), False)
+                    if path:
+                        pm.save(path, "png")
+                        configuracion.dirSalvados = os.path.dirname(path)
+                        configuracion.graba()
 
     def mouseDoubleClickEvent(self, event):
         super(Histogram, self).mouseDoubleClickEvent(event)
@@ -398,6 +428,7 @@ class Histogram(QtGui.QGraphicsView):
     def wheelEvent(self, event):
         k = QtCore.Qt.Key_Left if event.delta() > 0 else QtCore.Qt.Key_Right
         self.owner.gridTeclaControl(self.grid, k, False, False, False)
+
 
 def genHistograms(partida, sicentipawns):
     siPawns = not sicentipawns

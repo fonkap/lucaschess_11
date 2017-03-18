@@ -10,6 +10,7 @@ from Code import Util
 from Code import XMotorRespuesta
 from Code.Constantes import *
 
+
 def listaMotoresElo():
     x = """amyan|1|1112|5461
 amyan|2|1360|6597
@@ -135,6 +136,7 @@ umko|4|2081|7887"""
         li.append((elo, clave, depth))
     return li
 
+
 class MotorElo:
     def __init__(self, elo, nombre, clave, depth):
         self.elo = elo
@@ -155,6 +157,7 @@ class MotorElo:
             resp += " %d" % self.depth
         resp += " (%d)" % self.elo
         return resp
+
 
 class GestorElo(Gestor.Gestor):
     def valores(self):
