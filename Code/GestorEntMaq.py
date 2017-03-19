@@ -762,7 +762,11 @@ class GestorEntMaq(Gestor.Gestor):
             return False
 
         self.analizaTutorFinal()  # tiene que acabar siempre
-        if not siElegido and self.siTutorActivado:
+
+        # comprobacion de mate
+        mate = jg.posicion.siTerminada() and jg.siJaque
+
+        if not siElegido and self.siTutorActivado and not mate:
             rmUser, n = self.mrmTutor.buscaRM(movimiento)
             if not rmUser:
                 rmUser = self.xtutor.valora(self.partida.ultPosicion, desde, hasta, jg.coronacion)

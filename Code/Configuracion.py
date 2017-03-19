@@ -144,6 +144,7 @@ class Configuracion:
         self.tutorDifPorc = 0
 
         self.tiempoTutor = 3000
+        self.profTutor = 0
 
         self.siSuenaBeep = False
         self.siSuenaNuestro = False

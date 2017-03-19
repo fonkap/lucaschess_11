@@ -259,7 +259,7 @@ class Procesador:
 
     def creaXTutor(self):
         xtutor = XGestorMotor.GestorMotor(self, self.configuracion.tutor)
-        xtutor.opciones(self.configuracion.tiempoTutor, None, True)
+        xtutor.opciones(self.configuracion.tiempoTutor, self.configuracion.profTutor, True)
         if self.configuracion.tutorMultiPV == 0:
             xtutor.maximizaMultiPV()
         else:

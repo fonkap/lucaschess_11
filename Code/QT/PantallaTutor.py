@@ -9,6 +9,7 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code.QT import Tablero
 from Code import VarGen
+from Code import Util
 from Code.Constantes import *
 
 class PantallaTutor(QTVarios.WDialogo):
@@ -192,7 +193,16 @@ def cambioTutor(parent, configuracion):
     liGen.append((_("Engine") + ":", configuracion.ayudaCambioTutor()))
 
     # # Decimas de segundo a pensar el tutor
-    liGen.append((_("Duration of engine analysis (secs)") + ":", float(configuracion.tiempoTutor / 1000.0)))
+    liGen.append((FormLayout.Editbox(_("Duration of engine analysis (secs)"), 40, tipo=float), float(configuracion.tiempoTutor / 1000.0)))
+
+    # Depth
+    liDepths = [("--", 0)]
+    for x in range(1, 31):
+        liDepths.append((str(x), x))
+    config = FormLayout.Combobox(_("Depth"), liDepths)
+    liGen.append((config, configuracion.profTutor))
+
+
     li = [(_("Maximum"), 0)]
     for x in (1, 3, 5, 10, 15, 20, 30, 40, 50, 75, 100, 150, 200):
         li.append((str(x), x))
@@ -203,14 +213,34 @@ def cambioTutor(parent, configuracion):
     liGen.append((FormLayout.Spinbox(_("Minimum difference in points"), 0, 1000, 70), configuracion.tutorDifPts))
     liGen.append((FormLayout.Spinbox(_("Minimum difference in %"), 0, 1000, 70), configuracion.tutorDifPorc))
 
+    reg = Util.Almacen()
+    reg.form = None
+
+    def dispatchR(valor):
+        if reg.form is None:
+            if isinstance(valor, FormLayout.FormWidget):
+                reg.form = valor
+                reg.wtime = valor.getWidget(1)
+                reg.wdepth = valor.getWidget(2)
+        else:
+            sender = reg.form.sender()
+            if sender == reg.wtime:
+                if reg.wtime.textoFloat() > 0:
+                    reg.wdepth.setCurrentIndex(0)
+            elif sender == reg.wdepth:
+                if reg.wdepth.currentIndex() > 0:
+                    reg.wtime.ponFloat(0.0)
+            QTUtil.refreshGUI()
+
     # Editamos
-    resultado = FormLayout.fedit(liGen, title=_("Tutor change"), parent=parent, anchoMinimo=460, icon=Iconos.Opciones())
+    resultado = FormLayout.fedit(liGen, title=_("Tutor change"), parent=parent, anchoMinimo=460, icon=Iconos.Opciones(), dispatch=dispatchR)
 
     if resultado:
-        claveMotor, tiempo, multiPV, difpts, difporc = resultado[1]
+        claveMotor, tiempo, prof, multiPV, difpts, difporc = resultado[1]
         configuracion.tutor = configuracion.buscaTutor(claveMotor)
         configuracion.tiempoTutor = int(tiempo * 1000)
         configuracion.tutorMultiPV = multiPV
+        configuracion.profTutor = prof
         configuracion.tutorDifPts = difpts
         configuracion.tutorDifPorc = difporc
         configuracion.graba()
