@@ -7,6 +7,7 @@ from Code.QT import QTUtil2
 from Code import XMotorRespuesta
 from Code.Constantes import *
 
+
 class GestorBooks(Gestor.Gestor):
     def inicio(self, libro, siBlancas, jugContrario, jugJugador):
 

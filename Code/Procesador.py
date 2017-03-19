@@ -57,9 +57,9 @@ from Code import Routes
 from Code import Util
 from Code import VarGen
 from Code import XGestorMotor
-from Code import XMotor
 from Code import EngineThread
 from Code.Constantes import *
+
 
 class Procesador:
     """
@@ -113,7 +113,7 @@ class Procesador:
                 xkibitzer.terminar()
 
     def iniciarGUI(self):
-        self.pantalla = Pantalla.Pantalla(self)
+        self.pantalla = Pantalla.PantallaWidget(self)
         self.pantalla.ponGestor(self)  # antes que muestra
         self.pantalla.muestra()
 
@@ -144,9 +144,9 @@ class Procesador:
                 elif comandoL.endswith(".lcg"):
                     self.externDatabase(comando)
                     return
-                elif comandoL.endswith(".lcf"):
-                    self.externDatabaseFEN(comando)
-                    return
+                # elif comandoL.endswith(".lcf"):
+                #     self.externDatabaseFEN(comando)
+                #     return
                 elif comandoL.endswith(".bmt"):
                     self.inicio()
                     self.externBMT(comando)
@@ -327,7 +327,25 @@ class Procesador:
         menu.opcion(("competition", None), _("Competition"), Iconos.NuevaPartida())
         menu.separador()
 
-        menu.opcion(("elo", None), _("Elo-Rating"), Iconos.Elo())
+        submenu = menu.submenu(_("Elo-Rating"), Iconos.Elo())
+        submenu.opcion(("lucaselo",0), "%s (%d)" % (_("Lucas-Elo"), self.configuracion.elo), Iconos.Elo())
+        submenu.separador()
+        if VarGen.isWindows or VarGen.isWine:
+            submenu.opcion(("micelo",0), "%s (%d)" % (_("Tourney-Elo"), self.configuracion.michelo), Iconos.EloTimed())
+            submenu.separador()
+        fics = self.configuracion.fics
+        menuf = submenu.submenu("%s (%d)" % (_("Fics-Elo"), fics), Iconos.Fics())
+        rp = QTVarios.rondoPuntos()
+        for elo in range(900, 2800, 100):
+            if (elo == 900) or (0 <= (elo + 99 - fics) <= 400 or 0 <= (fics - elo) <= 400):
+                menuf.opcion(("fics", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
+        submenu.separador()
+        fide = self.configuracion.fide
+        menuf = submenu.submenu("%s (%d)" % (_("Fide-Elo"), fide), Iconos.Fide())
+        for elo in range(1500, 2700, 100):
+            if (elo == 1500) or (0 <= (elo + 99 - fide) <= 400 or 0 <= (fide - elo) <= 400):
+                menuf.opcion(("fide", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
+
         menu.separador()
 
         # Principiantes ----------------------------------------------------------------------------------------
@@ -370,13 +388,24 @@ class Procesador:
             elif tipo == "competition":
                 self.competicion()
 
-            elif tipo == "elo":
-                self.elo()
+            elif tipo == "lucaselo":
+                self.lucaselo(True)
+
+            elif tipo == "micelo":
+                self.micelo(True)
+
+            elif tipo == "fics":
+                self.ficselo(True, rival)
+
+            elif tipo == "fide":
+                self.fideelo(True, rival)
 
             elif tipo == "person":
                 self.playPerson(rival)
+
             elif tipo == "animales":
                 self.albumAnimales(rival)
+
             elif tipo == "vehicles":
                 self.albumVehicles(rival)
 
@@ -477,22 +506,9 @@ class Procesador:
         menu1 = menu.submenu(_("Colors"), Iconos.Colores())
         menu1.opcion(self.editaColoresTablero, _("Main board"), Iconos.EditarColores())
         menu1.separador()
-        menu1.opcion(self.cambiaColoresPGN, _("PGN"), Iconos.Vista())
+        menu1.opcion(self.cambiaColores, _("General"), Iconos.Vista())
         menu.separador()
 
-        menu1 = menu.submenu(_("Change board size"), Iconos.TamTablero())
-        menu1.opcion(self.size_main, _("Main board"), Iconos.PuntoVerde())
-        menu1.separador()
-        menu2 = menu1.submenu(_("Tutor board"), Iconos.PuntoAzul())
-        for txt, size in ((_("Large"), 64),
-                          (_("Medium"), 48),
-                          (_("Medium-small"), 32),
-                          (_("Small"), 24),
-                          (_("Very small"), 16)):
-            menu2.opcion((self.size_tutor, size), txt, Iconos.PuntoNaranja())
-            menu2.separador()
-
-        menu.separador()
         menu1 = menu.submenu(_("Sound"), Iconos.SoundTool())
         menu1.opcion(self.sonidos, _("Custom sounds"), Iconos.S_Play())
         menu.separador()
@@ -528,16 +544,9 @@ class Procesador:
         w = PantallaColores.WColores(self.tablero)
         w.exec_()
 
-    def cambiaColoresPGN(self):
-        PantallaColores.cambiaColoresPGN(self.pantalla, self.configuracion)
-
-    def size_main(self):
-        self.tablero.cambiaSize()
-
-    def size_tutor(self, tam):
-        confTablero = self.configuracion.confTablero("TUTOR", 16)
-        confTablero.anchoPieza(tam)
-        confTablero.guardaEnDisco()
+    def cambiaColores(self):
+        if PantallaColores.cambiaColores(self.pantalla, self.configuracion):
+            self.reiniciar()
 
     def sonidos(self):
         w = PantallaSonido.WSonidos(self)
@@ -670,8 +679,8 @@ class Procesador:
 
         menu1 = menu.submenu(_("Database"), Iconos.Database())
         menu1.opcion("database", _("Complete games"), Iconos.DatabaseC())
-        # menu1.separador()
-        # menu1.opcion("databaseFEN", _("Positions"), Iconos.DatabaseF()) # TODO
+        menu1.separador()
+        menu1.opcion("databaseFEN", _("Positions"), Iconos.DatabaseF()) # TODO
         menu.separador()
 
         menu.opcion("manual_save", _("Save positions to FNS/PGN"), Iconos.ManualSave())
@@ -978,6 +987,7 @@ class Procesador:
     #     dic = GestorSolo.pgn_json(estado, pgn)
     #     return dic
 
+
 class ProcesadorVariantes(Procesador):
 
     def __init__(self, wpantalla, liKibitzersActivas, xtutor, liEngines):
@@ -991,7 +1001,7 @@ class ProcesadorVariantes(Procesador):
 
         self.siPresentacion = False
 
-        self.pantalla = Pantalla.Pantalla(self, wpantalla)
+        self.pantalla = Pantalla.PantallaDialog(self, wpantalla)
         self.pantalla.ponGestor(self)
 
         self.tablero = self.pantalla.tablero

@@ -12,6 +12,7 @@ from Code import VarGen
 from Code import Util
 from Code.Constantes import *
 
+
 class PantallaTutor(QTVarios.WDialogo):
     def __init__(self, gestor, tutor, siRival, siAperturas, siBlancas, siPuntos):
         titulo = _("Analyzing your move")
@@ -185,6 +186,7 @@ class PantallaTutor(QTVarios.WDialogo):
         if hasattr(self, "timer"):
             self.timer.stop()
             delattr(self, "timer")
+
 
 def cambioTutor(parent, configuracion):
     liGen = [(None, None)]

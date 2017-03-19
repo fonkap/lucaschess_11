@@ -8,6 +8,7 @@ from Code import ControlPosicion
 from Code import Util
 from Code import VarGen
 
+
 class ListaLibros:
     def __init__(self):
         self.lista = []
@@ -159,6 +160,7 @@ class ListaLibros:
 
         return liResp
 
+
 class Libro:
     def __init__(self, tipo, nombre, path, pordefecto, extras=None):
         self.tipo = tipo
@@ -203,7 +205,6 @@ class Libro:
         return listaJugadas
 
     def eligeJugadaTipo(self, fen, tipo):
-
         maxim = 0
         liMax = []
         li = self.book.lista(self.path, fen)
@@ -212,7 +213,7 @@ class Libro:
             return None
 
         elif nli == 1:
-            return li[0].pv()
+            pv = li[0].pv()
 
         elif tipo == "mp":  # Mejor posicion
             for entry in li:
@@ -243,9 +244,9 @@ class Libro:
             pv = li[pos].pv()
 
         else:
-            pv = None
+            return None
 
-        return pv
+        return pv.lower()
 
     def miraListaPV(self, fen, siMax):
         li = self.book.lista(self.path, fen)
@@ -265,6 +266,7 @@ class Libro:
                 liResp.append(entry.pv())
 
         return liResp
+
 
 class Entry:
     key = 0L
@@ -287,6 +289,7 @@ class Entry:
             pv += " nbrq"[p]
 
         return {"e1h1": "e1g1", "e1a1": "e1c1", "e8h8": "e8g8", "e8a8": "e8c8"}.get(pv, pv)
+
 
 class Polyglot:
     """

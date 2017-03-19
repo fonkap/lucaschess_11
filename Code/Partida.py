@@ -3,6 +3,7 @@ from Code import ControlPosicion
 from Code import Jugada
 from Code import AperturasStd
 
+
 class Partida:
     def __init__(self, iniPosicion=None, fen=None):
         self.firstComment = ""
@@ -340,16 +341,19 @@ class Partida:
         for jg in self.liJugadas:
             jg.analisis = None
 
+
 def pv_san(fen, pv):
     p = Partida(fen=fen)
     p.leerPV(pv)
     jg = p.jugada(0)
     return jg.pgnSP()
 
+
 def pv_pgn(fen, pv):
     p = Partida(fen=fen)
     p.leerPV(pv)
     return p.pgnSP()
+
 
 class PartidaCompleta(Partida):
     def __init__(self, iniPosicion=None, fen=None, liTags=None):
@@ -396,4 +400,15 @@ class PartidaCompleta(Partida):
         txt = "".join(li)
         txt += "\n%s"%self.pgnBase()
         return txt
+
+    def resetFEN(self, fen):
+        ok = False
+        for n, tag in enumerate(self.liTags):
+            if tag[0] == "FEN":
+                self.liTags[n] = ("FEN", fen)
+                ok = True
+                break
+        if not ok and fen != ControlPosicion.FEN_INICIAL:
+            self.liTags.append(("FEN", fen))
+        Partida.resetFEN(self, fen)
 

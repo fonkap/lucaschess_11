@@ -13,6 +13,7 @@ from Code import XMotorRespuesta
 from Code import Washing
 from Code.Constantes import *
 
+
 def gestorWashing(procesador):
     dbwashing = Washing.DBWashing(procesador.configuracion)
     washing = dbwashing.washing
@@ -28,6 +29,7 @@ def gestorWashing(procesador):
     elif engine.state == Washing.REPLAY:
         procesador.gestor = GestorWashingReplay(procesador)
         procesador.gestor.inicio(dbwashing, washing, engine)
+
 
 class GestorWashingReplay(Gestor.Gestor):
     def inicio(self, dbwashing, washing, engine):
@@ -238,6 +240,7 @@ class GestorWashingReplay(Gestor.Gestor):
     def finalX(self):
         self.procesador.inicio()
         return False
+
 
 class GestorWashingTactics(Gestor.Gestor):
     def inicio(self, dbwashing, washing, engine):
@@ -451,6 +454,7 @@ class GestorWashingTactics(Gestor.Gestor):
         self.procesador.inicio()
         return False
 
+
 class GestorWashingCreate(Gestor.Gestor):
     def inicio(self, dbwashing, washing, engine):
         self.dbwashing = dbwashing
@@ -583,7 +587,7 @@ class GestorWashingCreate(Gestor.Gestor):
 
     def juegaHumano(self, siBlancas):
         self.siJuegaHumano = True
-        self.analizaTutorInicio()
+        self.analizaInicio()
         self.timekeeper.start()
         self.activaColor(siBlancas)
 
@@ -606,7 +610,7 @@ class GestorWashingCreate(Gestor.Gestor):
         else:
             self.rutinaAccionDef(clave)
 
-    def analizaTutorInicio(self):
+    def analizaInicio(self):
         self.siAnalizando = False
         self.siAnalizadoTutor = False
         if self.continueTt:
@@ -626,7 +630,7 @@ class GestorWashingCreate(Gestor.Gestor):
                     if mrm:
                         QtCore.QTimer.singleShot(1000, self.analizaSiguiente)
 
-    def analizaTutorFinal(self):
+    def analizaFinal(self):
         estado = self.siAnalizando
         self.siAnalizando = False
         if self.siAnalizadoTutor:
@@ -637,6 +641,15 @@ class GestorWashingCreate(Gestor.Gestor):
             self.pensando(False)
         else:
             self.mrmTutor = self.analizaTutor()
+
+    def analizaTerminar(self):
+        if self.siAnalizando:
+            self.siAnalizando = False
+            self.xtutor.ac_final(-1)
+
+    def sigueHumanoAnalisis(self):
+        self.analizaInicio()
+        Gestor.Gestor.sigueHumano(self)
 
     def mueveHumano(self, desde, hasta, coronacion=None):
         jg = self.checkMueveHumano(desde, hasta, coronacion)
@@ -661,7 +674,7 @@ class GestorWashingCreate(Gestor.Gestor):
             self.sigueHumano()
             return False
 
-        self.analizaTutorFinal()  # tiene que acabar siempre
+        self.analizaFinal()  # tiene que acabar siempre
         if not siElegido:
             rmUser, n = self.mrmTutor.buscaRM(movimiento)
             if not rmUser:
@@ -756,9 +769,7 @@ class GestorWashingCreate(Gestor.Gestor):
         return False
 
     def finalizar(self):
-        if self.siAnalizando:
-            self.siAnalizando = False
-            self.xtutor.ac_final(-1)
+        self.analizaTerminar()
         self.pantalla.activaJuego(False, False)
         self.quitaCapturas()
         self.procesador.inicio()
@@ -793,6 +804,7 @@ class GestorWashingCreate(Gestor.Gestor):
 
     def atras(self):
         if self.partida.numJugadas():
+            self.analizaTerminar()
             self.partida.anulaUltimoMovimiento(self.siJugamosConBlancas)
             self.listaAperturasStd.asignaApertura(self.partida)
             self.ponteAlFinal()

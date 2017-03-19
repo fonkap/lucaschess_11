@@ -7,6 +7,7 @@ from Code.QT import QTVarios
 from Code.QT import WBG_GamesFEN
 from Code.QT import WBG_InfoMove
 
+
 class WBDatabaseFEN(QTVarios.WDialogo):
     def __init__(self, wParent, procesador):
 

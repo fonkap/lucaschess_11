@@ -1,8 +1,11 @@
 import atexit
 import sqlite3
 
+from Code import Util
+
 import DBF
 import DBFcache
+
 
 class DBBase:
     """
@@ -12,8 +15,14 @@ class DBBase:
 
     def __init__(self, nomFichero):
         self.nomFichero = unicode(nomFichero)
+        existe = Util.existeFichero(nomFichero)
         self.conexion = sqlite3.connect(self.nomFichero)
         self.conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        if not existe:
+            cursor = self.conexion.cursor()
+            cursor.execute("PRAGMA page_size = 4096")
+            cursor.execute("PRAGMA synchronous = NORMAL")
+            cursor.close()
         atexit.register(self.cerrar)
 
     def cerrar(self):
@@ -65,12 +74,11 @@ class DBBase:
 
     def generarTabla(self, tb):
         cursor = self.conexion.cursor()
+        cursor.execute("PRAGMA page_size = 4096")
+        cursor.execute("PRAGMA synchronous = NORMAL")
         tb.crearBase(cursor)
         cursor.close()
-        cursor = self.conexion.cursor()
-        cursor.execute("PRAGMA synchronous = NORMAL")
-        cursor.execute("PRAGMA page_size = 8192")
-        cursor.close()
+
 
 class TablaBase:
     """
@@ -101,6 +109,7 @@ class TablaBase:
         indice = Indice(nombre, campos, siUnico)
         self.liIndices.append(indice)
 
+
 class Campo:
     """
     Definicion generica de un campo de una tabla.
@@ -122,6 +131,7 @@ class Campo:
         if self.autoInc:
             c += " AUTOINCREMENT"
         return "%s %s %s" % (self.nombre, self.tipo, c)
+
 
 class Indice:
     """

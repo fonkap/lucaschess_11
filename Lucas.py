@@ -8,7 +8,10 @@
 # Licence : GPL
 # ==============================================================================
 
-# Hi
+# vga, kibitzer, improving
+
+
+
 
 
 
@@ -63,5 +66,5 @@ elif nArgs >= 2:
         Code.RunVoyager.run(sys.argv[2])
 
     elif arg == "-scanner":
-        import Code.RunScanner
-        Code.RunScanner.run(sys.argv[2], sys.argv[3])  # fich, carpeta Scanners
+        import Code.QT.Scanner
+        Code.QT.Scanner.run(sys.argv[2], sys.argv[3])  # fich, carpeta Scanners

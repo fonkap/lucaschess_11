@@ -5,6 +5,7 @@ from Code import XMotorRespuesta
 from Code import EngineThread
 from Code.Constantes import *
 
+
 class GestorMotor:
     def __init__(self, procesador, confMotor, direct = False):
         self.procesador = procesador
@@ -229,11 +230,11 @@ class GestorMotor:
         return mrm, pos
 
     def analizaJugadaPartida(self, partida, njg, tiempo, depth=0, brDepth=5, brPuntos=50,
-                             stability=False, st_centipawns=0, st_depths=0):
+                             stability=False, st_centipawns=0, st_depths=0, st_timelimit=0):
         self.testEngine()
 
         if stability:
-            mrm = self.motor.analysis_stable(partida, njg, tiempo, depth, True, st_centipawns, st_depths)
+            mrm = self.motor.analysis_stable(partida, njg, tiempo, depth, True, st_centipawns, st_depths, st_timelimit)
         else:
             mrm = self.motor.bestmove_game_jg(partida, njg, tiempo, depth, is_savelines=True)
 

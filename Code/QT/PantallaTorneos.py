@@ -22,7 +22,8 @@ from Code import Torneo
 from Code import Util
 from Code import VarGen
 from Code import XRun
-from Code import XVoyager
+from Code.QT import Voyager
+
 
 class WResult(QTVarios.WDialogo):
     def __init__(self, wParent, torneo, torneoTMP, gestor):
@@ -124,6 +125,7 @@ class WResult(QTVarios.WDialogo):
     def terminar(self):
         self.guardarVideo()
         self.close()
+
 
 class WUnTorneo(QTVarios.WDialogo):
     def __init__(self, wParent, torneo):
@@ -322,7 +324,7 @@ class WUnTorneo(QTVarios.WDialogo):
         self.btPosicion.ponTexto(rotulo)
 
     def posicionEditar(self):
-        resp = XVoyager.xVoyagerFEN(self, self.configuracion, self.fen)
+        resp = Voyager.voyagerFEN(self, self.fen)
         if resp is not None:
             self.fen = resp
             self.muestraPosicion()
@@ -655,6 +657,9 @@ class WUnTorneo(QTVarios.WDialogo):
         liGen.append((None, None))
         liGen.append((_("Select all"), False))
 
+        liGen.append((None, None))
+        liGen.append((_("Random order"), True))
+
         reg = Util.Almacen()
         reg.form = None
 
@@ -693,6 +698,8 @@ class WUnTorneo(QTVarios.WDialogo):
             if si:
                 liSel.append(en.huella())
 
+        rnd = liResp[-1]
+
         self.configuracion.escVariables("crear_torneo", dicValores)
 
         nSel = len(liSel)
@@ -705,6 +712,8 @@ class WUnTorneo(QTVarios.WDialogo):
                 for y in range(x + 1, nSel):
                     self.torneo.nuevoGame(liSel[x], liSel[y], minutos, segundos)
                     self.torneo.nuevoGame(liSel[y], liSel[x], minutos, segundos)
+        if rnd:
+            self.torneo.randomize()
 
         self.gridGames.refresh()
         self.gridGames.gobottom()
@@ -745,6 +754,7 @@ class WUnTorneo(QTVarios.WDialogo):
         if pgn:
             w = PantallaSavePGN.WSave(self, pgn, self.configuracion)
             w.exec_()
+
 
 class WTorneos(QTVarios.WDialogo):
     def __init__(self, wParent):
@@ -878,12 +888,14 @@ class WTorneos(QTVarios.WDialogo):
                     self.grid.refresh()
                     return
 
+
 def torneos(parent):
     w = WTorneos(parent)
     if w.exec_():
         return w.verSiJugar()
     else:
         return None
+
 
 def unTorneo(parent, torneo):
     w = WUnTorneo(parent, torneo)

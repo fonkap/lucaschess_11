@@ -15,8 +15,9 @@ from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code import TrListas
-from Code import XVoyager
+from Code.QT import Voyager
 from Code.Constantes import *
+
 
 class GestorPartida(Gestor.Gestor):
     def inicio(self, partidaCompleta, siCompleta):
@@ -56,7 +57,7 @@ class GestorPartida(Gestor.Gestor):
 
         self.siguienteJugada()
 
-    def reiniciar(self,):
+    def reiniciar(self):
         if self.siCambios and not QTUtil2.pregunta(self.pantalla, _("You will lost all changes, are you sure?")):
             return
         p = Partida.PartidaCompleta()
@@ -321,33 +322,11 @@ class GestorPartida(Gestor.Gestor):
                     self.tablero.rotaTablero()
 
         elif resp == "posicion":
-            resp = XVoyager.xVoyagerFEN(self.pantalla, self.configuracion, self.fen)
-            if resp is not None:
-                self.fen = resp
-                self.posicApertura = None
-
-                if self.xpgn:
-                    siInicio = self.fen == ControlPosicion.FEN_INICIAL
-                    li = self.xpgn.split("\n")
-                    lin = []
-                    siFen = False
-                    for linea in li:
-                        if linea.startswith("["):
-                            if "FEN " in linea:
-                                siFen = True
-                                if siInicio:
-                                    continue
-                                linea = '[FEN "%s"]' % self.fen
-                            lin.append(linea)
-                        else:
-                            break
-                    if not siFen:
-                        linea = '[FEN "%s"]' % self.fen
-                        lin.append(linea)
-                    self.liPGN = lin
-                    self.xpgn = "\n".join(lin) + "\n\n*"
-
-                self.reiniciar()
+            ini_fen = self.partida.iniPosicion.fen()
+            cur_fen = Voyager.voyagerFEN(self.pantalla, ini_fen)
+            if cur_fen and cur_fen != ini_fen:
+                self.partida.resetFEN(cur_fen)
+                self.inicio(self.partida, self.siCompleta)
 
         elif resp == "pasteposicion":
             texto = QTUtil.traePortapapeles()
@@ -395,7 +374,7 @@ class GestorPartida(Gestor.Gestor):
                 self.reiniciar()
 
         elif resp == "voyager":
-            ptxt = XVoyager.xVoyager(self.pantalla, self.configuracion, partida=self.partida)
+            ptxt = Voyager.voyagerPartida(self.pantalla, self.partida)
             if ptxt:
                 dic = self.creaDic()
                 dic["PARTIDA"] = ptxt

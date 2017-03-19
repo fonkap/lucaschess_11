@@ -1,5 +1,3 @@
-from PyQt4 import QtGui
-
 from Code import TurnOnLights
 from Code.QT import Colocacion
 from Code.QT import Columnas
@@ -10,6 +8,7 @@ from Code.QT import Iconos
 from Code.QT import QTVarios
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
+
 
 class WTurnOnLights(QTVarios.WDialogo):
     def __init__(self, owner, name, title, icono, folder, li_tam_blocks):
@@ -142,6 +141,7 @@ class WTurnOnLights(QTVarios.WDialogo):
             menu.opcion(None, rotulo, d[key])
             menu.separador()
         menu.lanza()
+
 
 def pantallaTurnOnLigths(procesador, name, title, icono, folder, li_tam_blocks):
     while True:

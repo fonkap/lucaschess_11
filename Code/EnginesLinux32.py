@@ -3,7 +3,7 @@
 import collections
 
 from Code import BaseConfig
-from Code import VarGen
+
 
 def leeRivales():
     dicRivales = collections.OrderedDict()
@@ -151,8 +151,8 @@ def leeRivales():
     cm.ordenUCI("Hash", "64")
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.0", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.3", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017-v13_x32_linux"
     cm.elo = 3200
     cm.ordenUCI("Study", "true")
     cm.ordenUCI("Hash", "64")
@@ -161,6 +161,7 @@ def leeRivales():
     mas(cm)
 
     return dicRivales
+
 
 def dicMotoresFixedElo():
     d = leeRivales()

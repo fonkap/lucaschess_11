@@ -1,0 +1,2597 @@
+Random seed: 0x1487876986
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r2qkb1r/1bpp1ppp/p1n2n2/1p2p1N1/4P3/1B6/PPPP1PPP/RNBQ1RK1 b kq - 3 1
+
+   +-----------------+ B
+ 8 | r .   q k b   r |  
+ 7 | . b p p . p p p |  
+ 6 | p . n .   n   . |  
+ 5 | . p .   p   N   |  
+ 4 |   .   . P .   . |  
+ 3 | . B .   .   .   |  
+ 2 | P P P P   P P P |  
+ 1 | R N B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+d7d5 = -12
+f8c5 = -105
+f8d6 = -110
+f8b4 = -110
+f8e7 = -112
+d8e7 = -120
+d8c8 = -121
+d8b8 = -122
+c6d4 = -144
+d7d6 = -149
+e8e7 = -156
+c6b4 = -157
+a8c8 = -158
+g7g6 = -160
+a8b8 = -161
+h7h5 = -162
+h7h6 = -162
+a6a5 = -163
+b5b4 = -164
+a8a7 = -164
+c6a5 = -169
+b7c8 = -180
+c6a7 = -186
+c6b8 = -187
+f6g8 = -190
+f6d5 = -218
+f6e4 = -237
+h8g8 = -380
+f8a3 = -447
+f6h5 = -534
+f6g4 = -549
+c6e7 = -19998
+-> found 1 blunder(s)!
+    h8g8 (value=368, distance=4)
+-> move in range [0,3] = 2 out of 32
+-> move looks too bad, adjusting...
+-> move looks too bad, adjusting...
+-> move d7d5 = -12
+d7d5 = -29
+f8c5 = -105
+f8d6 = -110
+f8b4 = -110
+f8e7 = -112
+d8e7 = -120
+d8c8 = -121
+d8b8 = -122
+c6d4 = -144
+d7d6 = -149
+e8e7 = -156
+c6b4 = -157
+a8c8 = -158
+g7g6 = -160
+a8b8 = -161
+h7h6 = -162
+h7h5 = -162
+a6a5 = -163
+b5b4 = -164
+a8a7 = -164
+c6a5 = -169
+b7c8 = -180
+c6a7 = -186
+c6b8 = -187
+f6g8 = -190
+f6d5 = -218
+f6e4 = -237
+h8g8 = -380
+f8a3 = -447
+f6h5 = -534
+f6g4 = -549
+c6e7 = -19998
+-> found 1 blunder(s)!
+    h8g8 (value=351, distance=4)
+-> move in range [0,3] = 1 out of 32
+-> move looks too bad, adjusting...
+-> move d7d5 = -29
+d7d5 = -20
+d8e7 = -134
+d8c8 = -135
+d8b8 = -135
+f6d5 = -218
+f6e4 = -257
+f8c5 = -357
+h8g8 = -380
+c6d4 = -417
+c6a5 = -435
+f8b4 = -446
+f8d6 = -447
+f8e7 = -450
+c6b4 = -463
+g7g6 = -464
+a8c8 = -465
+h7h6 = -466
+a8b8 = -467
+b5b4 = -467
+d7d6 = -468
+a6a5 = -469
+a8a7 = -471
+b7c8 = -482
+e8e7 = -488
+c6a7 = -491
+c6b8 = -493
+h7h5 = -548
+f6g4 = -549
+f8a3 = -567
+f6h5 = -585
+f6g8 = -599
+c6e7 = -19998
+-> found 19 blunder(s)!
+    h8g8 (value=360, distance=4)
+    c6a5 (value=415, distance=4)
+    f8b4 (value=426, distance=4)
+    f8d6 (value=427, distance=4)
+    f8e7 (value=430, distance=4)
+    c6b4 (value=443, distance=4)
+    g7g6 (value=444, distance=4)
+    a8c8 (value=445, distance=4)
+    h7h6 (value=446, distance=4)
+    a8b8 (value=447, distance=4)
+    b5b4 (value=447, distance=4)
+    d7d6 (value=448, distance=4)
+    a6a5 (value=449, distance=4)
+    a8a7 (value=451, distance=4)
+    b7c8 (value=462, distance=4)
+    e8e7 (value=468, distance=4)
+    c6a7 (value=471, distance=4)
+    c6b8 (value=473, distance=4)
+    h7h5 (value=528, distance=4)
+-> move in range [0,3] = 0 out of 32
+-> move d7d5 = -20
+d7d5 = -18
+d8e7 = -167
+d8c8 = -168
+d8b8 = -168
+f6d5 = -218
+f6e4 = -257
+h8g8 = -380
+f8c5 = -435
+c6d4 = -435
+c6a5 = -435
+f8b4 = -446
+f8d6 = -447
+f8e7 = -450
+c6b4 = -463
+g7g6 = -464
+a8c8 = -465
+h7h6 = -466
+a8b8 = -467
+b5b4 = -467
+d7d6 = -468
+a6a5 = -469
+a8a7 = -471
+b7c8 = -482
+e8e7 = -488
+c6a7 = -491
+c6b8 = -493
+f6g4 = -533
+h7h5 = -548
+f8a3 = -567
+f6h5 = -585
+f6g8 = -599
+c6e7 = -19998
+-> found 22 blunder(s)!
+    h8g8 (value=362, distance=4)
+    f8c5 (value=417, distance=4)
+    c6d4 (value=417, distance=4)
+    c6a5 (value=417, distance=4)
+    f8b4 (value=428, distance=4)
+    f8d6 (value=429, distance=4)
+    f8e7 (value=432, distance=4)
+    c6b4 (value=445, distance=4)
+    g7g6 (value=446, distance=4)
+    a8c8 (value=447, distance=4)
+    h7h6 (value=448, distance=4)
+    a8b8 (value=449, distance=4)
+    b5b4 (value=449, distance=4)
+    d7d6 (value=450, distance=4)
+    a6a5 (value=451, distance=4)
+    a8a7 (value=453, distance=4)
+    b7c8 (value=464, distance=4)
+    e8e7 (value=470, distance=4)
+    c6a7 (value=473, distance=4)
+    c6b8 (value=475, distance=4)
+    f6g4 (value=515, distance=4)
+    h7h5 (value=530, distance=4)
+-> move in range [0,3] = 2 out of 32
+-> move looks too bad, adjusting...
+-> move looks too bad, adjusting...
+-> move d7d5 = -18
+d7d5 = -24
+d8c8 = -152
+d8b8 = -153
+d8e7 = -156
+f6d5 = -228
+h8g8 = -380
+f6e4 = -399
+f8c5 = -435
+c6d4 = -435
+c6a5 = -435
+f8b4 = -446
+f8d6 = -447
+f8e7 = -450
+c6b4 = -463
+g7g6 = -464
+a8c8 = -465
+h7h6 = -466
+a8b8 = -467
+b5b4 = -467
+d7d6 = -468
+a6a5 = -469
+a8a7 = -471
+b7c8 = -482
+e8e7 = -488
+c6a7 = -491
+c6b8 = -493
+f6g4 = -539
+h7h5 = -547
+f6h5 = -552
+f8a3 = -563
+f6g8 = -583
+c6e7 = -19998
+-> found 26 blunder(s)!
+    h8g8 (value=356, distance=4)
+    f6e4 (value=375, distance=4)
+    f8c5 (value=411, distance=4)
+    c6d4 (value=411, distance=4)
+    c6a5 (value=411, distance=4)
+    f8b4 (value=422, distance=4)
+    f8d6 (value=423, distance=4)
+    f8e7 (value=426, distance=4)
+    c6b4 (value=439, distance=4)
+    g7g6 (value=440, distance=4)
+    a8c8 (value=441, distance=4)
+    h7h6 (value=442, distance=4)
+    a8b8 (value=443, distance=4)
+    b5b4 (value=443, distance=4)
+    d7d6 (value=444, distance=4)
+    a6a5 (value=445, distance=4)
+    a8a7 (value=447, distance=4)
+    b7c8 (value=458, distance=4)
+    e8e7 (value=464, distance=4)
+    c6a7 (value=467, distance=4)
+    c6b8 (value=469, distance=4)
+    f6g4 (value=515, distance=4)
+    h7h5 (value=523, distance=4)
+    f6h5 (value=528, distance=4)
+    f8a3 (value=539, distance=4)
+    f6g8 (value=559, distance=4)
+-> move in range [0,3] = 0 out of 32
+-> move d7d5 = -24
+d7d5 = -24
+d8c8 = -152
+d8b8 = -153
+d8e7 = -156
+f6d5 = -228
+h8g8 = -380
+f6e4 = -399
+f8c5 = -435
+c6d4 = -435
+c6a5 = -435
+f8b4 = -446
+f8d6 = -447
+f8e7 = -450
+c6b4 = -463
+g7g6 = -464
+a8c8 = -465
+h7h6 = -466
+a8b8 = -467
+b5b4 = -467
+d7d6 = -468
+a6a5 = -469
+a8a7 = -471
+b7c8 = -482
+e8e7 = -488
+c6a7 = -491
+c6b8 = -493
+f6g4 = -539
+h7h5 = -547
+f6h5 = -552
+f8a3 = -563
+f6g8 = -583
+c6e7 = -19998
+-> found 26 blunder(s)!
+    h8g8 (value=356, distance=4)
+    f6e4 (value=375, distance=4)
+    f8c5 (value=411, distance=4)
+    c6d4 (value=411, distance=4)
+    c6a5 (value=411, distance=4)
+    f8b4 (value=422, distance=4)
+    f8d6 (value=423, distance=4)
+    f8e7 (value=426, distance=4)
+    c6b4 (value=439, distance=4)
+    g7g6 (value=440, distance=4)
+    a8c8 (value=441, distance=4)
+    h7h6 (value=442, distance=4)
+    a8b8 (value=443, distance=4)
+    b5b4 (value=443, distance=4)
+    d7d6 (value=444, distance=4)
+    a6a5 (value=445, distance=4)
+    a8a7 (value=447, distance=4)
+    b7c8 (value=458, distance=4)
+    e8e7 (value=464, distance=4)
+    c6a7 (value=467, distance=4)
+    c6b8 (value=469, distance=4)
+    f6g4 (value=515, distance=4)
+    h7h5 (value=523, distance=4)
+    f6h5 (value=528, distance=4)
+    f8a3 (value=539, distance=4)
+    f6g8 (value=559, distance=4)
+-> move in range [0,3] = 2 out of 32
+-> move looks too bad, adjusting...
+-> move looks too bad, adjusting...
+-> move d7d5 = -24
+fun_search -> leave (d7d5 = 0)
+Random seed: 0x1487877003
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r2qkb1r/1bp2ppp/p1n2n2/1p1pp1N1/4P3/1BN5/PPPP1PPP/R1BQ1RK1 b kq - 1 1
+
+   +-----------------+ B
+ 8 | r .   q k b   r |  
+ 7 | . b p   . p p p |  
+ 6 | p . n .   n   . |  
+ 5 | . p . p p   N   |  
+ 4 |   .   . P .   . |  
+ 3 | . B N   .   .   |  
+ 2 | P P P P   P P P |  
+ 1 | R   B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+c6d4 = -20
+c6b4 = -37
+h7h6 = -38
+c6a5 = -46
+c6e7 = -49
+c6a7 = -62
+c6b8 = -63
+f6e4 = -86
+d5e4 = -91
+f6d7 = -107
+f8c5 = -115
+f8d6 = -120
+f8b4 = -121
+f8e7 = -123
+f6g8 = -124
+a8c8 = -133
+a8b8 = -136
+d8e7 = -138
+a6a5 = -138
+g7g6 = -138
+a8a7 = -139
+h7h5 = -140
+h8g8 = -141
+b5b4 = -141
+d8d7 = -147
+d8d6 = -151
+d8b8 = -155
+d8c8 = -155
+b7c8 = -164
+e8d7 = -171
+d5d4 = -174
+e8e7 = -185
+f8a3 = -331
+f6h5 = -375
+f6g4 = -376
+-> move in range [0,3] = 0 out of 35
+-> move c6d4 = -20
+h7h6 = -10
+c6d4 = -16
+c6a5 = -23
+c6b4 = -40
+c6e7 = -52
+c6a7 = -65
+c6b8 = -66
+f6e4 = -86
+d5e4 = -91
+f6d7 = -107
+f8c5 = -115
+f8d6 = -120
+f8b4 = -121
+f8e7 = -123
+f6g8 = -124
+a8c8 = -133
+a8b8 = -136
+g7g6 = -138
+a6a5 = -138
+d8e7 = -138
+a8a7 = -139
+h7h5 = -140
+b5b4 = -141
+h8g8 = -141
+d8d7 = -147
+d8d6 = -151
+d8c8 = -155
+d8b8 = -155
+b7c8 = -164
+e8d7 = -171
+d5d4 = -174
+e8e7 = -185
+f8a3 = -331
+f6h5 = -375
+f6g4 = -376
+-> move in range [0,3] = 2 out of 35
+-> move c6a5 = -23
+h7h6 = -10
+c6d4 = -15
+f8d6 = -21
+c6a5 = -23
+f8e7 = -29
+a8c8 = -43
+c6b4 = -49
+c6e7 = -54
+c6b8 = -75
+c6a7 = -75
+f6e4 = -86
+f6d7 = -107
+f8c5 = -108
+f8b4 = -110
+f6g8 = -124
+a8b8 = -125
+a6a5 = -127
+g7g6 = -128
+d8e7 = -128
+a8a7 = -128
+b5b4 = -129
+h7h5 = -130
+h8g8 = -131
+d8d7 = -147
+d8d6 = -151
+d8c8 = -155
+d8b8 = -155
+b7c8 = -164
+e8e7 = -185
+d5d4 = -300
+f8a3 = -322
+f6g4 = -366
+f6h5 = -377
+d5e4 = -511
+e8d7 = -513
+-> found 2 blunder(s)!
+    d5d4 (value=290, distance=4)
+    e8d7 (value=503, distance=4)
+-> move in range [0,3] = 1 out of 35
+-> move c6d4 = -15
+h7h6 = -10
+c6d4 = -15
+c6a5 = -16
+f8d6 = -36
+c6b4 = -49
+c6e7 = -55
+c6a7 = -78
+c6b8 = -79
+f6e4 = -86
+f8e7 = -105
+f6d7 = -107
+f8c5 = -107
+f8b4 = -109
+d8e7 = -113
+a8c8 = -117
+a8b8 = -124
+f6g8 = -124
+a6a5 = -126
+g7g6 = -127
+a8a7 = -127
+h7h5 = -129
+h8g8 = -130
+b5b4 = -135
+d8d7 = -147
+d8d6 = -151
+d8c8 = -155
+d8b8 = -155
+b7c8 = -164
+e8e7 = -205
+d5d4 = -300
+f8a3 = -312
+f6g4 = -359
+f6h5 = -380
+d5e4 = -511
+e8d7 = -513
+-> found 2 blunder(s)!
+    d5d4 (value=290, distance=4)
+    e8d7 (value=503, distance=4)
+-> move in range [0,3] = 2 out of 35
+-> move c6a5 = -16
+c6d4 = -8
+h7h6 = -10
+c6a5 = -16
+f8d6 = -33
+c6e7 = -55
+c6b4 = -58
+c6a7 = -78
+c6b8 = -79
+f6e4 = -86
+f8e7 = -105
+f6d7 = -107
+f8c5 = -107
+f8b4 = -109
+d8e7 = -113
+a8c8 = -117
+a8b8 = -124
+f6g8 = -124
+a6a5 = -126
+g7g6 = -127
+a8a7 = -127
+h7h5 = -129
+h8g8 = -130
+b5b4 = -135
+d8d7 = -147
+d8d6 = -151
+d8c8 = -155
+d8b8 = -155
+b7c8 = -164
+e8e7 = -205
+d5d4 = -300
+f8a3 = -312
+f6g4 = -359
+f6h5 = -380
+d5e4 = -511
+e8d7 = -513
+-> found 2 blunder(s)!
+    d5d4 (value=292, distance=4)
+    e8d7 (value=505, distance=4)
+-> move in range [0,3] = 0 out of 35
+-> move c6d4 = -8
+fun_search -> leave (c6d4 = 0)
+Random seed: 0x1487877018
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r2qkb1r/1bp2ppp/p4n2/1p1Pp1N1/3n4/1BN5/PPPP1PPP/R1BQ1RK1 b kq - 0 1
+
+   +-----------------+ B
+ 8 | r .   q k b   r |  
+ 7 | . b p   . p p p |  
+ 6 | p .   .   n   . |  
+ 5 | . p . P p   N   |  
+ 4 |   .   n   .   . |  
+ 3 | . B N   .   .   |  
+ 2 | P P P P   P P P |  
+ 1 | R   B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+f6d5 = -9
+b7d5 = -12
+d4b3 = -16
+f8c5 = -108
+f8d6 = -110
+f8b4 = -110
+f8e7 = -112
+a8c8 = -123
+d8d7 = -124
+e5e4 = -124
+a8b8 = -125
+a6a5 = -127
+d8d6 = -127
+a8a7 = -128
+g7g6 = -128
+d8e7 = -128
+c7c5 = -129
+b5b4 = -129
+d8b8 = -129
+h7h6 = -129
+h7h5 = -130
+d8c8 = -130
+h8g8 = -131
+d4f5 = -136
+f6d7 = -137
+b7c8 = -142
+f6g8 = -154
+c7c6 = -160
+e8e7 = -165
+e8d7 = -251
+f8a3 = -310
+f6e4 = -354
+d4c2 = -356
+f6g4 = -366
+b7c6 = -445
+d4e6 = -454
+d4c6 = -454
+d4e2 = -467
+f6h5 = -467
+d4f3 = -472
+d8d5 = -625
+-> move in range [0,4] = 3 out of 41
+-> move looks too bad, adjusting...
+-> move d4b3 = -16
+f8d6 = -6
+b7d5 = -12
+d4b3 = -16
+f6d5 = -23
+f8c5 = -107
+f8b4 = -109
+f8e7 = -111
+d8e7 = -113
+h7h6 = -117
+e5e4 = -119
+a8c8 = -122
+d8d7 = -123
+d8d6 = -123
+a8b8 = -124
+a6a5 = -126
+a8a7 = -127
+g7g6 = -127
+d8b8 = -128
+h7h5 = -129
+d8c8 = -129
+h8g8 = -130
+b5b4 = -135
+d4f5 = -135
+b7c8 = -141
+f6d7 = -151
+c7c5 = -160
+c7c6 = -160
+f6g8 = -167
+e8e7 = -205
+e8d7 = -251
+f8a3 = -310
+f6e4 = -354
+d4c2 = -356
+f6g4 = -366
+b7c6 = -445
+d4c6 = -454
+d4e6 = -454
+d4e2 = -456
+d4f3 = -457
+f6h5 = -467
+d8d5 = -625
+-> move in range [0,4] = 2 out of 41
+-> move d4b3 = -16
+f8d6 = -6
+d4b3 = -16
+b7d5 = -17
+f6d5 = -26
+f8c5 = -74
+f8b4 = -77
+h7h6 = -110
+a8c8 = -111
+f8e7 = -112
+d8d7 = -112
+a8b8 = -113
+a6a5 = -115
+a8a7 = -117
+d8b8 = -118
+d8c8 = -118
+g7g6 = -119
+h7h5 = -119
+e5e4 = -119
+h8g8 = -120
+d8e7 = -121
+d8d6 = -123
+b7c8 = -130
+b5b4 = -132
+d4f5 = -137
+f6d7 = -154
+c7c5 = -160
+c7c6 = -160
+f6g8 = -168
+e8e7 = -182
+f8a3 = -310
+f6e4 = -354
+d4c2 = -355
+f6g4 = -366
+d4f3 = -446
+b7c6 = -447
+d4e2 = -456
+f6h5 = -470
+d4e6 = -487
+d4c6 = -568
+e8d7 = -583
+d8d5 = -625
+-> found 2 blunder(s)!
+    d4c6 (value=562, distance=4)
+    e8d7 (value=577, distance=4)
+-> move in range [0,4] = 2 out of 41
+-> move b7d5 = -17
+f8d6 = -6
+d4b3 = -16
+b7d5 = -25
+f6d5 = -28
+f8c5 = -74
+f8b4 = -77
+a8c8 = -104
+d8d7 = -104
+a8b8 = -106
+h7h6 = -110
+a6a5 = -110
+a8a7 = -110
+d8b8 = -111
+d8c8 = -111
+h7h5 = -111
+g7g6 = -112
+f8e7 = -112
+h8g8 = -113
+e5e4 = -119
+d8d6 = -119
+d8e7 = -121
+b7c8 = -125
+d4f5 = -127
+b5b4 = -132
+f6g8 = -140
+f6d7 = -156
+c7c6 = -160
+c7c5 = -160
+e8e7 = -177
+f8a3 = -318
+f6e4 = -354
+d4c2 = -356
+f6g4 = -366
+f6h5 = -438
+b7c6 = -447
+d4f3 = -449
+d4e2 = -460
+d4e6 = -487
+d4c6 = -568
+e8d7 = -583
+d8d5 = -625
+-> found 2 blunder(s)!
+    d4c6 (value=562, distance=4)
+    e8d7 (value=577, distance=4)
+-> move in range [0,4] = 2 out of 41
+-> move b7d5 = -25
+f8d6 = -6
+d4b3 = -16
+f6d5 = -18
+b7d5 = -27
+f8c5 = -74
+f8b4 = -77
+d8d7 = -104
+a8b8 = -106
+a8c8 = -107
+h7h6 = -110
+a6a5 = -110
+a8a7 = -110
+d8b8 = -111
+d8c8 = -111
+h7h5 = -111
+g7g6 = -112
+f8e7 = -112
+h8g8 = -113
+e5e4 = -119
+d8d6 = -119
+d8e7 = -121
+b7c8 = -125
+d4f5 = -127
+b5b4 = -132
+f6g8 = -140
+f6d7 = -156
+c7c6 = -160
+c7c5 = -160
+e8e7 = -177
+f8a3 = -318
+f6e4 = -354
+d4c2 = -356
+f6g4 = -366
+f6h5 = -438
+b7c6 = -447
+d4f3 = -449
+d4e2 = -460
+d4e6 = -487
+d4c6 = -568
+e8d7 = -583
+d8d5 = -625
+-> found 2 blunder(s)!
+    d4c6 (value=562, distance=4)
+    e8d7 (value=577, distance=4)
+-> move in range [0,4] = 2 out of 41
+-> move f6d5 = -18
+fun_search -> leave (f6d5 = 0)
+Random seed: 0x1487877033
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r2qkb1r/1bp2ppp/p7/1p1Bp1N1/3n4/2N5/PPPP1PPP/R1BQ1RK1 b kq - 0 1
+
+   +-----------------+ B
+ 8 | r .   q k b   r |  
+ 7 | . b p   . p p p |  
+ 6 | p .   .   .   . |  
+ 5 | . p . B p   N   |  
+ 4 |   .   n   .   . |  
+ 3 | .   N   .   .   |  
+ 2 | P P P P   P P P |  
+ 1 | R   B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+b7d5 = -7
+d8g5 = -340
+d4c2 = -403
+d8b8 = -473
+d8c8 = -474
+c7c6 = -483
+a8b8 = -484
+b7c6 = -486
+a8a7 = -488
+f8e7 = -489
+d4b3 = -497
+h7h6 = -504
+b7c8 = -509
+d4c6 = -509
+f7f6 = -528
+d4e2 = -548
+b5b4 = -588
+d8d5 = -614
+f8c5 = -658
+f8b4 = -660
+f8d6 = -660
+f8a3 = -667
+d8d7 = -672
+e5e4 = -672
+d8f6 = -672
+a8c8 = -673
+d8d6 = -676
+d8e7 = -677
+g7g6 = -677
+a6a5 = -677
+h8g8 = -679
+h7h5 = -679
+c7c5 = -680
+f7f5 = -684
+d4f5 = -685
+e8e7 = -699
+d4e6 = -705
+e8d7 = -715
+d4f3 = -753
+-> easy (re)capture
+-> move b7d5 = -7
+b7d5 = -7
+d8g5 = -340
+d4c2 = -403
+d8b8 = -473
+d8c8 = -474
+c7c6 = -483
+a8b8 = -484
+b7c6 = -486
+a8a7 = -488
+f8e7 = -489
+d4b3 = -497
+h7h6 = -504
+b7c8 = -509
+d4c6 = -509
+f7f6 = -528
+d4e2 = -548
+b5b4 = -588
+d8d5 = -614
+f8c5 = -658
+f8d6 = -660
+f8b4 = -660
+f8a3 = -667
+e5e4 = -672
+d8d7 = -672
+d8f6 = -672
+a8c8 = -673
+d8d6 = -676
+g7g6 = -677
+a6a5 = -677
+d8e7 = -677
+h7h5 = -679
+h8g8 = -679
+c7c5 = -680
+f7f5 = -684
+d4f5 = -685
+e8e7 = -699
+d4e6 = -705
+e8d7 = -715
+d4f3 = -753
+-> easy (re)capture
+-> move b7d5 = -7
+b7d5 = -11
+d8g5 = -348
+d4c2 = -529
+d4e2 = -548
+d8c8 = -549
+d8b8 = -551
+c7c6 = -556
+a8b8 = -584
+f8e7 = -588
+a8a7 = -588
+d8d5 = -614
+f7f6 = -626
+f8c5 = -663
+f8b4 = -665
+d8f6 = -668
+d8e7 = -673
+b5b4 = -677
+d8d7 = -681
+a8c8 = -682
+f7f5 = -689
+d4e6 = -706
+e5e4 = -727
+g7g6 = -731
+h7h6 = -732
+b7c6 = -732
+a6a5 = -732
+h7h5 = -733
+c7c5 = -736
+d4f5 = -737
+e8e7 = -742
+d4f3 = -753
+d8d6 = -776
+f8d6 = -800
+f8a3 = -808
+d4b3 = -826
+b7c8 = -832
+e8d7 = -835
+d4c6 = -842
+h8g8 = -942
+-> easy (re)capture
+-> move b7d5 = -11
+b7d5 = -13
+d8g5 = -350
+d4c2 = -529
+d8e7 = -547
+d4e2 = -548
+d8c8 = -549
+d8b8 = -551
+c7c6 = -556
+a8b8 = -584
+f8e7 = -588
+a8a7 = -588
+d8d5 = -614
+f7f6 = -626
+d8f6 = -673
+f8c5 = -675
+b5b4 = -677
+f8b4 = -678
+d8d7 = -695
+a8c8 = -696
+d4e6 = -706
+f7f5 = -722
+e5e4 = -727
+d4f3 = -727
+g7g6 = -731
+h7h6 = -732
+a6a5 = -732
+b7c6 = -732
+h7h5 = -733
+c7c5 = -736
+d4f5 = -739
+e8e7 = -742
+d8d6 = -776
+f8a3 = -812
+d4b3 = -823
+b7c8 = -838
+d4c6 = -842
+f8d6 = -910
+e8d7 = -914
+h8g8 = -942
+-> easy (re)capture
+-> move b7d5 = -13
+b7d5 = -11
+d8g5 = -356
+d4c2 = -529
+d4e2 = -548
+d8e7 = -555
+c7c6 = -557
+d8c8 = -564
+d8b8 = -565
+f8e7 = -615
+d8d5 = -621
+f7f6 = -626
+a8b8 = -662
+a8a7 = -666
+d8f6 = -673
+f8c5 = -675
+b5b4 = -677
+f8b4 = -678
+d8d7 = -695
+a8c8 = -696
+d4e6 = -706
+f7f5 = -722
+e5e4 = -727
+d4f3 = -727
+g7g6 = -731
+h7h6 = -732
+a6a5 = -732
+b7c6 = -732
+h7h5 = -733
+c7c5 = -736
+d4f5 = -739
+e8e7 = -742
+d8d6 = -776
+f8a3 = -812
+d4b3 = -823
+b7c8 = -838
+d4c6 = -842
+f8d6 = -910
+e8d7 = -914
+h8g8 = -942
+-> capture hanging piece/strong move
+-> move b7d5 = -11
+fun_search -> leave (b7d5 = 0)
+Random seed: 0x1487877040
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r2qkb1r/2p2ppp/p7/1p1Np1N1/3n4/8/PPPP1PPP/R1BQ1RK1 b kq - 0 1
+
+   +-----------------+ B
+ 8 | r .   q k b   r |  
+ 7 | .   p   . p p p |  
+ 6 | p .   .   .   . |  
+ 5 | . p . N p   N   |  
+ 4 |   .   n   .   . |  
+ 3 | .   .   .   .   |  
+ 2 | P P P P   P P P |  
+ 1 | R   B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+d8d5 = -7
+f8c5 = -352
+d4e2 = -352
+f8d6 = -354
+f8b4 = -354
+f8e7 = -355
+d4c2 = -356
+f8a3 = -361
+d8d7 = -365
+e5e4 = -367
+a8c8 = -367
+a8b8 = -368
+d8d6 = -369
+a6a5 = -371
+d8c8 = -372
+a8a7 = -372
+g7g6 = -373
+c7c6 = -373
+b5b4 = -373
+d8b8 = -374
+h7h6 = -374
+c7c5 = -375
+h7h5 = -377
+h8g8 = -378
+f7f6 = -378
+d4f5 = -379
+d4b3 = -381
+f7f5 = -384
+d4c6 = -387
+d4e6 = -388
+e8d7 = -487
+d8g5 = -562
+d4f3 = -753
+d8e7 = -945
+d8f6 = -975
+-> capture hanging piece/strong move
+-> move d8d5 = -7
+d8d5 = -6
+h7h6 = -140
+c7c6 = -142
+c7c5 = -232
+a8b8 = -236
+a8a7 = -240
+f8c5 = -253
+e5e4 = -285
+a6a5 = -289
+g7g6 = -291
+f8a3 = -293
+h7h5 = -295
+h8g8 = -305
+f8e7 = -316
+a8c8 = -331
+d8d7 = -332
+d8d6 = -335
+d4e2 = -352
+d4c2 = -356
+b5b4 = -365
+d4f5 = -377
+d4e6 = -388
+f8d6 = -396
+d8c8 = -414
+d8b8 = -416
+f7f6 = -422
+f8b4 = -423
+d4c6 = -429
+f7f5 = -434
+d4b3 = -437
+e8d7 = -487
+d8g5 = -562
+d4f3 = -727
+d8e7 = -945
+d8f6 = -975
+-> move in range [0,3] = 1 out of 35
+-> move looks too bad, adjusting...
+-> move d8d5 = -6
+d8d5 = 3
+h7h6 = -140
+c7c6 = -142
+f7f6 = -209
+c7c5 = -232
+a8b8 = -236
+a8a7 = -240
+f8c5 = -253
+e5e4 = -285
+a6a5 = -289
+b5b4 = -290
+g7g6 = -291
+f8a3 = -293
+h7h5 = -295
+f7f5 = -302
+h8g8 = -305
+f8e7 = -316
+d8d7 = -319
+d8d6 = -324
+a8c8 = -331
+d4c2 = -356
+d4e2 = -360
+d4f5 = -378
+d4e6 = -388
+f8d6 = -395
+d4c6 = -403
+d8b8 = -413
+d8c8 = -413
+f8b4 = -423
+d4b3 = -437
+d8g5 = -562
+e8d7 = -833
+d4f3 = -881
+d8e7 = -945
+d8f6 = -977
+-> move in range [0,3] = 0 out of 35
+-> move d8d5 = 3
+d8d5 = 0
+c7c6 = -120
+h7h6 = -128
+a8a7 = -155
+f7f6 = -209
+a8b8 = -236
+h7h5 = -241
+f8c5 = -253
+c7c5 = -290
+h8g8 = -305
+e5e4 = -307
+a6a5 = -316
+f8a3 = -316
+f8e7 = -317
+d8d7 = -320
+d8d6 = -324
+f8d6 = -324
+a8c8 = -326
+b5b4 = -326
+g7g6 = -331
+f7f5 = -352
+d4c2 = -356
+d4e2 = -360
+d8c8 = -404
+d4e6 = -419
+f8b4 = -423
+d4c6 = -430
+d8b8 = -437
+d4f5 = -456
+d4b3 = -489
+d8g5 = -549
+d4f3 = -908
+e8d7 = -916
+d8e7 = -946
+d8f6 = -970
+-> move in range [0,3] = 2 out of 35
+-> move looks too bad, adjusting...
+-> move looks too bad, adjusting...
+-> move d8d5 = 0
+d8d5 = 1
+c7c6 = -94
+e5e4 = -119
+f7f6 = -123
+h7h6 = -128
+a8a7 = -155
+f8c5 = -219
+a8c8 = -235
+a8b8 = -236
+a6a5 = -239
+h7h5 = -241
+f7f5 = -243
+b5b4 = -256
+c7c5 = -269
+f8e7 = -293
+f8a3 = -301
+h8g8 = -305
+g7g6 = -310
+d8d7 = -322
+f8d6 = -322
+d8d6 = -327
+d4c2 = -341
+d4e2 = -360
+d8c8 = -404
+d4e6 = -419
+f8b4 = -423
+d4c6 = -430
+d8b8 = -437
+d4f5 = -456
+d4b3 = -489
+d8g5 = -549
+d4f3 = -908
+e8d7 = -916
+d8e7 = -946
+d8f6 = -970
+-> move in range [0,3] = 0 out of 35
+-> move d8d5 = 1
+fun_search -> leave (d8d5 = 0)
+Random seed: 0x1487877050
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r3kb1r/2p2ppp/p7/1p1qp1N1/3n4/2P5/PP1P1PPP/R1BQ1RK1 b kq - 0 1
+
+   +-----------------+ B
+ 8 | r .   . k b   r |  
+ 7 | .   p   . p p p |  
+ 6 | p .   .   .   . |  
+ 5 | . p . q p   N   |  
+ 4 |   .   n   .   . |  
+ 3 | .   P   .   .   |  
+ 2 | P P   P   P P P |  
+ 1 | R   B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+f8e7 = 3
+e5e4 = 1
+h7h6 = -12
+d4f5 = -14
+d5d8 = -15
+d4e6 = -19
+d4c6 = -20
+f7f6 = -30
+f8d6 = -218
+f8c5 = -219
+e8c8 = -227
+a8d8 = -231
+c7c5 = -232
+a8c8 = -235
+a8b8 = -236
+a6a5 = -239
+c7c6 = -239
+g7g6 = -239
+d5c6 = -240
+d5d7 = -240
+d5c4 = -240
+a8a7 = -240
+h7h5 = -241
+b5b4 = -241
+d5c5 = -242
+d5b7 = -242
+f7f5 = -243
+d5d6 = -243
+e8d8 = -244
+e8d7 = -254
+e8e7 = -259
+f8a3 = -286
+f8b4 = -299
+h8g8 = -305
+d4f3 = -336
+d4b3 = -338
+d4c2 = -344
+d4e2 = -345
+d5e6 = -643
+d5g2 = -837
+d5a2 = -867
+d5b3 = -953
+d5f3 = -954
+d5e4 = -963
+-> move in range [0,4] = 0 out of 44
+-> move f8e7 = 3
+f8e7 = 3
+d4e6 = -15
+e5e4 = -21
+h7h6 = -24
+d4f5 = -26
+d5d8 = -27
+d4c6 = -33
+f7f6 = -85
+f8d6 = -218
+f8c5 = -219
+e8c8 = -227
+a8d8 = -231
+c7c5 = -232
+a8c8 = -235
+a8b8 = -236
+g7g6 = -239
+c7c6 = -239
+a6a5 = -239
+d5c4 = -240
+d5c6 = -240
+d5d7 = -240
+a8a7 = -240
+h7h5 = -241
+b5b4 = -241
+d5c5 = -242
+d5b7 = -242
+f7f5 = -243
+d5d6 = -243
+e8d8 = -244
+e8d7 = -254
+e8e7 = -259
+f8a3 = -286
+f8b4 = -299
+h8g8 = -305
+d4f3 = -326
+d4e2 = -331
+d4b3 = -338
+d4c2 = -344
+d5e6 = -643
+d5g2 = -850
+d5a2 = -867
+d5b3 = -953
+d5f3 = -954
+d5e4 = -963
+-> move in range [0,4] = 3 out of 44
+-> move h7h6 = -24
+f8e7 = 1
+h7h6 = -12
+d4e6 = -15
+d5d8 = -25
+d4c6 = -25
+d4f5 = -27
+f7f6 = -85
+e5e4 = -118
+f8d6 = -218
+f8c5 = -219
+e8c8 = -227
+a8d8 = -231
+c7c5 = -232
+a8c8 = -235
+a8b8 = -236
+g7g6 = -239
+c7c6 = -239
+a6a5 = -239
+d5c6 = -240
+d5d7 = -240
+a8a7 = -240
+h7h5 = -241
+b5b4 = -241
+d5c4 = -242
+d5c5 = -242
+d5b7 = -242
+f7f5 = -243
+d5d6 = -243
+e8d8 = -244
+e8d7 = -254
+e8e7 = -259
+f8b4 = -274
+f8a3 = -282
+h8g8 = -305
+d4b3 = -324
+d4f3 = -328
+d4e2 = -334
+d4c2 = -351
+d5e6 = -643
+d5g2 = -862
+d5a2 = -880
+d5b3 = -966
+d5f3 = -972
+d5e4 = -977
+-> move in range [0,4] = 3 out of 44
+-> move d5d8 = -25
+f8e7 = 0
+h7h6 = -12
+d4e6 = -20
+d4f5 = -21
+d4c6 = -34
+d5d8 = -37
+f7f6 = -84
+e5e4 = -118
+e8c8 = -224
+f8d6 = -232
+f8c5 = -233
+a8d8 = -235
+c7c6 = -242
+c7c5 = -243
+e8d8 = -244
+a8c8 = -249
+a8b8 = -250
+h7h5 = -251
+a6a5 = -253
+a8a7 = -254
+d5c6 = -254
+d5c4 = -254
+d5d7 = -254
+b5b4 = -255
+d5c5 = -256
+d5b7 = -256
+d5d6 = -256
+g7g6 = -256
+f7f5 = -273
+f8b4 = -274
+e8d7 = -288
+e8e7 = -296
+h8g8 = -296
+f8a3 = -300
+d4f3 = -315
+d4b3 = -323
+d4e2 = -323
+d4c2 = -353
+d5e6 = -651
+d5g2 = -878
+d5a2 = -895
+d5f3 = -968
+d5b3 = -978
+d5e4 = -983
+-> move in range [0,4] = 0 out of 44
+-> move f8e7 = 0
+f8e7 = 3
+d4e6 = -11
+h7h6 = -12
+d4f5 = -12
+f7f6 = -30
+d4c6 = -34
+d5d8 = -38
+e5e4 = -115
+e8c8 = -221
+f8c5 = -232
+a8d8 = -235
+e8d8 = -239
+f8d6 = -241
+c7c6 = -242
+c7c5 = -243
+h7h5 = -247
+a8b8 = -255
+a8c8 = -259
+a8a7 = -262
+a6a5 = -283
+g7g6 = -284
+f7f5 = -284
+b5b4 = -286
+d5c4 = -288
+d5d7 = -288
+f8b4 = -288
+e8d7 = -288
+d5c6 = -293
+d5b7 = -295
+e8e7 = -296
+h8g8 = -296
+f8a3 = -300
+d4f3 = -315
+d4b3 = -323
+d4e2 = -323
+d5d6 = -329
+d5c5 = -347
+d4c2 = -353
+d5e6 = -651
+d5g2 = -878
+d5a2 = -895
+d5f3 = -968
+d5b3 = -978
+d5e4 = -983
+-> move in range [0,4] = 0 out of 44
+-> move f8e7 = 3
+fun_search -> leave (f8e7 = 0)
+Random seed: 0x1487877062
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+r3k2r/2p1bppp/p7/1p1qp3/3n4/2P2N2/PP1P1PPP/R1BQ1RK1 b kq - 2 1
+
+   +-----------------+ B
+ 8 | r .   . k .   r |  
+ 7 | .   p   b p p p |  
+ 6 | p .   .   .   . |  
+ 5 | . p . q p   .   |  
+ 4 |   .   n   .   . |  
+ 3 | .   P   . N .   |  
+ 2 | P P   P   P P P |  
+ 1 | R   B Q . R K   |  
+   +-----------------+
+     a b c d e f g h  
+
+d4f3 = 39
+d4f5 = 7
+d4e6 = 4
+d4c6 = 1
+e8g8 = -186
+e8c8 = -204
+e8f8 = -207
+c7c5 = -210
+a8d8 = -211
+a8c8 = -214
+a8b8 = -215
+d5e4 = -217
+a6a5 = -217
+h8f8 = -217
+e7c5 = -217
+c7c6 = -217
+a8a7 = -218
+d5c4 = -218
+e7f6 = -218
+h7h6 = -219
+d5d7 = -219
+h7h5 = -219
+b5b4 = -219
+g7g6 = -219
+h8g8 = -219
+d5c5 = -221
+d5d6 = -222
+g7g5 = -222
+f7f5 = -222
+f7f6 = -223
+e8d8 = -223
+e7d6 = -224
+d5d8 = -227
+e8d7 = -229
+e7d8 = -235
+e7f8 = -237
+e7b4 = -304
+d5e6 = -304
+d5c6 = -304
+d5b7 = -306
+e7g5 = -307
+e5e4 = -310
+e7a3 = -312
+d4b3 = -317
+e7h4 = -319
+d4c2 = -323
+d4e2 = -324
+d5f3 = -578
+d5a2 = -847
+d5b3 = -933
+-> move in range [0,5] = 0 out of 50
+-> move d4f3 = 39
+d4f3 = 54
+d4f5 = 4
+d4e6 = 0
+d4c6 = -2
+e8g8 = -186
+e8c8 = -204
+e8f8 = -207
+c7c5 = -210
+a8d8 = -211
+a8c8 = -214
+a8b8 = -215
+c7c6 = -217
+a6a5 = -217
+h8f8 = -217
+e7c5 = -217
+d5e4 = -217
+e7f6 = -218
+d5c4 = -218
+a8a7 = -218
+h7h6 = -219
+h7h5 = -219
+g7g6 = -219
+b5b4 = -219
+h8g8 = -219
+d5d7 = -219
+d5c5 = -221
+g7g5 = -222
+f7f5 = -222
+d5d6 = -222
+f7f6 = -223
+e8d8 = -223
+e7d6 = -224
+d5d8 = -227
+e8d7 = -229
+e7d8 = -235
+e7f8 = -237
+e7b4 = -304
+d5c6 = -304
+d5e6 = -304
+d5b7 = -306
+e7g5 = -307
+e5e4 = -310
+d4e2 = -311
+e7a3 = -312
+d4b3 = -317
+e7h4 = -319
+d4c2 = -323
+d5f3 = -578
+d5a2 = -847
+d5b3 = -933
+-> move in range [0,5] = 1 out of 50
+-> move looks too bad, adjusting...
+-> move d4f3 = 54
+d4f3 = 54
+d4c6 = 7
+d4f5 = 2
+d4e6 = 0
+e8g8 = -186
+e8c8 = -204
+e8f8 = -207
+c7c5 = -210
+a8d8 = -211
+a8c8 = -214
+a8b8 = -215
+c7c6 = -217
+a6a5 = -217
+h8f8 = -217
+e7c5 = -217
+d5e4 = -217
+e7f6 = -218
+d5c4 = -218
+a8a7 = -218
+h7h6 = -219
+h7h5 = -219
+g7g6 = -219
+b5b4 = -219
+h8g8 = -219
+d5c5 = -221
+g7g5 = -222
+f7f5 = -222
+d5d6 = -222
+f7f6 = -223
+e8d8 = -223
+e7d6 = -224
+d5d8 = -227
+e8d7 = -229
+e7d8 = -235
+e7f8 = -237
+e5e4 = -286
+d4c2 = -298
+d4b3 = -304
+e7b4 = -304
+e7g5 = -306
+d5e6 = -307
+d5b7 = -309
+d4e2 = -316
+e7a3 = -316
+e7h4 = -328
+d5c6 = -341
+d5d7 = -341
+d5f3 = -592
+d5a2 = -866
+d5b3 = -951
+-> found 2 blunder(s)!
+    d5c6 (value=395, distance=4)
+    d5d7 (value=395, distance=4)
+-> move in range [0,5] = 4 out of 50
+-> move looks too bad, adjusting...
+-> move looks too bad, adjusting...
+-> move looks too bad, adjusting...
+-> move d4c6 = 7
+d4f3 = 59
+d4c6 = 14
+d4f5 = 2
+d4e6 = 0
+e8g8 = -186
+e8c8 = -204
+e8f8 = -208
+c7c5 = -210
+a8d8 = -211
+f7f6 = -213
+a8c8 = -214
+a8b8 = -215
+d5e4 = -216
+e7c5 = -216
+a6a5 = -217
+c7c6 = -217
+a8a7 = -218
+h7h5 = -218
+h8f8 = -218
+g7g6 = -219
+b5b4 = -219
+h8g8 = -219
+h7h6 = -219
+d5c5 = -221
+e7f6 = -221
+f7f5 = -222
+d5d6 = -222
+g7g5 = -222
+e8d8 = -223
+e7d6 = -223
+d5c4 = -227
+e8d7 = -229
+d5d8 = -234
+e7f8 = -236
+e7d8 = -239
+e5e4 = -292
+d4c2 = -302
+e7b4 = -304
+d4b3 = -304
+e7a3 = -316
+d5e6 = -317
+d4e2 = -319
+d5b7 = -320
+e7g5 = -324
+e7h4 = -328
+d5d7 = -341
+d5c6 = -341
+d5f3 = -599
+d5a2 = -851
+d5b3 = -937
+-> found 2 blunder(s)!
+    d5d7 (value=400, distance=4)
+    d5c6 (value=400, distance=4)
+-> move in range [0,5] = 1 out of 50
+-> move d4c6 = 14
+d4f3 = 50
+d4c6 = 29
+d4f5 = 18
+d4e6 = 15
+e8g8 = -188
+d5c5 = -196
+d5d6 = -197
+e8c8 = -204
+e8f8 = -209
+a8c8 = -210
+h7h5 = -213
+f7f6 = -213
+c7c5 = -213
+h7h6 = -214
+a6a5 = -214
+c7c6 = -214
+a8d8 = -215
+e7c5 = -216
+a8a7 = -217
+g7g6 = -217
+e7f6 = -218
+f7f5 = -219
+a8b8 = -219
+g7g5 = -221
+e8d8 = -221
+e7d6 = -221
+d5d8 = -223
+d5e4 = -224
+e8d7 = -228
+e7f8 = -233
+e7d8 = -233
+h8f8 = -234
+d5c4 = -234
+b5b4 = -235
+h8g8 = -235
+e7b4 = -283
+e5e4 = -284
+d4b3 = -289
+d4c2 = -290
+d5e6 = -293
+d5b7 = -295
+e7a3 = -316
+e7g5 = -324
+e7h4 = -328
+d4e2 = -337
+d5d7 = -341
+d5c6 = -341
+d5f3 = -599
+d5a2 = -851
+d5b3 = -937
+-> found 2 blunder(s)!
+    d5d7 (value=391, distance=4)
+    d5c6 (value=391, distance=4)
+-> move in range [0,5] = 2 out of 50
+-> move d4f5 = 18
+fun_search -> leave (d4f5 = 0)
+Random seed: 0x1488303599
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+rnbqkbnr/pppp1ppp/4p3/8/P3P3/8/1PPP1PPP/RNBQKBNR b KQkq - 0 1
+
+   +-----------------+ B
+ 8 | r n b q k b n r |  
+ 7 | p p p p . p p p |  
+ 6 |   .   . p .   . |  
+ 5 | .   .   .   .   |  
+ 4 | P .   . P .   . |  
+ 3 | .   .   .   .   |  
+ 2 |   P P P   P P P |  
+ 1 | R N B Q K B N R |  
+   +-----------------+
+     a b c d e f g h  
+
+b8c6 = 19
+g8f6 = 17
+f8c5 = 14
+f8d6 = 14
+f8b4 = 11
+f8e7 = 10
+g8e7 = 5
+g8h6 = 0
+d8h4 = -3
+d8g5 = -3
+d8f6 = -4
+b8a6 = -4
+d7d5 = -4
+e6e5 = -5
+g7g6 = -6
+g7g5 = -6
+b7b6 = -6
+h7h5 = -7
+a7a5 = -7
+a7a6 = -8
+h7h6 = -8
+d8e7 = -9
+c7c6 = -9
+f7f6 = -11
+c7c5 = -11
+f7f5 = -11
+d7d6 = -12
+e8e7 = -35
+b7b5 = -114
+f8a3 = -330
+-> move in range [0,3] = 0 out of 30
+-> move b8c6 = 19
+b8c6 = 1
+g8f6 = -1
+f8d6 = -4
+f8c5 = -4
+f8b4 = -8
+f8e7 = -8
+g8e7 = -13
+b8a6 = -17
+g8h6 = -18
+d8h4 = -20
+d8g5 = -20
+d8f6 = -21
+d7d5 = -22
+e6e5 = -22
+g7g6 = -24
+g7g5 = -24
+b7b6 = -24
+h7h5 = -25
+a7a5 = -25
+h7h6 = -26
+a7a6 = -26
+c7c6 = -26
+d8e7 = -26
+f7f6 = -28
+f7f5 = -28
+c7c5 = -28
+d7d6 = -29
+e8e7 = -52
+b7b5 = -114
+f8a3 = -330
+-> move in range [0,3] = 1 out of 30
+-> move g8f6 = -1
+b8c6 = 18
+g8f6 = 18
+f8d6 = 15
+f8b4 = 10
+f8e7 = 10
+f8c5 = 6
+g8e7 = 4
+g8h6 = 1
+d8h4 = 0
+d8f6 = -1
+b8a6 = -4
+e6e5 = -5
+g7g6 = -5
+g7g5 = -5
+b7b6 = -5
+a7a6 = -5
+a7a5 = -6
+h7h5 = -6
+h7h6 = -7
+d8e7 = -8
+c7c6 = -10
+f7f6 = -10
+c7c5 = -10
+d7d5 = -15
+f7f5 = -17
+d7d6 = -25
+d8g5 = -27
+e8e7 = -34
+b7b5 = -97
+f8a3 = -312
+-> move in range [0,3] = 1 out of 30
+-> move g8f6 = 18
+b8c6 = 1
+g8f6 = 1
+f8d6 = -2
+f8b4 = -2
+f8c5 = -6
+f8e7 = -7
+d8h4 = -7
+g8e7 = -13
+g8h6 = -16
+d7d5 = -16
+d8f6 = -19
+g7g6 = -22
+g7g5 = -22
+b7b6 = -22
+a7a6 = -22
+e6e5 = -22
+h7h5 = -23
+a7a5 = -23
+b8a6 = -23
+d8e7 = -24
+h7h6 = -24
+c7c5 = -26
+c7c6 = -26
+f7f5 = -26
+d7d6 = -28
+f7f6 = -31
+d8g5 = -45
+e8e7 = -50
+b7b5 = -114
+f8a3 = -323
+-> move in range [0,3] = 2 out of 30
+-> move f8d6 = -2
+b8c6 = 15
+f8d6 = 15
+g8f6 = 14
+f8b4 = 13
+f8e7 = 9
+g8h6 = 4
+f8c5 = 3
+d8f6 = -1
+d8h4 = -5
+e6e5 = -5
+g7g6 = -5
+b7b6 = -5
+a7a6 = -5
+h7h6 = -5
+b8a6 = -6
+h7h5 = -6
+a7a5 = -6
+d7d5 = -6
+g7g5 = -9
+d8e7 = -9
+c7c5 = -10
+c7c6 = -11
+g8e7 = -12
+d8g5 = -15
+f7f5 = -16
+d7d6 = -23
+f7f6 = -25
+e8e7 = -34
+b7b5 = -91
+f8a3 = -300
+-> move in range [0,3] = 0 out of 30
+-> move b8c6 = 15
+g8f6 = 14
+f8b4 = 13
+f8e7 = 9
+g8h6 = 4
+f8c5 = 3
+d8f6 = -1
+d8h4 = -5
+e6e5 = -5
+g7g6 = -5
+b7b6 = -5
+a7a6 = -5
+h7h6 = -5
+b8a6 = -6
+h7h5 = -6
+a7a5 = -6
+d7d5 = -6
+b8c6 = -7
+f8d6 = -7
+g7g5 = -9
+d8e7 = -9
+c7c5 = -10
+c7c6 = -11
+g8e7 = -12
+d8g5 = -15
+f7f5 = -16
+d7d6 = -23
+f7f6 = -25
+e8e7 = -34
+b7b5 = -91
+f8a3 = -300
+-> move in range [0,3] = 2 out of 30
+-> move f8e7 = 9
+fun_search -> leave (f8e7 = 0)
+Random seed: 0x1488703307
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+rnbqkbnr/ppp1pppp/8/3p4/3P4/N7/PPP1PPPP/R1BQKBNR b KQkq - 1 1
+
+   +-----------------+ B
+ 8 | r n b q k b n r |  
+ 7 | p p p   p p p p |  
+ 6 |   .   .   .   . |  
+ 5 | .   . p .   .   |  
+ 4 |   .   P   .   . |  
+ 3 | N   .   .   .   |  
+ 2 | P P P . P P P P |  
+ 1 | R   B Q K B N R |  
+   +-----------------+
+     a b c d e f g h  
+
+g8f6 = 14
+b8c6 = 13
+c8f5 = 11
+c8g4 = 8
+c8e6 = 7
+c8d7 = 7
+b8d7 = 1
+b8a6 = -4
+d8d6 = -6
+g8h6 = -9
+b7b6 = -9
+g7g6 = -9
+h7h5 = -10
+a7a5 = -10
+e7e6 = -10
+c7c6 = -12
+h7h6 = -12
+a7a6 = -12
+d8d7 = -12
+f7f6 = -13
+f7f5 = -17
+e8d7 = -39
+c7c5 = -86
+e7e5 = -87
+g7g5 = -119
+b7b5 = -120
+c8h3 = -334
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = 14
+g8f6 = -4
+b8c6 = -5
+c8f5 = -7
+c8g4 = -11
+c8d7 = -11
+c8e6 = -11
+b8d7 = -16
+g8h6 = -21
+b8a6 = -22
+e7e6 = -23
+d8d6 = -24
+g7g6 = -27
+b7b6 = -27
+h7h5 = -28
+a7a5 = -28
+h7h6 = -29
+a7a6 = -29
+c7c6 = -30
+d8d7 = -30
+f7f6 = -31
+f7f5 = -35
+e8d7 = -57
+c7c5 = -86
+e7e5 = -87
+g7g5 = -119
+b7b5 = -120
+c8h3 = -334
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = -4
+g8f6 = 13
+b8c6 = 13
+c8f5 = 11
+c8e6 = 7
+c8d7 = 6
+c8g4 = 6
+b8d7 = -1
+b8a6 = -4
+g8h6 = -9
+g7g6 = -9
+b7b6 = -9
+e7e6 = -10
+h7h5 = -10
+a7a5 = -10
+h7h6 = -10
+a7a6 = -11
+d8d7 = -11
+c7c6 = -12
+f7f6 = -14
+d8d6 = -16
+f7f5 = -17
+c7c5 = -25
+e8d7 = -39
+e7e5 = -83
+g7g5 = -102
+b7b5 = -102
+c8h3 = -317
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = 13
+g8f6 = -2
+b8c6 = -2
+c8f5 = -4
+c8e6 = -8
+c8g4 = -9
+c8d7 = -9
+b8d7 = -15
+e7e6 = -15
+b8a6 = -18
+d8d6 = -19
+g7g6 = -24
+b7b6 = -24
+a7a5 = -25
+h7h6 = -25
+a7a6 = -25
+h7h5 = -25
+d8d7 = -26
+g8h6 = -27
+c7c6 = -28
+f7f6 = -29
+c7c5 = -29
+f7f5 = -32
+e8d7 = -54
+e7e5 = -87
+b7b5 = -110
+g7g5 = -117
+c8h3 = -331
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = -2
+g8f6 = 6
+c8d7 = 6
+c8f5 = 2
+c8e6 = -2
+c8g4 = -2
+b8c6 = -2
+e7e6 = -4
+b8a6 = -4
+d8d6 = -6
+g7g6 = -7
+h7h6 = -8
+a7a6 = -8
+d8d7 = -9
+g8h6 = -10
+c7c6 = -14
+f7f6 = -14
+b8d7 = -16
+h7h5 = -16
+a7a5 = -16
+b7b6 = -17
+f7f5 = -23
+c7c5 = -34
+e8d7 = -49
+e7e5 = -69
+b7b5 = -93
+g7g5 = -104
+c8h3 = -314
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = 6
+b8c6 = -2
+e7e6 = -4
+b8a6 = -4
+c8d7 = -5
+g8f6 = -5
+b8c6 = -6
+d8d6 = -6
+g7g6 = -7
+c8f5 = -8
+h7h6 = -8
+a7a6 = -8
+d8d7 = -9
+g8h6 = -10
+c8e6 = -12
+c7c6 = -14
+f7f6 = -14
+b8d7 = -16
+h7h5 = -16
+a7a5 = -16
+b7b6 = -17
+f7f5 = -23
+c7c5 = -34
+e8d7 = -49
+e7e5 = -69
+b7b5 = -93
+g7g5 = -104
+c8h3 = -314
+-> move in range [0,2] = 0 out of 27
+-> move b8c6 = -2
+fun_search -> leave (b8c6 = 0)
+Random seed: 0x1488704215
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+rnbqkbnr/ppp1pppp/8/3p4/3P4/N7/PPP1PPPP/R1BQKBNR b KQkq - 1 1
+
+   +-----------------+ B
+ 8 | r n b q k b n r |  
+ 7 | p p p   p p p p |  
+ 6 |   .   .   .   . |  
+ 5 | .   . p .   .   |  
+ 4 |   .   P   .   . |  
+ 3 | N   .   .   .   |  
+ 2 | P P P . P P P P |  
+ 1 | R   B Q K B N R |  
+   +-----------------+
+     a b c d e f g h  
+
+g8f6 = 14
+b8c6 = 13
+c8f5 = 11
+c8g4 = 8
+c8e6 = 7
+c8d7 = 7
+b8d7 = 1
+b8a6 = -4
+d8d6 = -6
+g8h6 = -9
+b7b6 = -9
+g7g6 = -9
+h7h5 = -10
+a7a5 = -10
+e7e6 = -10
+c7c6 = -12
+h7h6 = -12
+a7a6 = -12
+d8d7 = -12
+f7f6 = -13
+f7f5 = -17
+e8d7 = -39
+c7c5 = -86
+e7e5 = -87
+g7g5 = -119
+b7b5 = -120
+c8h3 = -334
+-> move in range [0,2] = 1 out of 27
+-> move b8c6 = 13
+g8f6 = -4
+b8c6 = -5
+c8f5 = -7
+c8g4 = -11
+c8d7 = -11
+c8e6 = -11
+b8d7 = -16
+g8h6 = -21
+b8a6 = -22
+e7e6 = -23
+d8d6 = -24
+g7g6 = -27
+b7b6 = -27
+h7h5 = -28
+a7a5 = -28
+h7h6 = -29
+a7a6 = -29
+c7c6 = -30
+d8d7 = -30
+f7f6 = -31
+f7f5 = -35
+e8d7 = -57
+c7c5 = -86
+e7e5 = -87
+g7g5 = -119
+b7b5 = -120
+c8h3 = -334
+-> move in range [0,2] = 1 out of 27
+-> move b8c6 = -5
+g8f6 = 13
+b8c6 = 13
+c8f5 = 11
+c8e6 = 7
+c8d7 = 6
+c8g4 = 6
+b8d7 = -1
+b8a6 = -4
+g8h6 = -9
+g7g6 = -9
+b7b6 = -9
+e7e6 = -10
+h7h5 = -10
+a7a5 = -10
+h7h6 = -10
+a7a6 = -11
+d8d7 = -11
+c7c6 = -12
+f7f6 = -14
+d8d6 = -16
+f7f5 = -17
+c7c5 = -25
+e8d7 = -39
+e7e5 = -83
+g7g5 = -102
+b7b5 = -102
+c8h3 = -317
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = 13
+g8f6 = -2
+b8c6 = -2
+c8f5 = -4
+c8e6 = -8
+c8g4 = -9
+c8d7 = -9
+b8d7 = -15
+e7e6 = -15
+b8a6 = -18
+d8d6 = -19
+g7g6 = -24
+b7b6 = -24
+a7a5 = -25
+h7h6 = -25
+a7a6 = -25
+h7h5 = -25
+d8d7 = -26
+g8h6 = -27
+c7c6 = -28
+f7f6 = -29
+c7c5 = -29
+f7f5 = -32
+e8d7 = -54
+e7e5 = -87
+b7b5 = -110
+g7g5 = -117
+c8h3 = -331
+-> move in range [0,2] = 1 out of 27
+-> move b8c6 = -2
+g8f6 = 6
+c8d7 = 6
+c8f5 = 2
+c8e6 = -2
+c8g4 = -2
+b8c6 = -2
+e7e6 = -4
+b8a6 = -4
+d8d6 = -6
+g7g6 = -7
+h7h6 = -8
+a7a6 = -8
+d8d7 = -9
+g8h6 = -10
+c7c6 = -14
+f7f6 = -14
+b8d7 = -16
+h7h5 = -16
+a7a5 = -16
+b7b6 = -17
+f7f5 = -23
+c7c5 = -34
+e8d7 = -49
+e7e5 = -69
+b7b5 = -93
+g7g5 = -104
+c8h3 = -314
+-> move in range [0,2] = 0 out of 27
+-> move g8f6 = 6
+b8c6 = -2
+e7e6 = -4
+b8a6 = -4
+c8d7 = -5
+g8f6 = -5
+b8c6 = -6
+d8d6 = -6
+g7g6 = -7
+c8f5 = -8
+h7h6 = -8
+a7a6 = -8
+d8d7 = -9
+g8h6 = -10
+c8e6 = -12
+c7c6 = -14
+f7f6 = -14
+b8d7 = -16
+h7h5 = -16
+a7a5 = -16
+b7b6 = -17
+f7f5 = -23
+c7c5 = -34
+e8d7 = -49
+e7e5 = -69
+b7b5 = -93
+g7g5 = -104
+c8h3 = -314
+-> move in range [0,2] = 1 out of 27
+-> move e7e6 = -4
+fun_search -> leave (e7e6 = 0)
+Random seed: 0x1488704225
+Blunder distance = 6
+Pick move range = 0 -> 10
+Limit NPS = 50000
+fun_search -> start
+rnbqkbnr/ppp2ppp/4p3/3p4/3P4/N7/PPPKPPPP/R1BQ1BNR b kq - 1 1
+
+   +-----------------+ B
+ 8 | r n b q k b n r |  
+ 7 | p p p   . p p p |  
+ 6 |   .   . p .   . |  
+ 5 | .   . p .   .   |  
+ 4 |   .   P   .   . |  
+ 3 | N   .   .   .   |  
+ 2 | P P P K P P P P |  
+ 1 | R   B Q . B N R |  
+   +-----------------+
+     a b c d e f g h  
+
+b8c6 = 42
+g8f6 = 41
+f8d6 = 38
+f8b4 = 35
+c8d7 = 34
+f8e7 = 34
+b8d7 = 33
+g8e7 = 28
+f8a3 = 27
+g8h6 = 24
+b8a6 = 24
+d8h4 = 21
+d8f6 = 20
+d8d7 = 19
+g7g5 = 18
+d8d6 = 18
+b7b6 = 18
+g7g6 = 18
+a7a5 = 17
+h7h5 = 17
+h7h6 = 16
+a7a6 = 16
+d8e7 = 16
+c7c6 = 15
+c7c5 = 14
+f7f6 = 13
+f7f5 = 7
+d8g5 = 6
+e8d7 = -1
+e8e7 = -4
+e6e5 = -60
+b7b5 = -92
+f8c5 = -282
+-> move in range [0,3] = 1 out of 33
+-> move g8f6 = 41
+f8b4 = 34
+g8f6 = 27
+b8c6 = 27
+f8a3 = 27
+d8g5 = 22
+f8d6 = 21
+c8d7 = 19
+b8d7 = 19
+f8e7 = 17
+g8e7 = 10
+d8h4 = 9
+b8a6 = 9
+g8h6 = 8
+c7c5 = 7
+d8f6 = 6
+d8d7 = 5
+b7b6 = 4
+h7h5 = 3
+a7a5 = 3
+g7g5 = 2
+g7g6 = 2
+c7c6 = 1
+h7h6 = 1
+a7a6 = 1
+f7f6 = 0
+d8d6 = 0
+d8e7 = -2
+f7f5 = -7
+e8d7 = -13
+e8e7 = -22
+e6e5 = -60
+b7b5 = -92
+f8c5 = -282
+-> move in range [0,3] = 0 out of 33
+-> move f8b4 = 34
+f8a3 = 45
+g8f6 = 41
+b8c6 = 41
+d8h4 = 34
+c8d7 = 33
+f8e7 = 33
+f8d6 = 33
+b8d7 = 30
+d8f6 = 29
+g8e7 = 26
+g8h6 = 24
+b8a6 = 23
+f8b4 = 23
+d8d7 = 21
+d8d6 = 19
+g7g6 = 18
+g7g5 = 18
+a7a6 = 18
+b7b6 = 18
+h7h6 = 17
+h7h5 = 17
+a7a5 = 17
+d8e7 = 16
+c7c5 = 14
+c7c6 = 14
+f7f6 = 13
+f7f5 = 7
+e6e5 = 4
+e8d7 = 0
+e8e7 = -3
+d8g5 = -15
+b7b5 = -74
+f8c5 = -264
+-> move in range [0,3] = 0 out of 33
+-> move f8a3 = 45
+g8f6 = 38
+b8c6 = 31
+f8b4 = 28
+f8a3 = 27
+c8d7 = 24
+b8d7 = 23
+f8d6 = 22
+d8h4 = 19
+f8e7 = 17
+g8h6 = 14
+d8f6 = 13
+b8a6 = 13
+g8e7 = 12
+c7c5 = 12
+d8d7 = 9
+b7b6 = 8
+h7h5 = 7
+a7a5 = 7
+a7a6 = 7
+g7g6 = 6
+g7g5 = 6
+h7h6 = 5
+c7c6 = 4
+e6e5 = 4
+f7f6 = 3
+d8d6 = 2
+d8e7 = 0
+d8g5 = -1
+f7f5 = -3
+e8d7 = -11
+e8e7 = -20
+b7b5 = -72
+f8c5 = -198
+-> move in range [0,3] = 0 out of 33
+-> move g8f6 = 38
+g8f6 = 58
+f8a3 = 54
+f8e7 = 47
+b8c6 = 44
+c8d7 = 36
+b8d7 = 35
+g8h6 = 29
+f8b4 = 28
+b8a6 = 26
+g8e7 = 26
+d8d7 = 25
+b7b6 = 21
+a7a6 = 21
+f8d6 = 20
+h7h5 = 20
+a7a5 = 20
+h7h6 = 20
+g7g5 = 19
+g7g6 = 19
+c7c6 = 18
+d8d6 = 18
+d8e7 = 17
+f7f6 = 16
+c7c5 = 16
+e6e5 = 16
+d8h4 = 10
+f7f5 = 9
+d8f6 = 6
+e8d7 = 1
+e8e7 = -3
+d8g5 = -12
+b7b5 = -70
+f8c5 = -198
+-> move in range [0,3] = 0 out of 33
+-> move g8f6 = 58
+b8c6 = 44
+f8a3 = 40
+g8f6 = 40
+c8d7 = 36
+b8d7 = 35
+f8e7 = 32
+g8h6 = 29
+f8b4 = 28
+b8a6 = 26
+g8e7 = 26
+d8d7 = 25
+b7b6 = 21
+a7a6 = 21
+f8d6 = 20
+h7h5 = 20
+a7a5 = 20
+h7h6 = 20
+g7g5 = 19
+g7g6 = 19
+c7c6 = 18
+d8d6 = 18
+d8e7 = 17
+f7f6 = 16
+c7c5 = 16
+e6e5 = 16
+d8h4 = 10
+f7f5 = 9
+d8f6 = 6
+e8d7 = 1
+e8e7 = -3
+d8g5 = -12
+b7b5 = -70
+f8c5 = -198
+-> move in range [0,3] = 0 out of 33
+-> move b8c6 = 44
+fun_search -> leave (b8c6 = 0)

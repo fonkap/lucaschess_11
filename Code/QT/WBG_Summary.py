@@ -16,6 +16,7 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code.QT import WBG_Comun
 
+
 class WSummary(QtGui.QWidget):
     def __init__(self, procesador, winBookGuide, dbGames, siMoves=True):
         QtGui.QWidget.__init__(self)
@@ -262,11 +263,12 @@ class WSummary(QtGui.QWidget):
         recno = self.grid.recno()
         if recno >= 0:
             dic = self.liMoves[recno]
-            pv = dic["pv"]
-            if pv.count(" ") > 0:
-                pv = "%s %s" % (self.pvBase, dic["pvmove"])  # transposition case
-            self.actualizaPV(pv)
-            self.cambiaInfoMove()
+            if "pv" in dic:
+                pv = dic["pv"]
+                if pv.count(" ") > 0:
+                    pv = "%s %s" % (self.pvBase, dic["pvmove"])  # transposition case
+                self.actualizaPV(pv)
+                self.cambiaInfoMove()
 
     def ponPV(self, pvMirar):
         if not pvMirar:
@@ -297,7 +299,7 @@ class WSummary(QtGui.QWidget):
         name = os.path.basename(self.dbGames.nomFichero)[:-4]
         maxdepth = self.dbGames.depthStat()
         depth = maxdepth
-        minGames = min(self.dbGames.reccountTotal() * 10 / 100, 5)
+        minGames = min(self.dbGames.all_reccount() * 10 / 100, 5)
         pointview = 2
         inicio = 0
         mov = self.movActivo()

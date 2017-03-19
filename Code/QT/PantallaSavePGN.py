@@ -19,6 +19,7 @@ from Code import TrListas
 from Code import Util
 from Code import VarGen
 
+
 class WSave(QTVarios.WDialogo):
     def __init__(self, owner, pgn, configuracion):
         titulo = _("Save to PGN")

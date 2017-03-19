@@ -4,6 +4,7 @@ import LCEngine
 import chess
 import chess.syzygy
 
+
 class T4:
     def __init__(self):
         self.tb = chess.syzygy.Tablebases("./IntFiles/syzygy")
@@ -82,7 +83,6 @@ class T4:
             wdl, dtz = 2, 0
 
         return -wdl, -dtz
-
 
     def close(self):
         if self.tb:

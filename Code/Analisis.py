@@ -8,10 +8,11 @@ from Code import Jugada
 from Code import Partida
 from Code.QT import PantallaAnalisis
 from Code.QT import PantallaPGN
-from Code.QT import PantallaParamAnalisis
+from Code.QT import PantallaAnalisisParam
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code import Util
+
 
 class AnalizaPartida:
     def __init__(self, procesador, alm, is_massiv, li_moves=None):
@@ -31,6 +32,7 @@ class AnalizaPartida:
         self.stability = alm.stability
         self.st_centipawns = alm.st_centipawns
         self.st_depths = alm.st_depths
+        self.st_timelimit = alm.st_timelimit
 
         # Asignacion de variables para blunders:
         # kblunders: puntos de perdida para considerar un blunder
@@ -449,7 +451,8 @@ FILESW=%s:100
                                                      brDepth=self.dpbrilliancies, brPuntos=self.ptbrilliancies,
                                                      stability=self.stability,
                                                      st_centipawns=self.st_centipawns,
-                                                     st_depths=self.st_depths)
+                                                     st_depths=self.st_depths,
+                                                     st_timelimit=self.st_timelimit)
             if not resp:
                 self.xgestor.quitaGuiDispatch()
                 return
@@ -520,6 +523,7 @@ FILESW=%s:100
 
         self.xgestor.quitaGuiDispatch()
 
+
 class UnaMuestra:
     def __init__(self, mAnalisis, mrm, posElegida, numero, xmotor):
 
@@ -563,7 +567,7 @@ class UnaMuestra:
             pv1 = rm.pv.split(" ")[0]
             desde = pv1[:2]
             hasta = pv1[2:4]
-            coronacion = pv1[4] if len(pv1) == 5 else None
+            coronacion = pv1[4].lower() if len(pv1) == 5 else None
 
             txt = rm.abrTextoBase()
             if txt:
@@ -685,6 +689,7 @@ class UnaMuestra:
     def ponVistaGestor(self):
         self.mAnalisis.procesador.gestor.ponVista()
 
+
 class MuestraAnalisis:
     def __init__(self, procesador, jg, maxRecursion, posJugada):
 
@@ -728,6 +733,7 @@ class MuestraAnalisis:
         self.liMuestras.append(um)
         return um
 
+
 def muestraAnalisis(procesador, xtutor, jg, siBlancas, maxRecursion, posJugada, pantalla=None, siGrabar=True):
     pantalla = procesador.pantalla if pantalla is None else pantalla
 
@@ -749,6 +755,7 @@ def muestraAnalisis(procesador, xtutor, jg, siBlancas, maxRecursion, posJugada, 
         xmotor = uno.xmotor
         if not xtutor or xmotor.clave != xtutor.clave:
             xmotor.terminar()
+
 
 class AnalisisVariantes:
     def __init__(self, owner, xtutor, jg, siBlancas, cPuntosBase, maxRecursion=100000):
@@ -915,13 +922,14 @@ class AnalisisVariantes:
         pts = self.rm.texto()
         AnalisisVariantes(self.w, self.xtutor, jg, self.siBlancas, pts, maxRecursion)
 
+
 def analizaPartida(gestor):
     partida = gestor.partida
     procesador = gestor.procesador
     pantalla = gestor.pantalla
     pgn = gestor.pgn
 
-    alm = PantallaParamAnalisis.paramAnalisis(pantalla, procesador.configuracion, True)
+    alm = PantallaAnalisisParam.paramAnalisis(pantalla, procesador.configuracion, True)
 
     if alm is None:
         return

@@ -3,6 +3,7 @@ import sys
 
 from Code import VarGen
 
+
 def run_lucas(*args):
     li = []
     iswindows = VarGen.isWindows

@@ -16,6 +16,7 @@ from Code.QT import QTVarios
 from Code.QT import QTUtil2
 from Code.QT import FormLayout
 
+
 class WWashing(QTVarios.WDialogo):
     def __init__(self, procesador):
 
@@ -296,6 +297,7 @@ class WWashing(QTVarios.WDialogo):
         self.siPlay = True
         self.guardarVideo()
         self.accept()
+
 
 def pantallaWashing(procesador):
     while True:
