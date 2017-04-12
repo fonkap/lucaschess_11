@@ -25,7 +25,7 @@
 #include "search.h"
 #include "thread.h"
 #include "uci.h"
-#include "syzygy/tbprobe.h"
+#include "tbprobe.h"
 
 ThreadPool Threads; // Global object
 
@@ -214,6 +214,8 @@ void ThreadPool::start_thinking(Position& pos, StateListPtr& states,
       th->tbHits = 0;
       th->rootDepth = DEPTH_ZERO;
       th->rootMoves = rootMoves;
+	  th->nmp_ply = 0;
+	  th->pair = -1;
       th->rootPos.set(pos.fen(), pos.is_chess960(), &setupStates->back(), th);
   }
 

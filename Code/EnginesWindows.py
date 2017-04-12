@@ -217,11 +217,11 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "1.3 32bit", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017_v13_x32_old.exe"
-    cm.path_64 = "McBrain_2017_v13_x64_bmi2.exe", "1.3 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.1a 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017_v21a_x32_old.exe"
+    cm.path_64 = "McBrain_2017_v21a_x64_bmi2.exe", "2.1a 64bit bmi2"
     cm.elo = 3200
-    cm.ordenUCI("Study", "true")
+    cm.ordenUCI("Tactical", "8")
     cm.ordenUCI("Hash", "64")
     cm.ordenUCI("Threads", "1")
     cm.ponMultiPV(20, 256)
@@ -235,7 +235,7 @@ def leeRivales():
     cm.ponMultiPV(20, 64)
     mas(cm)
 
-    cm = ConfigMotor("irina", "Lucas Monge", "0.15", "")
+    cm = ConfigMotor("irina", "Lucas Monge", "0.15", "https://github.com/lukasmonk/irina")
     cm.path = "irina.exe"
     cm.elo = 1200
     mas(cm)
@@ -287,7 +287,7 @@ def leeRivales():
     cm.elo = 2100
     mas(cm)
 
-    cm = ConfigMotor("andscacs", "Daniel José Queraltó", "0.8932n", "http://www.andscacs.com/")
+    cm = ConfigMotor("andscacs", "Daniel José Queraltó", "0.9032n", "http://www.andscacs.com/")
     cm.path = "andscacs32.exe"
     cm.elo = 3150
     mas(cm)
@@ -312,6 +312,26 @@ def leeRivales():
     cm.elo = 3050
     mas(cm)
 
+    cm = ConfigMotor("spike", "Volker Böhm and Ralf Schäfer", "1.4", "http://spike.lazypics.de/index_en.html")
+    cm.path = "Spike1.4.exe"
+    cm.elo = 2921
+    mas(cm)
+
+    cm = ConfigMotor("zappa", "Anthony Cozzie", "1.1", "http://www.acoz.net/zappa/")
+    cm.path = "zappa.exe"
+    cm.elo = 2581
+    mas(cm)
+
+    cm = ConfigMotor("houdini", "Robert Houdart", "1.5a", "http://www.cruxis.com/chess/houdini.htm")
+    cm.path = "Houdini_15a_w32.exe"
+    cm.elo = 3093
+    mas(cm)
+
+    cm = ConfigMotor("paladin", "Ankan Banerjee", "0.1", "https://github.com/ankan-ban/chess_cpu")
+    cm.path = "Paladin_32bit.exe"
+    cm.elo = 2254
+    mas(cm)
+
     return dicRivales
 
 
@@ -321,7 +341,7 @@ def dicMotoresFixedElo():
     for nm, desde, hasta in (
             ("rodent", 600, 2600),
             ("amyan", 1000, 2400),
-            ("mcbrain", 800, 2800),
+            ("mcbrain", 1200, 2800),
             ("rhetoric", 1300, 2600),
             ("cheng", 800, 2500),
             ("greko", 1600, 2400),
@@ -329,14 +349,14 @@ def dicMotoresFixedElo():
             ("rybka", 1200, 2400),
             ("ufim", 700, 2000),
             ("delfi", 1000, 1000),
-
+            ("spike", 1100, 2500),
     ):
         for elo in range(desde, hasta + 100, 100):
             cm = d[nm].clona()
             if elo not in dic:
                 dic[elo] = []
             if nm == "mcbrain":
-                cm.removeUCI("Study")
+                cm.removeUCI("Tactical")
             cm.ordenUCI("UCI_Elo", str(elo))
             cm.ordenUCI("UCI_LimitStrength", "true")
             cm.nombre += " (%d)" % elo

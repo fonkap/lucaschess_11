@@ -58,7 +58,7 @@ class GestorPartida(Gestor.Gestor):
         self.siguienteJugada()
 
     def reiniciar(self):
-        if self.siCambios and not QTUtil2.pregunta(self.pantalla, _("You will lost all changes, are you sure?")):
+        if self.siCambios and not QTUtil2.pregunta(self.pantalla, _("You will loose all changes, are you sure?")):
             return
         p = Partida.PartidaCompleta()
         p.restore(self.reinicio)

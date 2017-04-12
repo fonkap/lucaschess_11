@@ -56,13 +56,12 @@ struct Entry {
   }
 
   Key key;
-
   EndgameBase<Value>* evaluationFunction;
   EndgameBase<ScaleFactor>* scalingFunction[COLOR_NB]; // Could be one for each
                                                        // side (e.g. KPKP, KBPsKs)
   int16_t value;
   uint8_t factor[COLOR_NB];
-	Phase gamePhase;
+  Phase gamePhase;
 };
 
 typedef HashTable<Entry, 8192> Table;

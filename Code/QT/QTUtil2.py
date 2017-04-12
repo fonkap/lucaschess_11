@@ -224,8 +224,8 @@ class ControlMensEspera:
 mensEspera = ControlMensEspera()
 
 
-def mensajeTemporal(pantalla, mensaje, segundos, background=None, pmImagen=None):
-    me = mensEspera.inicio(pantalla, mensaje, background=background, pmImagen=pmImagen, siCancelar=segundos > 3.0, titCancelar=_("Continue"))
+def mensajeTemporal(pantalla, mensaje, segundos, background=None, pmImagen=None, posicion="c"):
+    me = mensEspera.inicio(pantalla, mensaje, background=background, pmImagen=pmImagen, siCancelar=segundos > 3.0, titCancelar=_("Continue"), posicion=posicion)
     me.time(segundos)
 
 
@@ -613,8 +613,10 @@ def comboBoxLB(parent, liOpciones, valor, etiqueta=None):
         return cb
 
 
-def unMomento(owner):
-    return mensEspera.inicio(owner, _("One moment please..."))
+def unMomento(owner, mensaje=None):
+    if mensaje is None:
+        mensaje = _("One moment please...")
+    return mensEspera.inicio(owner, mensaje)
 
 
 def analizando(owner):

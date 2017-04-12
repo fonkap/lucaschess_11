@@ -355,7 +355,8 @@ class GestorMicElo(Gestor.Gestor):
                 self.liRMrival.append(self.rmRival)
                 if self.valoraRMrival(self.siRivalConBlancas):
                     self.siguienteJugada()
-
+            else:
+                self.ponResultado(kGanamos)
         else:
             self.relojStart(True)
 

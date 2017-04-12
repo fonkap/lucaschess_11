@@ -1,4 +1,5 @@
 import os
+import sys
 
 import time
 
@@ -128,6 +129,16 @@ class EnginePOP(object):
     def close(self):
         self.working = False
         if self.pid:
-            self.process.kill()
-            self.process.terminate()
+            if self.process.poll() is None:
+                self.put_line("quit")
+                wtime = 40  # wait for it, wait for it...
+                while self.process.poll() is None and wtime > 0:
+                    time.sleep(0.05)
+                    wtime -= 1
+
+                if self.process.poll() is None:  # nope, no luck
+                    sys.stderr.write("INFO: the engine %s won't close properly.\n" % self.exe)
+                    self.process.kill()
+                    self.process.terminate()
+
             self.pid = None

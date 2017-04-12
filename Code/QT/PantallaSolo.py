@@ -10,7 +10,6 @@ from Code.QT import QTVarios
 from Code.QT import FormLayout
 
 
-
 class WEtiquetasPGN(QTVarios.WDialogo):
     def __init__(self, procesador, liPGN):
         titulo = _("Edit PGN labels")
@@ -120,7 +119,7 @@ def editarEtiquetasPGN(procesador, liPGN):
 
 
 def massive_change_tags(owner, configuracion, num_selected):
-    APLY_ALL, APLY_SELECTED = range(2)
+    APPLY_ALL, APPLY_SELECTED = range(2)
     SAVE_NOTHING, SAVE_LABELS, SAVE_LABELS_VALUES = range(3)
     NUM_OTHERS = 4
 
@@ -137,17 +136,29 @@ def massive_change_tags(owner, configuracion, num_selected):
     sepBase()
 
     liBase.append((None, _("Basic tags")))
-    liBase.append(("Event:", dic.get("EVENT", "")))
-    liBase.append(("Site:", dic.get("SITE", "")))
-    liBase.append(("Date:", dic.get("DATE", "")))
+    liBase.append(("%s:" % _("Event"), dic.get("EVENT", "")))
+    liBase.append(("%s:" % _("Site"), dic.get("SITE", "")))
+    liBase.append(("%s:" % _("Date"), dic.get("DATE", "")))
+
+    sepBase()
+
+    liBaseOther = ["Round", "White", "Black", "Result", "WhiteTitle", "BlackTitle", "WhiteElo", "BlackElo",
+                   "WhiteUSCF", "BlackUSCF", "WhiteNA", "BlackNA", "WhiteType", "BlackType", "EventDate",
+                   "EventSponsor", "Section", "Stage", "Board", "Opening", "Variation", "SubVariation",
+                   "ECO", "Time", "UTCTime", "UTCDate", "TimeControl", "SetUp", "Termination"]
+    li0 = ["", "Event", "Site", "Date"]
+    li0.extend(liBaseOther)
+    li = [[uno, uno] for uno in li0]
+    combo = FormLayout.Combobox(_("Remove the tag (in English)"), li, si_editable=True)
+    liBase.append((combo, ""))
 
     sepBase()
 
     liBase.append((None, _("Configuration")))
 
-    liA = [(_("All read"), APLY_ALL), ("%s [%d]"%(_("Only selected"), num_selected), APLY_SELECTED)]
-    config = FormLayout.Combobox(_("Aply to"), liA)
-    liBase.append((config, dic.get("APLY", APLY_SELECTED if num_selected > 1 else APLY_ALL)))
+    liA = [(_("All read"), APPLY_ALL), ("%s [%d]"%(_("Only selected"), num_selected), APPLY_SELECTED)]
+    config = FormLayout.Combobox(_("Apply to"), liA)
+    liBase.append((config, dic.get("APPLY", APPLY_SELECTED if num_selected > 1 else APPLY_ALL)))
     sepBase()
 
     liBase.append((_("Overwrite"), dic.get("OVERWRITE", True)))
@@ -163,9 +174,25 @@ def massive_change_tags(owner, configuracion, num_selected):
     liOther = [sep]
 
     for x in range(NUM_OTHERS):
-        liOther.append(("%s %d:" % (_("Tag"), x+1), dic.get("OTHERS_TAG_%d" % x, "")))
-        liOther.append(("%s %d:" % (_("Value"), x+1), dic.get("OTHERS_VALUE_%d" % x, "")))
+        li = [[uno, uno] for uno in liBaseOther]
+        previo = dic.get("OTHERS_TAG_%d" % x, "")
+        li.insert(0, [previo, previo])
+        if previo:
+            li.insert(0, ["", ""])
+        combo = FormLayout.Combobox("%s %d" % (_("Tag"), x + 1), li, si_editable=True)
+        liOther.append((combo, previo))
+
+        previo_value = dic.get("OTHERS_VALUE_%d" % x)
+        rotulo = "%s %d" % (_("Value"), x + 1)
+        if previo_value:
+            li=[["", ""], [previo_value, previo_value]]
+            combo = FormLayout.Combobox(rotulo, li, si_editable=True)
+            liOther.append((combo, ""))
+        else:
+            liOther.append((rotulo, ""))
         liOther.append(sep)
+
+    liOther.append((None, "** %s" % _("All official tags must be indicated with their name in English.")))
 
     lista = []
     lista.append((liBase, _("Base"), ""))
@@ -178,7 +205,7 @@ def massive_change_tags(owner, configuracion, num_selected):
         liBase, liOther = resp
 
         dic = {}
-        dic["EVENT"], dic["SITE"], dic["DATE"], dic["APLY"], dic["OVERWRITE"], dic["SAVE"] = liBase
+        dic["EVENT"], dic["SITE"], dic["DATE"], dic["REMOVE"], dic["APPLY"], dic["OVERWRITE"], dic["SAVE"] = liBase
 
         liTags = []
         for tag in ("Event", "Site", "Date"):
@@ -202,15 +229,18 @@ def massive_change_tags(owner, configuracion, num_selected):
             for x in ("EVENT", "SITE", "DATE"):
                 del dic[x]
             for x in range(NUM_OTHERS):
-                del dic["OTHERS_VALUE_%d" % x]
+                key = "OTHERS_VALUE_%d" % x
+                if key in dic:
+                    del dic[key]
                 if save == SAVE_NOTHING:
-                    del dic["OTHERS_TAG_%d" % x]
+                    key = "OTHERS_TAG_%d" % x
+                    if key in dic:
+                        del dic[key]
 
         configuracion.escVariables("MASSIVE_CHANGE_TAGS", dic)
 
-        return (liTags, dic["OVERWRITE"], dic["APLY"] == APLY_ALL) if liTags else None
+        if liTags or dic["REMOVE"]:
+            return (liTags, dic["REMOVE"], dic["OVERWRITE"], dic["APPLY"] == APPLY_ALL)
 
-    else:
-        return None
-
+    return None
 

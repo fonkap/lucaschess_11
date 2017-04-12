@@ -63,6 +63,7 @@ class WGamesFEN(QtGui.QWidget):
             (_("Last"), Iconos.Final(), self.tw_gobottom), None,
             (_("Filter"), Iconos.Filtrar(), self.tw_filtrar), None,
             (_("Remove"), Iconos.Borrar(), self.tw_borrar),None,
+            (_("Utilities"), Iconos.Utilidades(), self.tw_utilities), None,
         ]
 
         self.tbWork = Controles.TBrutina(self, liAccionesWork, tamIcon=24)
@@ -77,6 +78,10 @@ class WGamesFEN(QtGui.QWidget):
         self.setLayout(layout)
 
         self.setNameToolBar()
+
+    def reread(self):
+        self.dbGamesFEN.lee_rowids()
+        self.grid.refresh()
 
     def limpiaColumnas(self):
         for col in self.grid.oColumnas.liColumnas:
@@ -238,6 +243,13 @@ class WGamesFEN(QtGui.QWidget):
 
             um.final()
 
+    def tw_utilities(self):
+        menu = QTVarios.LCMenu(self)
+        menu.opcion(self.tg_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
+        resp = menu.lanza()
+        if resp:
+            resp()
+
     def tg_file(self):
         menu = QTVarios.LCMenu(self)
 
@@ -259,9 +271,6 @@ class WGamesFEN(QtGui.QWidget):
         submenu.separador()
         submenu.opcion(self.tg_exportar_DB, _("Other database"), Iconos.DatabaseC())
         menu.separador()
-
-        submenu = menu.submenu(_("Utilities"), Iconos.Utilidades())
-        submenu.opcion(self.tg_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
 
         resp = menu.lanza()
         if resp:
@@ -285,10 +294,18 @@ class WGamesFEN(QtGui.QWidget):
     def tg_massive_change_tags(self):
         resp = PantallaSolo.massive_change_tags(self, self.configuracion, len(self.grid.recnosSeleccionados()))
         if resp:
-            liTags, overwrite, si_all = resp
+            recno = self.grid.recno()
+            liTags, remove, overwrite, si_all = resp
             liRegistros = range(self.dbGamesFEN.reccount()) if si_all else self.grid.recnosSeleccionados()
-            self.dbGamesFEN.massive_change_tags(liTags, liRegistros, overwrite)
-            self.actualiza(True)
+            nRegistros = len(liRegistros)
+            if (nRegistros == 1 or
+                ((nRegistros > 1) and
+                 QTUtil2.pregunta(self, _("Are you sure do you want to change the %d registers?" % nRegistros)))):
+                um = QTUtil2.unMomento(self)
+                self.dbGamesFEN.massive_change_tags(liTags, liRegistros, remove, overwrite)
+                self.reread()
+                self.grid.goto(recno, 0)
+                um.final()
 
     def tg_change(self):
         pathFich = QTUtil2.leeFichero(self, os.path.dirname(self.configuracion.ficheroDBgames), "lcf",

@@ -15,6 +15,12 @@
 
 
 
+
+
+
+
+
+
 import os
 import sip
 import sys
@@ -61,10 +67,3 @@ elif nArgs >= 2:
         import Code.RunKibitzer
         Code.RunKibitzer.run(sys.argv[2])
 
-    elif arg == "-voyager":
-        import Code.RunVoyager
-        Code.RunVoyager.run(sys.argv[2])
-
-    elif arg == "-scanner":
-        import Code.QT.Scanner
-        Code.QT.Scanner.run(sys.argv[2], sys.argv[3])  # fich, carpeta Scanners

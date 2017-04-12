@@ -1,3 +1,4 @@
+import sys
 import os
 import signal
 import struct
@@ -230,10 +231,13 @@ class XMotor:
         posInicial = "startpos" if partida.siFenInicial() else "fen %s" % partida.iniPosicion.fen()
         li = [jg.movimiento().lower() for n, jg in enumerate(partida.liJugadas) if n < njg]
         moves = " moves %s" % (" ".join(li)) if li else ""
+        if not li:
+            self.work_ok("ucinewgame")
         self.work_ok("position %s%s" % (posInicial, moves))
         self.is_white = partida.siBlancas() if njg > 9000 else partida.jugada(njg).siBlancas()
 
     def set_fen_position(self, fen):
+        self.work_ok("ucinewgame")
         self.work_ok("position fen %s" % fen)
         self.is_white = "w" in fen
 
@@ -329,9 +333,9 @@ class XMotor:
         if self.pid:
             try:
                 self.engine.close()
-                os.kill(self.pid, signal.SIGTERM)
             except:
-                pass
+                os.kill(self.pid, signal.SIGTERM)
+                sys.stderr.write("INFO: except - the engine %s won't close properly.\n" % self.nombre)
             self.pid = None
 
     def order_uci(self):
@@ -382,6 +386,8 @@ class XMotor:
         li1 = pv.split(" ")
         li.extend(li1[:2])
         moves = " moves %s" % (" ".join(li)) if li else ""
+        if not li:
+            self.work_ok("ucinewgame")
         self.pondering = True
         self.work_ok("position %s%s" % (posInicial, moves))
         self.put_line("go ponder")
@@ -544,6 +550,7 @@ class DirectMotor(QtCore.QProcess):
         return self.buffer()
 
     def bestmove_fen(self, fen, maxTiempo, maxProfundidad):
+        self.orden_ok("ucinewgame")
         self.orden_ok("position fen %s" % fen)
         self.siBlancas = siBlancas = "w" in fen
         return self._mejorMov(maxTiempo, maxProfundidad, siBlancas)

@@ -259,7 +259,7 @@ class Game:
 
         base = self._partida.pgnBase()
 
-        return cabecera + "\n" + base + " %s\n" % rs
+        return cabecera + "\n" + base + " %s\n\n" % rs
 
 
 class Torneo:

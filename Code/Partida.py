@@ -382,9 +382,10 @@ class PartidaCompleta(Partida):
         return ""
 
     def readPGN(self, configuracion, pgn):
-        from Code import PGN # evita el circulo vicioso
+        from Code import PGN  # evita el circulo vicioso
         unpgn = PGN.UnPGN()
-        unpgn.leeTexto(pgn)
+        if not unpgn.leeTexto(pgn):
+            return None
         self.recuperaDeTexto(unpgn.partida.guardaEnTexto())
         self.asignaApertura(configuracion)
 

@@ -814,7 +814,6 @@ class DBgames:
         self.dbSTAT.massive_append_set(False)
         self.dbSTAT.commit()
         conexion.commit()
-
         dlTmp.ponContinuar()
 
     def appendDB(self, db, liRecnos, dlTmp):
@@ -899,7 +898,7 @@ class DBgames:
         rtags = None
         if xpgn:
             xpgn = Util.blob2var(xpgn)
-            if type(xpgn) == str:  # Version -9
+            if type(xpgn) in (str, unicode):  # Version -9
                 p.readPGN(VarGen.configuracion, xpgn)
                 return p
             if "RTAGS" in xpgn:
@@ -935,7 +934,7 @@ class DBgames:
         rtags = None
         if xpgn:
             xpgn = Util.blob2var(xpgn)
-            if type(xpgn) == str:  # Version -9
+            if type(xpgn) in (str, unicode):
                 return xpgn
             if "RTAGS" in xpgn:
                 rtags = xpgn["RTAGS"]
@@ -945,6 +944,7 @@ class DBgames:
                 return p.pgn()
 
         p = Partida.PartidaCompleta()
+
         p.leerPV(xpv2pv(raw["XPV"]))
         rots = ["Event", "Site", "Date", "Round", "White", "Black", "Result",
                 "WhiteTitle", "BlackTitle", "WhiteElo", "BlackElo", "WhiteUSCF", "BlackUSCF", "WhiteNA", "BlackNA",
@@ -1053,19 +1053,32 @@ class DBgames:
     def guardaPartidaRecno(self, recno, partidaCompleta):
         return self.inserta(partidaCompleta) if recno is None else self.modifica(recno, partidaCompleta)
 
-    def massive_change_tags(self, li_tags_change, liRegistros, overwrite):
+    def massive_change_tags(self, li_tags_change, liRegistros, remove, overwrite):
         dtag = Util.SymbolDict({tag:val for tag, val in li_tags_change})
+
+        def work_tag(tag, alm):
+            if tag in dtag:
+                ant = getattr(alm, tag.upper())
+                if (ant and overwrite) or not ant:
+                    setattr(alm, tag.upper(), dtag[tag])
+
+        if remove:
+            remove = remove.upper()
 
         for recno in liRegistros:
             alm, raw = self.leeRegAllRecno(recno)
 
-            for tag in ("EVENT","SITE","DATE","WHITE","BLACK","RESULT","ECO","WHITEELO","BLACKELO"):
-                if tag in dtag:
-                    ant = getattr(alm, tag.upper())
-                    if (ant and overwrite) or not ant:
-                        setattr(alm, tag.upper(), dtag[tag])
+            work_tag("Event", alm)
+            work_tag("Site", alm)
+            work_tag("Date", alm)
 
             p = self.leePartidaRaw(raw)
+            if remove:
+                for n, (tag, val) in enumerate(p.liTags):
+                    if tag.upper() == remove:
+                        del p.liTags[n]
+                        break
+                setattr(alm, remove, "")
 
             st_tag_ant_upper = set()
             for n, (tag, val) in enumerate(p.liTags):
@@ -1073,10 +1086,12 @@ class DBgames:
                     if tag in dtag:
                         p.liTags[n] = [tag, dtag[tag]]
                 st_tag_ant_upper.add(tag.upper())
+                setattr(alm, tag.upper(), p.liTags[n][1])
 
             for tag_new in dtag:
                 if tag_new.upper() not in st_tag_ant_upper:
                     p.liTags.append([tag_new, dtag[tag_new]])
+                    setattr(alm, tag_new.upper(), dtag[tag_new])
 
             rowid = self.liRowids[recno]
             pgn = {"FULLGAME": p.save()}

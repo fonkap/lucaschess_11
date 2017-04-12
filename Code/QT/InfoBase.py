@@ -62,21 +62,26 @@ class ThanksTo:
             ["Critter 1.6a 32bits", "Richard Vida", "http://www.vlasak.biz/critter/"],
             ["Texel 1.07", "Peter Österlund", "http://web.comhem.se/petero2home/javachess/index.html#texel"],
             ["Stockfish 8", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
-            ["McBrain 1.3", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
+            ["McBrain 2.1a", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
             ["Gull 3", "Vadim Demichev", "https://sourceforge.net/projects/gullchess/"],
             ["Delfi 5.4", "Fabio Cavicchio", "http://www.msbsoftware.it/delfi/"],
             # ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
             ["Monarch 1.7", "Steve Maughan", "http://www.monarchchess.com/"],
-            ["Andscacs 0.8932n", "Daniel José Queraltó", "http://www.andscacs.com/"],
+            ["Andscacs 0.9032n", "Daniel José Queraltó", "http://www.andscacs.com/"],
             ["Arminius 2017-01-01", "Volker Annus", "http://www.nnuss.de/Hermann/Arminius2017-01-01.zip"],
             ["WildCat", "Igor Korshunov", "http://www.igorkorshunov.narod.ru/WildCat"],
             ["Demolito", "Lucas Braesch", "https://github.com/lucasart/Demolito"],
             ["Hannibal 1.7", "Samuel N. Hamilton and Edsel G. Apostol", "http://sites.google.com/site/edapostol/hannibal"],
+            ["Spike 1.4", "Volker Böhm and Ralf Schäfer", "http://spike.lazypics.de/index_en.html"],
+            ["Zappa 1.1", "Anthony Cozzie", "http://www.acoz.net/zappa/"],
+            ["Irina 0.15", "Lucas Monge", "https://github.com/lukasmonk/irina"],
+            ["Houdini 1.5a", "Robert Houdart", "http://www.cruxis.com/chess/houdini.htm"],
+            ["Paladin 0.1", "Ankan Banerjee", "https://github.com/ankan-ban/chess_cpu"],
         ]
         li.sort(key=lambda x: x[0])
         n = len(li)
-        x = n/3
-        bl = [0, x, 2*x, len(li)]
+        x = n*1.0/3
+        bl = [0, int(x), int(2*x), len(li)]
         nbl = int(bloque)
         return li[bl[nbl-1]:bl[nbl]]
 
@@ -118,12 +123,12 @@ class ThanksTo:
             return txt
 
         # Version 11
-        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico"]
+        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith"]
         liResto = []
         txt += version(11, liBase, liResto)
 
         # Version 10
-        liBase = ["Remes", "Max Aloyau", "Alfonso Solbes"]
+        liBase = ["Remes", "Max Aloyau", "Alfonso Solbes", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith"]
         liResto = ["Immortalchess forum", ]
         txt += version(10, liBase, liResto)
 
@@ -160,7 +165,7 @@ class ThanksTo:
         dic = {
             _("Portuguese"): ("Rui Grafino", ""),
             _("French"): ("Max Aloyau", "Lolo S."),
-            _("Russian"): ("Reinhard, Vladimir", "Slavik Pavlov"),
+            _("Russian"): ("Nils Andersson, Reinhard, Vladimir", "Slavik Pavlov"),
             _("German"): ("Alfons", "Georg Pfefferle"),
             _("Italiano"): ("Maurizio Peroni,Michele Tumbarello", ""),
             _("Azeri"): ("Shahin Jafarli (shahinjy)", ""),

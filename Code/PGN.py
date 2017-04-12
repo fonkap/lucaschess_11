@@ -28,6 +28,8 @@ class UnPGN:
 
     def leeTexto(self, texto):
         game = PGNreader.read1Game(unicode(texto))
+        if game.erroneo:
+            return False
         cp = ControlPosicion.ControlPosicion()
         cp.leeFen(game.fen)
         p = Partida.Partida(cp)
@@ -68,6 +70,7 @@ class UnPGN:
         self.dic = game.labels
         self.siError = False
         self.texto = texto
+        return True
 
     def variable(self, clave, defecto=""):
         return self.dic.get(clave, defecto)
@@ -341,3 +344,20 @@ def rawPGN(pgn):
     txt += p.pgnBase()
 
     return txt
+
+def pgn_partida(fen, solucion):
+    pgn = UnPGN()
+    pgn.leeTexto('[FEN "%s"]\n%s' % (fen, solucion))
+    partida = pgn.partida
+    for jg in partida.liJugadas:
+        jg.pvariantes = pvariantes = []
+        variantes = jg.variantes
+        if variantes:
+            fenBase = jg.posicionBase.fen()
+            for variante in variantes.split("\n"):
+                uno = UnPGN()
+                uno.leeTexto('[FEN "%s"]\n%s' % (fenBase, variante))
+                if not uno.siError and uno.partida.numJugadas():
+                    pvariantes.append(uno.partida)
+
+    return partida

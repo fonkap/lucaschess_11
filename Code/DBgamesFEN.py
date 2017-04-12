@@ -164,7 +164,6 @@ class DBgamesFEN():
         liRows = cursor.fetchall()
         stRegs = set(row[0] for row in liRows)
 
-
         sql = "insert into GAMES (FEN,EVENT,SITE,DATE,WHITE,BLACK,RESULT,XPV,PGN,PLIES) values (?,?,?,?,?,?,?,?,?,?);"
         liCabs = self.liCamposBase[:-1]  # all except PLIES PGN, TAGS
         liCabs.append("PLYCOUNT")
@@ -395,7 +394,7 @@ class DBgamesFEN():
         dlTmp.ponContinuar()
         self.lee_rowids()
 
-    def massive_change_tags(self, li_tags_change, liRegistros, overwrite):
+    def massive_change_tags(self, li_tags_change, liRegistros, remove, overwrite):
         dtag = Util.SymbolDict({tag:val for tag, val in li_tags_change})
 
         def work_tag(tag, alm):
@@ -403,6 +402,9 @@ class DBgamesFEN():
                 ant = getattr(alm, tag.upper())
                 if (ant and overwrite) or not ant:
                     setattr(alm, tag.upper(), dtag[tag])
+
+        if remove:
+            remove = remove.upper()
 
         for recno in liRegistros:
             alm, raw = self.leeRegAllRecno(recno)
@@ -412,6 +414,12 @@ class DBgamesFEN():
             work_tag("Date", alm)
 
             p = self.leePartidaRaw(raw)
+            if remove:
+                for n, (tag, val) in enumerate(p.liTags):
+                    if tag.upper() == remove:
+                        del p.liTags[n]
+                        break
+                setattr(alm, remove, "")
 
             st_tag_ant_upper = set()
             for n, (tag, val) in enumerate(p.liTags):
@@ -419,16 +427,18 @@ class DBgamesFEN():
                     if tag in dtag:
                         p.liTags[n] = [tag, dtag[tag]]
                 st_tag_ant_upper.add(tag.upper())
+                setattr(alm, tag.upper(), p.liTags[n][1])
 
             for tag_new in dtag:
                 if tag_new.upper() not in st_tag_ant_upper:
                     p.liTags.append([tag_new, dtag[tag_new]])
+                    setattr(alm, tag_new.upper(), dtag[tag_new])
 
             rowid = self.liRowids[recno]
             pgn = {"FULLGAME": p.save()}
             xpgn = Util.var2blob(pgn)
-            sql = "UPDATE GAMES SET EVENT=?, SITE=?, DATE=?, PGN=? WHERE ROWID = %d" % rowid
-            self._cursor.execute(sql, (alm.EVENT, alm.SITE, alm.DATE, xpgn))
+            sql = "UPDATE GAMES SET EVENT=?, SITE=?, DATE=?, WHITE=?, BLACK=?, PGN=?, RESULT=? WHERE ROWID = %d" % rowid
+            self._cursor.execute(sql, (alm.EVENT, alm.SITE, alm.DATE, alm.WHITE, alm.BLACK, xpgn, alm.RESULT))
 
         self._conexion.commit()
 

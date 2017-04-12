@@ -18,6 +18,7 @@ from Code.QT import PantallaAnalisisParam
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
+from Code.QT import PantallaSavePGN
 from Code import SQL
 from Code import TrListas
 from Code import Util
@@ -269,40 +270,29 @@ class WElegir(QTVarios.WDialogo):
         else:
             liSelected = [0]
 
-        extension = "pgn"
-        resp = QTUtil2.salvaFichero(self, _("File to save"), self.gestor.configuracion.dirSalvados,
-                                    _("File") + " %s (*.%s)" % (extension, extension), False)
-        if resp:
-            antSelect = self.dbf.select
-            nueSelect = antSelect + ",PGN"
-            self.dbf.ponSelect(nueSelect)
-            self.dbf.leer()
-            self.dbf.gotop()
-            li = []
-            for i in liSelected:
-                self.dbf.goto(i)
-                dic = self.dbf.dicValores()
-                li.append(dic["PGN"])
-            dato = "\n\n".join(li)
-            try:
-                modo = "w"
-                if Util.existeFichero(resp):
-                    modo = "a"
-                    dato = "\n" * 2 + dato
-                f = codecs.open(resp, modo, 'utf-8', 'ignore')
-                f.write(dato.replace("\n", "\r\n"))
-                f.close()
-                QTUtil2.mensaje(self, _X(_("Saved to %1"), resp))
-                direc = os.path.dirname(resp)
-                if direc != self.gestor.configuracion.dirSalvados:
-                    self.gestor.configuracion.dirSalvados = direc
-                    self.gestor.configuracion.graba()
-            except:
-                QTUtil.ponPortapapeles(dato)
-                QTUtil2.mensError(self, "%s : %s\n\n%s" % (
-                    _("Unable to save"), resp, _("It is saved in the clipboard to paste it wherever you want.")))
+        w = PantallaSavePGN.WSaveVarios(self, self.gestor.configuracion)
+        if w.exec_():
+            ws = PantallaSavePGN.FileSavePGN(self, w.dic_result)
+            if ws.open():
+                ws.um()
 
-            self.dbf.ponSelect(antSelect)
+                antSelect = self.dbf.select
+                nueSelect = antSelect + ",PGN"
+                self.dbf.ponSelect(nueSelect)
+                self.dbf.leer()
+                self.dbf.gotop()
+
+                for i in liSelected:
+                    self.dbf.goto(i)
+                    dic = self.dbf.dicValores()
+                    pgn = dic["PGN"]
+                    if i > 0 or not ws.is_new:
+                        ws.write("\n\n")
+                    ws.write(pgn)
+
+                ws.close()
+                self.dbf.ponSelect(antSelect)
+                ws.um_final()
 
     def borrar(self):
 

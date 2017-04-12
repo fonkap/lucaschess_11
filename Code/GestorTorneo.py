@@ -42,7 +42,6 @@ class GestorTorneo(Gestor.Gestor):
             self.wresult.terminar()
 
     def siguienteJuego(self, gm, ngame, numGames):
-
         self.estado = kJugando
 
         self.gm = gm

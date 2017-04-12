@@ -1,0 +1,287 @@
+set_option(): tbcache = 8388608 (8M)
+tablebase_init(): allocated 8388608 bytes for the tablebase cache.
+tablebase_init(): searching for Nalimov tablebases at path "C:\"
+tablebase_init(): found TBs with up to 0 pieces.
+tablebase_init(): TB indices & decompression using 0kb of memory
+set_option(): threads = 1 
+game_start_thread(0): spawning worker thread!
+set_option(): scorepov = 1 
+set_option(): book = public.zbook
+hash_reallocate(): Allocated pawn hash table: 1024K
+hash_reallocate(): Allocated king hash table: 8M
+worker_cpu(): CPU0 starting.
+hash_reallocate(): Allocated transposition table: 64M
+r - - q k - - r 
+p b p p - p p p 
+- P - - p - - - 
+- - - - P - - - 
+- - - - - P - - 
+- - - - n N P - 
+P P - - - - B P 
+n N - Q - R K - 
+
+WQC:0 WKC:0 BQC:1 BKC:1 Turn:WHITE EP:0
+MB:  -590 WPC: 5 BPC: 6 HM:0 HKL:577EE351 HKH:A1590AE6
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. b6xc7 Qd8xc7 
+ = (-6.12)	Depth: 1/7	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. b6xc7 Qd8xc7 
+ = (-6.12)	Depth: 2/7	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. b6xc7!
+ + (-5.82)	Depth: 3/10	00:00:00.00	1kN (1220 KN/s, 0 splits, 0 aborts)
+1. b6xc7 Qd8xc7 2. Qd1-c1 
+ = (-5.25)	Depth: 3/12	00:00:00.00	2kN (1309 KN/s, 0 splits, 0 aborts)
+1. b6xc7 Qd8xc7 2. Qd1-c1 Na1-c2 
+ = (-6.66)	Depth: 4/17	00:00:00.00	8kN (1254 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 8779 Qnodes: 7482[85.2%][66.5%], NPS: 381K
+Hash:  TProbes: 8779[100.0%] TPings: 2575[29.3%] THits: 899[10.2%]
+EHash: KHits 5263[84.0%] PHits 536[53.6%] POverall: 5799[92.6%]
+Exts:  Check: 6 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+r - - - k - - r 
+p b q p - p p p 
+- - - - p - - - 
+- - - - P - - - 
+- - - - - P - - 
+- - - - n N P - 
+P P - - - - B P 
+n N - Q - R K - 
+
+WQC:0 WKC:0 BQC:1 BKC:1 Turn:WHITE EP:0
+MB:  -590 WPC: 5 BPC: 6 HM:0 HKL:BE38A3F4 HKH:CA807003
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Qd1-c1 Na1-c2 
+ = (-6.66)	Depth: 1/0	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Qd1-c1 Na1-c2 
+ = (-6.66)	Depth: 2/0	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Qd1-c1 Na1-c2 2. Rf1-f2 
+ = (-6.71)	Depth: 3/10	00:00:00.00	1kN (1911 KN/s, 0 splits, 0 aborts)
+1. Qd1-d6 Qc7xd6 2. e5xd6 Ne3xf1 3. Kg1xf1 
+ = (-7.00)	Depth: 4/13	00:00:00.00	9kN (1372 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 9604 Qnodes: 8271[86.1%][53.7%], NPS: 429K
+Hash:  TProbes: 9604[100.0%] TPings: 3159[32.9%] THits: 1677[17.5%]
+EHash: KHits 5696[90.6%] PHits 340[57.3%] POverall: 6036[96.0%]
+Exts:  Check: 6 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+r - - - k - - r 
+p b - p - p p p 
+- - - q p - - - 
+- - - - P - - - 
+- - - - - P - - 
+- - - - n N P - 
+P P - - - - B P 
+n N - - - R K - 
+
+WQC:0 WKC:0 BQC:1 BKC:1 Turn:WHITE EP:0
+MB: -1800 WPC: 4 BPC: 6 HM:0 HKL:CFD94BA6 HKH:4A112C76
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. e5xd6 Ne3xf1 2. Kg1xf1 
+ = (-7.00)	Depth: 1/0	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. e5xd6 Ne3xf1 2. Kg1xf1 
+ = (-7.00)	Depth: 2/0	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. e5xd6 Ne3xf1 2. Kg1xf1 
+ = (-7.00)	Depth: 3/10	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. e5xd6 Ne3xf1 2. Kg1xf1 Na1-c2 
+ = (-8.25)	Depth: 4/11	00:00:00.00	3kN (1704 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 3407 Qnodes: 2786[81.8%][61.6%], NPS: 143K
+Hash:  TProbes: 3416[100.3%] TPings: 1232[36.1%] THits: 476[13.9%]
+EHash: KHits 1894[83.1%] PHits 266[69.1%] POverall: 2160[94.8%]
+Exts:  Check: 2 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+r - - - k - - r 
+p b - p - p p p 
+- - - P p - - - 
+- - - - - - - - 
+- - - - - P - - 
+- - - - n N P - 
+P P n - - - B P 
+- N - - - R K - 
+
+WQC:0 WKC:0 BQC:1 BKC:1 Turn:WHITE EP:0
+MB:  -590 WPC: 4 BPC: 5 HM:1 HKL:C0C13C8B HKH:D1EF913E
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Rf1-c1 Ne3xg2 2. Kg1xg2 
+ = (-6.29)	Depth: 1/5	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Rf1-c1 Ra8-c8 
+ = (-6.68)	Depth: 2/5	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Rf1-c1 Ra8-b8 2. b2-b3 Ne3xg2 3. Kg1xg2 
+ = (-6.41)	Depth: 3/11	00:00:00.00	1kN (1320 KN/s, 0 splits, 0 aborts)
+1. Rf1-f2 Ne3xg2 2. Rf2xg2 Nc2-e3 
+ = (-7.54)	Depth: 4/11	00:00:00.00	5kN (1147 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 5734 Qnodes: 4772[83.2%][54.3%], NPS: 238K
+Hash:  TProbes: 5736[100.0%] TPings: 1651[28.8%] THits: 694[12.1%]
+EHash: KHits 3487[88.0%] PHits 356[74.8%] POverall: 3843[97.0%]
+Exts:  Check: 0 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+- - r - k - - r 
+p b - p - p p p 
+- - - P p - - - 
+- - - - - - - - 
+- - - - - P - - 
+- - - - n N P - 
+P P n - - R B P 
+- N - - - - K - 
+
+WQC:0 WKC:0 BQC:0 BKC:1 Turn:WHITE EP:0
+MB:  -590 WPC: 4 BPC: 5 HM:3 HKL:6FBFAC85 HKH:3EB43294
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Nb1-c3 Ke8-g8 
+ = (-6.66)	Depth: 1/0	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nb1-c3 Ke8-g8 
+ = (-6.66)	Depth: 2/0	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nb1-c3 Ke8-g8 2. Rf2-d2 Ne3xg2 3. Kg1xg2 
+ = (-6.45)	Depth: 3/9	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nf3-e1 Ne3xg2 2. Ne1xc2 Bb7-e4 
+ = (-6.96)	Depth: 4/15	00:00:00.00	11kN (1456 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 11648 Qnodes: 10413[89.4%][47.7%], NPS: 524K
+Hash:  TProbes: 11663[100.1%] TPings: 2398[20.6%] THits: 1532[13.1%]
+EHash: KHits 7522[87.9%] PHits 729[70.7%] POverall: 8251[96.5%]
+Exts:  Check: 0 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+- - r - k - - r 
+p - - p - p p p 
+- - - P p - - - 
+- - - - - - - - 
+- - - - - P - - 
+- - - - n - P - 
+P P n - - R b P 
+- N - - N - K - 
+
+WQC:0 WKC:0 BQC:0 BKC:1 Turn:WHITE EP:0
+MB:  -980 WPC: 3 BPC: 5 HM:0 HKL:E6720DF3 HKH:BDE1D071
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Ne1xg2 Ne3-d5 
+ = (-7.06)	Depth: 1/2	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Ne1xc2!
+ + (-6.73)	Depth: 2/9	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Ne1xc2 Bg2-h3 2. Nc2xe3 Rc8-c1 3. Ne3-f1 Rc1xb1 
+ = (-6.54)	Depth: 2/9	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Ne1xc2 Bg2-h3 2. Nb1-c3 
+ = (-6.50)	Depth: 3/9	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Ne1xc2 Bg2-h3 2. Nc2xe3 Rc8-c1 3. Ne3-f1 Rc1xb1 
+ = (-6.54)	Depth: 4/12	00:00:00.00	2kN (2376 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 2376 Qnodes: 2149[90.4%][26.0%], NPS: 95K
+Hash:  TProbes: 2376[100.0%] TPings: 1143[48.1%] THits: 718[30.2%]
+EHash: KHits 1177[88.7%] PHits 127[84.7%] POverall: 1304[98.3%]
+Exts:  Check: 0 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+- - r - k - - r 
+p - - p - p p p 
+- - - P p - - - 
+- - - - - - - - 
+- - - - - P - - 
+- - - - - - P - 
+P P n - - R b P 
+- N - - - - K - 
+
+WQC:0 WKC:0 BQC:0 BKC:1 Turn:WHITE EP:0
+MB:  -980 WPC: 2 BPC: 4 HM:0 HKL:ECC1482B HKH:9978E8D2
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Kg1xg2 Nc2-d4 
+ = (-6.31)	Depth: 1/1	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Kg1xg2 Nc2-d4 
+ = (-6.53)	Depth: 2/7	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Rf2xg2 Nc2-e3 2. Rg2-d2 
+ = (-6.63)	Depth: 3/9	00:00:00.00	1kN (1162 KN/s, 0 splits, 0 aborts)
+1. Kg1xg2 Nc2-e3 2. Kg2-f3 Ne3-c4 3. Kf3-e4 Nc4xd6 4. Ke4-e5 
+ = (-6.71)	Depth: 4/9	00:00:00.00	3kN (1750 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 3500 Qnodes: 2775[79.3%][30.9%], NPS: 143K
+Hash:  TProbes: 3500[100.0%] TPings: 1478[42.2%] THits: 615[17.6%]
+EHash: KHits 1685[80.0%] PHits 300[71.4%] POverall: 1985[94.3%]
+Exts:  Check: 31 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+- - - - k - - r 
+p - - p - p p p 
+- - r P p - - - 
+- - - - - - - - 
+- - - - - P - - 
+- - - - - - P - 
+P P n - - R K P 
+- N - - - - - - 
+
+WQC:0 WKC:0 BQC:0 BKC:1 Turn:WHITE EP:0
+MB:  -590 WPC: 2 BPC: 3 HM:1 HKL:B46409E5 HKH:A3C41770
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Nb1-c3 
+ = (-6.01)	Depth: 1/3	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nb1-c3 Nc2-d4 
+ = (-6.19)	Depth: 2/6	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Rf2-d2 Nc2-e3 2. Kg2-f3 Ne3-d5 
+ = (-6.29)	Depth: 3/8	00:00:00.00	1kN (1314 KN/s, 0 splits, 0 aborts)
+1. Rf2-d2 Nc2-e3 2. Kg2-f3 Ne3-c4 3. Rd2-c2 Nc4xd6 
+ = (-6.78)	Depth: 4/11	00:00:00.00	4kN (1189 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 4755 Qnodes: 3932[82.7%][36.2%], NPS: 190K
+Hash:  TProbes: 4764[100.2%] TPings: 1131[23.7%] THits: 555[11.6%]
+EHash: KHits 2147[66.1%] PHits 776[70.5%] POverall: 2923[90.0%]
+Exts:  Check: 80 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+
+- - - - k - - r 
+p - - p - p p p 
+- - r P p - - - 
+- - - - - - - - 
+- n - - - P - - 
+- - - - - - P - 
+P P - R - - K P 
+- N - - - - - - 
+
+WQC:0 WKC:0 BQC:0 BKC:1 Turn:WHITE EP:0
+MB:  -590 WPC: 2 BPC: 3 HM:3 HKL:BEE18166 HKH:ECA151FC
+
+Book Lookup failed (0 entries / 0 bytes / 0 ms)
+
+1. Nb1-c3 Nb4-d3 
+ = (-5.85)	Depth: 1/1	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nb1-c3 Ke8-d8 
+ = (-5.91)	Depth: 2/5	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nb1-c3 Ke8-d8 2. Kg2-f3 
+ = (-5.65)	Depth: 3/6	00:00:00.00	0kN (1 KN/s, 0 splits, 0 aborts)
+1. Nb1-c3 Rc6-c5 2. Kg2-f3 Ke8-d8 
+ = (-5.69)	Depth: 4/9	00:00:00.00	1kN (1879 KN/s, 0 splits, 0 aborts)
+
+Count: Time: 21ms, Nodes: 1879 Qnodes: 1598[85.0%][27.5%], NPS: 48K
+Hash:  TProbes: 1879[100.0%] TPings: 509[27.1%] THits: 247[13.1%]
+EHash: KHits 861[64.1%] PHits 213[44.2%] POverall: 1074[80.0%]
+Exts:  Check: 0 Singular: 0 Mate: 0 One-rep: 0
+TB:    Probes:0 Hits: 0[0.0%]
+Idle:  CPU0: 0
+

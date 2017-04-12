@@ -35,16 +35,9 @@ struct HistoryStats {
 
   static const Value Max = Value(1 << 28);
 
-
-
   Value get(Color c, Move m) const { return table[c][from_sq(m)][to_sq(m)]; }
-
-
   void clear() { std::memset(table, 0, sizeof(table)); }
   void update(Color c, Move m, Value v) {
-
-    if (abs(int(v)) >= 324)
-        return;
 
     Square from = from_sq(m);
     Square to = to_sq(m);
@@ -71,9 +64,6 @@ struct Stats {
   void clear() { std::memset(table, 0, sizeof(table)); }
   void update(Piece pc, Square to, Move m) { table[pc][to] = m; }
   void update(Piece pc, Square to, Value v) {
-
-    if (abs(int(v)) >= 324)
-        return;
 
     table[pc][to] -= table[pc][to] * abs(int(v)) / 936;
     table[pc][to] += int(v) * 32;
@@ -105,7 +95,7 @@ public:
   MovePicker(const Position&, Move, Depth, Square);
   MovePicker(const Position&, Move, Depth, Search::Stack*);
 
-  Move next_move();
+  Move next_move(bool skipQuiets = false, bool skipBadCaptures = false);
 
 private:
   template<GenType> void score();
