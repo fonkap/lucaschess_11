@@ -212,7 +212,7 @@ class Procesador:
             # Presentacion.basico( self, hx )
             # Presentacion.partidaDia(self, hx)
             self.tablero.activaMenuVisual(True)
-            self.gM1 = Presentacion.GestorM1(self)
+            Presentacion.GestorChallenge101(self)
 
             # self.cpu.start()
 

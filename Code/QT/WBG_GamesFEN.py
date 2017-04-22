@@ -245,10 +245,27 @@ class WGamesFEN(QtGui.QWidget):
 
     def tw_utilities(self):
         menu = QTVarios.LCMenu(self)
-        menu.opcion(self.tg_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
+        menu.opcion(self.tw_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
+        menu.separador()
+        menu.opcion(self.tw_uti_tactic, _("Create tactics training"), Iconos.Tacticas())
         resp = menu.lanza()
         if resp:
             resp()
+
+    def tw_uti_tactic(self):
+        def rutinaDatos(recno):
+            dic = {}
+            for clave in self.dbGamesFEN.liCamposBase:
+                dic[clave] = self.dbGamesFEN.field(recno, clave)
+            p = self.dbGamesFEN.leePartidaRecno(recno)
+            dic["PGN"] = p.pgn()
+            return dic
+
+        liRegistros = self.grid.recnosSeleccionados()
+        if len(liRegistros) < 2:
+            liRegistros = range(self.dbGamesFEN.reccount())
+
+        PantallaPGN.crearTactic(self.procesador, self, liRegistros, rutinaDatos)
 
     def tg_file(self):
         menu = QTVarios.LCMenu(self)
@@ -291,7 +308,7 @@ class WGamesFEN(QtGui.QWidget):
             self.actualiza(True)
             self.grid.gobottom(0)
 
-    def tg_massive_change_tags(self):
+    def tw_massive_change_tags(self):
         resp = PantallaSolo.massive_change_tags(self, self.configuracion, len(self.grid.recnosSeleccionados()))
         if resp:
             recno = self.grid.recno()

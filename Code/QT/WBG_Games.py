@@ -345,13 +345,10 @@ class WGames(QtGui.QWidget):
     def tw_utilities(self):
         menu = QTVarios.LCMenu(self)
         ico = Iconos.PuntoAzul()
-        icoT = Iconos.Tacticas()
         menu1 = menu.submenu(_("Polyglot book"), ico)
         menu1.opcion(self.tw_uti_pcreate, _("Create a new book"), ico)
         menu1.separador()
         menu1.opcion(self.tw_uti_pmerge, _("Merge two books in one"), ico)
-        menu.separador()
-        menu.opcion(self.tw_uti_tactic, _("Create tactics training"), icoT)
         menu.separador()
         menu.opcion(self.tw_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
         resp = menu.lanza()
@@ -394,20 +391,6 @@ class WGames(QtGui.QWidget):
 
     def tw_uti_pmerge(self):
         PantallaBooks.polyglotUnir(self)
-
-    def tw_uti_tactic(self):
-        def rutinaDatos(recno):
-            dic = {}
-            for clave in self.dbGames.liCamposBase:
-                dic[clave] = self.dbGames.field(recno, clave)
-            dic["PGN"] = self.dbGames.leePGNrecno(recno)
-            return dic
-
-        liRegistros = self.grid.recnosSeleccionados()
-        if len(liRegistros) < 2:
-            liRegistros = range(self.dbGames.reccount())
-
-        PantallaPGN.crearTactic(self.procesador, self, liRegistros, rutinaDatos)
 
     def tg_change(self):
         pathFich = QTUtil2.leeFichero(self, os.path.dirname(self.configuracion.ficheroDBgames), "lcg",
@@ -520,13 +503,13 @@ class WGames(QtGui.QWidget):
                     ws.um_final()
 
     def tg_importar_PGN(self):
-        path = QTVarios.select_pgn(self)
-        if not path:
+        files = QTVarios.select_pgns(self)
+        if not files:
             return None
 
         dlTmp = QTVarios.ImportarFicheroPGN(self)
         dlTmp.show()
-        self.dbGames.leerPGN(path, dlTmp)
+        self.dbGames.leerPGNs(files, dlTmp)
 
         self.actualiza(True)
         self.wsummary.reset()

@@ -225,11 +225,20 @@ class GestorPGN(Gestor.Gestor):
             path = self.nuestroFichero
         elif siBuscar:
             # Elegimos el fichero
-            path = QTVarios.select_pgn(self.pantalla)
-            if not path:
+            files = QTVarios.select_pgns(self.pantalla)
+            if not files:
                 if self.muestraInicial:
                     self.finPartida()
                 return
+            if len(files) == 1:
+                path = files[0]
+            else:
+                path = self.configuracion.ficheroTemporal("pgn")
+                with open(path, "wb") as q:
+                    for fich in files:
+                        with open(fich, "rb") as f:
+                            q.write(f.read())
+
         # ~ else ya esta el nombre
 
         fpgn = PGN.PGN()

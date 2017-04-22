@@ -233,9 +233,6 @@ class Gestor:
         if a1h8 is None or not self.tablero.siActivasPiezas:
             self.atajosRatonReset()
             return
-        # Que hay en esa casilla:
-        # vacia o pieza contraria = destino
-        # pieza nuestra = origen
 
         numJugadas, nj, fila, siBlancas = self.jugadaActual()
         if nj < numJugadas - 1:
@@ -246,96 +243,132 @@ class Gestor:
 
         posicion = self.partida.ultPosicion
         LCEngine.setFen(posicion.fen())
-        li = LCEngine.getExMoves()
-        if not li:
+        li_moves = LCEngine.getExMoves()
+        if not li_moves:
             return
 
         # Se comprueba si algun movimiento puede empezar o terminar ahi
-        siOrigen = siDestino = False
-        for mov in li:
+        li_destinos = []
+        li_origenes = []
+        for mov in li_moves:
             desde = mov.desde()
             hasta = mov.hasta()
             if a1h8 == desde:
-                siOrigen = True
-                break
+                li_destinos.append(hasta)
             if a1h8 == hasta:
-                siDestino = True
-                break
-        if not (siOrigen or siDestino):
+                li_origenes.append(desde)
+        if not (li_destinos or li_origenes):
             self.atajosRatonReset()
             return
 
-        siPredictivo = self.configuracion.siAtajosRaton
+        def mueve():
+            self.tablero.muevePiezaTemporal(self.atajosRatonOrigen, self.atajosRatonDestino)
+            if not self.tablero.mensajero(self.atajosRatonOrigen, self.atajosRatonDestino):
+                self.tablero.reponPieza(self.atajosRatonOrigen)
+            self.atajosRatonReset()
 
-        pieza = posicion.casillas.get(a1h8, None)
-        if pieza is None:
-            self.atajosRatonDestino = a1h8
-        elif self.siJugamosConBlancas:
-            if pieza.isupper():
-                self.atajosRatonOrigen = a1h8
-            else:
-                self.atajosRatonDestino = a1h8
-        else:
-            if pieza.isupper():
-                self.atajosRatonDestino = a1h8
-            else:
-                self.atajosRatonOrigen = a1h8
-
-        if not siPredictivo:
-            if self.atajosRatonOrigen and self.atajosRatonDestino:
-                self.tablero.muevePiezaTemporal(self.atajosRatonOrigen, self.atajosRatonDestino)
-                if not self.tablero.mensajero(self.atajosRatonOrigen, self.atajosRatonDestino):
-                    self.tablero.reponPieza(self.atajosRatonOrigen)
-                self.atajosRatonReset()
-            elif not self.atajosRatonOrigen:
-                self.atajosRatonReset()
-            elif self.configuracion.showCandidates:
+        def showCandidates():
+            if self.configuracion.showCandidates:
                 liC = []
-                for mov in li:
+                for mov in li_moves:
                     a1 = mov.desde()
                     h8 = mov.hasta()
                     if a1 == self.atajosRatonOrigen:
                         liC.append((h8, "C"))
-                self.otherCandidates(li, posicion, liC)
+                self.otherCandidates(li_moves, posicion, liC)
                 self.tablero.showCandidates(liC)
+
+        if not self.configuracion.siAtajosRaton:
+            if li_destinos:
+                self.atajosRatonOrigen = a1h8
+                if self.atajosRatonDestino and self.atajosRatonDestino in li_destinos:
+                    mueve()
+                else:
+                    self.atajosRatonDestino = None
+                    showCandidates()
+                return
+            elif li_origenes:
+                self.atajosRatonDestino = a1h8
+                if self.atajosRatonOrigen and self.atajosRatonOrigen in li_origenes:
+                    mueve()
+                else:
+                    self.atajosRatonOrigen = None
+                    showCandidates()
             return
 
-        # else tipo = predictivo
-        # Si no es posible el movimiento -> y estan los dos -> reset + nuevo intento
-        # Miramos todos los movimientos que cumplan
-        liC = []
-        for mov in li:
-            a1 = mov.desde()
-            h8 = mov.hasta()
-            siO = (self.atajosRatonOrigen == a1) if self.atajosRatonOrigen else None
-            siD = (self.atajosRatonDestino == h8) if self.atajosRatonDestino else None
+        if li_origenes:
+            self.atajosRatonDestino = a1h8
+            if self.atajosRatonOrigen and self.atajosRatonOrigen in li_origenes:
+                mueve()
+            elif len(li_origenes) == 1:
+                self.atajosRatonOrigen = li_origenes[0]
+                mueve()
+            else:
+                showCandidates()
+            return
 
-            if (siO and siD) or ((siO is None) and siD) or ((siD is None) and siO):
-                t = (a1, h8)
-                if not (t in liC):
-                    liC.append(t)
-
-        nlc = len(liC)
-        if nlc == 0:
-            if (self.atajosRatonDestino == a1h8) and self.atajosRatonOrigen and self.atajosRatonOrigen != a1h8:
-                self.atajosRatonOrigen = None
-                self.atajosRaton(a1h8)
-        elif nlc == 1:
-            desde, hasta = liC[0]
-            self.tablero.muevePiezaTemporal(desde, hasta)
-            if not self.tablero.mensajero(desde, hasta):
-                    self.tablero.reponPieza(desde)
-            self.atajosRatonReset()
-        elif self.configuracion.showCandidates:
-
-            # -CONTROL-
-            if hasattr(self.pgn, "jugada"):  # gestor60 no tiene por ejemplo
-                if self.atajosRatonOrigen:
-                    liC = [(hasta, "C") for desde, hasta in liC]
-                else:
-                    liC = [(desde, "C") for desde, hasta in liC]
-                self.otherCandidates(li, posicion, liC)
-                self.tablero.showCandidates(liC)
+        if li_destinos:
+            self.atajosRatonOrigen = a1h8
+            if self.atajosRatonDestino and self.atajosRatonDestino in li_destinos:
+                mueve()
+            elif len(li_destinos) == 1:
+                self.atajosRatonDestino = li_destinos[0]
+                mueve()
+            else:
+                showCandidates()
+            return
+        #
+        #
+        # if self.atajosRatonOrigen and self.atajosRatonDestino:
+        #     elif not self.atajosRatonOrigen:
+        #         self.atajosRatonReset()
+        #     elif self.configuracion.showCandidates:
+        #         liC = []
+        #         for mov in li_moves:
+        #             a1 = mov.desde()
+        #             h8 = mov.hasta()
+        #             if a1 == self.atajosRatonOrigen:
+        #                 liC.append((h8, "C"))
+        #         self.otherCandidates(li_moves, posicion, liC)
+        #         self.tablero.showCandidates(liC)
+        #     return
+        #
+        # # else tipo = predictivo
+        # # Si no es posible el movimiento -> y estan los dos -> reset + nuevo intento
+        # # Miramos todos los movimientos que cumplan
+        # liC = []
+        # for mov in li_moves:
+        #     a1 = mov.desde()
+        #     h8 = mov.hasta()
+        #     siO = (self.atajosRatonOrigen == a1) if self.atajosRatonOrigen else None
+        #     siD = (self.atajosRatonDestino == h8) if self.atajosRatonDestino else None
+        #
+        #     if (siO and siD) or ((siO is None) and siD) or ((siD is None) and siO):
+        #         t = (a1, h8)
+        #         if not (t in liC):
+        #             liC.append(t)
+        #
+        # nlc = len(liC)
+        # if nlc == 0:
+        #     if (self.atajosRatonDestino == a1h8) and self.atajosRatonOrigen and self.atajosRatonOrigen != a1h8:
+        #         self.atajosRatonOrigen = None
+        #         self.atajosRaton(a1h8)
+        # elif nlc == 1:
+        #     desde, hasta = liC[0]
+        #     self.tablero.muevePiezaTemporal(desde, hasta)
+        #     if not self.tablero.mensajero(desde, hasta):
+        #             self.tablero.reponPieza(desde)
+        #     self.atajosRatonReset()
+        # elif self.configuracion.showCandidates:
+        #
+        #     # -CONTROL-
+        #     if hasattr(self.pgn, "jugada"):  # gestor60 no tiene por ejemplo
+        #         if self.atajosRatonOrigen:
+        #             liC = [(hasta, "C") for desde, hasta in liC]
+        #         else:
+        #             liC = [(desde, "C") for desde, hasta in liC]
+        #         self.otherCandidates(li_moves, posicion, liC)
+        #         self.tablero.showCandidates(liC)
 
     def repiteUltimaJugada(self):
         # Gestor ent tac + ent pos si hay partida

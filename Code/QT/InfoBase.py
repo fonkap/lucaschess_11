@@ -123,7 +123,7 @@ class ThanksTo:
             return txt
 
         # Version 11
-        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith"]
+        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob"]
         liResto = []
         txt += version(11, liBase, liResto)
 

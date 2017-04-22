@@ -715,7 +715,7 @@ class DBgames:
                     self.dbSTAT.commit()
             self.dbSTAT.commit()
 
-    def leerPGN(self, fichero, dlTmp):
+    def leerPGNs(self, ficheros, dlTmp):
         erroneos = duplicados = importados = n = 0
 
         t1 = time.time()-0.7  # para que empiece enseguida
@@ -726,7 +726,7 @@ class DBgames:
 
         # fich_erroneos = "UsrData/fich_erroneos.pgn"
 
-        codec = Util.file_encoding(fichero)
+        codec = Util.file_encoding(ficheros[0])
         sicodec = codec not in ("utf-8", "ascii")
 
         liRegs = []
@@ -740,69 +740,71 @@ class DBgames:
         liCabs = self.liCamposBase[:-1] # all except PLIES PGN, TAGS
         liCabs.append("PLYCOUNT")
 
-        with LCEngine.PGNreader(fichero, self.depthStat()) as fpgn:
-            for n, (pgn, pv, dCab, raw, liFens) in enumerate(fpgn, 1):
-                if not pv:
-                    erroneos += 1
-                else:
-                    fen = dCab.get("FEN", None)
-                    if fen and fen != ControlPosicion.FEN_INICIAL:
+        for fichero in ficheros:
+            dlTmp.pon_titulo(os.path.basename(fichero))
+            with LCEngine.PGNreader(fichero, self.depthStat()) as fpgn:
+                for n, (pgn, pv, dCab, raw, liFens) in enumerate(fpgn, 1):
+                    if not pv:
                         erroneos += 1
                     else:
-                        xpv = pv2xpv(pv)
-                        if xpv in stRegs:
-                            dup = True
+                        fen = dCab.get("FEN", None)
+                        if fen and fen != ControlPosicion.FEN_INICIAL:
+                            erroneos += 1
                         else:
-                            cursor.execute("SELECT COUNT(*) FROM games WHERE XPV = ?", (xpv,))
-                            num = cursor.fetchone()[0]
-                            dup = num > 0
-                        if dup:
-                            duplicados += 1
-                        else:
-                            stRegs.add(xpv)
-                            if sicodec:
-                                for k, v in dCab.iteritems():
-                                    dCab[k] = unicode(v, encoding=codec, errors="ignore")
+                            xpv = pv2xpv(pv)
+                            if xpv in stRegs:
+                                dup = True
+                            else:
+                                cursor.execute("SELECT COUNT(*) FROM games WHERE XPV = ?", (xpv,))
+                                num = cursor.fetchone()[0]
+                                dup = num > 0
+                            if dup:
+                                duplicados += 1
+                            else:
+                                stRegs.add(xpv)
+                                if sicodec:
+                                    for k, v in dCab.iteritems():
+                                        dCab[k] = unicode(v, encoding=codec, errors="ignore")
+                                    if pgn:
+                                        pgn = unicode(pgn, encoding=codec, errors="ignore")
+
+                                if raw: # si no tiene variantes ni comentarios, se graba solo las tags que faltan
+                                    liRTags = [(k,v) for k, v in dCab.iteritems() if k not in liCabs] # k is always upper
+                                    if liRTags:
+                                        pgn = {}
+                                        pgn["RTAGS"] = liRTags
+                                    else:
+                                        pgn = None
+
+                                event = dCab.get("EVENT", "")
+                                site = dCab.get("SITE", "")
+                                date = dCab.get("DATE", "")
+                                white = dCab.get("WHITE", "")
+                                black = dCab.get("BLACK", "")
+                                result = dCab.get("RESULT", "")
+                                eco = dCab.get("ECO", "")
+                                whiteelo = dCab.get("WHITEELO", "")
+                                blackelo = dCab.get("BLACKELO", "")
+                                plies = (pv.count(" ")+1) if pv else 0
                                 if pgn:
-                                    pgn = unicode(pgn, encoding=codec, errors="ignore")
+                                    pgn = Util.var2blob(pgn)
 
-                            if raw: # si no tiene variantes ni comentarios, se graba solo las tags que faltan
-                                liRTags = [(k,v) for k, v in dCab.iteritems() if k not in liCabs] # k is always upper
-                                if liRTags:
-                                    pgn = {}
-                                    pgn["RTAGS"] = liRTags
-                                else:
-                                    pgn = None
-
-                            event = dCab.get("EVENT", "")
-                            site = dCab.get("SITE", "")
-                            date = dCab.get("DATE", "")
-                            white = dCab.get("WHITE", "")
-                            black = dCab.get("BLACK", "")
-                            result = dCab.get("RESULT", "")
-                            eco = dCab.get("ECO", "")
-                            whiteelo = dCab.get("WHITEELO", "")
-                            blackelo = dCab.get("BLACKELO", "")
-                            plies = (pv.count(" ")+1) if pv else 0
-                            if pgn:
-                                pgn = Util.var2blob(pgn)
-
-                            reg = (xpv, event, site, date, white, black, result, eco, whiteelo, blackelo, pgn, plies)
-                            self.dbSTAT.append_fen(pv, result, liFens)
-                            liRegs.append(reg)
-                            nRegs += 1
-                            importados += 1
-                            if nRegs == 10000:
-                                cursor.executemany(sql, liRegs)
-                                liRegs = []
-                                stRegs = set()
-                                conexion.commit()
-                if n == next_n:
-                    if time.time()-t1> 0.8:
-                        if not dlTmp.actualiza(erroneos+duplicados+importados, erroneos, duplicados, importados):
-                            break
-                        t1 = time.time()
-                    next_n = n + random.randint(100, 500)
+                                reg = (xpv, event, site, date, white, black, result, eco, whiteelo, blackelo, pgn, plies)
+                                self.dbSTAT.append_fen(pv, result, liFens)
+                                liRegs.append(reg)
+                                nRegs += 1
+                                importados += 1
+                                if nRegs == 10000:
+                                    cursor.executemany(sql, liRegs)
+                                    liRegs = []
+                                    stRegs = set()
+                                    conexion.commit()
+                    if n == next_n:
+                        if time.time()-t1> 0.8:
+                            if not dlTmp.actualiza(erroneos+duplicados+importados, erroneos, duplicados, importados):
+                                break
+                            t1 = time.time()
+                        next_n = n + random.randint(100, 500)
 
         if liRegs:
             cursor.executemany(sql, liRegs)

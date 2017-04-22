@@ -1044,6 +1044,9 @@ class ImportarFichero(QtGui.QDialog):
 
         self.setLayout(layout)
 
+    def pon_titulo(self, titulo):
+        self.setWindowTitle(titulo)
+
     def hideDuplicados(self):
         self.lbRotDuplicados.hide()
         self.lbDuplicados.hide()
@@ -1202,6 +1205,18 @@ def select_pgn(wowner):
             configuracion.dirPGN = carpeta
             configuracion.graba()
     return path
+
+
+def select_pgns(wowner):
+    configuracion = VarGen.configuracion
+    files = QTUtil2.leeFicheros(wowner, configuracion.dirPGN, "pgn")
+    if files:
+        path = files[0]
+        carpeta, fichero = os.path.split(path)
+        if configuracion.dirPGN != carpeta:
+            configuracion.dirPGN = carpeta
+            configuracion.graba()
+    return files
 
 
 def select_ext(wowner, ext):

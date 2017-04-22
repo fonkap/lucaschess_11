@@ -355,6 +355,12 @@ def pv_pgn(fen, pv):
     return p.pgnSP()
 
 
+def pv_pgn_raw(fen, pv):
+    p = Partida(fen=fen)
+    p.leerPV(pv)
+    return p.pgnBaseRAW()
+
+
 class PartidaCompleta(Partida):
     def __init__(self, iniPosicion=None, fen=None, liTags=None):
         self.liTags = liTags if liTags else []

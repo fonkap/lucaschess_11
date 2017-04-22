@@ -250,6 +250,7 @@ class Configuracion:
         self.ficheroPuntuaciones = "%s/hpoints.pkd" % self.carpeta
 
         self.ficheroSelectedPositions = "%s/Selected positions.fns" % self.dirPersonalTraining
+        self.ficheroPresentationPositions = "%s/Challenge 101.fns" % self.dirPersonalTraining
 
         self.ficheroVariables = "%s/Variables.pk" % self.carpeta
 
