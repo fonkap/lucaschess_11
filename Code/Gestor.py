@@ -317,8 +317,7 @@ class Gestor:
             else:
                 showCandidates()
             return
-        #
-        #
+
         # if self.atajosRatonOrigen and self.atajosRatonDestino:
         #     elif not self.atajosRatonOrigen:
         #         self.atajosRatonReset()
@@ -332,7 +331,7 @@ class Gestor:
         #         self.otherCandidates(li_moves, posicion, liC)
         #         self.tablero.showCandidates(liC)
         #     return
-        #
+
         # # else tipo = predictivo
         # # Si no es posible el movimiento -> y estan los dos -> reset + nuevo intento
         # # Miramos todos los movimientos que cumplan
@@ -342,12 +341,12 @@ class Gestor:
         #     h8 = mov.hasta()
         #     siO = (self.atajosRatonOrigen == a1) if self.atajosRatonOrigen else None
         #     siD = (self.atajosRatonDestino == h8) if self.atajosRatonDestino else None
-        #
+
         #     if (siO and siD) or ((siO is None) and siD) or ((siD is None) and siO):
         #         t = (a1, h8)
         #         if not (t in liC):
         #             liC.append(t)
-        #
+
         # nlc = len(liC)
         # if nlc == 0:
         #     if (self.atajosRatonDestino == a1h8) and self.atajosRatonOrigen and self.atajosRatonOrigen != a1h8:
@@ -360,7 +359,7 @@ class Gestor:
         #             self.tablero.reponPieza(desde)
         #     self.atajosRatonReset()
         # elif self.configuracion.showCandidates:
-        #
+
         #     # -CONTROL-
         #     if hasattr(self.pgn, "jugada"):  # gestor60 no tiene por ejemplo
         #         if self.atajosRatonOrigen:
@@ -453,6 +452,12 @@ class Gestor:
             posJugada, jg = self.pgn.jugada(fila, columna.clave)
             if jg:
                 dic, siBlancas = jg.posicion.capturas()
+                if hasattr(jg, "analisis") and jg.analisis:
+                    mrm, pos = jg.analisis
+                    if pos:  # no se muestra la mejor jugada si es la realizada
+                        rm0 = mrm.mejorMov()
+                        self.tablero.ponFlechaSCvar([(rm0.desde, rm0.hasta),])
+
             else:
                 dic, siBlancas = self.partida.ultPosicion.capturas()
 
@@ -461,7 +466,7 @@ class Gestor:
             if apertura:
                 nomApertura = apertura.trNombre
             if self.pantalla.siCapturas:
-                self.pantalla.ponCapturas(dic, jg, nomApertura)
+                self.pantalla.ponCapturas(dic)
             if self.pantalla.siInformacionPGN:
                 if (fila == 0 and columna.clave == "NUMERO") or fila < 0:
                     self.pantalla.ponInformacionPGN(self.partida, None, nomApertura)
@@ -1445,7 +1450,7 @@ class Gestor:
     def showAnalisis(self):
         um = self.procesador.unMomento()
         alm = Histogram.genHistograms(self.partida, self.configuracion.centipawns)
-        alm.indexesHTML, alm.indexesRAW = AnalisisIndexes.genIndexes(self.partida, alm)
+        alm.indexesHTML, alm.indexesRAW, alm.eloW, alm.eloB, alm.eloT = AnalisisIndexes.genIndexes(self.partida, alm)
         um.final()
         PantallaAnalisis.showGraph(self.pantalla, self, alm, Analisis.muestraAnalisis)
 

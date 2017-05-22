@@ -149,8 +149,8 @@ class AnalizaPartida:
             return
 
         # Esta creado el folder
-        before = "BeforeBlunders.fns"
-        after = "AfterBlunders.fns"
+        before = "AvoidBlunders.fns"
+        after = "ExploitBlunders.fns"
         if not os.path.isdir(self.tacticblunders):
             dtactics = os.path.join(self.configuracion.dirPersonalTraining, "Tactics")
             if not os.path.isdir(dtactics):
@@ -860,7 +860,7 @@ class AnalisisVariantes:
             elif accion == "MoverFEN":
                 jg = self.partidaTutor.jugada(self.posTutor)
                 QTUtil.ponPortapapeles(jg.posicion.fen())
-                QTUtil2.mensajeTemporal(self.w, _("FEN is in clipboard"), 1)
+                QTUtil2.mensaje(self.w, _("FEN is in clipboard"))
 
     def mueveTutor(self, siInicio=False, nSaltar=0, siFinal=False, siBase=False):
         if nSaltar:

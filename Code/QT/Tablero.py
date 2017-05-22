@@ -118,7 +118,7 @@ class Tablero(QtGui.QGraphicsView):
         # CTRL-C : copy fen al clipboard
         if siCtrl and key == Qt.Key_C:
             QTUtil.ponPortapapeles(self.ultPosicion.fen())
-            QTUtil2.mensajeTemporal(self.pantalla, _("FEN is in clipboard"), 1)
+            QTUtil2.mensaje(self, _("FEN is in clipboard"))
 
         # ALT-D -> Director
         elif siAlt and key == Qt.Key_D:
@@ -573,6 +573,23 @@ class Tablero(QtGui.QGraphicsView):
         indicador.norte = gap / 2
         self.indicadorSC = TabElementos.CirculoSC(self.escena, indicador, rutina=self.intentaRotarTablero)
 
+        # Lanzador de menu visual
+        if self.siMenuVisual:
+            indicador_menu = TabTipos.Imagen()
+            indicador_menu.posicion.x = pFrontera.x - ancho
+            indicador_menu.posicion.y = pFrontera.y + pFrontera.alto + 2*gap
+
+            indicador_menu.posicion.ancho = indicador_menu.posicion.alto = ancho - 2*gap
+            indicador_menu.posicion.orden = 2
+            indicador_menu.color = self.colorFrontera
+            indicador_menu.grosor = 1
+            indicador_menu.tipo = 1
+            indicador_menu.sur = indicador.posicion.y
+            indicador_menu.norte = gap / 2
+            self.indicadorSC_menu = TabElementos.PixmapSC(self.escena, indicador_menu, pixmap=Iconos.pmSettings(), rutina=self.lanzaMenuVisual)
+            if self.configuracion.opacityToolBoard != 10:
+                self.indicadorSC_menu.setOpacity(0.01)
+
         self.init_kb_buffer()
 
     def showKeys(self):
@@ -610,7 +627,7 @@ class Tablero(QtGui.QGraphicsView):
                 menu.opcion(None, "%s [%s]" % (mess, key), rondo.otro())
         menu.lanza()
 
-    def lanzaMenuVisual(self, siIzquierdo):
+    def lanzaMenuVisual(self, siIzquierdo=False):
         if not self.siMenuVisual:
             return
 
@@ -626,14 +643,6 @@ class Tablero(QtGui.QGraphicsView):
         # menu.opcion("foto", _("Board -> Image"), Iconos.Camara())
         # menu.separador()
 
-        if not self.siTableroDirector():
-            menu.opcion("director", _("Director") + " [%s-D]" % _("ALT"), Iconos.Director())
-            menu.separador()
-
-        if self.siPosibleRotarTablero:
-            menu.opcion("girar", _("Flip the board") + " [%s-F]" % _("ALT"), Iconos.JS_Rotacion())
-            menu.separador()
-
         smenu = menu.submenu(_("Default"), Iconos.Defecto())
         smenu.opcion("def_todo", _("All"), Iconos.Generar())
         smenu.separador()
@@ -644,7 +653,16 @@ class Tablero(QtGui.QGraphicsView):
         smenu.opcion("def_resto", _("The other"), Iconos.PuntoVerde())
 
         menu.separador()
+        if not self.siTableroDirector():
+            menu.opcion("director", _("Director") + " [%s-D]" % _("ALT"), Iconos.Director())
+            menu.separador()
+
+        if self.siPosibleRotarTablero:
+            menu.opcion("girar", _("Flip the board") + " [%s-F]" % _("ALT"), Iconos.JS_Rotacion())
+            menu.separador()
+
         menu.opcion("keys", _("Active keys")+ " [%s-K]" % _("ALT"), Iconos.Rename())
+        menu.separador()
 
         resp = menu.lanza()
         if resp is None:
@@ -710,8 +728,12 @@ class Tablero(QtGui.QGraphicsView):
             self.showKeys()
 
         elif resp.startswith("def_"):
-            self.confTablero.porDefecto(resp[4:])
-            self.confTablero.guardaEnDisco()
+            if resp.endswith("todo"):
+                self.confTablero = self.configuracion.resetConfTablero(self.confTablero.id(), self.confTablero.anchoPieza())
+
+            else:
+                self.confTablero.porDefecto(resp[4:])
+                self.confTablero.guardaEnDisco()
             ap, apc = self.siActivasPiezas, self.siActivasPiezasColor
             siFlecha = self.flechaSC is not None
             self.reset(self.confTablero)
@@ -764,7 +786,7 @@ class Tablero(QtGui.QGraphicsView):
 
         else:
             fich = "Themes/" + resp[3:]
-            import Code.QT.PantallaColores as PantallaColores
+            from Code.QT import PantallaColores
 
             tema = PantallaColores.eligeTema(self, fich)
 
@@ -796,9 +818,7 @@ class Tablero(QtGui.QGraphicsView):
         maximo = self.margenCentro + (self.anchoCasilla * 8)
         siDentro = (minimo < x < maximo) and (minimo < y < maximo)
         if event.button() == QtCore.Qt.RightButton:
-            if not siDentro:
-                self.lanzaMenuVisual(False)
-            elif hasattr(self.pantalla, "boardRightMouse"):
+            if siDentro and hasattr(self.pantalla, "boardRightMouse"):
                 m = int(event.modifiers())
                 siShift = (m & QtCore.Qt.ShiftModifier) > 0
                 siControl = (m & QtCore.Qt.ControlModifier) > 0

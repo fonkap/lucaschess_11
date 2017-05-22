@@ -147,6 +147,10 @@ def activar():
 
     dgt._DGTDLL_SetNRun.argtype = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     dgt._DGTDLL_SetNRun.restype = ctypes.c_int
+
+    dgt._DGTDLL_Exit.argtype = []
+    dgt._DGTDLL_Exit.restype = ctypes.c_int
+
     return True
 
 
@@ -154,12 +158,12 @@ def desactivar():
     if VarGen.dgt:
         # log( "desactivar" )
         hideDialog()
+        VarGen.dgt._DGTDLL_Exit()
         del VarGen.dgt
         VarGen.dgt = None
         VarGen.dgtDispatch = None
 
 # Funciones directas en la DGT
-
 
 def showDialog():
     if VarGen.dgt:
@@ -192,7 +196,6 @@ def writeClocks(wclock, bclock):
         dgt._DGTDLL_SetNRun(wclock, bclock, 0)
 
 # Utilidades para la trasferencia de datos
-
 
 def _dgt2fen(dato):
     n = 0

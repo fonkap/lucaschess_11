@@ -32,10 +32,10 @@ namespace {
   #define S(mg, eg) make_score(mg, eg)
 
   // Isolated pawn penalty by opposed flag
-  const Score Isolated[2] = { S(45, 40), S(30, 27) };
+  const Score Isolated[] = { S(45, 40), S(30, 27) };
 
   // Backward pawn penalty by opposed flag
-  const Score Backward[2] = { S(56, 33), S(41, 19) };
+  const Score Backward[] = { S(56, 33), S(41, 19) };
 
   // Unsupported pawn penalty for pawns which are neither isolated or backward
   const Score Unsupported = S(17, 8);
@@ -104,7 +104,6 @@ namespace {
     bool opposed, backward;
     Score score = SCORE_ZERO;
     const Square* pl = pos.squares<PAWN>(Us);
-    const Bitboard* pawnAttacksBB = StepAttacksBB[make_piece(Us, PAWN)];
 
     Bitboard ourPawns   = pos.pieces(Us  , PAWN);
     Bitboard theirPawns = pos.pieces(Them, PAWN);
@@ -129,9 +128,9 @@ namespace {
         // Flag the pawn
         opposed    = theirPawns & forward_bb(Us, s);
         stoppers   = theirPawns & passed_pawn_mask(Us, s);
-        lever      = theirPawns & pawnAttacksBB[s];
-        leverPush  = theirPawns & pawnAttacksBB[s + Up];
-        doubled    = ourPawns   & (s + Up);
+        lever      = theirPawns & PawnAttacks[Us][s];
+        leverPush  = theirPawns & PawnAttacks[Us][s + Up];
+        doubled    = ourPawns   & (s - Up);
         neighbours = ourPawns   & adjacent_files_bb(f);
         phalanx    = neighbours & rank_bb(s);
         supported  = neighbours & rank_bb(s - Up);
@@ -177,8 +176,8 @@ namespace {
         if (connected)
             score += Connected[opposed][!!phalanx][more_than_one(supported)][relative_rank(Us, s)];
 
-        if (doubled)
-            score -= Doubled;
+        if (doubled && !supported)
+           score -= Doubled;
 
         if (lever)
             score += Lever[relative_rank(Us, s)];

@@ -552,16 +552,16 @@ class ConfigTabBase:
 
 
 class ConfigTablero:
-    def __init__(self, ident, anchoPieza, padre="BASE"):
-        self._id = ident
+    def __init__(self, xid, anchoPieza, padre="BASE"):
+        self._id = xid
         self._anchoPieza = anchoPieza
         self._anchoPiezaDef = anchoPieza
         self._tema = ConfigTabTema()
-        self._tema._siTemaDefecto = ident != "BASE"
+        self._tema._siTemaDefecto = xid != "BASE"
         self._base = ConfigTabBase()
         self._confPadre = None
         self._padre = padre
-        self.siBase = ident == "BASE"
+        self.siBase = xid == "BASE"
 
     def __str__(self):
         return self._tema.graba()

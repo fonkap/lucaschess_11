@@ -222,7 +222,6 @@ class WSave():
         Util.guardaDIC(dic, self.ficheroVideo)
 
     def recuperarDicVideo(self):
-
         if Util.tamFichero(self.ficheroVideo) > 0:
             return Util.recuperaDIC(self.ficheroVideo)
         else:

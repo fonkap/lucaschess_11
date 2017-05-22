@@ -3011,3 +3011,11 @@ def pmManualSave():
 def ManualSave():
     return QtGui.QIcon(pmManualSave())
 
+
+def pmSettings():
+    return PM(912896,913334)
+
+
+def Settings():
+    return QtGui.QIcon(pmSettings())
+

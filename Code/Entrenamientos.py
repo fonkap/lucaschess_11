@@ -14,6 +14,7 @@ from Code import GestorMate
 from Code import GestorUnJuego
 from Code import Memoria
 from Code import Partida
+from Code import Presentacion
 from Code.QT import DatosNueva
 from Code.QT import Iconos
 from Code.QT import PantallaAperturas
@@ -307,6 +308,9 @@ class Entrenamientos:
         menu1.separador()
         xopcion(menu1, "visualiza", _("The board at a glance"), Iconos.Gafas())
 
+        menu1.separador()
+        xopcion(menu1, "challenge101", _("Challenge 101"), Iconos.Wheel())
+
         # menu2 = menu1.submenu(_("Endings with 3/4 pieces"), Iconos.Puente())
         # xopcion(menu2, "end_t4-1", "%s %d"%(_("Level"), 1), Iconos.PuntoAzul())
         # xopcion(menu2, "end_t4-2", "%s %d"%(_("Level"), 2), Iconos.PuntoMagenta())
@@ -474,6 +478,9 @@ class Entrenamientos:
 
                 elif resp == "washing_machine":
                     self.washing_machine()
+
+                elif resp == "challenge101":
+                    Presentacion.GestorChallenge101(self.procesador)
 
             else:
                 if resp <= -100:

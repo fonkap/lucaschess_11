@@ -15,6 +15,7 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code.QT import Tablero
 from Code.QT import Histogram
+from Code.QT import WCapturas
 
 
 class WAnalisisGraph(QTVarios.WDialogo):
@@ -76,6 +77,9 @@ class WAnalisisGraph(QTVarios.WDialogo):
         self.tablero.ponerPiezasAbajo(True)
         self.tablero.dispatchSize(self.tableroSizeChanged)
 
+        self.capturas = WCapturas.CapturaLista(self, self.tablero)
+        ly_tc = Colocacion.H().control(self.tablero).control(self.capturas)
+
         self.rbShowValues = Controles.RB(self, _("Values"), rutina=self.cambiadoShow).activa(True)
         self.rbShowElo = Controles.RB(self, _("Elo perfomance"), rutina=self.cambiadoShow)
         self.chbShowLostPoints = Controles.CHB(self, _("Show lost points"), self.getShowLostPoints()).capturaCambiado(self, self.showLostPointsChanged)
@@ -84,23 +88,24 @@ class WAnalisisGraph(QTVarios.WDialogo):
         layout = Colocacion.G()
         layout.controlc(tabGrid, 0, 0)
         layout.otroc(ly_rb, 1, 0)
-        layout.controlc(self.tablero, 0, 1, numFilas=2)
+        layout.otroc(ly_tc, 0, 1, numFilas=2)
 
         Controles.Tab().ponPosicion("W")
-        ancho = self.tablero.width() + anchoGrid + 10
+        ancho = self.tablero.width() + anchoGrid
         self.htotal = [ Histogram.Histogram(self, alm.hgame, gridAll, ancho, True),
                         Histogram.Histogram(self, alm.hwhite, gridW, ancho, True),
                         Histogram.Histogram(self, alm.hblack, gridB, ancho, True),
-                        Histogram.Histogram(self, alm.hgame, gridAll, ancho, False),
-                        Histogram.Histogram(self, alm.hwhite, gridW, ancho, False),
-                        Histogram.Histogram(self, alm.hblack, gridB, ancho, False)]
+                        Histogram.Histogram(self, alm.hgame, gridAll, ancho, False, alm.eloT),
+                        Histogram.Histogram(self, alm.hwhite, gridW, ancho, False, alm.eloW),
+                        Histogram.Histogram(self, alm.hblack, gridB, ancho, False, alm.eloB)
+        ]
         lh = Colocacion.V()
         for x in range(6):
             lh.control(self.htotal[x])
             if x:
                 self.htotal[x].hide()
 
-        layout.otroc(lh, 2, 0, 1, 2)
+        layout.otroc(lh, 2, 0, 1, 3)
         self.setLayout(layout)
 
         self.recuperarVideo(siTam=False)
@@ -161,8 +166,12 @@ class WAnalisisGraph(QTVarios.WDialogo):
         rm = mrm.liMultiPV[0]
         self.tablero.creaFlechaMulti(rm.movimiento(), False)
         grid.setFocus()
-        self.htotal[self.tabActive].setPointActive(fila)
-        self.htotal[self.tabActive+3].setPointActive(fila)
+        ta = self.tabActive if self.tabActive < 3 else 0
+        self.htotal[ta].setPointActive(fila)
+        self.htotal[ta+3].setPointActive(fila)
+
+        dic, siBlancas = jg.posicion.capturas()
+        self.capturas.pon(dic)
 
     def gridDobleClick(self, grid, fila, columna):
         jg = self.dicLiJG[grid.id][fila]
@@ -374,7 +383,7 @@ class WMuestra(QtGui.QWidget):
             self.jugarPosicion()
         elif accion == "FEN":
             QTUtil.ponPortapapeles(self.um.fenActual())
-            QTUtil2.mensajeTemporal(self, _("FEN is in clipboard"), 1)
+            QTUtil2.mensaje(self, _("FEN is in clipboard"))
 
     def jugarPosicion(self):
         posicion, desde, hasta = self.um.posicionBaseActual()

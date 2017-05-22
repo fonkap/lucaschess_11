@@ -207,14 +207,15 @@ int MapKK[10][SQUARE_NB]; // [MapA1D1D4][SQUARE_NB]
 // Comparison function to sort leading pawns in ascending MapPawns[] order
 bool pawns_comp(Square i, Square j) { return MapPawns[i] < MapPawns[j]; }
 int off_A1H8(Square sq) { return int(rank_of(sq)) - file_of(sq); }
-
-const Value WDL_to_value[] = {
-   -VALUE_MATE + MAX_PLY + 1,
-    VALUE_DRAW - 2,
-    VALUE_DRAW,
-    VALUE_DRAW + 2,
-    VALUE_MATE - MAX_PLY - 1
-};
+	
+const Value WDL_to_value[] =
+	{
+		-VALUE_MATE_IN_MAX_PLY + MAX_PLY,
+		 VALUE_DRAW - 2,
+		 VALUE_DRAW,
+		 VALUE_DRAW + 2,
+		 VALUE_MATE_IN_MAX_PLY - MAX_PLY
+	};
 
 const std::string PieceToChar = " PNBRQK  pnbrqk";
 
@@ -978,8 +979,8 @@ uint8_t* set_sizes(PairsData* d, uint8_t* data) {
     d->flags = *data++;
 
     if (d->flags & TBFlag::SingleValue) {
-        d->blocksNum = d->span =
-        d->blockLengthSize = d->sparseIndexSize = 0; // Broken MSVC zero-init
+        d->blocksNum = d->blockLengthSize = 0;
+        d->span = d->sparseIndexSize = 0; // Broken MSVC zero-init
         d->minSymLen = *data++; // Here we store the single value
         return data;
     }
@@ -1292,7 +1293,7 @@ void Tablebases::init(const std::string& paths) {
             if (MapA1D1D4[s1] == idx && (idx || s1 == SQ_B1)) // SQ_B1 is mapped to 0
             {
                 for (Square s2 = SQ_A1; s2 <= SQ_H8; ++s2)
-                    if ((StepAttacksBB[KING][s1] | s1) & s2)
+                    if ((PseudoAttacks[KING][s1] | s1) & s2)
                         continue; // Illegal position
 
                     else if (!off_A1H8(s1) && off_A1H8(s2) > 0)

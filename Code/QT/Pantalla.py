@@ -189,7 +189,12 @@ class Pantalla():
 
         self.setWindowTitle(titulo if titulo else "-")
 
-        return self.exec_()
+        self.recuperarVideo(siTam=False)
+        self.ajustaTam()
+
+        resp = self.exec_()
+        self.guardarVideo()
+        return resp
 
     def ajustaTam(self):
         if self.isMaximized():
@@ -304,8 +309,8 @@ class Pantalla():
                 self.informacionPGN.splitter.setSizes(sizes)
                 break
 
-    def ponCapturas(self, dic, jg, apertura):
-        self.capturas.pon(dic, jg, apertura)
+    def ponCapturas(self, dic):
+        self.capturas.pon(dic)
 
     def ponInformacionPGN(self, partida, jg, apertura):
         self.informacionPGN.ponJG(partida, jg, apertura)
@@ -403,3 +408,9 @@ class PantallaDialog(QTVarios.WDialogo, Pantalla):
         extparam = "maind"
         QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
         Pantalla.__init__(self, gestor, owner)
+
+    def closeEvent(self, event):  # Cierre con X
+        self.guardarVideo()
+        if not self.gestor.finalX0():
+            event.ignore()
+

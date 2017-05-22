@@ -74,9 +74,10 @@ class ControlPosicion:
         self.casillas = d
 
         li = fen.split(" ")
-        if len(li) == 4:
-            li.append("0")
-            li.append("1")
+        nli = len(li)
+        if nli < 6:
+            lid = ["w", "-", "-", "0", "1"]
+            li.extend(lid[nli-1:])
         posicion, color, self.enroques, self.alPaso, mp, jg = li
 
         self.siBlancas = color == "w"

@@ -178,7 +178,7 @@ class PGN:
     def creaDB(self, ventana, fichero, uno):
 
         titulo = os.path.basename(fichero)
-        tmpBP = QTUtil2.BarraProgreso(ventana, titulo, _("Working..."), Util.tamFichero(fichero)).mostrar()
+        tmpBP = QTUtil2.BarraProgreso(ventana, titulo, _("Reading..."), Util.tamFichero(fichero)).mostrar()
 
         dClaves = Util.SymbolDict()  # contiene tam maximo de los campos a mostrar
 
@@ -344,6 +344,7 @@ def rawPGN(pgn):
     txt += p.pgnBase()
 
     return txt
+
 
 def pgn_partida(fen, solucion):
     pgn = UnPGN()

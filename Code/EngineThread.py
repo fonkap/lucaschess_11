@@ -56,7 +56,7 @@ class EnginePOP(object):
         self.working = True
         self.liBuffer = []
         self.starting = True
-        self.args = [self.exe, ]
+        self.args = [os.path.basename(self.exe), ]
         if args:
             self.args.extend(args)
 
@@ -107,8 +107,11 @@ class EnginePOP(object):
             startupinfo.wShowWindow = subprocess.SW_HIDE
         else:
             startupinfo = None
-        self.process = subprocess.Popen(self.args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, cwd=self.direxe,
+        curdir = os.path.abspath(os.curdir)  # problem with "." as curdir
+        os.chdir(self.direxe)  # to fix problems with non ascii folders
+        self.process = subprocess.Popen(self.args, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
                                          startupinfo=startupinfo, shell=False)
+        os.chdir(curdir)
 
         self.pid = self.process.pid
         if self.priority != PRIORITY_NORMAL:

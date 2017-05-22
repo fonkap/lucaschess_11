@@ -11,7 +11,7 @@ class CapturaLista(QtGui.QWidget):
     def __init__(self, wParent, tablero):
         super(CapturaLista, self).__init__(wParent)
 
-        self.setFixedWidth(10)
+        # self.setFixedWidth(10)
         anchoPZ = int(tablero.ancho/DIVISOR)
         self.pantalla = wParent.parent()
 
@@ -90,7 +90,7 @@ class CapturaLista(QtGui.QWidget):
             for x in range(len(d)):
                 d[x].hide()
 
-    def pon(self, dicCapturas, jg, apertura):
+    def pon(self, dicCapturas):
         if dicCapturas:
             cPiezas = "PNBRQ"
 
@@ -138,3 +138,5 @@ class CapturaLista(QtGui.QWidget):
                         liDif.append((pieza.lower(), vB))
 
             self.ponLI(liDif)
+        else:
+            self.ponLI([])

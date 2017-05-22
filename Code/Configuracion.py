@@ -99,6 +99,8 @@ class Configuracion:
 
         self.siDGT = False
 
+        self.opacityToolBoard = 10
+
         self.coloresPGNdefecto()
 
         self.tamFontRotulos = 10
@@ -473,6 +475,8 @@ class Configuracion:
 
         dic["SIDGT"] = self.siDGT
 
+        dic["OPACITYTOOLBOARD"] = self.opacityToolBoard
+
         dic["FICHEROBMT"] = self.ficheroBMT
 
         dic["FAMILIA"] = self.familia
@@ -604,6 +608,8 @@ class Configuracion:
                 self.fideNC = dg("FIDENC", self.fideNC)
 
                 self.siDGT = dg("SIDGT", False)
+
+                self.opacityToolBoard = dg("OPACITYTOOLBOARD", self.opacityToolBoard)
 
                 self.familia = dg("FAMILIA", self.familia)
 
@@ -806,6 +812,13 @@ class Configuracion:
         # with open("IntFiles/base.board", "wb") as f:
         #     f.write(db["BASE"])
         db.close()
+
+    def resetConfTablero(self, key, tamDef):
+        db = Util.DicSQL(self.ficheroConfTableros)
+        del db[key]
+        db.close()
+        self.leeConfTableros()
+        return self.confTablero(key, tamDef)
 
     def cambiaConfTablero(self, confTablero):
         xid = confTablero._id

@@ -204,13 +204,17 @@ class GestorEntPos(Gestor.Gestor):
 
         elif clave == k_utilidades:
             if "/Tactics/" in self.entreno:
-                liMasOpciones = ()
+                liMasOpciones = []
             else:
-                liMasOpciones = (("tactics", _("Create tactics training"), Iconos.Tacticas()),)
+                liMasOpciones = [("tactics", _("Create tactics training"), Iconos.Tacticas()),
+                                 (None, None, None)]
+            liMasOpciones.append(("play", _('Play current position'), Iconos.MoverJugar()))
 
             resp = self.utilidades(liMasOpciones)
             if resp == "tactics":
                 self.createTactics()
+            elif resp == "play":
+                self.jugarPosicionActual()
 
         elif clave == k_pgnInformacion:
             self.pgnInformacionMenu(self.dicEtiquetasPGN)

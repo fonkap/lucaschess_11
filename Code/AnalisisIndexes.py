@@ -363,7 +363,6 @@ def genIndexes(partida, alm):
     plantillaD = inicio + resto % ("%.02f%%", "%.02f%%", "-")
     plantillaL = inicio + resto % ("%.02f%s", "%.02f%s", "%.02f%s")
     plantillaC = inicio + resto % ("%s", "%s", "%s")
-    # plantillaP = inicio + resto%("%.02f%%", "%.02f%%", "%.02f%%")
 
     cab = (plantillaC % (_("Result of analysis"), cw, cb, ct)).replace("<td", "<th")
     txt = plantillaL % (_("Average lost scores"), average[True], cpt, average[False], cpt, averageT, cpt)
@@ -374,17 +373,13 @@ def genIndexes(partida, alm):
     txt += plantillaC % (_("Pieces activity"), xac(piecesactivity[True]), xac(piecesactivity[False]), xac(piecesactivityT))
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txt += plantillaL % ( "%", alm.porcW, prc, alm.porcB, prc, alm.porcT, prc)
-    # txt += plantillaC % ( _("Elo perfomance"), int(elo[True]), int(elo[False]), int(eloT))
     txt += plantillaC % ( _("Elo perfomance"), int(elo_real[True]), int(elo_real[False]), int(eloT_real))
 
     txtHTML = '<table border="1" cellpadding="5" cellspacing="1" >%s%s</table>' % (cab, txt)
-    # Analisis.csv_formula(partida)
-    # QTUtil2.mensaje( gestor.pantalla, "Created michele.csv" )
 
     plantillaD = "%s:\n" + cw + "= %.02f%s " + cb + "= %.02f%s\n"
     plantillaL = "%s:\n" + cw + "= %.02f%s " + cb + "= %.02f%s " + ct + "= %.02f%s\n"
     plantillaC = "%s:\n" + cw + "= %s " + cb + "= %s " + ct + "= %s\n"
-    # plantillaP = "%s:\n" + cw +"= %.02f%% " + cb + "= %.02f%% "+ ct + "= %.02f%%\n"
 
     txt = "%s:\n" % _("Result of analysis")
     txt += plantillaL % (_("Average lost scores"), average[True], cpt,
@@ -400,13 +395,4 @@ def genIndexes(partida, alm):
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txtRAW = txt
 
-    # if QTUtil2.pregunta(gestor.pantalla, "%s\n\n\n%s" % (txt, _("Add this text to the last move analyzed?") )):
-
-    # jg = partida.jugada(nUlt)
-    # if jg.comentario:
-    # jg.comentario += " " + txt
-    # else:
-    # jg.comentario = txt
-
-    # Html.grafAnalisis(partida)
-    return txtHTML, txtRAW
+    return txtHTML, txtRAW, int(elo_real[True]), int(elo_real[False]), int(eloT_real)

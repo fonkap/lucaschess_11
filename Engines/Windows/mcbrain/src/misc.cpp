@@ -51,7 +51,7 @@ namespace {
 
 /// Version number. If Version is left empty, then compile date in the format
 /// DD-MM-YY and show in engine_info.
-const string Version = "2.1a";
+const string Version = "2.3";
 
 /// Our fancy logging facility. The trick here is to replace cin.rdbuf() and
 /// cout.rdbuf() with two Tie objects that tie cin and cout to a file stream. We
@@ -122,7 +122,7 @@ const string engine_info(bool to_uci) {
   string month, day, year;
   stringstream ss, date(__DATE__); // From compiler, format is "Sep 21 2008"
 
-  ss << "McBrain " << Version << setfill('0');
+  ss << "McBrain 2017 " << Version << setfill('0');
 
   if (Version.empty())
   {
@@ -133,7 +133,7 @@ const string engine_info(bool to_uci) {
   ss << (Is64Bit ? " 64" : "")
      << (HasPext ? " BMI2" : (HasPopCnt ? " POPCNT" : ""))
      << (to_uci  ? "\nid author ": " by ")
-     << "M. Byrne, based on Stockfish";
+     << "by M. Byrne based on Stockfish";
 
   return ss.str();
 }
@@ -207,8 +207,8 @@ void prefetch(void* addr) {
 
 void prefetch2(void* addr) {
 
-    prefetch(addr);
-    prefetch((uint8_t*)addr + 64);
+  prefetch(addr);
+  prefetch((uint8_t*)addr + 64);
 }
 
 namespace WinProcGroup {

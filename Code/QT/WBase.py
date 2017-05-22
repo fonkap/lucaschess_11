@@ -437,55 +437,7 @@ class WBase(QtGui.QWidget):
         return pgn, color, info, indicadorInicial, liNAGs
 
     def gridPonValor(self, grid, fila, oColumna, valor):
-        """
-        Al a_adir los editores, pasa por aqui
-        """
         pass
-        # ~ #--------------------------------------------------------------------------------------------------------------------------------
-        # ~ def gridColorTexto( self, fila, oColumna ):
-        # ~ analisis = self.gestor.pgn.analisis(fila, oColumna.clave)
-        # ~ if analisis:
-        # ~ mate = analisis.mate
-        # ~ if mate:
-        # ~ return self.colorBlanco
-        # ~ else:
-        # ~ puntos = analisis.puntos
-        # ~ if puntos > 0:
-        # ~ if puntos < 1000:
-        # ~ return self.colorPositivo.darker( 1000-puntos )
-        # ~ else:
-        # ~ return self.colorBlanco
-        # ~ else:
-        # ~ if puntos > -1000:
-        # ~ return self.colorNegativo.darker( -(-1000-puntos) )
-        # ~ else:
-        # ~ return self.colorBlanco
-
-        # ~ return None
-        # ~ #--------------------------------------------------------------------------------------------------------------------------------
-        # ~ def gridColorFondo( self, fila, oColumna ):
-        # ~ analisis = self.gestor.pgn.analisis(fila, oColumna.clave)
-        # ~ if analisis:
-        # ~ mate = analisis.mate
-        # ~ if mate:
-        # ~ if mate < 0:
-        # ~ return self.colorMateNegativo
-        # ~ else:
-        # ~ return self.colorMatePositivo
-        # ~ else:
-        # ~ puntos = analisis.puntos
-        # ~ if puntos > 0:
-        # ~ if puntos < 1000:
-        # ~ return self.colorPositivo.lighter( 1000-puntos )
-        # ~ else:
-        # ~ return self.colorPositivo
-        # ~ else:
-        # ~ if puntos > -1000:
-        # ~ return self.colorNegativo.lighter( -(-1000-puntos) )
-        # ~ else:
-        # ~ return self.colorNegativo
-
-        # ~ return None
 
     def keyPressEvent(self, event):
         self.teclaPulsada("V", event.key())

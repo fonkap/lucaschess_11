@@ -170,6 +170,10 @@ def opciones(parent, configuracion):
     liT.append((_("Enable information panel by default") + ":", configuracion.siActivarInformacion))
     liT.append(separador)
     liT.append((_X(_("Enable %1"), _("DGT board")) + ":", configuracion.siDGT))
+    liT.append(separador)
+    # liT.append((FormLayout.Dial(_("Opacity of tool icon"), 1, 9, siporc=False), configuracion.opacityToolBoard))
+    liT.append((_("Show configuration icon"), configuracion.opacityToolBoard > 6))
+    liT.append(separador)
 
     lista = []
     lista.append((liGen, _("General"), ""))
@@ -218,7 +222,8 @@ def opciones(parent, configuracion):
             configuracion.efectosVisuales, rapidezMovPiezas,
             configuracion.siAtajosRaton, configuracion.showCandidates, configuracion.showVariantes,
             configuracion.cursorThinking, configuracion.siActivarCapturas, configuracion.tipoMaterial,
-            configuracion.siActivarInformacion, siDGT) = liT
+            configuracion.siActivarInformacion, siDGT, toolIcon) = liT
+        configuracion.opacityToolBoard = 10 if toolIcon else 1
         configuracion.rapidezMovPiezas = drap[rapidezMovPiezas]
         if configuracion.siDGT != siDGT:
             if siDGT:

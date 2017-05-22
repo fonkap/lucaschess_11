@@ -86,6 +86,7 @@ class GestorM1:
 
         return False
 
+
 class GestorChallenge101:
     def __init__(self, procesador):
         self.pantalla = procesador.pantalla

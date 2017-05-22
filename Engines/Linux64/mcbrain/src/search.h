@@ -43,9 +43,8 @@ struct Stack {
   Move currentMove;
   Move excludedMove;
   Move killers[2];
-  Move threatMove;	
   Value staticEval;
-  Value history;
+  int history;
   int moveCount;
 };
 
@@ -58,7 +57,8 @@ struct RootMove {
 
   explicit RootMove(Move m) : pv(1, m) {}
 
-  bool operator<(const RootMove& m) const { return m.score < score; } // Descending sort
+  bool operator<(const RootMove& m) const {
+    return m.score != score ? m.score < score : m.previousScore < previousScore; } // Descending sort
   bool operator==(const Move& m) const { return pv[0] == m; }
   bool extract_ponder_from_tt(Position& pos);
 
