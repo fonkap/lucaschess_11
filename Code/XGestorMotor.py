@@ -76,7 +76,7 @@ class GestorMotor:
         args = self.confMotor.argumentos()
         liUCI = self.confMotor.liUCI
         if self.direct:
-            self.motor = XMotor.DirectMotor(self.nombre, exe, liUCI, self.nMultiPV, args=args)
+            self.motor = XMotor.FastEngine(self.nombre, exe, liUCI, self.nMultiPV, priority=self.priority, args = args)
         else:
             self.motor = XMotor.XMotor(self.nombre, exe, liUCI, self.nMultiPV, priority=self.priority, args = args)
         if self.confMotor.siDebug:

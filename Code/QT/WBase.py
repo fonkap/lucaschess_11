@@ -191,9 +191,8 @@ class WBase(QtGui.QWidget):
 
         liOpciones = ((_("Quit"), Iconos.Terminar(), k_terminar),
                       (_("Play"), Iconos.Libre(), k_play),
-                      # (_("Competition"), Iconos.NuevaPartida(), k_competicion),
-                      # (_("Elo-Rating"), Iconos.Elo(), k_elo),
-                      (_("Training"), Iconos.Entrenamiento(), k_entrenamiento),
+                      (_("Compete"), Iconos.NuevaPartida(), k_competir),
+                      (_("Train"), Iconos.Entrenamiento(), k_entrenamiento),
                       (_("Options"), Iconos.Opciones(), k_opciones),
                       (_("Information"), Iconos.Informacion(), k_informacion),
                       (_("Save"), Iconos.Grabar(), k_grabar),
@@ -583,10 +582,14 @@ class WBase(QtGui.QWidget):
         return self.lbRotulo3
 
     def ponRelojBlancas(self, tm, tm2):
-        self.lbRelojBlancas.ponTexto(tm + '<br><FONT SIZE="-4">' + tm2)
+        if tm2 is not None:
+            tm += '<br><FONT SIZE="-4">' + tm2
+        self.lbRelojBlancas.ponTexto(tm)
 
     def ponRelojNegras(self, tm, tm2):
-        self.lbRelojNegras.ponTexto(tm + '<br><FONT SIZE="-4">' + tm2)
+        if tm2 is not None:
+            tm += '<br><FONT SIZE="-4">' + tm2
+        self.lbRelojNegras.ponTexto(tm)
 
     def creaCapturas(self):
         self.capturas = WCapturas.CapturaLista(self, self.tablero)

@@ -3,6 +3,8 @@ from Code import ControlPosicion
 from Code import Jugada
 from Code import AperturasStd
 
+OPENING, MIDDLEGAME, ENDGAME = range(3)
+
 
 class Partida:
     def __init__(self, iniPosicion=None, fen=None):
@@ -19,16 +21,17 @@ class Partida:
 
     def reset(self, iniPosicion=None):
         self.liJugadas = []
-        self.pendienteApertura = True
         self.apertura = None
 
         self.siEmpiezaConNegras = False
         if iniPosicion:
             self.iniPosicion = iniPosicion.copia()
             self.siEmpiezaConNegras = not self.iniPosicion.siBlancas
+            self.pendienteApertura = self.iniPosicion.fen() == ControlPosicion.FEN_INICIAL
         else:
             self.iniPosicion = ControlPosicion.ControlPosicion()
             self.iniPosicion.posInicial()
+            self.pendienteApertura = True
 
         self.ultPosicion = self.iniPosicion.copia()
 
@@ -340,6 +343,20 @@ class Partida:
     def remove_analysis(self):
         for jg in self.liJugadas:
             jg.analisis = None
+
+    def asigna_OME(self, configuracion):
+        if self.siFenInicial():
+            aps = AperturasStd.ListaAperturasStd(configuracion, False, False)
+            aps.asignaApertura(self)
+        else:
+            for jg in self.liJugadas:
+                jg.siApertura = False
+        for jg in self.liJugadas:
+            if jg.siApertura:
+                jg.estadoOME = OPENING
+            else:
+                material = jg.posicionBase.valor_material()
+                jg.estadoOME = ENDGAME if material < 15 else MIDDLEGAME
 
 
 def pv_san(fen, pv):

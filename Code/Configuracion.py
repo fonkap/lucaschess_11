@@ -75,7 +75,7 @@ class Configuracion:
         self.rapidezMovPiezas = 100
         self.guardarVariantesTutor = True
 
-        self.siAtajosRaton = False  # predicitvo=True
+        self.siAtajosRaton = False  # predictivo=True
         self.showCandidates = False
 
         self.siActivarCapturas = False
@@ -100,6 +100,7 @@ class Configuracion:
         self.siDGT = False
 
         self.opacityToolBoard = 10
+        self.positionToolBoard = "T"
 
         self.coloresPGNdefecto()
 
@@ -268,6 +269,7 @@ class Configuracion:
         Util.creaCarpeta(self.carpetaScanners)
 
         self.ficheroExpeditions = "%s/Expeditions.db" % self.carpeta
+        self.ficheroSingularMoves = "%s/SingularMoves.db" % self.carpeta
 
     def compruebaBMT(self):
         if not Util.existeFichero(self.ficheroBMT):
@@ -476,6 +478,8 @@ class Configuracion:
         dic["SIDGT"] = self.siDGT
 
         dic["OPACITYTOOLBOARD"] = self.opacityToolBoard
+        dic["POSITIONTOOLBOARD"] = self.positionToolBoard
+
 
         dic["FICHEROBMT"] = self.ficheroBMT
 
@@ -610,6 +614,7 @@ class Configuracion:
                 self.siDGT = dg("SIDGT", False)
 
                 self.opacityToolBoard = dg("OPACITYTOOLBOARD", self.opacityToolBoard)
+                self.positionToolBoard = dg("POSITIONTOOLBOARD", self.positionToolBoard)
 
                 self.familia = dg("FAMILIA", self.familia)
 

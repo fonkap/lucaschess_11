@@ -165,6 +165,7 @@ def desactivar():
 
 # Funciones directas en la DGT
 
+
 def showDialog():
     if VarGen.dgt:
         dgt = VarGen.dgt
@@ -196,6 +197,7 @@ def writeClocks(wclock, bclock):
         dgt._DGTDLL_SetNRun(wclock, bclock, 0)
 
 # Utilidades para la trasferencia de datos
+
 
 def _dgt2fen(dato):
     n = 0

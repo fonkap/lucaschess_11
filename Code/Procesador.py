@@ -20,6 +20,7 @@ from Code import GestorCompeticion
 from Code import GestorPGN
 from Code import GestorPerson
 from Code import GestorRoutes
+from Code import GestorSingularM
 from Code import GestorSolo
 from Code import GestorPartida
 from Code import GestorTorneo
@@ -41,6 +42,7 @@ from Code.QT import PantallaMotores
 from Code.QT import PantallaRoutes
 from Code.QT import PantallaSTS
 from Code.QT import PantallaSonido
+from Code.QT import PantallaSingularM
 from Code.QT import PantallaTorneos
 from Code.QT import PantallaUsuarios
 from Code.QT import PantallaWashing
@@ -75,8 +77,8 @@ class Procesador:
         self.web = "http://www-lucaschess.rhcloud.com"
         self.blog = "http://lucaschess.blogspot.com"
 
-        self.liOpcionesInicio = [k_terminar, k_play,
-                                 k_entrenamiento, k_tools, k_opciones, k_informacion]  # Lo incluimos aqui porque sino no lo lee, en caso de aplazada
+        self.liOpcionesInicio = [k_terminar, k_play, k_entrenamiento, k_competir,
+                                 k_tools, k_opciones, k_informacion]  # Lo incluimos aqui porque sino no lo lee, en caso de aplazada
 
         self.configuracion = Configuracion.Configuracion(user)
         self.configuracion.start(self.version)
@@ -193,6 +195,7 @@ class Procesador:
         self.siPresentacion = siEmpezar
         if not siEmpezar:
             self.cpu.stop()
+            self.tablero.ponerPiezasAbajo(True)
             self.tablero.activaMenuVisual(True)
             self.tablero.ponPosicion(self.posicionInicial)
             self.tablero.setToolTip("")
@@ -324,30 +327,6 @@ class Procesador:
         menu.opcion(("free", None), _("Play against an engine of your choice"), Iconos.Libre())
         menu.separador()
 
-        menu.opcion(("competition", None), _("Competition"), Iconos.NuevaPartida())
-        menu.separador()
-
-        submenu = menu.submenu(_("Elo-Rating"), Iconos.Elo())
-        submenu.opcion(("lucaselo",0), "%s (%d)" % (_("Lucas-Elo"), self.configuracion.elo), Iconos.Elo())
-        submenu.separador()
-        if VarGen.isWindows or VarGen.isWine:
-            submenu.opcion(("micelo",0), "%s (%d)" % (_("Tourney-Elo"), self.configuracion.michelo), Iconos.EloTimed())
-            submenu.separador()
-        fics = self.configuracion.fics
-        menuf = submenu.submenu("%s (%d)" % (_("Fics-Elo"), fics), Iconos.Fics())
-        rp = QTVarios.rondoPuntos()
-        for elo in range(900, 2800, 100):
-            if (elo == 900) or (0 <= (elo + 99 - fics) <= 400 or 0 <= (fics - elo) <= 400):
-                menuf.opcion(("fics", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
-        submenu.separador()
-        fide = self.configuracion.fide
-        menuf = submenu.submenu("%s (%d)" % (_("Fide-Elo"), fide), Iconos.Fide())
-        for elo in range(1500, 2700, 100):
-            if (elo == 1500) or (0 <= (elo + 99 - fide) <= 400 or 0 <= (fide - elo) <= 400):
-                menuf.opcion(("fide", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
-
-        menu.separador()
-
         # Principiantes ----------------------------------------------------------------------------------------
         menu1 = menu.submenu(_("Opponents for young players"), Iconos.RivalesMP())
 
@@ -384,21 +363,6 @@ class Procesador:
             tipo, rival = resp
             if tipo == "free":
                 self.procesarAccion(k_libre)
-
-            elif tipo == "competition":
-                self.competicion()
-
-            elif tipo == "lucaselo":
-                self.lucaselo(True)
-
-            elif tipo == "micelo":
-                self.micelo(True)
-
-            elif tipo == "fics":
-                self.ficselo(True, rival)
-
-            elif tipo == "fide":
-                self.fideelo(True, rival)
 
             elif tipo == "person":
                 self.playPerson(rival)
@@ -469,6 +433,65 @@ class Procesador:
         self.gestor = GestorAlbum.GestorAlbum(self)
         self.gestor.inicio(album, cromo)
 
+    def menuCompetir(self):
+        menu = QTVarios.LCMenu(self.pantalla)
+        menu.opcion(("competition", None), _("Competition with tutor"), Iconos.NuevaPartida())
+        menu.separador()
+
+        submenu = menu.submenu(_("Elo-Rating"), Iconos.Elo())
+        submenu.opcion(("lucaselo",0), "%s (%d)" % (_("Lucas-Elo"), self.configuracion.elo), Iconos.Elo())
+        submenu.separador()
+        if VarGen.isWindows or VarGen.isWine:
+            submenu.opcion(("micelo",0), "%s (%d)" % (_("Tourney-Elo"), self.configuracion.michelo), Iconos.EloTimed())
+            submenu.separador()
+        fics = self.configuracion.fics
+        menuf = submenu.submenu("%s (%d)" % (_("Fics-Elo"), fics), Iconos.Fics())
+        rp = QTVarios.rondoPuntos()
+        for elo in range(900, 2800, 100):
+            if (elo == 900) or (0 <= (elo + 99 - fics) <= 400 or 0 <= (fics - elo) <= 400):
+                menuf.opcion(("fics", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
+        submenu.separador()
+        fide = self.configuracion.fide
+        menuf = submenu.submenu("%s (%d)" % (_("Fide-Elo"), fide), Iconos.Fide())
+        for elo in range(1500, 2700, 100):
+            if (elo == 1500) or (0 <= (elo + 99 - fide) <= 400 or 0 <= (fide - elo) <= 400):
+                menuf.opcion(("fide", elo / 100), "%d-%d" % (elo, elo + 99), rp.otro())
+        menu.separador()
+        submenu = menu.submenu(_("Singular moves"), Iconos.Singular())
+        submenu.opcion(("strenght101", 0), _("Calculate your strength"), Iconos.Strength())
+        submenu.separador()
+        submenu.opcion(("challenge101",0), _("Challenge 101"), Iconos.Wheel())
+
+        resp = menu.lanza()
+        if resp:
+            tipo, rival = resp
+            if tipo == "competition":
+                self.competicion()
+
+            elif tipo == "lucaselo":
+                self.lucaselo(True)
+
+            elif tipo == "micelo":
+                self.micelo(True)
+
+            elif tipo == "fics":
+                self.ficselo(True, rival)
+
+            elif tipo == "fide":
+                self.fideelo(True, rival)
+
+            elif tipo == "challenge101":
+                Presentacion.GestorChallenge101(self)
+
+            elif tipo == "strenght101":
+                self.strenght101()
+
+    def strenght101(self):
+        w = PantallaSingularM.WSingularM(self.pantalla, self.configuracion)
+        if w.exec_():
+            self.gestor = GestorSingularM.GestorSingularM(self)
+            self.gestor.inicio(w.sm)
+
     def procesarAccion(self, clave):
         if self.siPresentacion:
             self.presentacion(False)
@@ -481,6 +504,9 @@ class Procesador:
 
         elif clave == k_play:
             self.menuPlay()
+
+        elif clave == k_competir:
+            self.menuCompetir()
 
         elif clave == k_libre:
             self.libre()
@@ -996,8 +1022,8 @@ class ProcesadorVariantes(Procesador):
         # self.configuracion = copy.deepcopy( VarGen.configuracion )
         self.configuracion = VarGen.configuracion
 
-        self.liOpcionesInicio = [k_terminar, k_play, k_competicion, k_elo,
-                                 k_entrenamiento, k_tools, k_opciones, k_informacion]  # Lo incluimos aqui porque sino no lo lee, en caso de aplazada
+        self.liOpcionesInicio = [k_terminar, k_play, k_entrenamiento, k_competir,
+                                 k_tools, k_opciones, k_informacion]  # Lo incluimos aqui porque sino no lo lee, en caso de aplazada
 
         self.siPresentacion = False
 

@@ -121,6 +121,7 @@ public:
   bool capture_or_promotion(Move m) const;
   bool gives_check(Move m) const;
   bool advanced_pawn_push(Move m) const;
+  bool far_advanced_pawn_push(Move m) const;
   Piece moved_piece(Move m) const;
   Piece captured_piece() const;
 
@@ -136,7 +137,7 @@ public:
   void undo_null_move();
 
   // Static Exchange Evaluation
-  bool see_ge(Move m, Value value) const;
+  bool see_ge(Move m, Value threshold = VALUE_ZERO) const;
 
   // Accessing hash keys
   Key key() const;
@@ -158,7 +159,7 @@ public:
   Value non_pawn_material() const;
 
   // Position consistency check, for debugging
-  bool pos_is_ok(int* failedStep = nullptr) const;
+  bool pos_is_ok() const;
   void flip();
 
 private:
@@ -317,6 +318,11 @@ inline bool Position::advanced_pawn_push(Move m) const {
         && relative_rank(sideToMove, from_sq(m)) > RANK_4;
 }
 
+inline bool Position::far_advanced_pawn_push(Move m) const {
+	return   type_of(moved_piece(m)) == PAWN
+	&& relative_rank(sideToMove, from_sq(m)) > RANK_6;
+}
+
 inline Key Position::key() const {
   return st->key;
 }
@@ -350,7 +356,7 @@ inline int Position::rule50_count() const {
 }
 
 inline uint64_t Position::nodes_searched() const {
-  return nodes;
+	return nodes;
 }
 
 inline bool Position::opposite_bishops() const {

@@ -57,12 +57,12 @@ class ThanksTo:
             ["Discocheck 5.2.1", "Lucas Braesch", "https://github.com/lucasart"],
             ["Gaviota 1.0", "Miguel A. Ballicora", "https://sites.google.com/site/gaviotachessengine"],
             ["Toga deepTogaNPS 1.9.6", "WHMoweryJr,Thomas Gaksch,Fabien Letouzey", "http://www.computerchess.info/tdbb/phpBB3/viewtopic.php?f=9&t=357"],
-            ["Komodo 8 32bit", "Don Dailey, Larry Kaufman, Mark Lefler", "http://komodochess.com/"],
+            ["Komodo 9.02", "Don Dailey, Larry Kaufman, Mark Lefler", "http://komodochess.com/"],
             ["Rybka 2.3.2a 32-bit", "Vasik Rajlich", "http://rybkachess.com/"],
             ["Critter 1.6a 32bits", "Richard Vida", "http://www.vlasak.biz/critter/"],
             ["Texel 1.07", "Peter Österlund", "http://web.comhem.se/petero2home/javachess/index.html#texel"],
             ["Stockfish 8", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
-            ["McBrain 2.3", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
+            ["McBrain 2.6", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
             ["Gull 3", "Vadim Demichev", "https://sourceforge.net/projects/gullchess/"],
             ["Delfi 5.4", "Fabio Cavicchio", "http://www.msbsoftware.it/delfi/"],
             # ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
@@ -183,6 +183,7 @@ class ThanksTo:
             _("Chinese simplified"): ("Kevin Sicong Jiang,Stephen Yang", ""),
             _("Romanian"):("Dan-Alexandru Raportaru",""),
             _("Greek"): ("Nick Delta", ""),
+            _("Ukrainian"): ("Volodymyr Soltys", "Maxym Makarchuk"),
         }
 
         def r(lng):
@@ -410,8 +411,12 @@ class ThanksTo:
         txt += "</tr>"
         for nombre, autor, url in self.listaMotores(orden):
             txt += "<tr>"
-            txt += "<th>%s</th>" % nombre
-            txt += "<th>%s</th>" % autor
+            if "McBrain" in nombre:
+                txt += '<th><font color="darkred">%s (%s)</font></th>' % (nombre, _("default"))
+                txt += '<th><font color="darkred">%s</font></th>' % autor
+            else:
+                txt += "<td>%s</td>" % nombre
+                txt += "<td>%s</td>" % autor
             txt += "<td><a href=\"%s\">%s</a></td>" % (url, url)
             txt += "</tr>"
         txt += self.tableEnd()

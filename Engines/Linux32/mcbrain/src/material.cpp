@@ -53,50 +53,59 @@ namespace {
     { 101,  100, -37,   141,  268,    0 }  // Queen
   };
 
-  // PawnSet[pawn count] contains a bonus/malus indexed by number of pawns
-  const int PawnSet[] = {
-    24, -32, 107, -51, 117, -9, -126, -21, 31
-  };
-
-  // Endgame evaluation and scaling functions are accessed directly and not through
-  // the function maps because they correspond to more than one material hash key.
-  Endgame<KXK>    EvaluateKXK[] = { Endgame<KXK>(WHITE),    Endgame<KXK>(BLACK) };
-
-  Endgame<KBPsK>  ScaleKBPsK[]  = { Endgame<KBPsK>(WHITE),  Endgame<KBPsK>(BLACK) };
-  Endgame<KQKRPs> ScaleKQKRPs[] = { Endgame<KQKRPs>(WHITE), Endgame<KQKRPs>(BLACK) };
-  Endgame<KPsK>   ScaleKPsK[]   = { Endgame<KPsK>(WHITE),   Endgame<KPsK>(BLACK) };
-  Endgame<KPKP>   ScaleKPKP[]   = { Endgame<KPKP>(WHITE),   Endgame<KPKP>(BLACK) };
-
-  // Helper used to detect a given material distribution
-  bool is_KXK(const Position& pos, Color us) {
-    return  !more_than_one(pos.pieces(~us))
-          && pos.non_pawn_material(us) >= RookValueMg;
-  }
-
-  bool is_KBPsKs(const Position& pos, Color us) {
-    return   pos.non_pawn_material(us) == BishopValueMg
-          && pos.count<BISHOP>(us) == 1
-          && pos.count<PAWN  >(us) >= 1;
-  }
-
-  bool is_KQKRPs(const Position& pos, Color us) {
-    return  !pos.count<PAWN>(us)
-          && pos.non_pawn_material(us) == QueenValueMg
-          && pos.count<QUEEN>(us)  == 1
-          && pos.count<ROOK>(~us) == 1
-          && pos.count<PAWN>(~us) >= 1;
-  }
-
-  /// imbalance() calculates the imbalance by comparing the piece count of each
-  /// piece type for both colors.
-  template<Color Us>
-  int imbalance(const int pieceCount[][PIECE_TYPE_NB]) {
-
-    const Color Them = (Us == WHITE ? BLACK : WHITE);
-
-    int bonus = PawnSet[pieceCount[Us][PAWN]];
-
-    // Second-degree polynomial material imbalance by Tord Romstad
+    // PawnSet[pawn count] contains a bonus/malus indexed by number of pawns
+	const int PawnSet[] = {
+		24, -32, 107, -51, 117, -9, -126, -21, 31
+	};
+	
+	// QueenMinorsImbalance
+	const int QueenMinorsImbalance[16] = {
+		31, -8, -15, -25, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	};
+	
+	// Endgame evaluation and scaling functions are accessed directly and not through
+	// the function maps because they correspond to more than one material hash key.
+	Endgame<KXK>    EvaluateKXK[] = { Endgame<KXK>(WHITE),    Endgame<KXK>(BLACK) };
+	
+	Endgame<KBPsK>  ScaleKBPsK[]  = { Endgame<KBPsK>(WHITE),  Endgame<KBPsK>(BLACK) };
+	Endgame<KQKRPs> ScaleKQKRPs[] = { Endgame<KQKRPs>(WHITE), Endgame<KQKRPs>(BLACK) };
+	Endgame<KPsK>   ScaleKPsK[]   = { Endgame<KPsK>(WHITE),   Endgame<KPsK>(BLACK) };
+	Endgame<KPKP>   ScaleKPKP[]   = { Endgame<KPKP>(WHITE),   Endgame<KPKP>(BLACK) };
+	
+	// Helper used to detect a given material distribution
+	bool is_KXK(const Position& pos, Color us) {
+		return  !more_than_one(pos.pieces(~us))
+		&& pos.non_pawn_material(us) >= RookValueMg;
+	}
+	
+	bool is_KBPsKs(const Position& pos, Color us) {
+		return   pos.non_pawn_material(us) == BishopValueMg
+		&& pos.count<BISHOP>(us) == 1
+		&& pos.count<PAWN  >(us) >= 1;
+	}
+	
+	bool is_KQKRPs(const Position& pos, Color us) {
+		return  !pos.count<PAWN>(us)
+		&& pos.non_pawn_material(us) == QueenValueMg
+		&& pos.count<QUEEN>(us)  == 1
+		&& pos.count<ROOK>(~us) == 1
+		&& pos.count<PAWN>(~us) >= 1;
+	}
+	
+	/// imbalance() calculates the imbalance by comparing the piece count of each
+	/// piece type for both colors.
+	template<Color Us>
+	int imbalance(const int pieceCount[][PIECE_TYPE_NB]) {
+		
+		const Color Them = (Us == WHITE ? BLACK : WHITE);
+		
+		int bonus = PawnSet[pieceCount[Us][PAWN]];
+		
+		if  (pieceCount[Us][QUEEN] == 1 && pieceCount[Them][QUEEN] == 0)
+			
+		bonus += QueenMinorsImbalance[pieceCount[Them][KNIGHT] + pieceCount[Them][BISHOP]];
+		
+	// Second-degree polynomial material imbalance by Tord Romstad
     for (int pt1 = NO_PIECE_TYPE; pt1 <= QUEEN; ++pt1)
     {
         if (!pieceCount[Us][pt1])
@@ -155,7 +164,7 @@ Entry* probe(const Position& pos) {
 
   if ((sf = pos.this_thread()->endgames.probe<ScaleFactor>(key)) != nullptr)
   {
-      e->scalingFunction[sf->strong_side()] = sf; // Only strong color assigned
+      e->scalingFunction[sf->strongSide] = sf; // Only strong color assigned
       return e;
   }
 

@@ -42,11 +42,10 @@ def leeRivales():
 
     cm = ConfigMotor("komodo", "Don Dailey, Larry Kaufman", "5r1 32-bit", "http://komodochess.com/")
     cm.path = "Linux/komodo-5r1-32bit"
-    cm.path_64 = "Linux/komodo-8-linux-generic", "8 64bits"
     cm.ordenUCI("Ponder", "false")
     cm.ordenUCI("Hash", "32")
     cm.elo = 3053
-    cm.ponMultiPV(20, 99)
+    cm.ponMultiPV(20, 218)
     mas(cm)
 
     cm = ConfigMotor("stockfish", "Tord Romstad, Marco Costalba, Joona Kiiski", "8 32bits", "http://stockfishchess.org/")
@@ -86,6 +85,7 @@ def leeRivales():
     cm = ConfigMotor("gaviota", "Miguel A. Ballicora", "1.0", "https://sites.google.com/site/gaviotachessengine")
     cm.path = "gaviota-1.0-linux32"
     cm.elo = 2548
+    cm.ordenUCI("Log", "false")
     mas(cm)
 
     cm = ConfigMotor("godel", "Juan Manuel Vazquez", "3.4.9", "https://sites.google.com/site/godelchessengine")
@@ -151,10 +151,11 @@ def leeRivales():
     cm.ordenUCI("Hash", "64")
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.3", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017_v23_x32_linux"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.6", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017_v26_x32_linux"
     cm.elo = 3200
-    cm.ordenUCI("Tactical", "8")
+    cm.ordenUCI("Respect", "30")
+    cm.ordenUCI("MateFinder", "true")
     cm.ordenUCI("Hash", "64")
     cm.ordenUCI("Threads", "1")
     cm.ponMultiPV(20, 256)
@@ -174,15 +175,13 @@ def dicMotoresFixedElo():
     for nm, desde, hasta in (
             ("cheng", 800, 2500),
             ("greko", 1600, 2400),
-            ("mcbrain", 800, 2800),
+            ("mcbrain", 1500, 2800),
             ("discocheck", 1500, 2700),
     ):
         for elo in range(desde, hasta + 100, 100):
             cm = d[nm].clona()
             if elo not in dic:
                 dic[elo] = []
-            if nm == "mcbrain":
-                cm.removeUCI("Tactical")
             cm.ordenUCI("UCI_Elo", str(elo))
             cm.ordenUCI("UCI_LimitStrength", "true")
             cm.clave += " (%d)" % elo

@@ -178,6 +178,8 @@ class GestorSolo(Gestor.Gestor):
             self.cambioRival()
             del dic["SICAMBIORIVAL"]  # que no lo vuelva a pedir
 
+        self.valor_inicial = self.dame_valor_actual()
+
         self.siguienteJugada()
 
     def tituloVentanaPGN(self):
@@ -277,6 +279,7 @@ class GestorSolo(Gestor.Gestor):
 
     def finPartida(self):
         # Comprobamos que no haya habido cambios desde el ultimo grabado
+        self.siCambios = self.siCambios or self.valor_inicial != self.dame_valor_actual()
         if self.siCambios and self.partida.numJugadas():
             resp = QTUtil2.preguntaCancelar(self.pantalla, _("Do you want to save changes to a file?"), _("Yes"), _("No"))
             if resp is None:
@@ -451,6 +454,11 @@ class GestorSolo(Gestor.Gestor):
 
         return resp
 
+    def dame_valor_actual(self):
+        dic = self.creaDic()
+        dic["PARTIDA"] = self.partida.guardaEnTexto()
+        return Util.dic2txt(dic)
+
     def creaDic(self):
         dic = {}
         dic["VOLTEO"] = self.siVolteoAutomatico
@@ -490,6 +498,7 @@ class GestorSolo(Gestor.Gestor):
             dic["SIBLANCASABAJO"] = self.tablero.siBlancasAbajo
             with open(fichero, "wb") as f:
                 f.write(Util.dic2txt(dic))
+            self.valor_inicial = self.dame_valor_actual()
             self.guardaDir(fichero)
             self.siCambios = False
             nombre = os.path.basename(fichero)

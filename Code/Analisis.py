@@ -705,11 +705,11 @@ class MuestraAnalisis:
         if hasattr(jg, "analisis") and jg.analisis:
             mrm, pos = jg.analisis
         else:
-            me = QTUtil2.mensEspera.inicio(pantalla, _("Analyzing the move...."), posicion="ad")
+            me = QTUtil2.mensEspera.inicio(pantalla, _("Analyzing the move...."), posicion="ad") #, siCancelar=True)
             mrm, pos = xmotor.analizaJugada(jg, xmotor.motorTiempoJugada, xmotor.motorProfundidad)
             jg.analisis = mrm, pos
-
             me.final()
+
         um = UnaMuestra(self, mrm, pos, 0, xmotor)
         self.liMuestras.append(um)
         return um
@@ -741,6 +741,8 @@ def muestraAnalisis(procesador, xtutor, jg, siBlancas, maxRecursion, posJugada, 
     if xtutor is None:
         xtutor = procesador.XTutor()
     um0 = ma.creaMuestraInicial(pantalla, xtutor)
+    if not um0:
+        return
     siLibre = maxRecursion > 0
     wa = PantallaAnalisis.WAnalisis(ma, pantalla, siBlancas, siLibre, siGrabar, um0)
     wa.exec_()

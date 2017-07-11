@@ -22,7 +22,6 @@
 #define THREAD_H_INCLUDED
 
 #include <atomic>
-#include <bitset>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
@@ -61,17 +60,16 @@ public:
   Material::Table materialTable;
   Endgames endgames;
   size_t idx, PVIdx;
-  int maxPly, callsCnt;
-  uint64_t tbHits;
+  int maxPly, meanH;
+  std::atomic<uint64_t> nodes, tbHits;
 
   Position rootPos;
   Search::RootMoves rootMoves;
-  Depth rootDepth;
+  std::atomic<Depth> rootDepth;
   Depth completedDepth;
-  std::atomic_bool resetCalls;
-  MoveStats counterMoves;
-  HistoryStats history;
-  CounterMoveHistoryStats counterMoveHistory;
+  CounterMoveStat counterMoves;
+  ButterflyHistory history;
+  CounterMoveHistoryStat counterMoveHistory;
 };
 
 
@@ -79,10 +77,12 @@ public:
 
 struct MainThread : public Thread {
   virtual void search();
+  void check_time();
 
   bool easyMovePlayed, failedLow;
   double bestMoveChanges;
   Value previousScore;
+  int callsCnt = 0;
 };
 
 

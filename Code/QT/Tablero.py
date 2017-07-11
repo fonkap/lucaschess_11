@@ -577,7 +577,10 @@ class Tablero(QtGui.QGraphicsView):
         if self.siMenuVisual:
             indicador_menu = TabTipos.Imagen()
             indicador_menu.posicion.x = pFrontera.x - ancho
-            indicador_menu.posicion.y = pFrontera.y + pFrontera.alto + 2*gap
+            if self.configuracion.positionToolBoard == "B":
+                indicador_menu.posicion.y = pFrontera.y + pFrontera.alto + 2*gap
+            else:
+                indicador_menu.posicion.y = 0
 
             indicador_menu.posicion.ancho = indicador_menu.posicion.alto = ancho - 2*gap
             indicador_menu.posicion.orden = 2
@@ -587,8 +590,7 @@ class Tablero(QtGui.QGraphicsView):
             indicador_menu.sur = indicador.posicion.y
             indicador_menu.norte = gap / 2
             self.indicadorSC_menu = TabElementos.PixmapSC(self.escena, indicador_menu, pixmap=Iconos.pmSettings(), rutina=self.lanzaMenuVisual)
-            if self.configuracion.opacityToolBoard != 10:
-                self.indicadorSC_menu.setOpacity(0.01)
+            self.indicadorSC_menu.setOpacity(0.50 if self.configuracion.opacityToolBoard == 10 else 0.01)
 
         self.init_kb_buffer()
 
@@ -643,14 +645,15 @@ class Tablero(QtGui.QGraphicsView):
         # menu.opcion("foto", _("Board -> Image"), Iconos.Camara())
         # menu.separador()
 
-        smenu = menu.submenu(_("Default"), Iconos.Defecto())
-        smenu.opcion("def_todo", _("All"), Iconos.Generar())
-        smenu.separador()
-        smenu.opcion("def_colores", _("Colors"), Iconos.Colores())
-        smenu.separador()
-        smenu.opcion("def_size", _("Size"), Iconos.TamTablero())
-        smenu.separador()
-        smenu.opcion("def_resto", _("The other"), Iconos.PuntoVerde())
+        menu.opcion("def_todo", _("Default"), Iconos.Defecto())
+        # smenu = menu.submenu(_("Default"), Iconos.Defecto())
+        # smenu.opcion("def_todo", _("All"), Iconos.Generar())
+        # smenu.separador()
+        # smenu.opcion("def_colores", _("Colors"), Iconos.Colores())
+        # smenu.separador()
+        # smenu.opcion("def_size", _("Size"), Iconos.TamTablero())
+        # smenu.separador()
+        # smenu.opcion("def_resto", _("The other"), Iconos.PuntoVerde())
 
         menu.separador()
         if not self.siTableroDirector():
@@ -730,20 +733,21 @@ class Tablero(QtGui.QGraphicsView):
         elif resp.startswith("def_"):
             if resp.endswith("todo"):
                 self.confTablero = self.configuracion.resetConfTablero(self.confTablero.id(), self.confTablero.anchoPieza())
+                self.reset(self.confTablero)
 
-            else:
-                self.confTablero.porDefecto(resp[4:])
-                self.confTablero.guardaEnDisco()
-            ap, apc = self.siActivasPiezas, self.siActivasPiezasColor
-            siFlecha = self.flechaSC is not None
-            self.reset(self.confTablero)
-            if ap:
-                self.activaColor(apc)
-                self.ponIndicador(apc)
-
-            if siFlecha:
-                # self.ponFlechaSC( self.ultMovFlecha[0], self.ultMovFlecha[1])
-                self.resetFlechaSC()
+            # else:
+            #     self.confTablero.porDefecto(resp[4:])
+            #     self.confTablero.guardaEnDisco()
+            # ap, apc = self.siActivasPiezas, self.siActivasPiezasColor
+            # siFlecha = self.flechaSC is not None
+            # self.reset(self.confTablero)
+            # if ap:
+            #     self.activaColor(apc)
+            #     self.ponIndicador(apc)
+            #
+            # if siFlecha:
+            #     # self.ponFlechaSC( self.ultMovFlecha[0], self.ultMovFlecha[1])
+            #     self.resetFlechaSC()
 
     def lanzaDirector(self):
         if self.siMenuVisual:
@@ -1357,7 +1361,6 @@ class Tablero(QtGui.QGraphicsView):
         flecha.show()
 
     def creaFlechaSC(self, a1h8):
-
         bf = copy.deepcopy(self.confTablero.fTransicion())
         bf.a1h8 = a1h8
         bf.anchoCasilla = self.anchoCasilla
@@ -1366,7 +1369,6 @@ class Tablero(QtGui.QGraphicsView):
         return self.creaFlecha(bf, self.pulsadaFlechaSC)
 
     def creaFlechaTmp(self, desdeA1h8, hastaA1h8, siMain):
-
         bf = copy.deepcopy(self.confTablero.fTransicion() if siMain else self.confTablero.fAlternativa())
         bf.a1h8 = desdeA1h8 + hastaA1h8
         flecha = self.creaFlecha(bf)

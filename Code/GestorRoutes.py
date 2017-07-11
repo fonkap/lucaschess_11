@@ -23,12 +23,14 @@ class GR_Engine:
         self.level = nlevel
         if nlevel == 0:
             self.gestor = None
+            self._nombre = self._label
         else:
             dEngines = self.elos()
             nom_engine, depth, elo = random.choice(dEngines[nlevel])
             rival = procesador.configuracion.buscaRival(nom_engine)
             self.gestor = procesador.creaGestorMotor(rival, None, depth)
-            self._label += "\n%s %s %d\n%s: %d" % (rival.nombre, _("Depth"), depth, _("Estimated elo"), elo)
+            self._nombre = "%s %s %d" % (rival.nombre, _("Depth"), depth)
+            self._label += "\n%s\n%s: %d" % (self._nombre, _("Estimated elo"), elo)
 
     def close(self):
         if self.gestor and self.gestor != self:
@@ -38,6 +40,10 @@ class GR_Engine:
     @property
     def label(self):
         return self._label
+
+    @property
+    def nombre(self):
+        return self._nombre
 
     def play(self, fen):
         if self.gestor:
@@ -312,6 +318,8 @@ class GestorRoutesPlay(GestorRoutes):
 
         siwin = (jgUlt.siBlancas() == self.siJugamosConBlancas) and not jgUlt.siTablas()
 
+        self.guardarGanados(siwin)
+
         if siwin:
             if self.route.end_playing():
                 QTUtil2.mensaje(self.pantalla, _("Congratulations, you have completed the game."))
@@ -328,9 +336,7 @@ class GestorRoutesPlay(GestorRoutes):
     def actualPGN(self):
         resp = '[Event "%s"]\n' % _("Transsiberian Railway")
 
-        lbe = _("Internal engine")
-        if getattr(self.engine, "level", 0):
-            lbe += " %s %d" % (_("Basic"), self.engine.level)
+        lbe = self.engine.nombre
 
         white, black = self.configuracion.jugador, lbe
         if not self.siJugamosConBlancas:
@@ -737,7 +743,8 @@ class GestorRoutesTactics(GestorRoutes):
         self.desactivaTodas()
         self.refresh()
         km = self.route.end_tactic()
-        QTUtil2.mensaje(self.pantalla, _("Done") + "<br>" + _("You have traveled %s") % Routes.km_mi(km, self.route.is_miles))
+        if not self.route.go_fast:
+            QTUtil2.mensaje(self.pantalla, _("Done") + "<br>" + _("You have traveled %s") % Routes.km_mi(km, self.route.is_miles))
         self.siJuegaHumano = False
         self.estado = kFinJuego
         if self.route.go_fast:

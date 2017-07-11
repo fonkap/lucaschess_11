@@ -38,14 +38,19 @@ namespace Search {
 
 struct Stack {
   Move* pv;
-  CounterMoveStats* counterMoves;
+  PieceToHistory* history;
   int ply;
   Move currentMove;
   Move excludedMove;
   Move killers[2];
   Value staticEval;
-  int history;
+  int statScore;
   int moveCount;
+  bool ttCapture;
+  int rHist;
+  Depth newDepth;
+  uint8_t forcedMove;
+  uint8_t forcingTree;
 };
 
 
@@ -56,11 +61,12 @@ struct Stack {
 struct RootMove {
 
   explicit RootMove(Move m) : pv(1, m) {}
-
-  bool operator<(const RootMove& m) const {
-    return m.score != score ? m.score < score : m.previousScore < previousScore; } // Descending sort
-  bool operator==(const Move& m) const { return pv[0] == m; }
   bool extract_ponder_from_tt(Position& pos);
+  bool operator==(const Move& m) const { return pv[0] == m; }
+  bool operator<(const RootMove& m) const { // Sort in descending order
+    return m.score != score ? m.score < score
+                            : m.previousScore < previousScore;
+  }
 
   Value score = -VALUE_INFINITE;
   Value previousScore = -VALUE_INFINITE;

@@ -305,6 +305,14 @@ class ControlPosicion:
     def siTerminada(self):
         return self.setLCE() == 0
 
+    def valor_material(self):
+        valor = 0
+        d = { "R": 5, "Q": 10, "B": 3, "N": 3, "P": 1, "K": 0 }
+        for v in self.casillas.itervalues():
+            if v:
+                valor += d[v.upper()]
+        return valor
+
     def siFaltaMaterial(self):
         # Rey y Rey
         # Rey + Caballo y Rey

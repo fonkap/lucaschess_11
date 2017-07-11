@@ -806,7 +806,7 @@ class AperturasPersonales(QTVarios.WDialogo):
 
         self.procesador.procesador = self.procesador  # ya que editaVariante espera un gestor
 
-        resp = Variantes.editaVariante(self.procesador, self.procesador, fen, pgn, titulo=nombre)
+        resp = Variantes.editaVariante(self.procesador, self.procesador, fen, pgn, titulo=nombre, siBlancasAbajo=True)
 
         if resp:
             pgn, a1h8 = resp

@@ -1450,7 +1450,7 @@ class Gestor:
     def showAnalisis(self):
         um = self.procesador.unMomento()
         alm = Histogram.genHistograms(self.partida, self.configuracion.centipawns)
-        alm.indexesHTML, alm.indexesRAW, alm.eloW, alm.eloB, alm.eloT = AnalisisIndexes.genIndexes(self.partida, alm)
+        alm.indexesHTML, alm.indexesRAW, alm.eloW, alm.eloB, alm.eloT = AnalisisIndexes.genIndexes(self.procesador.configuracion, self.partida, alm)
         um.final()
         PantallaAnalisis.showGraph(self.pantalla, self, alm, Analisis.muestraAnalisis)
 

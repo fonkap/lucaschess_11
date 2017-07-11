@@ -115,6 +115,7 @@ class GestorChallenge101:
                 self.st_randoms.add(random_pos)
                 break
         self.fen, self.result, self.pgn_result, self.pgn, self.difficult = self.li_lineas_posicion[random_pos].strip().split("|")
+        self.difficult = int(self.difficult)
 
         self.cp = ControlPosicion.ControlPosicion()
         self.cp.leeFen(self.fen)
@@ -128,7 +129,7 @@ class GestorChallenge101:
         self.tablero.ponIndicador(self.siBlancas)
 
         self.intentos = 0
-        self.max_intentos = int(self.difficult)/2+4
+        self.max_intentos = (self.difficult+1)/2+4
         self.iniTime = time.time()
 
         self.savePosition()

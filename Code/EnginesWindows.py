@@ -171,15 +171,16 @@ def leeRivales():
     cm.path = "gaviota-1.0-win32.exe"
     cm.elo = 2950
     cm.ponMultiPV(20, 32)
+    cm.ordenUCI("Log", "false")
     mas(cm)
 
-    cm = ConfigMotor("komodo", "Don Dailey, Larry Kaufman, Mark Lefler", "8 32bit", "http://komodochess.com/")
-    cm.path = "komodo-8-32bit.exe"
-    cm.path_64 = "komodo-8-64bit.exe", "8 64bit"
+    cm = ConfigMotor("komodo", "Don Dailey, Larry Kaufman, Mark Lefler", "9.02 32bit", "http://komodochess.com/")
+    cm.path = "komodo-9.02-32bit.exe"
+    cm.path_64 = "komodo-9.02-64bit.exe", "9.02 64bit"
     cm.ordenUCI("Ponder", "false")
     cm.ordenUCI("Hash", "64")
-    cm.elo = 3181
-    cm.ponMultiPV(20, 99)
+    cm.elo = 3240
+    cm.ponMultiPV(20, 218)
     mas(cm)
 
     cm = ConfigMotor("rybka", "Vasik Rajlich", "2.3.2a 32-bit", "http://rybkachess.com/")
@@ -217,11 +218,12 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.3 32bit", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017_v23_x32_old.exe"
-    cm.path_64 = "McBrain_2017_v23_x64_bmi2.exe", "2.3 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.6 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain_2017_v26_x32_old.exe"
+    cm.path_64 = "McBrain_2017_v26_x64_bmi2.exe", "2.6 64bit bmi2"
     cm.elo = 3200
-    cm.ordenUCI("Tactical", "8")
+    cm.ordenUCI("Respect", "30")
+    cm.ordenUCI("MateFinder", "true")
     cm.ordenUCI("Hash", "64")
     cm.ordenUCI("Threads", "1")
     cm.ponMultiPV(20, 256)
@@ -341,7 +343,7 @@ def dicMotoresFixedElo():
     for nm, desde, hasta in (
             ("rodent", 600, 2600),
             ("amyan", 1000, 2400),
-            ("mcbrain", 1200, 2800),
+            ("mcbrain", 1500, 2800),
             ("rhetoric", 1300, 2600),
             ("cheng", 800, 2500),
             ("greko", 1600, 2400),
@@ -355,8 +357,6 @@ def dicMotoresFixedElo():
             cm = d[nm].clona()
             if elo not in dic:
                 dic[elo] = []
-            if nm == "mcbrain":
-                cm.removeUCI("Tactical")
             cm.ordenUCI("UCI_Elo", str(elo))
             cm.ordenUCI("UCI_LimitStrength", "true")
             cm.nombre += " (%d)" % elo

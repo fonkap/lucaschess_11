@@ -232,7 +232,14 @@ class ConfigMotorBase:
 
     def actMultiPV(self, xMultiPV):
         if xMultiPV == "PD":
-            self.multiPV = min(self.maxMultiPV, 10)
+            multiPV = min(self.maxMultiPV, 10)
+            multiPV = max(multiPV, self.multiPV)
+            for comando, valor in self.liUCI:
+                if comando == "MultiPV":
+                    multiPV = int(valor)
+                    break
+            self.multiPV = multiPV
+
         elif xMultiPV == "MX":
             self.multiPV = self.maxMultiPV
         else:

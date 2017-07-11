@@ -47,7 +47,7 @@ import threading
 import collections
 
 
-class EnginePOP(object):
+class Engine(object):
     def __init__(self, exe, priority, args):
         self.pid = None
         self.exe = os.path.abspath(exe)
