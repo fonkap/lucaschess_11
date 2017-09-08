@@ -3,6 +3,7 @@ import time
 
 import LCEngine
 
+from Code import Util
 from Code import Books
 from Code import ControlPosicion
 from Code import Gestor
@@ -20,14 +21,23 @@ from Code.Constantes import *
 class GR_Engine:
     def __init__(self, procesador, nlevel):
         self._label = "%s - %s %d" % (_("Engine"), _("Level"), nlevel)
+        self.configuracion = procesador.configuracion
         self.level = nlevel
         if nlevel == 0:
             self.gestor = None
             self._nombre = self._label
         else:
             dEngines = self.elos()
-            nom_engine, depth, elo = random.choice(dEngines[nlevel])
-            rival = procesador.configuracion.buscaRival(nom_engine)
+            x = +1 if nlevel < 6 else -1
+            while True:
+                if len(dEngines[nlevel]) > 0:
+                    nom_engine, depth, elo = random.choice(dEngines[nlevel])
+                    break
+                else:
+                    nlevel += x
+                    if nlevel > 6:
+                        nlevel = 1
+            rival = self.configuracion.buscaRival(nom_engine)
             self.gestor = procesador.creaGestorMotor(rival, None, depth)
             self._nombre = "%s %s %d" % (rival.nombre, _("Depth"), depth)
             self._label += "\n%s\n%s: %d" % (self._nombre, _("Estimated elo"), elo)
@@ -99,7 +109,8 @@ toga 1236 1495 1928 2132"""
                 tp = 6
             else:
                 return
-            d[tp].append((engine, depth, elo))
+            if engine in self.configuracion.dicRivales:
+                d[tp].append((engine, depth, elo))
 
         for line in x.split("\n"):
             engine, d1, d2, d3, d4 = line.split(" ")
@@ -335,6 +346,8 @@ class GestorRoutesPlay(GestorRoutes):
 
     def actualPGN(self):
         resp = '[Event "%s"]\n' % _("Transsiberian Railway")
+        hoy = Util.hoy()
+        resp += '[Date "%d-%d-%d"]\n' % (hoy.year, hoy.month, hoy.day)
 
         lbe = self.engine.nombre
 

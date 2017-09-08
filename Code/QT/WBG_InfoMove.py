@@ -50,7 +50,7 @@ class WInfomove(QtGui.QWidget):
         self.tablero.crea()
         self.tablero.ponerPiezasAbajo(True)
         self.tablero.ponMensajero(self.mueveHumano)
-        self.tablero.si_borraMovibles = False
+        # self.tablero.si_borraMovibles = False
         self.cpActual = ControlPosicion.ControlPosicion()
         self.historia = None
         self.posHistoria = None
@@ -172,7 +172,7 @@ class WInfomove(QtGui.QWidget):
             self.cbValoracion.ponValor(move.nag())
             self.cbVentaja.ponValor(move.adv())
             self.emComentario.ponTexto(move.comment())
-            self.tablero.importaMovibles(move.graphics())
+            # self.tablero.importaMovibles(move.graphics())
 
     def camposEdicion(self, siVisible):
         if self.siMoves:
@@ -183,7 +183,6 @@ class WInfomove(QtGui.QWidget):
             self.emComentario.setVisible(siVisible)
 
     def mueveHumano(self, desde, hasta, coronacion=""):
-
         if self.cpActual.siPeonCoronando(desde, hasta):
             coronacion = self.tablero.peonCoronando(self.cpActual.siBlancas)
             if coronacion is None:

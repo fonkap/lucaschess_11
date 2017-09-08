@@ -50,6 +50,7 @@ class WGames(QtGui.QWidget):
         for clave in liBasic:
             rotulo = TrListas.pgnLabel(clave)
             oColumnas.nueva(clave, rotulo, ancho, siCentrado=True)
+        oColumnas.nueva("rowid", _("Row ID"), 70, siCentrado=True)
 
         self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True, xid="wgames")
 
@@ -68,6 +69,8 @@ class WGames(QtGui.QWidget):
             (_("Filter"), Iconos.Filtrar(), self.tw_filtrar), None,
             (_("Remove"), Iconos.Borrar(), self.tw_borrar),None,
             (_("Utilities"), Iconos.Utilidades(), self.tw_utilities), None,
+            (_("Move up"), Iconos.Arriba(), self.tw_up), None,
+            (_("Move down"), Iconos.Abajo(), self.tw_down), None,
         ]
 
         self.tbWork = Controles.TBrutina(self, liAccionesWork, tamIcon=24)
@@ -134,6 +137,8 @@ class WGames(QtGui.QWidget):
         clave = ocol.clave
         if clave == "numero":
             return str(nfila + 1)
+        elif clave == "rowid":
+            return str(self.dbGames.getROWID(nfila))
         return self.dbGames.field(nfila, clave)
 
     def gridDobleClick(self, grid, fil, col):
@@ -215,6 +220,20 @@ class WGames(QtGui.QWidget):
 
     def tw_gotop(self):
         self.grid.gotop()
+
+    def tw_up(self):
+        fila = self.grid.recno()
+        filaNueva = self.dbGames.intercambia(fila, True)
+        if filaNueva is not None:
+            self.grid.goto(filaNueva, 0)
+            self.grid.refresh()
+
+    def tw_down(self):
+        fila = self.grid.recno()
+        filaNueva = self.dbGames.intercambia(fila, False)
+        if filaNueva is not None:
+            self.grid.goto(filaNueva, 0)
+            self.grid.refresh()
 
     def editar(self, recno, partidaCompleta):
         partidaCompleta = self.procesador.gestorPartida(self, partidaCompleta, True)

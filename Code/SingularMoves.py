@@ -3,7 +3,6 @@ import random
 from Code import Util
 
 
-
 class SingularMoves:
     def __init__(self, fichero_db):
         fichero_tactic = "./IntFiles/tactic0.bm"
@@ -37,7 +36,6 @@ class SingularMoves:
         self.li_bloque = li
         self.registro = None
         self.current_key = None
-
 
     def repite(self, fila):
         self.current_key = self.db_keys[fila]
@@ -73,7 +71,7 @@ class SingularMoves:
             self.graba_repeticion()
 
     def graba_repeticion(self):
-        repeticiones = self.registro.get("REPETITIONS", [])
+        repeticiones = self.registro.get("REPETICIONES", [])
         rep = {}
         rep["DATETIME"] = datetime.datetime.now()
         strength = rep["STRENGTH"] = self.media()
@@ -88,7 +86,6 @@ class SingularMoves:
         best = self.registro.get("BEST", 0.00)
         if best < strength:
             self.registro["BEST"] = strength
-        self.db[self.current_key] = self.registro
 
     def graba_nuevo(self):
         hoy = datetime.datetime.now()

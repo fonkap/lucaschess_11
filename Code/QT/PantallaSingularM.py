@@ -30,9 +30,9 @@ class WSingularM(QTVarios.WDialogo):
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("N", _("N."), 60, siCentrado=True)
         oColumnas.nueva("DATE", _("Date"), 120, siCentrado=True)
-        oColumnas.nueva("STRENGTH", _("Score"), 80, siCentrado=True)
+        oColumnas.nueva("STRENGTH", _("Strength"), 80, siCentrado=True)
         oColumnas.nueva("REPETITIONS", _("Repetitions"), 80, siCentrado=True)
-        oColumnas.nueva("BEST", _("Highest score"), 120, siCentrado=True)
+        oColumnas.nueva("BEST", _("Best strength"), 120, siCentrado=True)
         self.grid = grid = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True)
         grid.coloresAlternados()
         self.registrarGrid(grid)
@@ -82,13 +82,10 @@ class WSingularM(QTVarios.WDialogo):
         if col == "STRENGTH":
             return "%0.2f" % registro.get("STRENGTH", 0.0)
         if col == "BEST":
-            best = registro.get("BEST", None)
-            return "%0.2f" % best if best else ""
+            return registro.get("BEST", "")
         if col == "REPETITIONS":
-            rep = registro.get("REPETITIONS", [])
-            return "%d" % len(rep)
+            return registro.get("REPETITIONS", "")
 
     def gridDobleClick(self, grid, fila, columna):
         self.repetir()
-
 

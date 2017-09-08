@@ -2278,3 +2278,27 @@ def pmSingular():
 def Singular():
     return QtGui.QIcon(pmSingular())
 
+def pmScript():
+    return PM(914860,915429)
+
+def Script():
+    return QtGui.QIcon(pmScript())
+
+def pmScriptFree():
+    return PM(915429,915989)
+
+def ScriptFree():
+    return QtGui.QIcon(pmScriptFree())
+
+def pmTexto():
+    return PM(915989,918834)
+
+def Texto():
+    return QtGui.QIcon(pmTexto())
+
+def pmLampara():
+    return PM(918834,919543)
+
+def Lampara():
+    return QtGui.QIcon(pmLampara())
+

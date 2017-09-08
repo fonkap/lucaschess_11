@@ -118,6 +118,56 @@ class DBgamesFEN():
             self.cache = ncache
         self.cache[rowid] = reg
 
+    def intercambia(self, nfila, siUP):
+        rowid = self.liRowids[nfila]
+        if siUP:
+            # buscamos el mayor, menor que rowid
+            filOther = None
+            rowidOther = -1
+            for fil0, rowid0 in enumerate(self.liRowids):
+                if rowid0 < rowid:
+                    if rowid0 > rowidOther:
+                        filOther = fil0
+                        rowidOther = rowid0
+            if filOther is None:
+                return None
+        else:
+            # buscamos el menor, mayor que rowid
+            filOther = None
+            rowidOther = 999999999999
+            for fil0, rowid0 in enumerate(self.liRowids):
+                if rowid0 > rowid:
+                    if rowid0 < rowidOther:
+                        filOther = fil0
+                        rowidOther = rowid0
+            if filOther is None:
+                return None
+        # Hay que intercambiar rowid, con rowidOther
+        selectAll = ",".join(self.liCamposAll)
+        self._cursor.execute("SELECT %s FROM GAMES WHERE rowid =%d" % (selectAll, rowid))
+        reg = self._cursor.fetchone()
+        self._cursor.execute("SELECT %s FROM GAMES WHERE rowid =%d" % (selectAll, rowidOther))
+        regOther = self._cursor.fetchone()
+
+        # Problema con error por FEN unico cuando se intercambia, en RowidOther ponemos un fen ficticio
+        sql = "UPDATE GAMES SET FEN=? WHERE ROWID = %d" % rowidOther
+        self._cursor.execute(sql, ("?????",))
+
+        updateAll = ",".join(["%s=?"%campo for campo in self.liCamposAll])
+        sql = "UPDATE GAMES SET %s" % updateAll + " WHERE ROWID = %d"
+
+        self._cursor.execute(sql % rowid, regOther)
+        self._cursor.execute(sql % rowidOther, reg)
+        self._conexion.commit()
+
+        self.addcache(rowid, regOther)
+        self.addcache(rowidOther, reg)
+
+        return filOther
+
+    def getROWID(self, nfila):
+        return self.liRowids[nfila]
+
     def field(self, nfila, name):
         rowid = self.liRowids[nfila]
         if rowid not in self.cache:

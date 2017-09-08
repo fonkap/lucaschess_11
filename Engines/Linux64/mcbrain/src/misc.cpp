@@ -51,7 +51,7 @@ namespace {
 
 /// Version number. If Version is left empty, then compile date in the format
 /// DD-MM-YY and show in engine_info.
-const string Version = "2.6";
+const string Version = "v2.7";
 
 /// Our fancy logging facility. The trick here is to replace cin.rdbuf() and
 /// cout.rdbuf() with two Tie objects that tie cin and cout to a file stream. We
@@ -63,10 +63,10 @@ struct Tie: public streambuf { // MSVC requires split streambuf for cin and cout
 
   Tie(streambuf* b, streambuf* l) : buf(b), logBuf(l) {}
 
-  int sync() { return logBuf->pubsync(), buf->pubsync(); }
-  int overflow(int c) { return log(buf->sputc((char)c), "<< "); }
-  int underflow() { return buf->sgetc(); }
-  int uflow() { return log(buf->sbumpc(), ">> "); }
+  int sync() override { return logBuf->pubsync(), buf->pubsync(); }
+  int overflow(int c) override { return log(buf->sputc((char)c), "<< "); }
+  int underflow() override { return buf->sgetc(); }
+  int uflow() override { return log(buf->sbumpc(), ">> "); }
 
   streambuf *buf, *logBuf;
 
@@ -133,7 +133,7 @@ const string engine_info(bool to_uci) {
   ss << (Is64Bit ? " 64" : "")
      << (HasPext ? " BMI2" : (HasPopCnt ? " POPCNT" : ""))
      << (to_uci  ? "\nid author ": " by ")
-     << "M. Byrne, based on Stockfish";
+     << "M. Byrne based on Stockfish";
 
   return ss.str();
 }

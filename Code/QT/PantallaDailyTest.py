@@ -273,10 +273,10 @@ class WDailyTest(QTVarios.WDialogo):
     def procesarTB(self):
         accion = self.sender().clave
         if accion == "abandonar":
-            if QTUtil2.pregunta(self, _("Are you sure you want to resign")):
+            if QTUtil2.pregunta(self, _("Are you sure you want to resign?")):
                 self.terminar()
         elif accion == "cancelar":
-            if QTUtil2.pregunta(self, _("Are you sure you want to cancel")):
+            if QTUtil2.pregunta(self, _("Are you sure you want to cancel?")):
                 self.terminar()
         elif accion in "terminar":
             self.terminar()

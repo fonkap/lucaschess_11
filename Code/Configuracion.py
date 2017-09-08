@@ -175,6 +175,8 @@ class Configuracion:
         self.grupos.nuevo("Alaric", 2600, 2799, 3600)
         self.grupos.nuevo("Rybka", 2800, 3400, 6000)
 
+        self._dbFEN = None
+
     def start(self, version):
         self.lee()
         if version != self.version:
@@ -241,6 +243,7 @@ class Configuracion:
         self.ficheroPuente = "%s/bridge.db" % self.carpeta
         self.ficheroMoves = "%s/moves.dbl" % self.carpeta
         self.ficheroRecursos = "%s/recursos.dbl" % self.carpeta
+        self.ficheroFEN = self.ficheroRecursos
         self.ficheroConfTableros = "%s/confTableros.pk" % self.carpeta
         self.ficheroBoxing = "%s/boxing.pk" % self.carpeta
         self.ficheroTrainings = "%s/trainings.pk" % self.carpeta
@@ -480,8 +483,9 @@ class Configuracion:
         dic["OPACITYTOOLBOARD"] = self.opacityToolBoard
         dic["POSITIONTOOLBOARD"] = self.positionToolBoard
 
-
         dic["FICHEROBMT"] = self.ficheroBMT
+        dic["FICHEROFEN"] = self.ficheroFEN
+
 
         dic["FAMILIA"] = self.familia
 
@@ -640,6 +644,7 @@ class Configuracion:
                 self.tipoMaterial = dg("TIPOMATERIAL", self.tipoMaterial)
 
                 self.ficheroBMT = dg("FICHEROBMT", self.ficheroBMT)
+                self.ficheroFEN = dg("FICHEROFEN", self.ficheroFEN)
 
                 self.liTrasteros = dg("TRASTEROS", [])
                 self.liFavoritos = dg("FAVORITOS", [])
@@ -853,3 +858,26 @@ class Configuracion:
 
     def dicMotoresFixedElo(self):
         return Engines.dicMotoresFixedElo()
+
+    def fich_dbFEN(self):
+        if self._dbFEN is None:
+            self._dbFEN = Util.DicSQL(self.ficheroFEN, tabla="FEN")
+        return self._dbFEN
+
+    def close_dbFEN(self):
+        if self._dbFEN is not None:
+            self._dbFEN.close()
+            self._dbFEN = None
+
+    def dbFEN(self, fenM2):
+        dbFEN = self.fich_dbFEN()
+        return dbFEN[fenM2]
+
+    def esta_dbFEN(self, fenM2):
+        dbFEN = self.fich_dbFEN()
+        return fenM2 in dbFEN
+
+    def save_dbFEN(self, fenM2, data):
+        dbFEN = self.fich_dbFEN()
+        dbFEN[fenM2] = data
+

@@ -98,10 +98,24 @@ class GestorChallenge101:
         self.puntos_ultimo = 0
         self.pendientes = 10
         self.st_randoms = set()
+        self.st_lines = set() # para no salvar mas de una vez una linea
         self.key = Util.hoy()
         random.seed()
 
         fmt = "./IntFiles/tactic0.bm"
+
+        # Test if trainings exist
+        # folder = "Trainings/Challenge101"
+        # if not os.path.isdir(folder):
+            # os.mkdir(folder)
+            # temp = "Trainings/Challenge101/Difficulty %s.fns"
+            # with open(fmt) as f:
+                # for linea in f:
+                    # fen, result, pgn_result, pgn, difficult = linea.strip().split("|")
+                    # line = "%s|Challenge 101|%s|%s\n" %(fen, pgn_result, pgn)
+                    # with open(temp % difficult, "ab") as q:
+                        # q.write(line)
+
         with open(fmt) as f:
             self.li_lineas_posicion = [linea for linea in f if linea.strip()]
 
@@ -131,8 +145,6 @@ class GestorChallenge101:
         self.intentos = 0
         self.max_intentos = (self.difficult+1)/2+4
         self.iniTime = time.time()
-
-        self.savePosition()
 
     def lee_results(self):
         dic = self.configuracion.leeVariables(self.cod_variables)
@@ -219,6 +231,7 @@ class GestorChallenge101:
         return not (resp == "close" or self.pendientes == 0)
 
     def mueveHumano(self, desde, hasta, coronacion=None):
+        self.savePosition() # Solo cuando ha hecho un intento
         self.puntos_ultimo = 0
         if desde + hasta == self.result: # No hay coronaciones
             tm = time.time() - self.iniTime
@@ -228,7 +241,8 @@ class GestorChallenge101:
             self.tablero.ponFlechaSC(desde, hasta)
 
             puntos = int(1000 - (1000/self.max_intentos)*self.intentos)
-            puntos -= int((tm-5.0)*5.0/3.0)
+            if tm > 5.0:
+                puntos -= int((tm-5.0)*5.0/3.0)
 
             if puntos > 0:
                 self.puntos_totales += puntos
@@ -252,11 +266,17 @@ class GestorChallenge101:
         return False
 
     def savePosition(self):
-        f = codecs.open(self.configuracion.ficheroPresentationPositions, "ab", "utf-8")
         line = "%s|%s|%s|%s\n" %(self.fen, str(self.key)[:19], self.pgn_result, self.pgn)
-        f.write(line)
-        f.close()
-        self.procesador.entrenamientos.menu = None
+        if line not in self.st_lines:
+            self.st_lines.add(line)
+            fich = self.configuracion.ficheroPresentationPositions
+            existe = Util.existeFichero(fich)
+            f = codecs.open(fich, "ab", "utf-8")
+            line = "%s|%s|%s|%s\n" %(self.fen, str(self.key)[:19], self.pgn_result, self.pgn)
+            f.write(line)
+            f.close()
+            if not existe:
+                self.procesador.entrenamientos.menu = None
 
 
 def basico(procesador, hx, factor=1.0):

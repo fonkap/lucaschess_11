@@ -55,11 +55,11 @@ class WAnalisisGraph(QTVarios.WDialogo):
         anchoGrid = max(gridB.fixMinWidth(), anchoGrid)
         self.registrarGrid(gridB)
 
-        lbIndexes = Controles.LB(self, alm.indexesHTML)
+        self.emIndexes = Controles.EM(self, alm.indexesHTML).soloLectura()
         pbSave = Controles.PB(self, _("Save to game comments"), self.saveIndexes, plano=False)
         pbSave.ponIcono(Iconos.Grabar())
         ly0 = Colocacion.H().control(pbSave).relleno()
-        ly = Colocacion.V().control(lbIndexes).otro(ly0).relleno()
+        ly = Colocacion.V().control(self.emIndexes).otro(ly0).relleno()
         wIdx = QtGui.QWidget()
         wIdx.setLayout(ly)
 
@@ -108,14 +108,16 @@ class WAnalisisGraph(QTVarios.WDialogo):
         layout.otroc(lh, 2, 0, 1, 3)
         self.setLayout(layout)
 
-        self.recuperarVideo(siTam=False)
+        self.recuperarVideo()
 
         gridAll.gotop()
         gridB.gotop()
         gridW.gotop()
         self.gridBotonIzquierdo(gridAll, 0, None)
-        self.tabGrid.setFixedHeight(self.tablero.height())
+        th = self.tablero.height()
+        self.tabGrid.setFixedHeight(th)
         self.adjustSize()
+        self.emIndexes.setFixedHeight(th - 72)
 
     def valorShowLostPoints(self):
         # Llamada desde histogram
@@ -134,7 +136,9 @@ class WAnalisisGraph(QTVarios.WDialogo):
         self.tabChanged(self.tabGrid.currentIndex())
 
     def tableroSizeChanged(self):
-        self.tabGrid.setFixedHeight(self.tablero.height())
+        th = self.tablero.height()
+        self.tabGrid.setFixedHeight(th)
+        self.emIndexes.setFixedHeight(th - 72)
         self.adjustSize()
         self.cambiadoShow()
 

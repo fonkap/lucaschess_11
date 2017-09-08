@@ -19,6 +19,7 @@ from Code.QT import TabMarcos
 from Code.QT import TabMarker
 from Code.QT import TabSVG
 from Code.QT import TabTipos
+from Code import TabVisual
 from Code import Util
 from Code import VarGen
 from Code.Constantes import *
@@ -31,7 +32,7 @@ class RegKB:
 
 
 class Tablero(QtGui.QGraphicsView):
-    def __init__(self, parent, confTablero, siMenuVisual=True):
+    def __init__(self, parent, confTablero, siMenuVisual=True, siDirector=True):
         super(Tablero, self).__init__(None)
 
         self.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing | QtGui.QPainter.SmoothPixmapTransform)
@@ -45,14 +46,13 @@ class Tablero(QtGui.QGraphicsView):
         self.setScene(self.escena)
         self.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
 
-        self.liMouse = []
-        self.dicF1_F10 = {}
-
         self.pantalla = parent
 
         self.siMenuVisual = siMenuVisual
-
-        self.director = None
+        self.siDirector = siDirector and siMenuVisual
+        self.dirvisual = None
+        self.guion = None
+        self.lastFenM2 = ""
 
         self.confTablero = confTablero
 
@@ -82,22 +82,6 @@ class Tablero(QtGui.QGraphicsView):
         self.kb_buffer = []
 
     def exec_kb_buffer(self, key, flags):
-        if Qt.Key_F1 <= key <= Qt.Key_F10:
-            f = key - Qt.Key_F1 + 1
-            if self.liMouse:
-                if len(self.liMouse) >= 2:
-                    desde = self.liMouse[-2]
-                    hasta = self.liMouse[-1]
-                else:
-                    desde = self.liMouse[-1]
-                    hasta = None
-
-                # Miramos si estan las F1..F10
-                # Sino las creamos
-                self.lanzaFuncion(f - 1, desde, hasta)
-            self.init_kb_buffer()
-            return
-
         if key == Qt.Key_Escape:
             self.init_kb_buffer()
             return
@@ -119,11 +103,6 @@ class Tablero(QtGui.QGraphicsView):
         if siCtrl and key == Qt.Key_C:
             QTUtil.ponPortapapeles(self.ultPosicion.fen())
             QTUtil2.mensaje(self, _("FEN is in clipboard"))
-
-        # ALT-D -> Director
-        elif siAlt and key == Qt.Key_D:
-            if not self.siTableroDirector():
-                self.lanzaDirector()
 
         # ALT-F -> Rota tablero
         elif siAlt and key == Qt.Key_F:
@@ -231,6 +210,14 @@ class Tablero(QtGui.QGraphicsView):
 
     def keyPressEvent(self, event):
         k = event.key()
+
+        if Qt.Key_F1 <= k <= Qt.Key_F10:
+            if self.dirvisual and self.dirvisual.keyPressEvent(event):
+                return
+            if self.lanzaDirector():
+                self.dirvisual.keyPressEvent(event)
+            return
+
         m = int(event.modifiers())
         event.ignore()
         self.exec_kb_buffer(k, m)
@@ -592,6 +579,25 @@ class Tablero(QtGui.QGraphicsView):
             self.indicadorSC_menu = TabElementos.PixmapSC(self.escena, indicador_menu, pixmap=Iconos.pmSettings(), rutina=self.lanzaMenuVisual)
             self.indicadorSC_menu.setOpacity(0.50 if self.configuracion.opacityToolBoard == 10 else 0.01)
 
+            if self.siDirector:
+                script = TabTipos.Imagen()
+                script.posicion.x = pFrontera.x - ancho + ancho
+                if self.configuracion.positionToolBoard == "B":
+                    script.posicion.y = pFrontera.y + pFrontera.alto + 2 * gap
+                else:
+                    script.posicion.y = 0
+
+                script.posicion.ancho = script.posicion.alto = ancho - 2*gap
+                script.posicion.orden = 2
+                script.color = self.colorFrontera
+                script.grosor = 1
+                script.tipo = 1
+                script.sur = indicador.posicion.y
+                script.norte = gap / 2
+                self.scriptSC_menu = TabElementos.PixmapSC(self.escena, script, pixmap=Iconos.pmLampara(), rutina=self.lanzaGuion)
+                self.scriptSC_menu.hide()
+                self.scriptSC_menu.setOpacity(0.70)
+
         self.init_kb_buffer()
 
     def showKeys(self):
@@ -642,22 +648,12 @@ class Tablero(QtGui.QGraphicsView):
         if not self.siMaximizado():
             menu.opcion("size", _("Change board size"), Iconos.TamTablero())
             menu.separador()
-        # menu.opcion("foto", _("Board -> Image"), Iconos.Camara())
-        # menu.separador()
 
         menu.opcion("def_todo", _("Default"), Iconos.Defecto())
-        # smenu = menu.submenu(_("Default"), Iconos.Defecto())
-        # smenu.opcion("def_todo", _("All"), Iconos.Generar())
-        # smenu.separador()
-        # smenu.opcion("def_colores", _("Colors"), Iconos.Colores())
-        # smenu.separador()
-        # smenu.opcion("def_size", _("Size"), Iconos.TamTablero())
-        # smenu.separador()
-        # smenu.opcion("def_resto", _("The other"), Iconos.PuntoVerde())
 
         menu.separador()
-        if not self.siTableroDirector():
-            menu.opcion("director", _("Director") + " [%s-D]" % _("ALT"), Iconos.Director())
+        if self.siDirector:
+            menu.opcion("director", _("Director") + " [F1..F10]", Iconos.Director())
             menu.separador()
 
         if self.siPosibleRotarTablero:
@@ -720,13 +716,6 @@ class Tablero(QtGui.QGraphicsView):
         elif resp == "director":
             self.lanzaDirector()
 
-        # elif resp == "foto":
-        #     import Code.QT.PantallaTabVisual as PantallaTabVisual
-
-        #     w = PantallaTabVisual.WTabVisual(self)
-        #     w.exec_()
-        #     QTUtil.refreshGUI()
-
         elif resp == "keys":
             self.showKeys()
 
@@ -735,32 +724,34 @@ class Tablero(QtGui.QGraphicsView):
                 self.confTablero = self.configuracion.resetConfTablero(self.confTablero.id(), self.confTablero.anchoPieza())
                 self.reset(self.confTablero)
 
-            # else:
-            #     self.confTablero.porDefecto(resp[4:])
-            #     self.confTablero.guardaEnDisco()
-            # ap, apc = self.siActivasPiezas, self.siActivasPiezasColor
-            # siFlecha = self.flechaSC is not None
-            # self.reset(self.confTablero)
-            # if ap:
-            #     self.activaColor(apc)
-            #     self.ponIndicador(apc)
-            #
-            # if siFlecha:
-            #     # self.ponFlechaSC( self.ultMovFlecha[0], self.ultMovFlecha[1])
-            #     self.resetFlechaSC()
-
     def lanzaDirector(self):
-        if self.siMenuVisual:
-            if self.director:
-                self.director.show()
+        if self.siDirector:
+            if self.dirvisual:
+                self.dirvisual.terminar()
+                self.dirvisual = None
+                return False
             else:
-                from Code.QT import PantallaTabDirector
-                self.director = PantallaTabDirector.WTabDirector(self)
-                self.director.show()
+                from Code.QT import PantallaTabDirVisual
 
-    def cierraDirector(self):
-        self.director = None
-        self.dicF1_F10 = {}  # Para que relea si se usa directamente
+                self.dirvisual = PantallaTabDirVisual.DirVisual(self)
+            return True
+        else:
+            return False
+
+    def cierraGuion(self):
+        if self.guion is not None:
+            self.guion.cierraPizarra()
+            self.guion.cerrado = True
+            self.borraMovibles()
+            self.guion = None
+
+    def lanzaGuion(self):
+        if self.guion is not None:
+            self.cierraGuion()
+        else:
+            self.guion = TabVisual.Guion(self)
+            self.guion.recupera()
+            self.guion.play()
 
     def cambiaSize(self):
         imp = WTamTablero(self)
@@ -809,11 +800,9 @@ class Tablero(QtGui.QGraphicsView):
             del item
         self.crea()
 
-    def resetMouse(self):
-        self.liMouse = []
-        self.init_kb_buffer()
-
     def mousePressEvent(self, event):
+        if self.dirvisual and self.dirvisual.mousePressEvent(event):
+            return
         QtGui.QGraphicsView.mousePressEvent(self, event)
         pos = event.pos()
         x = pos.x()
@@ -846,8 +835,6 @@ class Tablero(QtGui.QGraphicsView):
         f = chr(48 + yc)
         c = chr(96 + xc)
         a1h8 = c + f
-
-        self.liMouse.append(a1h8)
 
         if self.atajosRaton:
             self.atajosRaton(a1h8)
@@ -930,7 +917,14 @@ class Tablero(QtGui.QGraphicsView):
             self.pendingRelease.append(svg)
         self.escena.update()
 
+    def mouseMoveEvent(self, event):
+        if self.dirvisual and self.dirvisual.mouseMoveEvent(event):
+            return
+        QtGui.QGraphicsView.mouseMoveEvent(self, event)
+
     def mouseReleaseEvent(self, event):
+        if self.dirvisual and self.dirvisual.mouseReleaseEvent(event):
+            return
         if self.pendingRelease:
             for objeto in self.pendingRelease:
                 objeto.hide()
@@ -963,88 +957,50 @@ class Tablero(QtGui.QGraphicsView):
         elif hasattr(self.pantalla, "tableroWheelEvent"):
             self.pantalla.tableroWheelEvent(self, event.delta() < 0)
 
-    def siTableroDirector(self):
-        return self.confTablero.id() == "Director"
-
-    def lanzaFuncion(self, func, desde, hasta):
-        if not self.dicF1_F10:
-            fdb = self.configuracion.ficheroRecursos
-            dbConfig = Util.DicSQL(fdb, tabla="Config")
-            dbFlechas = Util.DicSQL(fdb, tabla="Flechas")
-            dbMarcos = Util.DicSQL(fdb, tabla="Marcos")
-            dbSVGs = Util.DicSQL(fdb, tabla="SVGs")
-            li = dbConfig["DRAGBANDA"]
-            if li:
-                for tpid, funcion in li:
-                    tp = tpid[1]
-                    xid = tpid[3:]
-                    if tp == "F":
-                        regFlecha = dbFlechas[xid]
-                        if regFlecha is None:
-                            continue
-                        self.dicF1_F10[funcion] = tp, regFlecha
-                    elif tp == "M":
-                        regMarco = dbMarcos[xid]
-                        if regMarco is None:
-                            continue
-                        self.dicF1_F10[funcion] = tp, regMarco
-                    elif tp == "S":
-                        regSVG = dbSVGs[xid]
-                        if regSVG is None:
-                            continue
-                        self.dicF1_F10[funcion] = tp, regSVG
-            dbConfig.close()
-            dbFlechas.close()
-            dbMarcos.close()
-            dbSVGs.close()
-
-        if QtGui.QApplication.keyboardModifiers() == QtCore.Qt.ControlModifier:
-            if func == 0:  # ^F1 elimina el ultimo movible
-                li = self.dicMovibles.keys()
-                if li:
-                    self.borraMovible(self.dicMovibles[li[-1]])
-
-            elif func == 1:  # ^F2 elimina todos movibles
-                self.borraMovibles()
-
-        elif func in self.dicF1_F10:
-            tp, reg = self.dicF1_F10[func]
-            if not hasta:
-                a1h8 = desde + desde
-            else:
-                a1h8 = desde + hasta
-            reg.a1h8 = a1h8
-            if tp == "F":
-                self.creaFlecha(reg)
-            elif tp == "M":
-                self.creaMarco(reg)
-            elif tp == "S":
-                self.creaSVG(reg, siEditando=False)
-            elif tp == "X":
-                self.creaMarker(reg, siEditando=False)
-
     def ponMensajero(self, mensajero, atajosRaton=None):
+        if self.dirvisual:
+            self.dirvisual.cambiadoMensajero()
         self.mensajero = mensajero
         if atajosRaton:
             self.atajosRaton = atajosRaton
         self.init_kb_buffer()
 
+    def setUltPosicion(self, posicion):
+        self.cierraGuion()
+        self.ultPosicion = posicion
+
+        if self.siDirector:
+            fenM2 = posicion.fenM2()
+            if self.lastFenM2 != fenM2:
+                self.lastFenM2 = fenM2
+                if self.configuracion.esta_dbFEN(fenM2):
+                    self.scriptSC_menu.show()
+                else:
+                    self.scriptSC_menu.hide()
+
+
     def ponPosicion(self, posicion):
-        if self.director:
-            self.director.cambiadaPosicion(posicion)
+        if self.dirvisual:
+            self.dirvisual.cambiadaPosicionAntes()
 
         self.ponPosicionBase(posicion)
         if self.si_borraMovibles:
             self.borraMovibles()
 
-    def ponPosicionBase(self, posicion):
-        self.ultPosicion = posicion
-        self.siActivasPiezas = False
+        if self.dirvisual:
+            self.dirvisual.cambiadaPosicionDespues()
+
+    def removePieces(self):
         for x in self.liPiezas:
             if x[2]:
                 self.xremoveItem(x[1])
-
         self.liPiezas = []
+
+    def ponPosicionBase(self, posicion):
+        self.setUltPosicion(posicion)
+        self.siActivasPiezas = False
+        self.removePieces()
+
         casillas = posicion.casillas
         for k in casillas.keys():
             if casillas[k]:
@@ -1310,7 +1266,7 @@ class Tablero(QtGui.QGraphicsView):
                 piezaSC.setPos(x, y)
 
             # -CONTROL-
-            self.resetMouse()
+            self.init_kb_buffer()
 
         piezaSC.rehazPosicion()
         piezaSC.update()
@@ -1338,7 +1294,6 @@ class Tablero(QtGui.QGraphicsView):
         if self.flechaSC is None:
             self.flechaSC = self.creaFlechaSC(a1h8)
         self.flechaSC.show()
-        # self.ultMovFlecha = (desdeA1h8, hastaA1h8) # Lo usamos si se cambia la posicion del tablero
         self.flechaSC.ponA1H8(a1h8)
         self.flechaSC.update()
 
@@ -1392,7 +1347,6 @@ class Tablero(QtGui.QGraphicsView):
         QtCore.QTimer.singleShot(2000 if len(lista) > 1 else 1400, quitaFlechasTmp)
 
     def creaFlechaMov(self, desdeA1h8, hastaA1h8, modo):
-
         bf = TabTipos.Flecha()
         bf.trasparencia = 0.9
         bf.posicion.orden = kZvalue_pieza + 1
@@ -1747,6 +1701,44 @@ class Tablero(QtGui.QGraphicsView):
 
         return "/".join(lineas) + " " + resto
 
+    def copiaPosicionDe(self, otroTablero):
+        for x in self.liPiezas:
+            if x[2]:
+                self.xremoveItem(x[1])
+        self.liPiezas = []
+        for cpieza, piezaSC, siActiva in otroTablero.liPiezas:
+            if siActiva:
+                posicion = piezaSC.bloquePieza
+                f = posicion.fila
+                c = posicion.columna
+                posA1H8 = chr(c + 96) + str(f)
+                self.creaPieza(cpieza, posA1H8)
+
+        if not otroTablero.siBlancasAbajo:
+            self.rotaTablero()
+
+        if otroTablero.indicadorSC.isVisible():
+            bdOT = otroTablero.indicadorSC.bloqueDatos
+            siBlancas = bdOT.colorRelleno == otroTablero.colorBlancas
+            siIndicadorAbajo = bdOT.posicion.y == bdOT.sur
+
+            bd = self.indicadorSC.bloqueDatos
+            bd.posicion.y = bd.sur if siIndicadorAbajo else bd.norte
+            bd.colorRelleno = self.colorBlancas if siBlancas else self.colorNegras
+            self.indicadorSC.mostrar()
+
+        if otroTablero.flechaSC and otroTablero.flechaSC.isVisible():
+            a1h8 = otroTablero.flechaSC.bloqueDatos.a1h8
+            desdeA1h8, hastaA1h8 = a1h8[:2], a1h8[2:]
+            self.ponFlechaSC(desdeA1h8, hastaA1h8)
+
+        self.escena.update()
+        self.setFocus()
+
+    def terminar(self):
+        if self.dirvisual:
+            self.dirvisual.terminar()
+
 
 class WTamTablero(QtGui.QDialog):
     def __init__(self, tablero):
@@ -1986,198 +1978,3 @@ class TableroEstatico(Tablero):
         self.pantalla.pulsadaCelda(c + f)
 
         Tablero.mousePressEvent(self, event)
-
-
-class TableroVisual(Tablero):
-    EVENTO_DERECHO, EVENTO_DERECHO_PIEZA, EVENTO_DROP, EVENTO_BORRAR, EVENTO_FUNCION = range(5)
-
-    def __init__(self, parent, confTablero, siMenuVisual=True):
-        Tablero.__init__(self, parent, confTablero, siMenuVisual)
-        self.ultGuerra = "", None
-        self.dispatchEventos = None
-
-    def ponDispatchEventos(self, dispatch):
-        self.dispatchEventos = dispatch
-
-    def keyPressEvent(self, event):
-        k = event.key()
-        m = int(event.modifiers())
-        siCtrl = (m & QtCore.Qt.ControlModifier) > 0
-        if k == 67:  # C copiar tablero
-            self.salvaEnImagen(siCtrl=siCtrl)
-        elif k == 83:  # S copiar tablero en fichero
-            resp = QTUtil2.salvaFichero(self, _("File to save"), self.configuracion.dirSalvados,
-                                        "%s PNG (*.png)" % _("File"), False)
-            if resp:
-                self.salvaEnImagen(resp, "png", siCtrl=siCtrl)
-
-    def borraMovible(self, itemSC):
-        for k, uno in self.dicMovibles.items():
-            if uno == itemSC:
-                del self.dicMovibles[k]
-                self.xremoveItem(uno)
-                return
-
-    def mousePressEvent(self, event):
-        siDerecho = event.button() == QtCore.Qt.RightButton
-
-        # Determinamos cual mover
-        pa = event.pos()
-        gap = self.baseCasillasSC.bloqueDatos.posicion.x
-        p = QtCore.QPointF(pa.x() - gap, pa.y() - gap)
-        li = []
-        dicLi = {}
-        for k, uno in self.dicMovibles.items():
-            if uno.contiene(p) and uno.isVisible():
-                li.append(uno)
-                dicLi[len(li) - 1] = k
-        if li:
-            if len(li) > 1:  # Guerra
-                guerra = str(li)
-                if self.ultGuerra[0] != guerra:
-                    menu = QTVarios.LCMenu(self)
-                    icoAzul = Iconos.PuntoAzul()
-                    for uno in li:
-                        menu.opcion(uno, uno.nombre() + " %d" % uno.idMovible, icoAzul)
-                    p = QtGui.QCursor.pos()
-                    elegido = menu.lanza()
-                    if elegido is not None:
-                        self.ultGuerra = guerra, elegido
-                        QtGui.QCursor.setPos(p)
-                    else:
-                        self.ultGuerra = "", None
-                    event.ignore()
-                    return
-                elegido = self.ultGuerra[1]
-                self.ultGuerra = "", None
-            else:
-                elegido = li[0]
-
-            for n, uno in enumerate(li):
-                uno.activa(uno == elegido)
-                if siDerecho:
-                    if self.dispatchEventos:
-                        self.dispatchEventos(self.EVENTO_DERECHO, uno)
-                    else:
-                        k = dicLi[n]
-                        del self.dicMovibles[k]
-                        self.xremoveItem(uno)
-                break
-
-            Tablero.mousePressEvent(self, event)
-        else:
-
-            Tablero.mousePressEvent(self, event)
-
-    def dropEvent(self, event):
-        if event.mimeData().hasFormat('image/x-lc-dato'):
-            pieza = event.mimeData().data('image/x-lc-dato')
-            p = event.pos()
-            x = p.x()
-            y = p.y()
-            cx = self.punto2columna(x)
-            cy = self.punto2fila(y)
-            if cx in range(1, 9) and cy in range(1, 9):
-                a1h8 = self.num2alg(cy, cx)
-                self.dispatchEventos(self.EVENTO_DROP, (a1h8, str(pieza)))
-            event.setDropAction(QtCore.Qt.IgnoreAction)
-        event.ignore()
-
-    def ponPieza(self, pieza, posA1H8):
-        piezaSC = Tablero.ponPieza(self, pieza, posA1H8)
-        piezaSC.activa(True)
-
-    def intentaMover(self, piezaSC, posCursor, eventButton):
-        # Modificado para que borre si se la saca fuera del tiesto
-
-        pieza = piezaSC.bloquePieza
-        desde = self.num2alg(pieza.fila, pieza.columna)
-
-        x = int(posCursor.x())
-        y = int(posCursor.y())
-        cx = self.punto2columna(x)
-        cy = self.punto2fila(y)
-
-        hasta = self.num2alg(cy, cx)
-
-        if desde == hasta:
-            if eventButton == QtCore.Qt.RightButton:
-                if self.dispatchEventos:
-                    self.dispatchEventos(self.EVENTO_DERECHO_PIEZA, (pieza, desde))
-                else:
-                    self.borraPieza(desde)
-            self.reponPieza(desde)
-            return
-
-        if cx in range(1, 9) and cy in range(1, 9):
-            hasta = self.num2alg(cy, cx)
-
-            self.mensajero(desde, hasta)
-
-            piezaSC.rehazPosicion()
-            piezaSC.update()
-            self.escena.update()
-        else:
-            self.borraPieza(desde)
-
-    def copiaPosicionDe(self, otroTablero):
-        for x in self.liPiezas:
-            if x[2]:
-                self.xremoveItem(x[1])
-        self.liPiezas = []
-        for cpieza, piezaSC, siActiva in otroTablero.liPiezas:
-            if siActiva:
-                posicion = piezaSC.bloquePieza
-                f = posicion.fila
-                c = posicion.columna
-                posA1H8 = chr(c + 96) + str(f)
-                self.creaPieza(cpieza, posA1H8)
-
-        if not otroTablero.siBlancasAbajo:
-            self.rotaTablero()
-
-        if otroTablero.indicadorSC.isVisible():
-            bdOT = otroTablero.indicadorSC.bloqueDatos
-            siBlancas = bdOT.colorRelleno == otroTablero.colorBlancas
-            siIndicadorAbajo = bdOT.posicion.y == bdOT.sur
-
-            bd = self.indicadorSC.bloqueDatos
-            bd.posicion.y = bd.sur if siIndicadorAbajo else bd.norte
-            bd.colorRelleno = self.colorBlancas if siBlancas else self.colorNegras
-            self.indicadorSC.mostrar()
-
-        if otroTablero.flechaSC and otroTablero.flechaSC.isVisible():
-            a1h8 = otroTablero.flechaSC.bloqueDatos.a1h8
-            desdeA1h8, hastaA1h8 = a1h8[:2], a1h8[2:]
-            self.ponFlechaSC(desdeA1h8, hastaA1h8)
-
-        self.escena.update()
-        self.setFocus()
-
-    def rehaz(self):
-        Tablero.rehaz(self)
-        self.baseCasillasSC.setAcceptDrops(True)
-        self.activaTodas()
-
-    def ponPosicion(self, posicion):
-        Tablero.ponPosicion(self, posicion)
-        self.baseCasillasSC.setAcceptDrops(True)
-        self.activaTodas()
-
-
-class TableroDirector(TableroVisual):
-    def keyPressEvent(self, event):
-
-        k = event.key()
-        if 16777264 <= k <= 16777273:  # F1..F10
-            f = k - 16777263
-            if self.liMouse:
-                if len(self.liMouse) >= 2:
-                    desde = self.liMouse[-2]
-                    hasta = self.liMouse[-1]
-                else:
-                    desde = self.liMouse[-1]
-                    hasta = None
-                self.dispatchEventos(self.EVENTO_FUNCION, (f - 1, desde, hasta))
-        else:
-            Tablero.keyPressEvent(self, event)

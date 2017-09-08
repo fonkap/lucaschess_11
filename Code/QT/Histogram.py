@@ -250,6 +250,7 @@ class Histogram(QtGui.QGraphicsView):
         self.tooltip.hide()
 
         self.scale(0.90, 0.8)
+        #self.scale(0.45, 0.4)
         self.setMinimumSize(sz_width+26, sz_height+26)
         self.setPointActive(0)
 

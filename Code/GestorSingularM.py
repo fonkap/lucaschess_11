@@ -25,7 +25,6 @@ class GestorSingularM(Gestor.Gestor):
 
         self.ayudasPGN = 0
 
-
         self.pantalla.activaJuego(True, True, siAyudas=False)
         self.pantalla.quitaAyudas(True)
         self.ponMensajero(self.mueveHumano)
@@ -160,13 +159,11 @@ class GestorSingularM(Gestor.Gestor):
 
         self.refresh()
 
-
     def actualPGN(self):
-        resp = '[Event "%s"]\n' % _("")
+        resp = '[Event "%s"]\n' % _("Challenge 101")
         resp += '[FEN "%s"\n' % self.partida.iniPosicion.fen()
 
         resp += "\n" + self.partida.pgnBase()
 
         return resp
-
 

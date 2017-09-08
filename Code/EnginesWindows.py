@@ -218,12 +218,11 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.6 32bit", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "McBrain_2017_v26_x32_old.exe"
-    cm.path_64 = "McBrain_2017_v26_x64_bmi2.exe", "2.6 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.7 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "SF-McBrain-27_x32_old.exe"
+    cm.path_64 = "SF-McBrain-27_x64_bmi2.exe", "2.7 64bit bmi2"
     cm.elo = 3200
     cm.ordenUCI("Respect", "30")
-    cm.ordenUCI("MateFinder", "true")
     cm.ordenUCI("Hash", "64")
     cm.ordenUCI("Threads", "1")
     cm.ponMultiPV(20, 256)

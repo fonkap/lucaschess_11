@@ -56,7 +56,10 @@ struct StateInfo {
   Bitboard   checkSquares[PIECE_TYPE_NB];
 };
 
-// In a std::deque references to elements are unaffected upon resizing
+/// A list to keep track of the position states along the setup moves (from the
+/// start position to the position just before the search starts). Needed by
+/// 'draw by repetition' detection. Use a std::deque because pointers to
+/// elements are not invalidated upon list resizing.
 typedef std::unique_ptr<std::deque<StateInfo>> StateListPtr;
 
 
@@ -121,7 +124,6 @@ public:
   bool capture_or_promotion(Move m) const;
   bool gives_check(Move m) const;
   bool advanced_pawn_push(Move m) const;
-  bool far_advanced_pawn_push(Move m) const;
   Piece moved_piece(Move m) const;
   Piece captured_piece() const;
 
@@ -147,11 +149,9 @@ public:
 
   // Other properties of the position
   Color side_to_move() const;
-  Phase game_phase() const;
   int game_ply() const;
   bool is_chess960() const;
   Thread* this_thread() const;
-  uint64_t nodes_searched() const;
   bool is_draw(int ply) const;
   int rule50_count() const;
   Score psq_score() const;
@@ -185,7 +185,6 @@ private:
   int castlingRightsMask[SQUARE_NB];
   Square castlingRookSquare[CASTLING_RIGHT_NB];
   Bitboard castlingPath[CASTLING_RIGHT_NB];
-  uint64_t nodes;
   int gamePly;
   Color sideToMove;
   Thread* thisThread;
@@ -318,11 +317,6 @@ inline bool Position::advanced_pawn_push(Move m) const {
         && relative_rank(sideToMove, from_sq(m)) > RANK_4;
 }
 
-inline bool Position::far_advanced_pawn_push(Move m) const {
-	return   type_of(moved_piece(m)) == PAWN
-	&& relative_rank(sideToMove, from_sq(m)) > RANK_6;
-}
-
 inline Key Position::key() const {
   return st->key;
 }
@@ -353,10 +347,6 @@ inline int Position::game_ply() const {
 
 inline int Position::rule50_count() const {
   return st->rule50;
-}
-
-inline uint64_t Position::nodes_searched() const {
-	return nodes;
 }
 
 inline bool Position::opposite_bishops() const {

@@ -119,8 +119,13 @@ class Pantalla():
         else:
             self.showNormal()
 
-    def closeEvent(self, event):  # Cierre con X
+    def procesosFinales(self):
+        self.tablero.cierraGuion()
         self.guardarVideo()
+        self.tablero.terminar()
+
+    def closeEvent(self, event):  # Cierre con X
+        self.procesosFinales()
         if not self.gestor.finalX0():
             event.ignore()
 
@@ -393,10 +398,18 @@ class PantallaWidget(QTVarios.WWidget, Pantalla):
         Pantalla.__init__(self, gestor, owner)
 
     def accept(self):
+        self.tablero.cierraGuion()
         self.close()
 
     def reject(self):
+        self.tablero.cierraGuion()
         self.close()
+
+    def closeEvent(self, event):  # Cierre con X
+        self.tablero.cierraGuion()
+        self.guardarVideo()
+        if not self.gestor.finalX0():
+            event.ignore()
 
 
 class PantallaDialog(QTVarios.WDialogo, Pantalla):
@@ -410,6 +423,7 @@ class PantallaDialog(QTVarios.WDialogo, Pantalla):
         Pantalla.__init__(self, gestor, owner)
 
     def closeEvent(self, event):  # Cierre con X
+        self.tablero.cierraGuion()
         self.guardarVideo()
         if not self.gestor.finalX0():
             event.ignore()

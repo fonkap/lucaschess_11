@@ -11,8 +11,8 @@ class CapturaLista(QtGui.QWidget):
     def __init__(self, wParent, tablero):
         super(CapturaLista, self).__init__(wParent)
 
-        # self.setFixedWidth(10)
         anchoPZ = int(tablero.ancho/DIVISOR)
+        self.setFixedWidth(tablero.anchoCasilla+2)
         self.pantalla = wParent.parent()
 
         self.tipoMaterial = VarGen.configuracion.tipoMaterial

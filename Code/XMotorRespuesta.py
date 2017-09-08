@@ -95,9 +95,9 @@ class RespuestaMotor:
     def puntosABS(self):
         if self.mate:
             if self.mate < 0:
-                puntos = -10000 - (self.mate + 1) * 10
+                puntos = -30000 - (self.mate + 1) * 10
             else:
-                puntos = +10000 - (self.mate - 1) * 10
+                puntos = +30000 - (self.mate - 1) * 10
         else:
             puntos = self.puntos
 
@@ -106,9 +106,9 @@ class RespuestaMotor:
     def puntosABS_5(self):
         if self.mate:
             if self.mate < 0:
-                puntos = -10000 - (self.mate + 1) * 100
+                puntos = -30000 - (self.mate + 1) * 100
             else:
-                puntos = +10000 - (self.mate - 1) * 100
+                puntos = +30000 - (self.mate - 1) * 100
         else:
             puntos = self.puntos
 
@@ -287,13 +287,16 @@ class MRespuestaMotor:
     def ordena(self):
         li = []
         setYa = set()
-        for k, rm in self.dicMultiPV.iteritems():
+        dic = self.dicMultiPV
+        keys = dic.keys()
+        keys.sort(key= lambda k: int(k))
+        for k in keys:
+            rm = dic[k]
             mov = rm.movimiento()
-            if mov in setYa:
-                continue
-            setYa.add(mov)
-            li.append(rm)
-        self.liMultiPV = sorted(li, key=lambda rm: -rm.puntosABS())  # de mayor a menor
+            if mov not in setYa:
+                setYa.add(mov)
+                li.append(rm)
+        self.liMultiPV = li #sorted(li, key=lambda rm: -rm.puntosABS())  # de mayor a menor
 
     def __len__(self):
         return len(self.liMultiPV)
@@ -313,7 +316,9 @@ class MRespuestaMotor:
                 return
 
         if "score" in dClaves:
-            if "mate 0 " in pvBase:
+            if "mate 0 " in pvBase or \
+                "mate -0 " in pvBase or \
+                "mate +0 " in pvBase:
                 return
 
         if "multipv" in dClaves:

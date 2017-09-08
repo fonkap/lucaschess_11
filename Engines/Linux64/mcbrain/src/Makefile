@@ -28,8 +28,8 @@ ifeq ($(KERNEL),Linux)
 endif
 
 ### Executable name
-EXE = SF_McBrain_2017_v26
-# bench =  6478637
+EXE = SF-McBrain-27
+# bench =  5127083
 
 ### Installation dir definitions
 PREFIX = /usr/local
@@ -154,7 +154,7 @@ endif
 ifeq ($(COMP),gcc)
 	comp=gcc
 	CXX=g++
-	CXXFLAGS += -pedantic -Wextra -Wshadow
+	CXXFLAGS += -pedantic -Wextra -Wshadow -static-libstdc++
 
 	ifeq ($(ARCH),armv7)
 		ifeq ($(OS),Android)
@@ -334,7 +334,7 @@ ifeq ($(popcnt),yes)
 	ifeq ($(comp),icc)
 		CXXFLAGS += -msse3 -DUSE_POPCNT
 	else
-		CXXFLAGS += -msse4.2 -mpopcnt -DUSE_POPCNT
+		CXXFLAGS += -msse3 -mpopcnt -DUSE_POPCNT
 	endif
 endif
 
@@ -352,7 +352,7 @@ endif
 ifeq ($(comp),gcc)
 	ifeq ($(optimize),yes)
 	ifeq ($(debug),no)
-		CXXFLAGS += -flto
+		CXXFLAGS += -flto -fno-rtti
 		LDFLAGS += $(CXXFLAGS)
 	endif
 	endif
@@ -470,12 +470,12 @@ clean: objclean profileclean
 
 # clean binaries and objects
 objclean:
-	@rm -f $(EXE) $(EXE).exe *.o
+	@rm -f $(EXE) $(EXE).exe *.o ./syzygy/*.o
 
 # clean auxiliary profiling files
 profileclean:
 	@rm -rf profdir
-	@rm -f bench.txt *.gcda *.gcno
+	@rm -f bench.txt *.gcda ./syzygy/*.gcda *.gcno ./syzygy/*.gcno
 	@rm -f stockfish.profdata *.profraw
 
 default:
@@ -545,7 +545,7 @@ gcc-profile-make:
 
 gcc-profile-use:
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) \
-	EXTRACXXFLAGS='-fprofile-use -fprofile-correction -fno-peel-loops -fno-tracer' \
+	EXTRACXXFLAGS='-fprofile-use -fprofile-correction  -fno-peel-loops -fno-tracer' \
 	EXTRALDFLAGS='-lgcov' \
 	all
 
@@ -557,7 +557,7 @@ icc-profile-make:
 
 icc-profile-use:
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) \
-	EXTRACXXFLAGS='-prof_use -ipo -prof_dir ./profdir' \
+	EXTRACXXFLAGS='-prof_use -prof_dir ./profdir' \
 	all
 
 .depend:

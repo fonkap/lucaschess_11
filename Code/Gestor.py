@@ -445,11 +445,18 @@ class Gestor:
         return self.pgn.numDatos()
 
     def ponVista(self):
+        if not hasattr(self.pgn, "jugada"):  # gestor60 por ejemplo
+            return
+        fila, columna = self.pantalla.pgnPosActual()
+        posJugada, jg = self.pgn.jugada(fila, columna.clave)
+
+        if jg:
+            posicion = jg.posicionBase if columna.clave == "NUMERO" else jg.posicion
+        else:
+            posicion = self.partida.iniPosicion
+        self.tablero.setUltPosicion(posicion)
+
         if self.pantalla.siCapturas or self.pantalla.siInformacionPGN or self.liKibitzersActivas:
-            if not hasattr(self.pgn, "jugada"):  # gestor60 por ejemplo
-                return
-            fila, columna = self.pantalla.pgnPosActual()
-            posJugada, jg = self.pgn.jugada(fila, columna.clave)
             if jg:
                 dic, siBlancas = jg.posicion.capturas()
                 if hasattr(jg, "analisis") and jg.analisis:

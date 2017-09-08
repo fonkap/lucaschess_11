@@ -57,7 +57,7 @@ def prlkn(*x):
     sys.stdout.write("\n")
 
 
-def prlk_stack(siPrevio=False):
+def stack(siPrevio=False):
     import traceback
 
     if siPrevio:

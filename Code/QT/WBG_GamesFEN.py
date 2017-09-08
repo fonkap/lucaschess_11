@@ -46,6 +46,7 @@ class WGamesFEN(QtGui.QWidget):
 
             ancho = 140 if clave == "FEN" else 70  # para que sirva con WBG_GamesFEN
             oColumnas.nueva(clave, rotulo, ancho, siCentrado=siCentrado)
+        oColumnas.nueva("rowid", _("Row ID"), 70, siCentrado=True)
 
         self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True, xid="wgamesfen")
 
@@ -64,6 +65,8 @@ class WGamesFEN(QtGui.QWidget):
             (_("Filter"), Iconos.Filtrar(), self.tw_filtrar), None,
             (_("Remove"), Iconos.Borrar(), self.tw_borrar),None,
             (_("Utilities"), Iconos.Utilidades(), self.tw_utilities), None,
+            (_("Move up"), Iconos.Arriba(), self.tw_up), None,
+            (_("Move down"), Iconos.Abajo(), self.tw_down), None,
         ]
 
         self.tbWork = Controles.TBrutina(self, liAccionesWork, tamIcon=24)
@@ -111,6 +114,8 @@ class WGamesFEN(QtGui.QWidget):
         clave = ocol.clave
         if clave == "numero":
             return str(nfila + 1)
+        elif clave == "rowid":
+            return str(self.dbGamesFEN.getROWID(nfila))
         return self.dbGamesFEN.field(nfila, clave)
 
     def gridDobleClick(self, grid, fil, col):
@@ -187,6 +192,20 @@ class WGamesFEN(QtGui.QWidget):
 
     def tw_gotop(self):
         self.grid.gotop()
+
+    def tw_up(self):
+        fila = self.grid.recno()
+        filaNueva = self.dbGamesFEN.intercambia(fila, True)
+        if filaNueva is not None:
+            self.grid.goto(filaNueva, 0)
+            self.grid.refresh()
+
+    def tw_down(self):
+        fila = self.grid.recno()
+        filaNueva = self.dbGamesFEN.intercambia(fila, False)
+        if filaNueva is not None:
+            self.grid.goto(filaNueva, 0)
+            self.grid.refresh()
 
     def tw_nuevo(self):
         # Se genera un PGN

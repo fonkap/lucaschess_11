@@ -499,7 +499,7 @@ class Procesador:
         if clave == k_terminar:
             if hasattr(self, "cpu"):
                 self.cpu.stop()
-            self.pantalla.guardarVideo()
+            self.pantalla.procesosFinales()
             self.pantalla.accept()
 
         elif clave == k_play:
