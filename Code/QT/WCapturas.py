@@ -43,8 +43,8 @@ class CapturaLista(QtGui.QWidget):
         for k, li in self.dic.iteritems():
             for lb in li:
                 tablero.piezas.change_label(lb, anchoPZ)
-        self.setMinimumWidth(anchoPZ + 4)
-        self.adjustSize()
+        # self.setMinimumWidth(anchoPZ + 4)
+        # self.adjustSize()
 
     def ponLayout(self, siBlancasAbajo):
         layout = self.layout()

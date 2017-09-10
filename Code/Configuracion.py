@@ -486,7 +486,6 @@ class Configuracion:
         dic["FICHEROBMT"] = self.ficheroBMT
         dic["FICHEROFEN"] = self.ficheroFEN
 
-
         dic["FAMILIA"] = self.familia
 
         dic["PUNTOSMENU"] = self.puntosMenu

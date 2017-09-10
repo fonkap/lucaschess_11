@@ -98,18 +98,20 @@ class XKibitzer:
 
     def __init__(self, gestor, kibitzer):
 
-        fdb = VarGen.configuracion.ficheroTemporal("db")
+        configuracion = VarGen.configuracion
+
+        fdb = configuracion.ficheroTemporal("db")
 
         self.ipc = Util.IPC(fdb, True)
 
         motor = kibitzer["MOTOR"]
         if kibitzer["TIPO"] == "I":
             motor = "rodentII"
-        configMotor = gestor.configuracion.buscaRivalExt(motor)
+        configMotor = configuracion.buscaRivalExt(motor)
 
         orden = Orden()
         orden.clave = self.CONFIGURACION
-        orden.dv["CONFIGURACION"] = gestor.configuracion
+        orden.dv["USER"] = configuracion.user
         orden.dv["TITULO"] = kibitzer["NOMBRE"]
         orden.dv["FVIDEO"] = kibitzer["FVIDEO"]
         orden.dv["TIPO"] = kibitzer["TIPO"]

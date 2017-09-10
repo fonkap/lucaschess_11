@@ -84,7 +84,8 @@ class WSingularM(QTVarios.WDialogo):
         if col == "BEST":
             return registro.get("BEST", "")
         if col == "REPETITIONS":
-            return registro.get("REPETITIONS", "")
+            rep = registro.get("REPETITIONS", [])
+            return len(rep) if len(rep) else ""
 
     def gridDobleClick(self, grid, fila, columna):
         self.repetir()

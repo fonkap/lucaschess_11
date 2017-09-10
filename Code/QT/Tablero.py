@@ -978,7 +978,6 @@ class Tablero(QtGui.QGraphicsView):
                 else:
                     self.scriptSC_menu.hide()
 
-
     def ponPosicion(self, posicion):
         if self.dirvisual:
             self.dirvisual.cambiadaPosicionAntes()
@@ -1129,6 +1128,8 @@ class Tablero(QtGui.QGraphicsView):
             self.blindfoldReset()
 
     def buscaPieza(self, posA1H8):
+        if posA1H8 is None:
+            return -1
         fila = int(posA1H8[1])
         columna = ord(posA1H8[0]) - 96
         for num, x in enumerate(self.liPiezas):

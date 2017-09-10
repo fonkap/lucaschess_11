@@ -7,6 +7,7 @@ from PyQt4 import QtCore, QtGui
 
 from Code import AnalisisIndexes
 from Code import ControlPosicion
+from Code import Configuracion
 from Code import Partida
 from Code.QT import Colocacion
 from Code.QT import Columnas
@@ -1581,7 +1582,10 @@ class CPU:
     def procesa(self, orden):
         clave = orden.clave
         if clave == CONFIGURACION:
-            self.configuracion = orden.dv["CONFIGURACION"]
+            user = orden.dv["USER"]
+            self.configuracion = Configuracion.Configuracion(user)
+            self.configuracion.lee()
+            self.configuracion.leeConfTableros()
             self.titulo = orden.dv["TITULO"]
             self.configMotor = orden.dv["CONFIG_MOTOR"]
             self.ficheroVideo = orden.dv["FVIDEO"]

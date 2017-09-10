@@ -263,7 +263,7 @@ class Gestor:
 
         def mueve():
             self.tablero.muevePiezaTemporal(self.atajosRatonOrigen, self.atajosRatonDestino)
-            if not self.tablero.mensajero(self.atajosRatonOrigen, self.atajosRatonDestino):
+            if (not self.tablero.mensajero(self.atajosRatonOrigen, self.atajosRatonDestino)) and self.atajosRatonOrigen:
                 self.tablero.reponPieza(self.atajosRatonOrigen)
             self.atajosRatonReset()
 

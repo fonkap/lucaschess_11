@@ -308,7 +308,6 @@ class Pizarra(QtGui.QWidget):
             self.clearFocus()
             self.mensaje.setFocus()
 
-
     def showLRD(self, l, r, d):
         self.pbRight.setVisible(r)
         self.pbLeft.setVisible(l)

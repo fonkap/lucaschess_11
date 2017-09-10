@@ -71,7 +71,7 @@ class SingularMoves:
             self.graba_repeticion()
 
     def graba_repeticion(self):
-        repeticiones = self.registro.get("REPETICIONES", [])
+        repeticiones = self.registro.get("REPETITIONS", [])
         rep = {}
         rep["DATETIME"] = datetime.datetime.now()
         strength = rep["STRENGTH"] = self.media()
@@ -86,6 +86,7 @@ class SingularMoves:
         best = self.registro.get("BEST", 0.00)
         if best < strength:
             self.registro["BEST"] = strength
+        self.db[self.current_key] = self.registro
 
     def graba_nuevo(self):
         hoy = datetime.datetime.now()

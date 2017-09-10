@@ -344,7 +344,7 @@ class WTabDirVisual(QTVarios.WDialogo):
 
         # tc = TabVisual.GT_Configuration(None)
         # liConfigurations = [(txt, Iconos.PuntoVerde(), "GTC_%s" % configuration) for configuration, txt in tc.dicTxt.iteritems()]
-        #
+
         liMore = [
             (_("Text"), Iconos.Texto(), TabVisual.TP_TEXTO),
             (_("Actions"), Iconos.Run(), liActions),

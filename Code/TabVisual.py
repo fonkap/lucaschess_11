@@ -644,5 +644,3 @@ class Guion:
             if self.cerrado:
                 return
 
-
-
