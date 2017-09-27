@@ -82,7 +82,7 @@ class WSingularM(QTVarios.WDialogo):
         if col == "STRENGTH":
             return "%0.2f" % registro.get("STRENGTH", 0.0)
         if col == "BEST":
-            return registro.get("BEST", "")
+            return "%0.2f" % registro.get("BEST", 0.0)
         if col == "REPETITIONS":
             rep = registro.get("REPETITIONS", [])
             return len(rep) if len(rep) else ""

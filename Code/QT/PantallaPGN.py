@@ -573,7 +573,18 @@ class WElegir(QTVarios.WDialogo):
             self.dbf.goto(n)
             self.grid.goto(n, 0)
 
-            jugadas = self.dbf.leeOtroCampo(n, "PGN").replace("\n", " ").replace("\r", "").strip()
+            pgn = self.dbf.leeOtroCampo(n, "PGN")
+            li = []
+            grabar = False
+            for linea in pgn.split("\n"):
+                if not grabar:
+                    if not linea.startswith("["):
+                        grabar = True
+                if grabar:
+                    li.append(linea.strip())
+            jugadas = " ".join(li)
+            while "  " in jugadas:
+                jugadas = jugadas.replace("  ", " ")
 
             dic = self.dbf.dicValores()
 
@@ -616,7 +627,7 @@ class WElegir(QTVarios.WDialogo):
             if wb:
                 titulo += "<br>%s" % wb
 
-            txt = fen + "|%s|%s\n" % (titulo, jugadas)
+            txt = fen + "|%s|%s\n" % (titulo, jugadas.strip())
 
             f.write(txt)
 

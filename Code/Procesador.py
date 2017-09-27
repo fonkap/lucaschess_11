@@ -3,6 +3,13 @@ import random
 import sys
 import webbrowser
 
+from Code import Routes
+from Code import Util
+from Code import VarGen
+from Code import XGestorMotor
+from Code import EngineThread
+from Code.Constantes import *
+
 from Code import Albums
 from Code import CPU
 from Code import Configuracion
@@ -55,12 +62,6 @@ from Code.QT import PantallaDatabase
 from Code.QT import PantallaManualSave
 from Code.QT import WBDatabaseFEN
 from Code.QT import WBGuide
-from Code import Routes
-from Code import Util
-from Code import VarGen
-from Code import XGestorMotor
-from Code import EngineThread
-from Code.Constantes import *
 
 
 class Procesador:
@@ -68,13 +69,14 @@ class Procesador:
     Vinculo entre pantalla y gestores
     """
     def __init__(self):
-        self.liEngines = []
+        if VarGen.listaGestoresMotor is None:
+            VarGen.listaGestoresMotor = XGestorMotor.ListaGestoresMotor()
 
     def iniciaConUsuario(self, user):
 
         self.user = user
 
-        self.web = "http://www-lucaschess.rhcloud.com"
+        self.web = "http://lucaschess.pythonanywhere.com"
         self.blog = "http://lucaschess.blogspot.com"
 
         self.liOpcionesInicio = [k_terminar, k_play, k_entrenamiento, k_competir,
@@ -103,8 +105,6 @@ class Procesador:
         self.replayBeep = None
 
         self.liKibitzersActivas = []
-
-        self.liEngines = []
 
     def setVersion(self, version):
         self.version = version
@@ -255,13 +255,13 @@ class Procesador:
             self.gestor.inicio(aplazamiento["IDGAME"], aplazamiento["SICOMPETITIVO"], aplazamiento=aplazamiento)
 
     def XTutor(self):
-        # if not self.xtutor:
-            # self.creaXTutor()
-        self.cambiaXTutor()
+        if self.xtutor is None or not self.xtutor.activo:
+            self.creaXTutor()
         return self.xtutor
 
     def creaXTutor(self):
         xtutor = XGestorMotor.GestorMotor(self, self.configuracion.tutor)
+        xtutor.nombre += ("(%s)" % _("tutor"))
         xtutor.opciones(self.configuracion.tiempoTutor, None, True)
         if self.configuracion.tutorMultiPV == 0:
             xtutor.maximizaMultiPV()
@@ -271,8 +271,6 @@ class Procesador:
         self.xtutor = xtutor
         VarGen.xtutor = xtutor
 
-        self.liEngines.append(xtutor)
-
     def cambiaXTutor(self):
         if self.xtutor:
             self.xtutor.terminar()
@@ -280,13 +278,13 @@ class Procesador:
         self.cambiaXAnalyzer()
 
     def XAnalyzer(self):
-        if not self.xanalyzer:
+        if self.xanalyzer is None or not self.xanalyzer.activo:
             self.creaXAnalyzer()
-        self.cambiaXAnalyzer()
         return self.xanalyzer
 
     def creaXAnalyzer(self):
         xanalyzer = XGestorMotor.GestorMotor(self, self.configuracion.tutor)
+        xanalyzer.nombre += ("(%s)" % _("analyzer"))
         xanalyzer.opciones(self.configuracion.tiempoTutor, None, True)
         if self.configuracion.tutorMultiPV == 0:
             xanalyzer.maximizaMultiPV()
@@ -295,8 +293,6 @@ class Procesador:
 
         self.xanalyzer = xanalyzer
         VarGen.xanalyzer = xanalyzer
-
-        self.liEngines.append(xanalyzer)
 
     def cambiaXAnalyzer(self):
         if self.xanalyzer:
@@ -307,13 +303,10 @@ class Procesador:
         xgestor = XGestorMotor.GestorMotor(self, confMotor)
         xgestor.opciones(tiempo, nivel, siMultiPV)
         xgestor.setPriority(priority)
-        self.liEngines.append(xgestor)
         return xgestor
 
     def pararMotores(self):
-        for xgestormotor in self.liEngines:
-            xgestormotor.terminar()
-        self.liEngines = []
+        VarGen.listaGestoresMotor.closeAll()
 
     def cambiaRival(self, nuevo):
         """
@@ -980,10 +973,10 @@ class Procesador:
     def clonVariantes(self, wpantalla, liKibitzersActivas=None, xtutor=None):
         if liKibitzersActivas is None:
             liKibitzersActivas = []
-        return ProcesadorVariantes(wpantalla, liKibitzersActivas, xtutor, self.liEngines)
+        return ProcesadorVariantes(wpantalla, liKibitzersActivas, xtutor)
 
     def gestorUnPGN(self, wpantalla, pgn, jugadaInicial=None, siGrabar=True):
-        clonProcesador = ProcesadorVariantes(wpantalla, self.liKibitzersActivas, self.xtutor, self.liEngines)
+        clonProcesador = ProcesadorVariantes(wpantalla, self.liKibitzersActivas, self.xtutor)
 
         clonProcesador.gestor = GestorSolo.GestorSolo(clonProcesador)
         clonProcesador.gestor.inicio(pgn=pgn, jugadaInicial=jugadaInicial, siGrabar=siGrabar)
@@ -993,7 +986,7 @@ class Procesador:
         return getattr(clonProcesador, "valorPGN", (None, None, None))
 
     def gestorPartida(self, wpantalla, partidaCompleta, siCompleta):
-        clonProcesador = ProcesadorVariantes(wpantalla, self.liKibitzersActivas, self.xtutor, self.liEngines)
+        clonProcesador = ProcesadorVariantes(wpantalla, self.liKibitzersActivas, self.xtutor)
 
         clonProcesador.gestor = GestorPartida.GestorPartida(clonProcesador)
         clonProcesador.gestor.inicio(partidaCompleta, siCompleta)
@@ -1016,7 +1009,7 @@ class Procesador:
 
 class ProcesadorVariantes(Procesador):
 
-    def __init__(self, wpantalla, liKibitzersActivas, xtutor, liEngines):
+    def __init__(self, wpantalla, liKibitzersActivas, xtutor):
         self.liKibitzersActivas = liKibitzersActivas
 
         # self.configuracion = copy.deepcopy( VarGen.configuracion )
@@ -1042,4 +1035,3 @@ class ProcesadorVariantes(Procesador):
         self.posicionInicial = None
 
         self.cpu = CPU.CPU(self.pantalla)
-        self.liEngines = liEngines

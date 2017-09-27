@@ -69,9 +69,8 @@ class GestorSolo(Gestor.Gestor):
         siPGN = False
         if fichero:
             siExterno = True
-            f = open(fichero, "rb")
-            txt = f.read()
-            f.close()
+            with open(fichero, "rb") as f:
+                txt = f.read()
             dic = Util.txt2dic(txt)
             dic["ULTIMOFICHERO"] = fichero
         elif pgn:
@@ -79,6 +78,14 @@ class GestorSolo(Gestor.Gestor):
             dic = pgn_pks(kJugando, pgn, jugadaInicial)
 
             self.resultadoPGN = None, None
+        else:
+            li = self.listaHistorico()
+            if li:
+                fichero = li[0]
+                with open(fichero, "rb") as f:
+                    txt = f.read()
+                dic = Util.txt2dic(txt)
+                dic["ULTIMOFICHERO"] = fichero
 
         if dic is None:
             dic = {}

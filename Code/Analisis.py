@@ -600,7 +600,7 @@ class UnaMuestra:
         self.posMovActual = 0
 
     def pgnActual(self):
-        return self.partida.pgnSP(self.mAnalisis.posJugada / 2 + 1)
+        return self.partida.pgnHTML(self.mAnalisis.posJugada / 2 + 1, siFigurines=self.siFigurines)
 
     def puntuacionActual(self):
         rm = self.listaRM[self.posRMactual][0]

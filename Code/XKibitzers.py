@@ -1,5 +1,7 @@
 import datetime
 
+from PyQt4 import QtCore
+
 from Code.QT import FormLayout
 from Code.QT import Iconos
 from Code import Util
@@ -38,7 +40,7 @@ def nuevaKibitzer(ventana, configuracion):
                ("J", _("Select move")),
                ("C", _("Threats")),
                ("E", _("Stockfish evaluation")),
-               ]
+    ]
     liGen.append((_("Type"), liTipos))
 
     # Editamos

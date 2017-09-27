@@ -1,9 +1,25 @@
 import LCEngine
 
+from Code import VarGen
 from Code import XMotor
 from Code import XMotorRespuesta
 from Code import EngineThread
 from Code.Constantes import *
+
+
+class ListaGestoresMotor:
+    def __init__(self):
+        self.lista = []
+
+    def append(self, gestorMotor):
+        self.lista.append(gestorMotor)
+
+    def listaActivos(self):
+        return [gestorMotor for gestorMotor in self.lista if gestorMotor.activo]
+
+    def closeAll(self):
+        for gestorMotor in self.lista:
+            gestorMotor.terminar()
 
 
 class GestorMotor:
@@ -20,7 +36,10 @@ class GestorMotor:
 
         self.dispatching = None
 
+        self.activo = True  # No es suficiente con motor == None para saber si esta activo y se puede logear
+
         self.direct = direct
+        VarGen.listaGestoresMotor.append(self)
 
     def set_direct(self):
         self.direct = True
@@ -189,6 +208,7 @@ class GestorMotor:
         if self.motor:
             self.motor.close()
             self.motor = None
+            self.activo = False
 
     def analizaJugada(self, jg, tiempo, depth=0, brDepth=5, brPuntos=50):
         self.testEngine()

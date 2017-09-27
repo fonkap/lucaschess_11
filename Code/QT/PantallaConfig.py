@@ -174,7 +174,7 @@ def opciones(parent, configuracion):
     # liT.append((FormLayout.Dial(_("Opacity of tool icon"), 1, 9, siporc=False), configuracion.opacityToolBoard))
     liT.append((_("Show configuration icon"), configuracion.opacityToolBoard > 6))
     liPos = [configuracion.positionToolBoard, ("B", _("Bottom")), ("T", _("Top"))]
-    liT.append((_("Configuration icon position" + ":"), liPos))
+    liT.append((_("Configuration icon position") + ":", liPos))
     liT.append(separador)
 
     lista = []

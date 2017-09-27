@@ -19,6 +19,7 @@ from Code.QT import TabMarcos
 from Code.QT import TabMarker
 from Code.QT import TabSVG
 from Code.QT import TabTipos
+from Code.QT import Delegados
 from Code import TabVisual
 from Code import Util
 from Code import VarGen
@@ -134,9 +135,11 @@ class Tablero(QtGui.QGraphicsView):
             elif key == Qt.Key_N and siAlt:
                 self.pantalla.gestor.rightMouse(False, False, True)
             # ALT-C -> show captures
-            elif key == Qt.Key_C and siAlt:
-                self.pantalla.gestor.rightMouse(False, True, False)
-
+            elif key == Qt.Key_C:
+                if  siAlt:
+                    self.pantalla.gestor.rightMouse(False, True, False)
+                else:
+                    okseguir = True
         else:
             okseguir = True
 
@@ -774,6 +777,11 @@ class Tablero(QtGui.QGraphicsView):
             self.resetFlechaSC()
 
         self.init_kb_buffer()
+
+        if self.confTablero.siBase:
+            nomPiezasOri = self.confTablero.nomPiezas()
+            VarGen.todasPiezas.saveAllPNG(nomPiezasOri, 16)  # reset IntFiles/Figs
+            Delegados.generaPM(self.piezas)
 
     def ponColores(self, liTemas, resp):
         if resp.startswith("tt_"):

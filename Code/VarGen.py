@@ -29,3 +29,5 @@ xtutor = None
 
 XSEP = chr(183)
 
+listaGestoresMotor = None
+

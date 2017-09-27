@@ -30,7 +30,6 @@ class Pantalla():
         self.capturas = self.base.capturas
         self.capturas.hide()
         self.siCapturas = False
-        self.capturas.hide()
         self.informacionPGN = WInformacion.InformacionPGN(self)
         self.siInformacionPGN = False
         self.informacionPGN.hide()

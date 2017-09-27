@@ -226,6 +226,29 @@ class Partida:
 
         return resp.strip()
 
+    def pgnHTML(self, numJugada=None, hastaJugada=9999, siFigurines=True):
+        liResp = []
+        if self.firstComment:
+            liResp.append("{%s}" % self.firstComment)
+        if numJugada is None:
+            numJugada = self.primeraJugada()
+        if self.siEmpiezaConNegras:
+            liResp.append('<span style="color:navy">%d...</span>' % numJugada)
+            numJugada += 1
+            salta = 1
+        else:
+            salta = 0
+        for n, jg in enumerate(self.liJugadas):
+            if n > hastaJugada:
+                break
+            if n % 2 == salta:
+                x = '<span style="color:navy">%d.</span>' % numJugada
+                numJugada += 1
+            else:
+                x = ""
+            liResp.append(x + (jg.pgnHTML() if siFigurines else jg.pgnSP()))
+        return " ".join(liResp)
+
     def siTerminada(self):
         if self.liJugadas:
             jg = self.liJugadas[-1]

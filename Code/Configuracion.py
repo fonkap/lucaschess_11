@@ -104,6 +104,8 @@ class Configuracion:
 
         self.coloresPGNdefecto()
 
+        self.tablaSelBackground = None
+
         self.tamFontRotulos = 10
         self.anchoPGN = 283
         self.puntosPGN = 10
@@ -502,6 +504,8 @@ class Configuracion:
         dic["COLOR_NAG5"] = self.color_nag5
         dic["COLOR_NAG6"] = self.color_nag6
 
+        dic["TABLASELBACKGROUND"] = self.tablaSelBackground
+
         dic["TAMFONTROTULOS"] = self.tamFontRotulos
         dic["ANCHOPGN"] = self.anchoPGN
         dic["PUNTOSPGN"] = self.puntosPGN
@@ -634,6 +638,9 @@ class Configuracion:
                 self.color_nag4 = dg("COLOR_NAG4", self.color_nag4)
                 self.color_nag5 = dg("COLOR_NAG5", self.color_nag5)
                 self.color_nag6 = dg("COLOR_NAG6", self.color_nag6)
+
+                self.tablaSelBackground = dg("TABLASELBACKGROUND", None)
+
                 self.tamFontRotulos = dg("TAMFONTROTULOS", self.tamFontRotulos)
                 self.anchoPGN = dg("ANCHOPGN", self.anchoPGN)
                 self.puntosPGN = dg("PUNTOSPGN", self.puntosPGN)

@@ -278,12 +278,12 @@ class WMuestra(QtGui.QWidget):
         self.colorNegativo = QTUtil.qtColorRGB(255, 0, 0)
         self.colorImpares = QTUtil.qtColorRGB(231, 244, 254)
         oColumnas = Columnas.ListaColumnas()
-        siFigurinesPGN = VarGen.configuracion.figurinesPGN
+        self.siFigurinesPGN = VarGen.configuracion.figurinesPGN
         oColumnas.nueva("JUGADAS", "%d %s" % (len(self.listaRM), _("Moves")), 120, siCentrado=True,
-                        edicion=Delegados.EtiquetaPGN(um.jg.siBlancas() if siFigurinesPGN else None))
+                        edicion=Delegados.EtiquetaPGN(um.jg.siBlancas() if self.siFigurinesPGN else None))
         self.wrm = Grid.Grid(self, oColumnas, siLineas=False)
 
-        self.wrm.tipoLetra(puntos=9)
+        self.wrm.tipoLetra(puntos=VarGen.configuracion.puntosPGN)
         nAncho = self.wrm.anchoColumnas() + 20
         self.wrm.setFixedWidth(nAncho)
         self.wrm.goto(self.um.posElegida, 0)
@@ -447,7 +447,8 @@ class WAnalisis(QTVarios.WDialogo):
         self.mAnalisis = mAnalisis
         self.muestraActual = None
 
-        confTablero = VarGen.configuracion.confTablero("ANALISIS", 48)
+        configuracion = VarGen.configuracion
+        confTablero = configuracion.confTablero("ANALISIS", 48)
         self.siLibre = siLibre
         self.siGrabar = siGrabar
         self.siBlancas = siBlancas
@@ -462,8 +463,8 @@ class WAnalisis(QTVarios.WDialogo):
 
         self.lbMotor = Controles.LB(self).alinCentrado()
         self.lbTiempo = Controles.LB(self).alinCentrado()
-        self.lbPuntuacion = Controles.LB(self).alinCentrado().ponTipoLetra(puntos=10, peso=75)
-        self.lbPGN = Controles.LB(self).ponTipoLetra(peso=75).ponWrap()
+        self.lbPuntuacion = Controles.LB(self).alinCentrado().ponTipoLetra(puntos=configuracion.puntosPGN, peso=75)
+        self.lbPGN = Controles.LB(self).ponWrap().ponTipoLetra(puntos=configuracion.puntosPGN)
 
         self.setStyleSheet("QStatusBar::item { border-style: outset; border-width: 1px; border-color: LightSlateGray ;}")
 

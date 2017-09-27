@@ -3,12 +3,17 @@
 
 # ==============================================================================
 # Author : Lucas Monge, lukasmonk@gmail.com
-# Web : http://www-lucaschess.rhcloud.com
+# Web : http://lucaschess.pythonanywhere.com/
 # Blog : http://lucaschess.blogspot.com
 # Licence : GPL
 # ==============================================================================
 
 # vga, kibitzer, improving
+
+
+
+
+
 
 
 

@@ -2143,6 +2143,7 @@ def dicTraining():
         "Attacking Defender": _("Attacking Defender"),
 
         "All tactics": _("All tactics"),
+        'Pawn endings': _("Pawn endings")
     }
 
     for n in range(1,10):

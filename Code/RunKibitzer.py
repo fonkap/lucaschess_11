@@ -630,7 +630,6 @@ class Ventana(QtGui.QDialog):
         Util.guardaDIC(dic, self.ficheroVideo)
 
     def recuperarVideo(self):
-
         if Util.tamFichero(self.ficheroVideo) > 0:
             dic = Util.recuperaDIC(self.ficheroVideo)
             if dic:
@@ -1378,6 +1377,7 @@ class VentanaLinea(Ventana):
         self.siMover = not self.siMover
         self.setWindowFlags(self.flags[self.siMover])
         self.show()
+        self.recuperarVideo()
         QTUtil.refreshGUI()
 
     def pause(self):

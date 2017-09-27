@@ -943,7 +943,7 @@ class Gestor:
 
         if not (hasattr(jg, "analisis") and jg.analisis):
             me = QTUtil2.mensEspera.inicio(self.pantalla, _("Analyzing the move...."), posicion="ad")
-            mrm, pos = self.xtutor.analizaJugadaPartida(self.partida, pos_jg, self.xtutor.motorTiempoJugada, self.xtutor.motorProfundidad)
+            mrm, pos = self.xanalyzer.analizaJugadaPartida(self.partida, pos_jg, self.xtutor.motorTiempoJugada, self.xtutor.motorProfundidad)
             jg.analisis = mrm, pos
             me.final()
 
@@ -1364,7 +1364,8 @@ class Gestor:
 
             liKibitzers = XKibitzers.listaKibitzersRecuperar(self.configuracion)
 
-            dico = {"S": icoVerde, "C": icoAzul, "J": icoNaranja, "I": icoNegro, "L": icoMagenta, "M": icoRojo, "E": icoAmarillo}
+            dico = {"S": icoVerde, "C": icoAzul, "J": icoNaranja, "I": icoNegro, "L": icoMagenta, "M": icoRojo, "E": icoAmarillo,
+                    "X": icoCamara}
             for nkibitzer, kibitzer in enumerate(liKibitzers):
                 menuKibitzers.opcion("kibitzer_%d" % nkibitzer, kibitzer["NOMBRE"], dico[kibitzer["TIPO"]])
 

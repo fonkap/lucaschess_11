@@ -69,7 +69,8 @@ class XMotor:
             self.wait_mrm("readyok", 1000)
 
     def get_lines(self):
-        return self.engine.get_lines()
+        li = self.engine.get_lines()
+        return li
 
     def put_line(self, line):
         self.engine.put_line(line)
