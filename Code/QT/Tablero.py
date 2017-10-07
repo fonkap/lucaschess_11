@@ -111,14 +111,14 @@ class Tablero(QtGui.QGraphicsView):
 
         # ALT-I Save image to clipboard (CTRL->no border)
         elif key == Qt.Key_I:
-            self.salvaEnImagen(siCtrl=siCtrl)
+            self.salvaEnImagen(siCtrl=siCtrl, siAlt=siAlt)
             QTUtil2.mensaje(self, _("Board image is in clipboard"))
 
         # ALT-J Save image to file (CTRL->no border)
         elif key == Qt.Key_J:
             path = QTUtil2.salvaFichero(self, _("File to save"), self.configuracion.dirSalvados, "%s PNG (*.png)" % _("File"), False)
             if path:
-                self.salvaEnImagen(path, "png", siCtrl=siCtrl)
+                self.salvaEnImagen(path, "png", siCtrl=siCtrl, siAlt=siAlt)
                 self.configuracion.dirSalvados = os.path.dirname(path)
                 self.configuracion.graba()
 
@@ -564,6 +564,8 @@ class Tablero(QtGui.QGraphicsView):
         self.indicadorSC = TabElementos.CirculoSC(self.escena, indicador, rutina=self.intentaRotarTablero)
 
         # Lanzador de menu visual
+        self.indicadorSC_menu = None
+        self.scriptSC_menu = None
         if self.siMenuVisual:
             indicador_menu = TabTipos.Imagen()
             indicador_menu.posicion.x = pFrontera.x - ancho
@@ -609,8 +611,10 @@ class Tablero(QtGui.QGraphicsView):
             (_("CTRL") + "-C", _("Copy FEN to clipboard")),
             ("I", _("Copy board as image to clipboard")),
             (_("CTRL") + "-I", _("Copy board as image to clipboard") + " (%s)" % _("without border")),
+            (_("ALT") + "-I", _("Copy board as image to clipboard") + " (%s)" % _("without coordinates")),
             ("J", _("Copy board as image to a file")),
             (_("CTRL") + "-J", _("Copy board as image to a file") + " (%s)" % _("without border")),
+            (_("ALT") + "-J", _("Copy board as image to a file") + " (%s)" % _("without coordinates")),
         ]
         if self.siActivasPiezas:
             liKeys.append((None, None))
@@ -1505,16 +1509,44 @@ class Tablero(QtGui.QGraphicsView):
         if self.exePulsadaLetra:
             self.exePulsadaLetra(siActivar, letra)
 
-    def salvaEnImagen(self, fichero=None, tipo=None, siCtrl=False):
-        if siCtrl:
-            pm = QtGui.QPixmap.grabWidget(self, 2, 2, self.width() - 4, self.height() - 4)
-        else:
+    def salvaEnImagen(self, fichero=None, tipo=None, siCtrl=False, siAlt=False):
+        actInd = actScr = False
+        if self.indicadorSC_menu:
+            if self.indicadorSC_menu.isVisible():
+                actInd = True
+                self.indicadorSC_menu.hide()
+        if self.scriptSC_menu:
+            if self.scriptSC_menu.isVisible():
+                actScr = True
+                self.scriptSC_menu.hide()
+
+        if not (siCtrl or siAlt):
             pm = QtGui.QPixmap.grabWidget(self)
+        else:
+            x = 0
+            y = 0
+            w = self.width()
+            h = self.height()
+            if siCtrl:
+                x = self.tamFrontera
+                y = self.tamFrontera
+                w -= self.tamFrontera*2
+                h -= self.tamFrontera*2
+            if siAlt:
+                x += self.margenCentro
+                y += self.margenCentro
+                w -= self.margenCentro*2
+                h -= self.margenCentro*2
+            pm = QtGui.QPixmap.grabWidget(self, x, y, w, h)
         if fichero is None:
             QTUtil.ponPortapapeles(pm, tipo="p")
-
         else:
             pm.save(fichero, tipo)
+
+        if actInd:
+            self.indicadorSC_menu.show()
+        if actScr:
+            self.scriptSC_menu.show()
 
     def thumbnail(self, ancho):
         # escondemos piezas+flechas
@@ -1891,20 +1923,10 @@ class PosTablero(Tablero):
 
     def keyPressEvent(self, event):
         k = event.key()
-        m = int(event.modifiers())
-        siCtrl = (m & QtCore.Qt.ControlModifier) > 0
-        if k == 67:  # C copiar tablero
-            self.salvaEnImagen(siCtrl=siCtrl)
-        elif k == 83:  # S copiar tablero en fichero
-            resp = QTUtil2.salvaFichero(self, _("File to save"), self.configuracion.dirSalvados,
-                                        "%s PNG (*.png)" % _("File"), False)
-            if resp:
-                self.salvaEnImagen(resp, "png", siCtrl=siCtrl)
-        elif k == 70:  # F girar tablero
-            self.intentaRotarTablero(None)
-
-        elif (96 > k > 64) and chr(k) in "PQKRNB":
+        if (96 > k > 64) and chr(k) in "PQKRNB":
             self.parent().cambiaPiezaSegun(chr(k))
+        else:
+            Tablero.keyPressEvent(self, event)
         event.ignore()
 
     def mousePressEvent(self, event):

@@ -7,7 +7,6 @@ from Code.Constantes import *
 
 class GestorSingularM(Gestor.Gestor):
     def inicio(self, singularMoves):
-
         self.singularMoves = singularMoves
 
         self.pos_bloque = 0

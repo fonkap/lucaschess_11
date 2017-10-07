@@ -13,7 +13,7 @@ from Code import EngineThread
 
 
 class XMotor:
-    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=EngineThread.PRIORITY_NORMAL, args=None):
+    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=None, args=None):
         self.nombre = nombre
 
         self.ponder = False
@@ -113,6 +113,7 @@ class XMotor:
                 stop = True
             if not self.engine.hay_datos():
                 if not self.dispatch():
+                    self.put_line("stop")
                     return False
                 time.sleep(0.090)
 
@@ -336,7 +337,7 @@ class XMotor:
                 self.engine.close()
             except:
                 os.kill(self.pid, signal.SIGTERM)
-                sys.stderr.write("INFO: except - the engine %s won't close properly.\n" % self.nombre)
+                sys.stderr.write("INFO X CLOSE: except - the engine %s won't close properly.\n" % self.nombre)
             self.pid = None
 
     def order_uci(self):
@@ -399,7 +400,7 @@ class XMotor:
 
 
 class FastEngine(object):
-    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=EngineThread.PRIORITY_NORMAL, args=None):
+    def __init__(self, nombre, exe, liOpcionesUCI=None, nMultiPV=0, priority=None, args=None):
         self.nombre = nombre
 
         self.ponder = False
@@ -441,9 +442,9 @@ class FastEngine(object):
         os.chdir(curdir)
 
         self.pid = self.process.pid
-        if priority != EngineThread.PRIORITY_NORMAL:
+        if priority is not None:
             p = psutil.Process(self.pid)
-            p.nice(priority)
+            p.nice(EngineThread.priorities.value(priority))
 
         self.stdout = self.process.stdout
         self.stdin = self.process.stdin
@@ -532,7 +533,7 @@ class FastEngine(object):
                     wtime -= 1
 
                 if self.process.poll() is None:  # nope, no luck
-                    sys.stderr.write("INFO: the engine %s won't close properly.\n" % self.exe)
+                    sys.stderr.write("INFO X CLOSE525: the engine %s won't close properly.\n" % self.exe)
                     self.process.kill()
                     self.process.terminate()
 

@@ -169,7 +169,7 @@ class GestorEntPos(Gestor.Gestor):
         QTUtil.xrefreshGUI()
 
         if self.xrival is None:
-            self.xrival = self.procesador.creaGestorMotor(self.configuracion.tutor, self.configuracion.tiempoTutor, None)
+            self.xrival = self.procesador.creaGestorMotor(self.configuracion.tutor, self.configuracion.tiempoTutor, self.configuracion.depthTutor)
 
         self.siAnalizadoTutor = False
 
@@ -337,7 +337,6 @@ class GestorEntPos(Gestor.Gestor):
 
         self.siJuegaHumano = True
         self.activaColor(siBlancas)
-        self.siAnalizadoTutor = False
 
     def piensaRival(self):
         self.rivalPensando = True
@@ -521,11 +520,9 @@ class GestorEntPos(Gestor.Gestor):
 
         siBien, mens, jg = Jugada.dameJugada(self.partida.ultPosicion, desde, hasta, coronacion)
         if siBien:
+            self.siAnalizadoTutor = False
             self.partida.ultPosicion = jg.posicion
-            if not self.siTutorActivado:
-                self.siAnalizadoTutor = False
-            else:
-
+            if self.siTutorActivado:
                 if not self.siDirigido:
                     self.analizaTutor()  # Que analice antes de activar humano, para que no tenga que esperar
                     self.siAnalizadoTutor = True

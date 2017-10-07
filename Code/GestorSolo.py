@@ -78,7 +78,7 @@ class GestorSolo(Gestor.Gestor):
             dic = pgn_pks(kJugando, pgn, jugadaInicial)
 
             self.resultadoPGN = None, None
-        else:
+        elif dic is None:
             li = self.listaHistorico()
             if li:
                 fichero = li[0]
@@ -601,6 +601,9 @@ class GestorSolo(Gestor.Gestor):
             return self.leeFichero(resp[2:])
 
     def nuevo(self):
+        self.xfichero = None
+        self.xpgn = None
+        self.xjugadaInicial = None
         self.reiniciar({})
         self.ponToolBar(False, True)
 
@@ -692,6 +695,9 @@ class GestorSolo(Gestor.Gestor):
                 self.bloqueApertura = w.resultado()
                 # self.posicApertura = ps
                 self.fen = None
+                self.xfichero = None
+                self.xpgn = None
+                self.xjugadaInicial = None
                 self.reiniciar()
 
         elif resp == "posicion":
@@ -703,6 +709,9 @@ class GestorSolo(Gestor.Gestor):
                 cp = ControlPosicion.ControlPosicion()
                 try:
                     cp.leeFen(str(texto))
+                    self.xfichero = None
+                    self.xpgn = None
+                    self.xjugadaInicial = None
                     self.fen = cp.fen()
                     self.bloqueApertura = None
                     self.posicApertura = None
@@ -716,6 +725,9 @@ class GestorSolo(Gestor.Gestor):
                 self.bloqueApertura = None
                 self.posicApertura = None
                 self.fen = unpgn.dic.get("FEN", None)
+                self.xfichero = None
+                self.xpgn = None
+                self.xjugadaInicial = None
                 dic = self.creaDic()
                 dic["PARTIDA"] = unpgn.partida.guardaEnTexto()
                 dic["liPGN"] = unpgn.listaCabeceras()
@@ -731,6 +743,9 @@ class GestorSolo(Gestor.Gestor):
                 if unpgn.siError:
                     QTUtil2.mensError(self.pantalla, _("The text from the clipboard does not contain a chess game in PGN format"))
                     return
+                self.xfichero = None
+                self.xpgn = None
+                self.xjugadaInicial = None
                 self.bloqueApertura = None
                 self.posicApertura = None
                 self.fen = unpgn.dic.get("FEN", None)
@@ -754,6 +769,9 @@ class GestorSolo(Gestor.Gestor):
         elif resp == "voyager":
             ptxt = Voyager.voyagerPartida(self.pantalla, self.partida)
             if ptxt:
+                self.xfichero = None
+                self.xpgn = None
+                self.xjugadaInicial = None
                 dic = self.creaDic()
                 dic["PARTIDA"] = ptxt
                 p = self.partida.copia()
@@ -781,30 +799,12 @@ class GestorSolo(Gestor.Gestor):
     def startPosition(self):
         resp = Voyager.voyagerFEN(self.pantalla, self.fen)
         if resp is not None:
+            self.xfichero = None
+            self.xpgn = None
+            self.xjugadaInicial = None
             self.fen = resp
             self.bloqueApertura = None
             self.posicApertura = None
-
-            if self.xpgn:
-                siInicio = self.fen == ControlPosicion.FEN_INICIAL
-                li = self.xpgn.split("\n")
-                lin = []
-                siFen = False
-                for linea in li:
-                    if linea.startswith("["):
-                        if "FEN " in linea:
-                            siFen = True
-                            if siInicio:
-                                continue
-                            linea = '[FEN "%s"]' % self.fen
-                        lin.append(linea)
-                    else:
-                        break
-                if not siFen:
-                    linea = '[FEN "%s"]' % self.fen
-                    lin.append(linea)
-                self.liPGN = lin
-                self.xpgn = "\n".join(lin) + "\n\n*"
 
             self.reiniciar()
 
@@ -819,6 +819,9 @@ class GestorSolo(Gestor.Gestor):
                 self.bloqueApertura = None
                 self.posicApertura = None
                 self.fen = unpgn.dic.get("FEN", None)
+                self.xfichero = None
+                self.xpgn = None
+                self.xjugadaInicial = None
                 dic = self.creaDic()
                 dic["PARTIDA"] = unpgn.partida.guardaEnTexto()
                 dic["liPGN"] = unpgn.listaCabeceras()
@@ -827,6 +830,9 @@ class GestorSolo(Gestor.Gestor):
                 self.reiniciar(dic)
             else:
                 cp.leeFen(str(texto))
+                self.xfichero = None
+                self.xpgn = None
+                self.xjugadaInicial = None
                 self.fen = cp.fen()
                 self.bloqueApertura = None
                 self.posicApertura = None

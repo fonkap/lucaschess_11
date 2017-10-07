@@ -100,6 +100,12 @@ def opciones(parent, configuracion):
     liTT = [separador]
     liTT.append((_("Engine") + ":", configuracion.ayudaCambioTutor()))
     liTT.append((_("Duration of tutor analysis (secs)") + ":", float(configuracion.tiempoTutor / 1000.0)))
+    liDepths = [("--", 0)]
+    for x in range(1, 51):
+        liDepths.append((str(x), x))
+    config = FormLayout.Combobox(_("Depth"), liDepths)
+    liTT.append((config, configuracion.depthTutor))
+
     li = [(_("Maximum"), 0)]
     for x in (1, 3, 5, 10, 15, 20, 30, 40, 50, 75, 100, 150, 200):
         li.append((str(x), x))
@@ -212,7 +218,7 @@ def opciones(parent, configuracion):
 
         (configuracion.siSuenaBeep, configuracion.siSuenaResultados, configuracion.siSuenaJugada, configuracion.siSuenaNuestro) = liSon
 
-        (configuracion.tutor.clave, tiempoTutor, configuracion.tutorMultiPV,
+        (configuracion.tutor.clave, tiempoTutor, configuracion.depthTutor, configuracion.tutorMultiPV,
             configuracion.tutorActivoPorDefecto, configuracion.tutorDifPts, configuracion.tutorDifPorc) = liTT
         configuracion.tiempoTutor = int(tiempoTutor * 1000)
 

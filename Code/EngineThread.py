@@ -30,17 +30,38 @@ def xprli(li):
 
 if DEBUG:
     tdbg = [time.time()]
-
     xpr("DEBUG XMOTOR")
 
-if VarGen.isLinux:
-    PRIORITY_NORMAL = 0
-    PRIORITY_LOW, PRIORITY_VERYLOW = 10, 20
-    PRIORITY_HIGH, PRIORITY_VERYHIGH = -10, -20
-else:
-    PRIORITY_NORMAL                  = psutil.NORMAL_PRIORITY_CLASS
-    PRIORITY_LOW, PRIORITY_VERYLOW   = psutil.BELOW_NORMAL_PRIORITY_CLASS, psutil.IDLE_PRIORITY_CLASS
-    PRIORITY_HIGH, PRIORITY_VERYHIGH = psutil.ABOVE_NORMAL_PRIORITY_CLASS, psutil.HIGH_PRIORITY_CLASS
+
+class Priorities:
+    def __init__(self):
+        self.normal, self.low, self.verylow, self.high, self.veryhigh = range(5)
+
+        if VarGen.isLinux:
+            p_normal = 0
+            p_low, p_verylow = 10, 20
+            p_high, p_veryhigh = -10, -20
+        else:
+            p_normal = psutil.NORMAL_PRIORITY_CLASS
+            p_low, p_verylow = psutil.BELOW_NORMAL_PRIORITY_CLASS, psutil.IDLE_PRIORITY_CLASS
+            p_high, p_veryhigh = psutil.ABOVE_NORMAL_PRIORITY_CLASS, psutil.HIGH_PRIORITY_CLASS
+
+        self.values = [p_normal, p_low, p_verylow, p_high, p_veryhigh]
+
+    def value(self, priority):
+        return self.values[priority] if priority in range(5) else self.value(self.normal)
+
+    def labels(self):
+        return [_("Normal"), _("Low"), _("Very low"), _("High"), _("Very high")]
+
+    def combo(self):
+        labels = self.labels()
+        return [(labels[pr], pr) for pr in range(5)]
+
+    def texto(self, prioridad):
+        return self.labels()[prioridad]
+
+priorities = Priorities()
 
 import subprocess
 import threading
@@ -114,9 +135,9 @@ class Engine(object):
         os.chdir(curdir)
 
         self.pid = self.process.pid
-        if self.priority != PRIORITY_NORMAL:
+        if self.priority is not None:
             p = psutil.Process(self.pid)
-            p.nice(self.priority)
+            p.nice(priorities.value(self.priority))
 
         self.stdout_lock = threading.Lock()
         self.stdout_queue = collections.deque()
@@ -140,7 +161,7 @@ class Engine(object):
                     wtime -= 1
 
                 if self.process.poll() is None:  # nope, no luck
-                    sys.stderr.write("INFO: the engine %s won't close properly.\n" % self.exe)
+                    sys.stderr.write("INFO ENGINE: the engine %s won't close properly.\n" % self.exe)
                     self.process.kill()
                     self.process.terminate()
 

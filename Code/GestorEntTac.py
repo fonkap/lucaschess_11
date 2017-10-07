@@ -154,8 +154,10 @@ class GestorEntTac(Gestor.Gestor):
         self.ponPosicionDGT()
 
         self.siSeguirJugando = False
-        self.xrival = self.procesador.creaGestorMotor(self.configuracion.tutor, min(self.configuracion.tiempoTutor, 5),
-                                                      None)
+        tiempo = self.configuracion.tiempoTutor
+        if tiempo < 1000 or tiempo > 5000:
+            tiempo = 5000
+        self.xrival = self.procesador.creaGestorMotor(self.configuracion.tutor, tiempo, None)
 
         self.reiniciando = False
 

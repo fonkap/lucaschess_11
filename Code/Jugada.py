@@ -16,9 +16,9 @@ def creaDicHTML():
     return dic
 
 # def creaDicHTML():
-#     base = '<span style="font-family:Chess Merida;font-size:60px">%s</span>'
-#     ori = "NnBbRrQqKk"
-#     des = "nmbvrtqwkl"
+#     base = '<span style="font-family:Chess Diagramm Pirat;font-size:18pt">%s</span>'
+#     ori = "KQRBNPkqrbnp"
+#     des = "rstuvw" + chr(126) + chr(130) + chr(131) + chr(132) + chr(133) + chr(134)
 #     def haz(c):
 #         return des[ori.index(c)]
 #     dic = {}

@@ -241,6 +241,10 @@ class WElegir(QTVarios.WDialogo):
             valor = valor.replace("?", "")
         return valor
 
+    def gridTeclaControl(self, grid, k, siShift, siControl, siAlt):
+        if k in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return):
+            self.elegir()
+
     def filtrar(self):
         w = WFiltrar(self, self.grid.oColumnas, self.liFiltro)
         if w.exec_():

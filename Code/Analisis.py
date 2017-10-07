@@ -716,8 +716,9 @@ class MuestraAnalisis:
 
     def creaMuestra(self, pantalla, alm):
         xmotor = None
+        busca = alm.motor[1:] if alm.motor.startswith("*") else alm.motor
         for um in self.liMuestras:
-            if um.xmotor.clave == alm.motor:
+            if um.xmotor.clave == busca:
                 xmotor = um.xmotor
                 xmotor.actMultiPV(alm.multiPV)
                 break
@@ -725,6 +726,7 @@ class MuestraAnalisis:
             confMotor = self.configuracion.buscaMotor(alm.motor)
             confMotor.actMultiPV(alm.multiPV)
             xmotor = self.procesador.creaGestorMotor(confMotor, alm.tiempo, alm.depth, siMultiPV=True)
+
         me = QTUtil2.mensEspera.inicio(pantalla, _("Analyzing the move...."), posicion="ad")
         mrm, pos = xmotor.analizaJugada(self.jg, alm.tiempo, alm.depth)
         me.final()

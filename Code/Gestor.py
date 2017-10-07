@@ -20,6 +20,7 @@ from Code.QT import PantallaArbol
 from Code.QT import PantallaArbolBook
 from Code.QT import PantallaSavePGN
 from Code.QT import PantallaTutor
+from Code.QT import PantallaKibitzers
 from Code.QT import Pelicula
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
@@ -27,7 +28,7 @@ from Code.QT import QTVarios
 from Code.QT import WBGuide
 from Code import Util
 from Code import VarGen
-from Code import XKibitzers
+from Code import Kibitzers
 from Code import XRun
 from Code.Constantes import *
 
@@ -493,13 +494,15 @@ class Gestor:
 
     def miraKibitzers(self, jg, columnaClave):
         if jg:
-            fen = jg.posicionBase.fen() if columnaClave == "NUMERO" else jg.posicion.fen()
+            fenBase = jg.posicionBase.fen()
+            fen = fenBase if columnaClave == "NUMERO" else jg.posicion.fen()
         else:
             fen = self.partida.ultPosicion.fen()
+            fenBase = fen
         liApagadas = []
         for n, xkibitzer in enumerate(self.liKibitzersActivas):
             if xkibitzer.siActiva():
-                xkibitzer.ponFen(fen)
+                xkibitzer.ponFen(fen, fenBase)
             else:
                 liApagadas.append(n)
         if liApagadas:
@@ -942,8 +945,17 @@ class Gestor:
                 maxRecursion = 9999
 
         if not (hasattr(jg, "analisis") and jg.analisis):
-            me = QTUtil2.mensEspera.inicio(self.pantalla, _("Analyzing the move...."), posicion="ad")
+            siCancelar = self.xtutor.motorTiempoJugada > 5000 or self.xtutor.motorProfundidad > 7
+            me = QTUtil2.mensEspera.inicio(self.pantalla, _("Analyzing the move...."), posicion="ad", siCancelar = siCancelar)
+            if siCancelar:
+                def test_me(txt):
+                    return not me.cancelado()
+                self.xanalyzer.ponGuiDispatch(test_me)
             mrm, pos = self.xanalyzer.analizaJugadaPartida(self.partida, pos_jg, self.xtutor.motorTiempoJugada, self.xtutor.motorProfundidad)
+            if siCancelar:
+                if me.cancelado():
+                    me.final()
+                    return
             jg.analisis = mrm, pos
             me.final()
 
@@ -1042,21 +1054,14 @@ class Gestor:
                     'h':kMoverFinal }
             self.mueveJugada(dic[letra])
 
-    def kibitzers(self, liKibitzers, orden):
-        if orden == "nueva":
-            liKibitzers = XKibitzers.nuevaKibitzer(self.pantalla, self.configuracion)
-            if liKibitzers:
-                self.kibitzers(liKibitzers, str(len(liKibitzers) - 1))
-
-        elif orden.startswith("quitar"):
-            nquitar = int(orden[7:])
-            del liKibitzers[nquitar]
-            XKibitzers.listaKibitzersGrabar(self.configuracion, liKibitzers)
+    def kibitzers(self, orden):
+        if orden == "edit":
+            w = PantallaKibitzers.WKibitzers(self.pantalla, self.procesador)
+            w.exec_()
 
         else:
             nkibitzer = int(orden)
-            kibitzer = liKibitzers[nkibitzer]
-            xkibitzer = XKibitzers.XKibitzer(self, kibitzer)
+            xkibitzer = Kibitzers.IPCKibitzer(self, nkibitzer)
             self.liKibitzersActivas.append(xkibitzer)
             self.ponVista()
 
@@ -1293,12 +1298,6 @@ class Gestor:
         icoCamara = Iconos.Camara()
         icoClip = Iconos.Clip()
         icoAzul = Iconos.PuntoAzul()
-        icoNegro = Iconos.PuntoNegro()
-        icoVerde = Iconos.PuntoVerde()
-        icoNaranja = Iconos.PuntoNaranja()
-        icoMagenta = Iconos.PuntoMagenta()
-        icoRojo = Iconos.PuntoRojo()
-        icoAmarillo = Iconos.PuntoAmarillo()
 
         trFichero = _("Save to a file")
         trPortapapeles = _("Copy to clipboard")
@@ -1362,24 +1361,15 @@ class Gestor:
             menu.separador()
             menuKibitzers = menu.submenu(_("Kibitzers"), Iconos.Kibitzer())
 
-            liKibitzers = XKibitzers.listaKibitzersRecuperar(self.configuracion)
-
-            dico = {"S": icoVerde, "C": icoAzul, "J": icoNaranja, "I": icoNegro, "L": icoMagenta, "M": icoRojo, "E": icoAmarillo,
-                    "X": icoCamara}
-            for nkibitzer, kibitzer in enumerate(liKibitzers):
-                menuKibitzers.opcion("kibitzer_%d" % nkibitzer, kibitzer["NOMBRE"], dico[kibitzer["TIPO"]])
-
+            kibitzers = Kibitzers.Kibitzers()
+            for num, (nombre, ico) in enumerate(kibitzers.lista_menu()):
+                menuKibitzers.opcion("kibitzer_%d" % num, nombre, ico)
             menuKibitzers.separador()
-            menuKibitzers.opcion("kibitzer_nueva", _("New"), Iconos.Nuevo())
-            if liKibitzers:
-                menuKibitzers.separador()
-                menuKibitzersBorrar = menuKibitzers.submenu(_("Remove"), Iconos.Borrar())
-                for nkibitzer, kibitzer in enumerate(liKibitzers):
-                    menuKibitzersBorrar.opcion("kibitzer_quitar_%d" % nkibitzer, kibitzer["NOMBRE"], icoNegro)
+            menuKibitzers.opcion("kibitzer_edit", _("Edition"), Iconos.ModificarP())
 
         # Juega por mi
-        if self.siJuegaPorMi and self.estado == kJugando and (
-                    self.ayudas or self.tipoJuego in (kJugEntMaq, kJugSolo, kJugEntPos, kJugEntTac)):
+        if self.siJuegaPorMi and self.estado == kJugando and \
+                (self.ayudas or self.tipoJuego in (kJugEntMaq, kJugSolo, kJugEntPos, kJugEntTac)):
             menu.separador()
             menu.opcion("juegapormi", _("Plays instead of me") + "  [^1]", Iconos.JuegaPorMi()),
 
@@ -1426,7 +1416,7 @@ class Gestor:
             self.trasteros(resp[9:])
 
         elif resp.startswith("kibitzer_"):
-            self.kibitzers(liKibitzers, resp[9:])
+            self.kibitzers(resp[9:])
 
         elif resp == "arbol":
             self.arbol()

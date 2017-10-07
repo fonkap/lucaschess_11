@@ -138,6 +138,8 @@ class MensEspera(QtGui.QWidget):
 
     def cancelar(self):
         self.siCancelado = True
+        self.btCancelar.hide()
+        QTUtil.refreshGUI()
 
     def cancelado(self):
         QTUtil.refreshGUI()

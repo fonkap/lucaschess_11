@@ -34,7 +34,7 @@ class Variantes(QtGui.QWidget):
         self.em.setReadOnly(True)
         self.em.capturaDobleClick(self.dobleClick)
 
-        ly = Colocacion.V().control(tbVariantes).control(self.em)
+        ly = Colocacion.V().control(tbVariantes).control(self.em).margen(3)
 
         f = Controles.TipoLetra(puntos=puntos)
 
@@ -211,7 +211,7 @@ class InformacionPGN(QtGui.QWidget):
 
         # Comentarios
         self.comentario = Controles.EM(self, siHTML=False).capturaCambios(self.comentarioCambiado).ponFuente(ftxt).anchoMinimo(200)
-        ly = Colocacion.H().control(self.comentario)
+        ly = Colocacion.H().control(self.comentario).margen(3)
         self.gbComentario = Controles.GB(self, _("Comments"), ly).ponFuente(f)
 
         # Variantes
@@ -226,7 +226,7 @@ class InformacionPGN(QtGui.QWidget):
         layout.control(self.lbApertura)
         layout.control(self.gbValoracion)
         layout.control(self.splitter)
-        layout.margen(5)
+        layout.margen(1)
 
         self.setLayout(layout)
 

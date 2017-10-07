@@ -32,7 +32,7 @@ class GestorMotor:
         self.clave = confMotor.clave
         self.nMultiPV = 0
 
-        self.priority = EngineThread.PRIORITY_NORMAL
+        self.priority = EngineThread.priorities.normal
 
         self.dispatching = None
 
@@ -59,7 +59,7 @@ class GestorMotor:
         self.motorProfundidad = profundidad
 
     def setPriority(self, priority):
-        self.priority = priority
+        self.priority = priority if priority else EngineThread.priorities.normal
 
     def maximizaMultiPV(self):
         self.nMultiPV = 9999

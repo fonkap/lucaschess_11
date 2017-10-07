@@ -1,7 +1,7 @@
 import codecs
 import os
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 from Code import Partida
 from Code import DBgamesFEN
@@ -148,6 +148,10 @@ class WGamesFEN(QtGui.QWidget):
         self.dbGamesFEN.ponOrden(liOrden)
         self.grid.refresh()
         self.updateStatus()
+
+    def gridTeclaControl(self, grid, k, siShift, siControl, siAlt):
+        if k in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return):
+            self.tw_editar()
 
     def closeEvent(self, event):
         self.tw_terminar()

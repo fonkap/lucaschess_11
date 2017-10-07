@@ -7,7 +7,6 @@ from Code import Routes
 from Code import Util
 from Code import VarGen
 from Code import XGestorMotor
-from Code import EngineThread
 from Code.Constantes import *
 
 from Code import Albums
@@ -62,6 +61,7 @@ from Code.QT import PantallaDatabase
 from Code.QT import PantallaManualSave
 from Code.QT import WBDatabaseFEN
 from Code.QT import WBGuide
+from Code.QT import PantallaKibitzers
 
 
 class Procesador:
@@ -262,7 +262,7 @@ class Procesador:
     def creaXTutor(self):
         xtutor = XGestorMotor.GestorMotor(self, self.configuracion.tutor)
         xtutor.nombre += ("(%s)" % _("tutor"))
-        xtutor.opciones(self.configuracion.tiempoTutor, None, True)
+        xtutor.opciones(self.configuracion.tiempoTutor, self.configuracion.depthTutor, True)
         if self.configuracion.tutorMultiPV == 0:
             xtutor.maximizaMultiPV()
         else:
@@ -285,7 +285,7 @@ class Procesador:
     def creaXAnalyzer(self):
         xanalyzer = XGestorMotor.GestorMotor(self, self.configuracion.tutor)
         xanalyzer.nombre += ("(%s)" % _("analyzer"))
-        xanalyzer.opciones(self.configuracion.tiempoTutor, None, True)
+        xanalyzer.opciones(self.configuracion.tiempoTutor, self.configuracion.depthTutor, True)
         if self.configuracion.tutorMultiPV == 0:
             xanalyzer.maximizaMultiPV()
         else:
@@ -299,7 +299,7 @@ class Procesador:
             self.xanalyzer.terminar()
         self.creaXAnalyzer()
 
-    def creaGestorMotor(self, confMotor, tiempo, nivel, siMultiPV=False, priority=EngineThread.PRIORITY_NORMAL):
+    def creaGestorMotor(self, confMotor, tiempo, nivel, siMultiPV=False, priority=None):
         xgestor = XGestorMotor.GestorMotor(self, confMotor)
         xgestor.opciones(tiempo, nivel, siMultiPV)
         xgestor.setPriority(priority)
@@ -718,6 +718,8 @@ class Procesador:
         menu1.opcion("sts", _("STS: Strategic Test Suite"), Iconos.STS())
         menu1.separador()
         menu1.opcion("motores", _("External engines"), Iconos.Motores())
+        menu1.separador()
+        menu1.opcion("kibitzers", _("Kibitzers"), Iconos.Kibitzer())
         menu.separador()
 
         resp = menu.lanza()
@@ -734,6 +736,8 @@ class Procesador:
                 self.motoresExternos()
             elif resp == "sts":
                 self.sts()
+            elif resp == "kibitzers":
+                self.kibitzers()
 
             elif resp == "manual_save":
                 self.manual_save()
@@ -749,6 +753,10 @@ class Procesador:
             elif resp == "bookguide":
                 w = WBGuide.WBGuide(self.pantalla, self)
                 w.exec_()
+
+    def kibitzers(self):
+        w = PantallaKibitzers.WKibitzers(self.pantalla, self)
+        w.exec_()
 
     def externBMT(self, fichero):
         self.configuracion.ficheroBMT = fichero
@@ -881,7 +889,6 @@ class Procesador:
 
     def informacion(self):
         liBlog = (
-            ("Director", "http://lucaschess.blogspot.com.es/2012/05/director.html"),
             ("Tactical training with your own blunders",
              "http://lucaschess.blogspot.com.es/2011/11/tactical-training-with-your-own.html"),
             ("Announcements sounds", "http://lucaschess.blogspot.com.es/2011/10/announcements-sounds.html"),

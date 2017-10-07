@@ -49,6 +49,7 @@ class WSave():
             dic["SP_%s" % name] = sp.sizes()
 
         Util.guardaDIC(dic, self.ficheroVideo)
+        return dic
 
     def recuperarDicVideo(self):
         if Util.tamFichero(self.ficheroVideo) > 0:

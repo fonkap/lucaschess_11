@@ -33,6 +33,7 @@ from Code.QT import PantallaVisualiza
 from Code.QT import PantallaTurnOnLights
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
+from Code.QT import Controles
 from Code import Tacticas
 from Code import TrListas
 from Code import Util
@@ -116,8 +117,19 @@ class Entrenamientos:
         dicMenu = {}
         menu = QTVarios.LCMenu(self.parent)
 
+        tpirat = Controles.TipoLetra("Chess Diagramm Pirat", self.configuracion.puntosMenu+4)
+
         def xopcion(menu, clave, texto, icono, siDeshabilitado=False):
-            menu.opcion(clave, texto, icono, siDeshabilitado)
+            if "KP" in texto:
+                d = {"K":"r", "P":"w", "k":chr(126), "p":chr(134)}
+                k2 = texto.index("K", 2)
+                texto = texto[:k2] + texto[k2:].lower()
+                texton = ""
+                for c in texto:
+                    texton += d[c]
+                menu.opcion(clave, texton, icono, siDeshabilitado, tipoLetra=tpirat)
+            else:
+                menu.opcion(clave, texto, icono, siDeshabilitado)
             dicMenu[clave] = (clave, texto, icono, siDeshabilitado)
 
         # Posiciones de entrenamiento --------------------------------------------------------------------------

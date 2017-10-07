@@ -340,7 +340,7 @@ class WTabDirVisual(QTVarios.WDialogo):
 
     def gmas(self, siInsertar):
         ta = TabVisual.GT_Action(None)
-        liActions = [(txt, Iconos.PuntoRojo(), "GTA_%s" % action) for action, txt in ta.dicTxt.iteritems()]
+        liActions = [(_F(txt), Iconos.PuntoRojo(), "GTA_%s" % action) for action, txt in ta.dicTxt.iteritems()]
 
         # tc = TabVisual.GT_Configuration(None)
         # liConfigurations = [(txt, Iconos.PuntoVerde(), "GTC_%s" % configuration) for configuration, txt in tc.dicTxt.iteritems()]

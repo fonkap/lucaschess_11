@@ -153,6 +153,7 @@ class Configuracion:
         self.tutorDifPorc = 0
 
         self.tiempoTutor = 3000
+        self.depthTutor = 0
 
         self.siSuenaBeep = False
         self.siSuenaNuestro = False
@@ -233,6 +234,7 @@ class Configuracion:
         self.ficheroPuntuacion = "%s/punt.pke" % self.carpeta
         self.ficheroDirSound = "%s/direc.pkv" % self.carpeta
         self.ficheroKibitzers = "%s/moscas.pkv" % self.carpeta
+        self.ficheroKibitzersN = "%s/kibitzers.pkv" % self.carpeta
         self.ficheroEntAperturas = "%s/entaperturas.pkd" % self.carpeta
         self.ficheroEntAperturasPar = "%s/entaperturaspar.pkd" % self.carpeta
         self.ficheroPersAperturas = "%s/persaperturas.pkd" % self.carpeta
@@ -443,6 +445,7 @@ class Configuracion:
         dic["JUGADOR"] = self.jugador
         dic["ESTILO"] = self.estilo
         dic["TIEMPOTUTOR"] = self.tiempoTutor
+        dic["DEPTHTUTOR"] = self.depthTutor
 
         dic["SIBEEP"] = self.siSuenaBeep
         dic["SISUENANUESTRO"] = self.siSuenaNuestro
@@ -563,7 +566,8 @@ class Configuracion:
                 self.jugador = dic["JUGADOR"]
                 self.estilo = dg("ESTILO", "Cleanlooks")
                 self.tiempoTutor = dic["TIEMPOTUTOR"]
-                if self.tiempoTutor == 0:
+                self.depthTutor = dg("DEPTHTUTOR", 0)
+                if self.tiempoTutor == 0 and self.depthTutor == 0:
                     self.tiempoTutor = 3000
 
                 self.siSuenaBeep = dic["SIBEEP"]

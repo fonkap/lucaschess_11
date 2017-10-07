@@ -336,3 +336,26 @@ class HTMLDelegate(QtGui.QStyledItemDelegate):
         doc.setHtml(options.text)
         doc.setTextWidth(options.rect.width())
         return QtCore.QSize(doc.idealWidth(), doc.size().height())
+
+
+class MultiEditor(QtGui.QItemDelegate):
+    def __init__(self, wparent):
+        QtGui.QItemDelegate.__init__(self, None)
+        self.win_me = wparent
+
+    def createEditor(self, parent, option, index):
+        editor = self.win_me.me_setEditor(parent)
+        if editor:
+            editor.installEventFilter(self)
+        return editor
+
+    def setEditorData(self, editor, index):
+        value = index.model().data(index, QtCore.Qt.DisplayRole)
+        self.win_me.me_ponValor(editor, value)
+
+    def setModelData(self, editor, model, index):
+        value = self.win_me.me_leeValor(editor)
+        model.setData(index, value)
+
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)

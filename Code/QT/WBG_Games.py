@@ -172,6 +172,10 @@ class WGames(QtGui.QWidget):
         self.grid.refresh()
         self.updateStatus()
 
+    def gridTeclaControl(self, grid, k, siShift, siControl, siAlt):
+        if k in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return):
+            self.tw_editar()
+
     def closeEvent(self):
         self.tw_terminar()
 

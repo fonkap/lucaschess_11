@@ -200,7 +200,7 @@ def leeRivales():
     cm.ponMultiPV(20, 100)
     mas(cm)
 
-    cm = ConfigMotor("texel", "Peter Österlund", "1.07a6 32bit", "http://web.comhem.se/petero2home/javachess/index.html#texel")
+    cm = ConfigMotor("texel", "Peter Österlund", "1.07 32bit", "http://hem.bredband.net/petero2b/javachess/index.html#texel")
     cm.path = "texel32old.exe"
     cm.elo = 3100
     cm.ordenUCI("Hash", "32")

@@ -191,7 +191,11 @@ class GestorChallenge101:
         icono = Iconos.PuntoAzul()
 
         menu.separador()
-        menu.opcion(None,("** %s **" % _("Challenge 101")).center(30))
+        titulo = ("** %s **" % _("Challenge 101")).center(30)
+        if self.pendientes == 0:
+            menu.opcion("close", titulo, Iconos.Terminar())
+        else:
+            menu.opcion("continuar", titulo, Iconos.Pelicula_Seguir())
         menu.separador()
         ok_en_lista = False
         for n, (fecha, pts) in enumerate(li_results, 1):
