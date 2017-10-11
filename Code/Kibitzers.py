@@ -292,6 +292,7 @@ class IPCKibitzer:
 
         self.popen = XRun.run_lucas("-kibitzer", fdb)
 
+
     def escribe(self, orden):
         self.ipc.push(orden.bloqueEnvio())
 

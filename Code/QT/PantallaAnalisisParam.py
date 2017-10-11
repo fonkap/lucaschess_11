@@ -304,7 +304,7 @@ def paramAnalisis(parent, configuracion, siModoAmpliado, siTodosMotores=False):
         return None
 
 
-def paramAnalisisMasivo(parent, configuracion, siVariosSeleccionados):
+def paramAnalisisMasivo(parent, configuracion, siVariosSeleccionados, siDatabase=False):
     alm = leeDicParametros(configuracion)
 
     # Datos
@@ -454,7 +454,7 @@ def paramAnalisisMasivo(parent, configuracion, siVariosSeleccionados):
         Util.guardaVar(configuracion.ficheroAnalisis, dic)
 
         if not (alm.tacticblunders or alm.pgnblunders or alm.bmtblunders or alm.fnsbrilliancies or
-                    alm.pgnbrilliancies or alm.bmtbrilliancies):
+                    alm.pgnbrilliancies or alm.bmtbrilliancies or siDatabase):
             QTUtil2.mensError(parent, _("No file was specified where to save results"))
             return
 

@@ -81,7 +81,7 @@ class WAnalisisGraph(QTVarios.WDialogo):
         ly_tc = Colocacion.H().control(self.tablero).control(self.capturas)
 
         self.rbShowValues = Controles.RB(self, _("Values"), rutina=self.cambiadoShow).activa(True)
-        self.rbShowElo = Controles.RB(self, _("Elo perfomance"), rutina=self.cambiadoShow)
+        self.rbShowElo = Controles.RB(self, _("Elo performance"), rutina=self.cambiadoShow)
         self.chbShowLostPoints = Controles.CHB(self, _("Show lost points"), self.getShowLostPoints()).capturaCambiado(self, self.showLostPointsChanged)
         ly_rb = Colocacion.H().espacio(40).control(self.rbShowValues).espacio(20).control(self.rbShowElo).espacio(30).control(self.chbShowLostPoints).relleno(1)
 

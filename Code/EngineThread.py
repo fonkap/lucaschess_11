@@ -154,6 +154,7 @@ class Engine(object):
         self.working = False
         if self.pid:
             if self.process.poll() is None:
+                self.put_line("stop")
                 self.put_line("quit")
                 wtime = 40  # wait for it, wait for it...
                 while self.process.poll() is None and wtime > 0:

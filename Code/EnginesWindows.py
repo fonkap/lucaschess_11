@@ -311,7 +311,9 @@ def leeRivales():
     cm = ConfigMotor("hannibal", "Samuel N. Hamilton and Edsel G. Apostol", "1.7", "http://sites.google.com/site/edapostol/hannibal")
     cm.path = "Hannibal1.7w32.exe"
     cm.elo = 3050
+    cm.removeLog("log.txt")
     mas(cm)
+
 
     cm = ConfigMotor("spike", "Volker Böhm and Ralf Schäfer", "1.4", "http://spike.lazypics.de/index_en.html")
     cm.path = "Spike1.4.exe"
@@ -321,6 +323,7 @@ def leeRivales():
     cm = ConfigMotor("zappa", "Anthony Cozzie", "1.1", "http://www.acoz.net/zappa/")
     cm.path = "zappa.exe"
     cm.elo = 2581
+    cm.removeLog("zappa_log.txt")
     mas(cm)
 
     cm = ConfigMotor("houdini", "Robert Houdart", "1.5a", "http://www.cruxis.com/chess/houdini.htm")

@@ -385,24 +385,24 @@ class WTabDirVisual(QTVarios.WDialogo):
         self.ponSiGrabar()
         self.refresh_guion()
 
-    def creaConfiguration(self, txt, configuration, fila):
-        liGen = [(None, None)]
-        config = FormLayout.Editbox(_("Time in milliseconds"), 80, tipo=int)
-        liGen.append((config, ""))
-        ico = Iconos.Configurar()
-
-        resultado = FormLayout.fedit(liGen, title=txt, parent=self, icon=ico)
-        if resultado:
-            accion, liResp = resultado
-            value = liResp[0]
-            tarea = TabVisual.GT_Configuration(self.guion)
-            tarea.configuration(configuration)
-            tarea.value(value)
-            self.guion.nuevaTarea(tarea, fila)
-            self.ponSiGrabar()
-            self.refresh_guion()
-            return True
-        return False
+    # def creaConfiguration(self, txt, configuration, fila):
+    #     liGen = [(None, None)]
+    #     config = FormLayout.Editbox(_("Time in milliseconds"), 80, tipo=int)
+    #     liGen.append((config, ""))
+    #     ico = Iconos.Configurar()
+    #
+    #     resultado = FormLayout.fedit(liGen, title=txt, parent=self, icon=ico)
+    #     if resultado:
+    #         accion, liResp = resultado
+    #         value = liResp[0]
+    #         tarea = TabVisual.GT_Configuration(self.guion)
+    #         tarea.configuration(configuration)
+    #         tarea.value(value)
+    #         self.guion.nuevaTarea(tarea, fila)
+    #         self.ponSiGrabar()
+    #         self.refresh_guion()
+    #         return True
+    #     return False
 
     def gnuevo(self):
         self.gmas(False)

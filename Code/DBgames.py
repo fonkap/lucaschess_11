@@ -434,6 +434,23 @@ class DBgames:
     def reset_cache(self):
         self.cache = {}
 
+    def guardaConfig(self, clave, valor):
+        with Util.DicRaw(self.nomFichero, "config") as dbconf:
+            dbconf[clave] = valor
+
+    def recuperaConfig(self, clave):
+        with Util.DicRaw(self.nomFichero, "config") as dbconf:
+            return dbconf[clave]
+
+    def guardaOrden(self):
+        self.guardaConfig("LIORDEN", self.liOrden)
+
+    def recuperaOrden(self):
+        liOrden = self.recuperaConfig("LIORDEN")
+        if liOrden:
+            self.ponOrden(liOrden)
+        return self.liOrden
+
     def addcache(self, rowid, reg):
         if len(self.cache) > self.maxcache:
             keys = self.cache.keys()

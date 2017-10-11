@@ -123,7 +123,7 @@ class ThanksTo:
             return txt
 
         # Version 11
-        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob"]
+        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob", "Giovanni di Maria", "vga"]
         liResto = []
         txt += version(11, liBase, liResto)
 
@@ -271,6 +271,7 @@ class ThanksTo:
             ("Felicia", _("Permission of author")),
             ("Mohammed Abdalazez", _("Permission of author")),
             ("Red Hood", _("Permission of author")),
+            ("Michael Byrne", _("Permission of author")),
         ]
         for autor, licencia in li:
             txt += "<tr>"

@@ -461,7 +461,7 @@ def genHistograms(partida, sicentipawns):
     porcT = 0
     porcW = 0
     porcB = 0
-    with open( "IntFiles/Formulas/eloperfomance.formula") as f:
+    with open( "IntFiles/Formulas/eloperformance.formula") as f:
         eloformula = f.read().strip()
 
     for num, jg in enumerate(partida.liJugadas):

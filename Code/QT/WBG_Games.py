@@ -2,6 +2,7 @@ import os
 
 from PyQt4 import QtGui, QtCore
 
+from Code import Analisis
 from Code import Partida
 from Code import DBgames
 from Code import TrListas
@@ -17,6 +18,7 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 from Code.QT import PantallaSolo
 from Code.QT import PantallaSavePGN
+from Code.QT import PantallaAnalisisParam
 
 
 class WGames(QtGui.QWidget):
@@ -87,6 +89,17 @@ class WGames(QtGui.QWidget):
         self.setLayout(layout)
 
         self.setNameToolBar()
+
+        self.recuperaOrden()
+
+    def recuperaOrden(self):
+        liOrden = self.dbGames.recuperaOrden()
+        if liOrden:
+            for clave, tipo in liOrden:
+                col = self.grid.buscaCabecera(clave)
+                col.antigua = col.cabecera
+                col.cabecera = col.antigua + ("+" if tipo == "ASC" else "-")
+            self.grid.refresh()
 
     def limpiaColumnas(self):
         for col in self.grid.oColumnas.liColumnas:
@@ -182,6 +195,7 @@ class WGames(QtGui.QWidget):
     def tw_terminar(self):
         self.terminado = True
         self.dbGames.close()
+        self.dbGames.guardaOrden()
         self.winBookGuide.terminar()
 
     def actualiza(self, siObligatorio=False):
@@ -374,6 +388,8 @@ class WGames(QtGui.QWidget):
         menu1.opcion(self.tw_uti_pmerge, _("Merge two books in one"), ico)
         menu.separador()
         menu.opcion(self.tw_massive_change_tags, _("Massive change of tags"), Iconos.PGN())
+        menu.separador()
+        menu.opcion(self.tw_massive, _("Mass analysis"), Iconos.Analizar())
         resp = menu.lanza()
         if resp:
             resp()
@@ -408,6 +424,81 @@ class WGames(QtGui.QWidget):
                 self.grid.refresh()
                 self.grid.goto(recno, 0)
                 um.final()
+
+    def tw_massive(self):
+        liSeleccionadas = self.grid.recnosSeleccionados()
+        nSeleccionadas = len(liSeleccionadas)
+
+        alm = PantallaAnalisisParam.paramAnalisisMasivo(self, self.configuracion, nSeleccionadas > 1, siDatabase=True)
+        if alm:
+
+            if alm.siVariosSeleccionados:
+                nregs = nSeleccionadas
+            else:
+                nregs = self.dbGames.reccount()
+
+            tmpBP = QTUtil2.BarraProgreso2(self, _("Mass analysis"), formato2="%p%")
+            tmpBP.ponTotal(1, nregs)
+            tmpBP.ponRotulo(1, _("Game"))
+            tmpBP.ponRotulo(2, _("Moves"))
+            tmpBP.mostrar()
+
+            ap = Analisis.AnalizaPartida(self.procesador, alm, True)
+
+            for n in range(nregs):
+
+                if tmpBP.siCancelado():
+                    break
+
+                tmpBP.pon(1, n + 1)
+
+                if alm.siVariosSeleccionados:
+                    n = liSeleccionadas[n]
+
+                partida = self.dbGames.leePartidaRecno(n)
+                self.grid.goto(n, 0)
+
+                ap.xprocesa(partida.dicTags(), partida, tmpBP, partida.pgn())
+
+                self.dbGames.guardaPartidaRecno(n, partida)
+
+            if not tmpBP.siCancelado():
+                ap.terminar(True)
+
+                liCreados = []
+                liNoCreados = []
+
+                if alm.tacticblunders:
+                    if ap.siTacticBlunders:
+                        liCreados.append(alm.tacticblunders)
+                    else:
+                        liNoCreados.append(alm.tacticblunders)
+
+                for x in (alm.pgnblunders, alm.fnsbrilliancies, alm.pgnbrilliancies):
+                    if x:
+                        if Util.existeFichero(x):
+                            liCreados.append(x)
+                        else:
+                            liNoCreados.append(x)
+
+                if alm.bmtblunders:
+                    if ap.siBMTblunders:
+                        liCreados.append(alm.bmtblunders)
+                    else:
+                        liNoCreados.append(alm.bmtblunders)
+                if alm.bmtbrilliancies:
+                    if ap.siBMTbrilliancies:
+                        liCreados.append(alm.bmtbrilliancies)
+                    else:
+                        liNoCreados.append(alm.bmtbrilliancies)
+                if liCreados:
+                    PantallaPGN.mensajeEntrenamientos(self, liCreados, liNoCreados)
+
+            else:
+                ap.terminar(False)
+
+            tmpBP.cerrar()
+
 
     def tw_uti_pcreate(self):
         PantallaBooks.polyglotCrear(self)

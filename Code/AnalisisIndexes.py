@@ -394,7 +394,7 @@ def genIndexes(configuracion, partida, alm):
     txt += plantillaC % (_("Pieces activity"), xac(piecesactivity[True]), xac(piecesactivity[False]), xac(piecesactivityT))
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txt += plantillaL % ( "%", alm.porcW, prc, alm.porcB, prc, alm.porcT, prc)
-    txt += plantillaC % ( _("Elo perfomance"), int(elo_real[True]), int(elo_real[False]), int(eloT_real))
+    txt += plantillaC % ( _("Elo performance"), int(elo_real[True]), int(elo_real[False]), int(eloT_real))
 
     if Partida.OPENING in st_EMO:
         txt += plantillaC % ( _("Opening"), int(elo_real_OME[Partida.OPENING][True]), int(elo_real_OME[Partida.OPENING][False]), int(elo_real_OME[Partida.OPENING][None]))

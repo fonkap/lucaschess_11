@@ -427,6 +427,9 @@ class PartidaCompleta(Partida):
                 return v
         return ""
 
+    def dicTags(self):
+        return {k:v for k, v in self.liTags}
+
     def readPGN(self, configuracion, pgn):
         from Code import PGN  # evita el circulo vicioso
         unpgn = PGN.UnPGN()

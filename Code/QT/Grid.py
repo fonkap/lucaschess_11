@@ -272,6 +272,9 @@ class Grid(QtGui.QTableView):
 
         self.siEditable = siEditable
 
+    def buscaCabecera(self, clave):
+        return self.oColumnas.buscaColumna(clave)
+
     def coloresAlternados(self):
         self.setAlternatingRowColors(True)
 
