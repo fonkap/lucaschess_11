@@ -1,11 +1,11 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Controles
 from Code.QT import QTUtil
 from Code.Constantes import *
 
 
-class BloqueSC(QtGui.QGraphicsItem):
+class BloqueSC(QtWidgets.QGraphicsItem):
     def __init__(self, escena, posicion):
 
         super(BloqueSC, self).__init__()
@@ -31,12 +31,12 @@ class BloqueSC(QtGui.QGraphicsItem):
 
     def activa(self, siActivar):
         if siActivar:
-            self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
-            self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable, True)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, True)
             self.setFocus()
         else:
-            self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-            self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable, False)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, False)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, False)
 
 
 class CajaSC(BloqueSC):
@@ -207,20 +207,20 @@ class PiezaSC(BloqueSC):
 
     def mousePressEvent(self, event):
         if self.dragable:
-            QtGui.QGraphicsItem.mousePressEvent(self, event)
+            QtWidgets.QGraphicsItem.mousePressEvent(self, event)
             self.setZValue(kZvalue_piezaMovimiento)
             self.setCursor(QtCore.Qt.ClosedHandCursor)
         else:
             event.ignore()
 
     def mouseReleaseEvent(self, event):
-        QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsItem.mouseReleaseEvent(self, event)
         if self.dragable:
             self.setZValue(kZvalue_pieza)
             self.tablero.intentaMover(self, event.scenePos(), event.button())
 
     def activa(self, siActivar):
-        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, siActivar)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, siActivar)
         self.siActiva = siActivar
         if siActivar:
             self.setCursor(QtCore.Qt.OpenHandCursor)
@@ -316,7 +316,7 @@ class TiempoSC(BloqueSC):
             painter.drawRect(rect)
 
     def mousePressEvent(self, event):
-        QtGui.QGraphicsItem.mousePressEvent(self, event)
+        QtWidgets.QGraphicsItem.mousePressEvent(self, event)
         p = event.scenePos()
         self.expX = p.x()
 
@@ -358,10 +358,10 @@ class TiempoSC(BloqueSC):
 
     def activa(self, siActivar):
         if siActivar:
-            self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
             self.setFocus()
         else:
-            self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, False)
 
 
 class PixmapSC(BloqueSC):

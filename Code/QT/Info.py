@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -7,7 +7,7 @@ from Code.QT import InfoBase
 from Code.QT import QTUtil
 
 
-class WAbout(QtGui.QDialog):
+class WAbout(QtWidgets.QDialog):
     def __init__(self, procesador):
         super(WAbout, self).__init__(procesador.pantalla)
 
@@ -37,7 +37,7 @@ class WAbout(QtGui.QDialog):
 
         ib = InfoBase.ThanksTo()
 
-        for n, (k, titulo) in enumerate(ib.dic.iteritems()):
+        for n, (k, titulo) in enumerate(ib.dic.items()):
             txt = ib.texto(k)
             lb = Controles.LB(self, txt)
             lb.ponFondoN("#F6F3EE")
@@ -50,7 +50,7 @@ class WAbout(QtGui.QDialog):
         self.setLayout(layout)
 
 
-class WInfo(QtGui.QDialog):
+class WInfo(QtWidgets.QDialog):
     def __init__(self, wParent, titulo, cabecera, txt, minTam, pmIcono):
         super(WInfo, self).__init__(wParent)
 

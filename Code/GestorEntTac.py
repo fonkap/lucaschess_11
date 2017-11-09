@@ -1,6 +1,6 @@
 import time
 
-from PyQt4.QtCore import Qt
+from PyQt5.QtCore import Qt
 
 from Code import ControlPosicion
 from Code import Gestor
@@ -87,7 +87,7 @@ class GestorEntTac(Gestor.Gestor):
                         self.partida = partida
                         self.pgn.partida = partida
                         self.dicEtiquetasPGN = pgn.dic
-                        # for k, v in pgn.dic.iteritems():
+                        # for k, v in pgn.dic.items():
                         # if k.upper() != "FEN":
                         # if etiDirigido:
                         # etiDirigido += "<br>"
@@ -554,7 +554,7 @@ class GestorEntTac(Gestor.Gestor):
         jg = self.partida.last_jg()
         mv = jg.movimiento()
         fenM2 = jg.posicion.fenM2()
-        for k, liOpciones in self.dicDirigidoFenM2.iteritems():
+        for k, liOpciones in self.dicDirigidoFenM2.items():
             for siMain, jg1 in liOpciones:
                 if jg1.posicion.fenM2() == fenM2 and jg1.movimiento() == mv:
                     if jg1.critica and not jg.critica:

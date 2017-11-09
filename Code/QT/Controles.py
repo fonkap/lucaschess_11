@@ -1,9 +1,9 @@
 # import datetime
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class ED(QtGui.QLineEdit):
+class ED(QtWidgets.QLineEdit):
     """
     Control de entrada de texto en una linea.
     """
@@ -14,9 +14,9 @@ class ED(QtGui.QLineEdit):
         @param texto: texto inicial.
         """
         if texto:
-            QtGui.QLineEdit.__init__(self, texto, parent)
+            QtWidgets.QLineEdit.__init__(self, texto, parent)
         else:
-            QtGui.QLineEdit.__init__(self, parent)
+            QtWidgets.QLineEdit.__init__(self, parent)
         self.parent = parent
 
         self.siMayusculas = False
@@ -29,7 +29,7 @@ class ED(QtGui.QLineEdit):
         return self
 
     def password(self):
-        self.setEchoMode(QtGui.QLineEdit.Password)
+        self.setEchoMode(QtWidgets.QLineEdit.Password)
         return self
 
     def deshabilitado(self, sino):
@@ -139,7 +139,7 @@ class ED(QtGui.QLineEdit):
         return int(txt) if txt else 0
 
 
-class SB(QtGui.QSpinBox):
+class SB(QtWidgets.QSpinBox):
     """
     SpinBox: Entrada de numeros enteros, con control de incremento o reduccion
     """
@@ -150,7 +150,7 @@ class SB(QtGui.QSpinBox):
         @param desde: limite inferior
         @param hasta: limite superior
         """
-        QtGui.QSpinBox.__init__(self, parent)
+        QtWidgets.QSpinBox.__init__(self, parent)
         self.setRange(desde, hasta)
         self.setSingleStep(1)
         self.setValue(int(valor))
@@ -166,11 +166,11 @@ class SB(QtGui.QSpinBox):
         self.setValue(int(valor))
 
     def capturaCambiado(self, rutina):
-        self.connect(self, QtCore.SIGNAL("valueChanged(int)"), rutina)
+        self.valueChanged.connect(rutina)
         return self
 
 
-class CB(QtGui.QComboBox):
+class CB(QtWidgets.QComboBox):
     """
     ComboBox : entrada de una lista de opciones = etiqueta,clave[,icono]
     """
@@ -180,7 +180,7 @@ class CB(QtGui.QComboBox):
         @param liOpciones: lista de (etiqueta,clave)
         @param valorInicial: valor inicial
         """
-        QtGui.QComboBox.__init__(self, parent)
+        QtWidgets.QComboBox.__init__(self, parent)
         self.rehacer(liOpciones, valorInicial)
 
     def valor(self):
@@ -227,11 +227,11 @@ class CB(QtGui.QComboBox):
         return self
 
     def capturaCambiado(self, rutina):
-        self.connect(self, QtCore.SIGNAL("currentIndexChanged(int)"), rutina)
+        self.currentIndexChanged.connect(rutina)
         return self
 
 
-class CHB(QtGui.QCheckBox):
+class CHB(QtWidgets.QCheckBox):
     """
     CheckBox : entrada de una campo seleccionable
     """
@@ -241,7 +241,7 @@ class CHB(QtGui.QCheckBox):
         @param etiqueta: rotulo mostrado
         @param valorInicial: valor inicial : True/False
         """
-        QtGui.QCheckBox.__init__(self, etiqueta, parent)
+        QtWidgets.QCheckBox.__init__(self, etiqueta, parent)
         self.setChecked(valorInicial)
 
     def ponValor(self, si):
@@ -256,7 +256,7 @@ class CHB(QtGui.QCheckBox):
         return self
 
     def capturaCambiado(self, owner, rutina):
-        owner.connect(self, QtCore.SIGNAL("clicked()"), rutina)
+        self.clicked.connect(rutina)
         return self
 
     def anchoFijo(self, px):
@@ -264,7 +264,7 @@ class CHB(QtGui.QCheckBox):
         return self
 
 
-class LB(QtGui.QLabel):
+class LB(QtWidgets.QLabel):
     """
     Etiquetas de texto.
     """
@@ -274,9 +274,9 @@ class LB(QtGui.QLabel):
         @param texto: texto inicial.
         """
         if texto:
-            QtGui.QLabel.__init__(self, texto, parent)
+            QtWidgets.QLabel.__init__(self, texto, parent)
         else:
-            QtGui.QLabel.__init__(self, parent)
+            QtWidgets.QLabel.__init__(self, parent)
 
         self.setOpenExternalLinks(True)
         self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction|QtCore.Qt.TextSelectableByMouse)
@@ -373,7 +373,7 @@ def LB2P(parent, texto):
     return LB(parent, texto + ": ")
 
 
-class PB(QtGui.QPushButton):
+class PB(QtWidgets.QPushButton):
     """
     Boton.
     """
@@ -384,7 +384,7 @@ class PB(QtGui.QPushButton):
         @param texto: etiqueta inicial.
         @param rutina: rutina a la que se conecta el boton.
         """
-        QtGui.QPushButton.__init__(self, texto, parent)
+        QtWidgets.QPushButton.__init__(self, texto, parent)
         self.wParent = parent
         self.setFlat(plano)
         if rutina:
@@ -421,7 +421,7 @@ class PB(QtGui.QPushButton):
         return self
 
     def conectar(self, rutina):
-        self.wParent.connect(self, QtCore.SIGNAL("clicked()"), rutina)
+        self.clicked.connect(rutina)
         return self
 
     def ponFondo(self, txtFondo):
@@ -444,13 +444,13 @@ class PB(QtGui.QPushButton):
         self.setText(txt)
 
 
-class RB(QtGui.QRadioButton):
+class RB(QtWidgets.QRadioButton):
     """
     RadioButton: lista de alternativas
     """
 
     def __init__(self, wParent, texto, rutina=None):
-        QtGui.QRadioButton.__init__(self, texto, wParent)
+        QtWidgets.QRadioButton.__init__(self, texto, wParent)
         if rutina:
             wParent.connect(self, QtCore.SIGNAL("clicked()"), rutina)
 
@@ -459,13 +459,13 @@ class RB(QtGui.QRadioButton):
         return self
 
 
-class GB(QtGui.QGroupBox):
+class GB(QtWidgets.QGroupBox):
     """
     GroupBox: Recuadro para agrupamiento de controles
     """
 
     def __init__(self, wParent, texto, layout):
-        QtGui.QGroupBox.__init__(self, texto, wParent)
+        QtWidgets.QGroupBox.__init__(self, texto, wParent)
         self.setLayout(layout)
         self.wParent = wParent
 
@@ -493,7 +493,7 @@ class GB(QtGui.QGroupBox):
         return self
 
 
-class EM(QtGui.QTextEdit):
+class EM(QtWidgets.QTextEdit):
     """
     Control de entrada de texto en varias lineas.
     """
@@ -502,7 +502,7 @@ class EM(QtGui.QTextEdit):
         """
         @param texto: texto inicial.
         """
-        QtGui.QTextEdit.__init__(self, parent)
+        QtWidgets.QTextEdit.__init__(self, parent)
         self.parent = parent
 
         self.menu = None  # menu de contexto
@@ -578,7 +578,7 @@ class EM(QtGui.QTextEdit):
         return self
 
     def capturaCambios(self, rutina):
-        self.parent.connect(self, QtCore.SIGNAL("textChanged()"), rutina)
+        self.textChanged.connect(rutina)
         return self
 
     def capturaDobleClick(self, rutina):
@@ -593,7 +593,7 @@ class EM(QtGui.QTextEdit):
         return self.textCursor().position()
 
 
-class Menu(QtGui.QMenu):
+class Menu(QtWidgets.QMenu):
     """
     Menu popup.
 
@@ -624,7 +624,7 @@ class Menu(QtGui.QMenu):
 
     def __init__(self, parent, titulo=None, icono=None, siDeshabilitado=False, puntos=None, siBold=True):
 
-        QtGui.QMenu.__init__(self, parent)
+        QtWidgets.QMenu.__init__(self, parent)
 
         if titulo:
             self.setTitle(titulo)
@@ -648,9 +648,9 @@ class Menu(QtGui.QMenu):
 
     def opcion(self, clave, rotulo, icono=None, siDeshabilitado=False, tipoLetra=None, siCheckable=False, siChecked=False):
         if icono:
-            accion = QtGui.QAction(icono, rotulo, self)
+            accion = QtWidgets.QAction(icono, rotulo, self)
         else:
-            accion = QtGui.QAction(rotulo, self)
+            accion = QtWidgets.QAction(rotulo, self)
         accion.clave = clave
         if siDeshabilitado:
             accion.setDisabled(True)
@@ -672,7 +672,7 @@ class Menu(QtGui.QMenu):
     def mousePressEvent(self, event):
         self.siIzq = event.button() == QtCore.Qt.LeftButton
         self.siDer = event.button() == QtCore.Qt.RightButton
-        resp = QtGui.QMenu.mousePressEvent(self, event)
+        resp = QtWidgets.QMenu.mousePressEvent(self, event)
         return resp
 
     def separador(self):
@@ -680,7 +680,7 @@ class Menu(QtGui.QMenu):
 
     def lanza(self):
         QtCore.QCoreApplication.processEvents()
-        QtGui.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents()
         resp = self.exec_(QtGui.QCursor.pos())
         if resp:
             return resp.clave
@@ -688,7 +688,7 @@ class Menu(QtGui.QMenu):
             return None
 
 
-class TB(QtGui.QToolBar):
+class TB(QtWidgets.QToolBar):
     """
     Crea una barra de tareas simple.
 
@@ -701,7 +701,7 @@ class TB(QtGui.QToolBar):
 
     def __init__(self, parent, liAcciones, siTexto=True, tamIcon=32, rutina=None, puntos=None, background=None):
 
-        QtGui.QToolBar.__init__(self, "BASICO", parent)
+        QtWidgets.QToolBar.__init__(self, "BASICO", parent)
 
         self.setIconSize(QtCore.QSize(tamIcon, tamIcon))
 
@@ -731,10 +731,10 @@ class TB(QtGui.QToolBar):
                     self.addWidget(LB("").anchoFijo(datos))
                 else:
                     titulo, icono, clave = datos
-                    accion = QtGui.QAction(titulo, self.parent)
+                    accion = QtWidgets.QAction(titulo, self.parent)
                     accion.setIcon(icono)
                     accion.setIconText(titulo)
-                    self.parent.connect(accion, QtCore.SIGNAL("triggered()"), self.rutina)
+                    accion.triggered.connect(self.rutina)
                     accion.clave = clave
                     if self.f:
                         accion.setFont(self.f)
@@ -760,7 +760,7 @@ class TB(QtGui.QToolBar):
                 accion.setVisible(value)
 
 
-class TBrutina(QtGui.QToolBar):
+class TBrutina(QtWidgets.QToolBar):
     """
     Crea una barra de tareas simple.
 
@@ -773,7 +773,7 @@ class TBrutina(QtGui.QToolBar):
 
     def __init__(self, parent, liAcciones=None, siTexto=True, tamIcon=32, puntos=None, background=None):
 
-        QtGui.QToolBar.__init__(self, "BASICO", parent)
+        QtWidgets.QToolBar.__init__(self, "BASICO", parent)
 
         self.setIconSize(QtCore.QSize(tamIcon, tamIcon))
 
@@ -795,12 +795,12 @@ class TBrutina(QtGui.QToolBar):
             self.liAcciones = []
 
     def new(self, titulo, icono, clave, sep=True, toolTip=None):
-        accion = QtGui.QAction(titulo, self.parent)
+        accion = QtWidgets.QAction(titulo, self.parent)
         accion.setIcon(icono)
         accion.setIconText(titulo)
         if toolTip:
             accion.setToolTip(toolTip)
-        self.parent.connect(accion, QtCore.SIGNAL("triggered()"), clave)
+        accion.triggered.connect(clave)
         if self.f:
             accion.setFont(self.f)
         self.liAcciones.append(accion)
@@ -846,6 +846,7 @@ class TBrutina(QtGui.QToolBar):
 class TipoLetra(QtGui.QFont):
     def __init__(self, nombre="", puntos=8, peso=50, siCursiva=False, siSubrayado=False, siTachado=False, txt=None):
         QtGui.QFont.__init__(self)
+        self.setStyleStrategy(QtGui.QFont.PreferAntialias)
         if txt is None:
             cursiva = 1 if siCursiva else 0
             subrayado = 1 if siSubrayado else 0
@@ -854,7 +855,7 @@ class TipoLetra(QtGui.QFont):
         self.fromString(txt)
 
 
-class Tab(QtGui.QTabWidget):
+class Tab(QtWidgets.QTabWidget):
     def nuevaTab(self, widget, texto):
         self.addTab(widget, texto)
 
@@ -897,22 +898,22 @@ class Tab(QtGui.QTabWidget):
         # self.setTabShape(self.Triangular)
 
 
-class SL(QtGui.QSlider):
+class SL(QtWidgets.QSlider):
     def __init__(self, parent, minimo, maximo, nvalor, dispatch, tick=10, step=1):
-        QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
+        QtWidgets.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
 
         self.setMinimum(minimo)
         self.setMaximum(maximo)
 
         self.dispatch = dispatch
         if tick:
-            self.setTickPosition(QtGui.QSlider.TicksBelow)
+            self.setTickPosition(QtWidgets.QSlider.TicksBelow)
             self.setTickInterval(tick)
         self.setSingleStep(step)
 
         self.setValue(nvalor)
 
-        self.connect(self, QtCore.SIGNAL("valueChanged (int)"), self.movido)
+        self.valueChanged.connect(self.movido)
 
     def ponValor(self, nvalor):
         self.setValue(nvalor)

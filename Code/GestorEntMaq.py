@@ -1,5 +1,5 @@
 import LCEngine
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 from Code import Analisis
 from Code import Apertura
@@ -906,7 +906,7 @@ class GestorEntMaq(Gestor.Gestor):
         time_rival = 0.0
         ntime_rival = 0
 
-        for njg, d in self.summary.iteritems():
+        for njg, d in self.summary.items():
             if "POINTSBEST" in d:
                 j_num += 1
                 p = d["POINTSBEST"] - d["POINTSUSER"]
@@ -1039,7 +1039,7 @@ class GestorEntMaq(Gestor.Gestor):
                 delattr(rival, "icono")
 
             Util.guardaDIC(dic, self.configuracion.ficheroEntMaquina)
-            for k, v in dic.iteritems():
+            for k, v in dic.items():
                 self.reinicio[k] = v
 
             siBlancas = dic["SIBLANCAS"]

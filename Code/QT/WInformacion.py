@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code.Constantes import *
 from Code import PGN
@@ -12,7 +12,7 @@ from Code import TrListas
 from Code import VarGen
 
 
-class Variantes(QtGui.QWidget):
+class Variantes(QtWidgets.QWidget):
 
     def __init__(self, owner):
         self.owner = owner
@@ -20,7 +20,7 @@ class Variantes(QtGui.QWidget):
         self.siFigurines = configuracion.figurinesPGN
         puntos = configuracion.puntosPGN
 
-        QtGui.QWidget.__init__(self, self.owner)
+        QtWidgets.QWidget.__init__(self, self.owner)
 
         liAcciones = (
             (_("Append"), Iconos.Mas(), self.tbMasVariante), None,
@@ -155,9 +155,9 @@ class Variantes(QtGui.QWidget):
             self.mostrar()
 
 
-class InformacionPGN(QtGui.QWidget):
+class InformacionPGN(QtWidgets.QWidget):
     def __init__(self, wParent):
-        QtGui.QWidget.__init__(self, wParent)
+        QtWidgets.QWidget.__init__(self, wParent)
 
         self.wParent = wParent
 
@@ -217,7 +217,7 @@ class InformacionPGN(QtGui.QWidget):
         # Variantes
         self.variantes = Variantes(self)
 
-        self.splitter = splitter = QtGui.QSplitter(self)
+        self.splitter = splitter = QtWidgets.QSplitter(self)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         splitter.addWidget(self.gbComentario)
         splitter.addWidget(self.variantes)

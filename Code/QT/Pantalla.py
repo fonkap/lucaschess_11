@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Iconos
@@ -46,44 +46,53 @@ class Pantalla():
         self.tablero.permitidoResizeExterno(True)
         self.anchoAntesMaxim = None
 
-        self.splitter = splitter = QtGui.QSplitter(self)
+        self.splitter = splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(self.base)
         splitter.addWidget(self.informacionPGN)
 
-        ly = Colocacion.H().control(splitter).margen(0)
+        # ly = Colocacion.H().control(splitter).margen(0)
 
-        self.setLayout(ly)
+        # self.setLayout(ly)
+        l = QtWidgets.QVBoxLayout()
+        # l.addWidget(self.base)
+        # self.setLayout(l)
 
-        ctrl1 = QtGui.QShortcut(self)
+        gw = QtWidgets.QGraphicsView()
+        gw.setFixedSize(400,400)
+        l = QtWidgets.QVBoxLayout()
+        # l.addWidget(gw)
+        l.addWidget(self.splitter)
+        self.setLayout(l)
+
+        ctrl1 = QtWidgets.QShortcut(self)
         ctrl1.setKey("Ctrl+1")
-        self.connect(ctrl1, QtCore.SIGNAL("activated()"), self.pulsadoShortcutCtrl1)
+        ctrl1.activated.connect(self.pulsadoShortcutCtrl1)
 
-        ctrlF10 = QtGui.QShortcut(self)
+        ctrlF10 = QtWidgets.QShortcut(self)
         ctrlF10.setKey("Ctrl+0")
-        self.connect(ctrlF10, QtCore.SIGNAL("activated()"), self.pulsadoShortcutCtrl0)
+        ctrlF10.activated.connect(self.pulsadoShortcutCtrl0)
 
-        F11 = QtGui.QShortcut(self)
+        F11 = QtWidgets.QShortcut(self)
         F11.setKey("F11")
-        self.connect(F11, QtCore.SIGNAL("activated()"), self.pulsadoShortcutF11)
+        F11.activated.connect(self.pulsadoShortcutF11)
         self.activadoF11 = False
 
-        if QtGui.QSystemTrayIcon.isSystemTrayAvailable():
-            F12 = QtGui.QShortcut(self)
+        if QtWidgets.QSystemTrayIcon.isSystemTrayAvailable():
+            F12 = QtWidgets.QShortcut(self)
             F12.setKey("F12")
-            self.connect(F12, QtCore.SIGNAL("activated()"), self.pulsadoShortcutF12)
+            F12.activated.connect(self.pulsadoShortcutF12)
 
-            restoreAction = QtGui.QAction(Iconos.PGN(), _("Show"), self, triggered=self.restauraTrayIcon)
-            quitAction = QtGui.QAction(Iconos.Terminar(), _("Quit"), self, triggered=self.quitTrayIcon)
-            trayIconMenu = QtGui.QMenu(self)
+            restoreAction = QtWidgets.QAction(Iconos.PGN(), _("Show"), self, triggered=self.restauraTrayIcon)
+            quitAction = QtWidgets.QAction(Iconos.Terminar(), _("Quit"), self, triggered=self.quitTrayIcon)
+            trayIconMenu = QtWidgets.QMenu(self)
             trayIconMenu.addAction(restoreAction)
             trayIconMenu.addSeparator()
             trayIconMenu.addAction(quitAction)
 
-            self.trayIcon = QtGui.QSystemTrayIcon(self)
+            self.trayIcon = QtWidgets.QSystemTrayIcon(self)
             self.trayIcon.setContextMenu(trayIconMenu)
             self.trayIcon.setIcon(Iconos.Otros())  # Aplicacion())
-            self.connect(self.trayIcon, QtCore.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"),
-                         self.activateTrayIcon)
+            self.trayIcon.activated.connect(self.activateTrayIcon)
         else:
             self.trayIcon = None
 
@@ -149,42 +158,48 @@ class Pantalla():
         self.ponTitulo()
 
     def changeEvent(self, event):
-        QtGui.QWidget.changeEvent(self, event)
-        if event.type() != QtCore.QEvent.WindowStateChange:
-            return
+        try :
+            QtWidgets.QWidget.changeEvent(self, event)
+            if event.type() != QtCore.QEvent.WindowStateChange:
+                return
 
-        nue = EstadoWindow(self.windowState())
-        ant = EstadoWindow(event.oldState())
+            nue = EstadoWindow(self.windowState())
+            ant = EstadoWindow(event.oldState())
 
-        ct = self.tablero.confTablero
+            ct = self.tablero.confTablero
 
-        if getattr(self.gestor, "siPresentacion", False):
-            self.gestor.presentacion(False)
+            if getattr(self.gestor, "siPresentacion", False):
+                self.gestor.presentacion(False)
 
-        if nue.fullscreen:
-            self.base.tb.hide()
-            self.tablero.siF11 = True
-            self.antiguoAnchoPieza = 1000 if ant.maximizado else ct.anchoPieza()
-            self.tablero.maximizaTam(True)
-        else:
-            if ant.fullscreen:
-                self.base.tb.show()
-                self.tablero.normalTam(self.antiguoAnchoPieza)
-                self.ajustaTam()
-                if self.antiguoAnchoPieza == 1000:
-                    self.setWindowState(QtCore.Qt.WindowMaximized)
-            elif nue.maximizado:
-                self.antiguoAnchoPieza = ct.anchoPieza()
-                self.tablero.maximizaTam(False)
-            elif ant.maximizado:
-                if not self.antiguoAnchoPieza or self.antiguoAnchoPieza == 1000:
-                    self.antiguoAnchoPieza = self.tablero.calculaAnchoMXpieza()
-                self.tablero.normalTam(self.antiguoAnchoPieza)
-                self.ajustaTam()
-                # ct.anchoPieza(self.antiguoAnchoPieza)
-                # ct.guardaEnDisco()
-                # self.tablero.ponAncho()
-                # self.ajustaTam()
+            if nue.fullscreen:
+                self.base.tb.hide()
+                self.tablero.siF11 = True
+                self.antiguoAnchoPieza = 1000 if ant.maximizado else ct.anchoPieza()
+                self.tablero.maximizaTam(True)
+            else:
+                if ant.fullscreen:
+                    self.base.tb.show()
+                    self.tablero.normalTam(self.antiguoAnchoPieza)
+                    self.ajustaTam()
+                    if self.antiguoAnchoPieza == 1000:
+                        self.setWindowState(QtCore.Qt.WindowMaximized)
+                elif nue.maximizado:
+                    self.antiguoAnchoPieza = ct.anchoPieza()
+                    self.tablero.maximizaTam(False)
+                elif ant.maximizado:
+                    if not self.antiguoAnchoPieza or self.antiguoAnchoPieza == 1000:
+                        self.antiguoAnchoPieza = self.tablero.calculaAnchoMXpieza()
+                    self.tablero.normalTam(self.antiguoAnchoPieza)
+                    self.ajustaTam()
+                    # ct.anchoPieza(self.antiguoAnchoPieza)
+                    # ct.guardaEnDisco()
+                    # self.tablero.ponAncho()
+                    # self.ajustaTam()
+        except Exception as e:
+             import traceback
+             import sys
+             traceback.print_exc(file=sys.stderr)
+             raise e
 
     def muestraVariantes(self, titulo):
         flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
@@ -356,8 +371,12 @@ class Pantalla():
         self.base.columnas60(siPoner, cNivel)
 
     def pulsadoShortcutCtrl1(self):
-        if self.gestor and hasattr(self.gestor, "control1"):
-            self.gestor.control1()
+        try:
+            if self.gestor and hasattr(self.gestor, "control1"):
+                self.gestor.control1()
+            pass
+        except Exception as e:
+            pass
 
     def pulsadoShortcutCtrl0(self):
         if self.gestor and hasattr(self.gestor, "control0"):
@@ -380,9 +399,9 @@ class Pantalla():
 
     def pensando(self, siPensando):
         if siPensando:
-            QtGui.QApplication.setOverrideCursor(self.cursorthinking)
+            QtWidgets.QApplication.setOverrideCursor(self.cursorthinking)
         else:
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
         self.refresh()
 
 
@@ -393,7 +412,7 @@ class PantallaWidget(QTVarios.WWidget, Pantalla):
         titulo = ""
         icono = Iconos.Aplicacion64()
         extparam = "main"
-        QTVarios.WWidget.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(titulo=titulo, icono=icono, extparam=extparam)
         Pantalla.__init__(self, gestor, owner)
 
     def accept(self):
@@ -409,6 +428,7 @@ class PantallaWidget(QTVarios.WWidget, Pantalla):
         self.guardarVideo()
         if not self.gestor.finalX0():
             event.ignore()
+        self.deleteLater()
 
 
 class PantallaDialog(QTVarios.WDialogo, Pantalla):

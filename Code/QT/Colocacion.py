@@ -1,7 +1,11 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class V(QtGui.QVBoxLayout):
+class V(QtWidgets.QVBoxLayout):
+
+    def __init__(self, QWidget=None):
+        super().__init__(QWidget)
+
     def control(self, control):
         self.addWidget(control)
         return self
@@ -38,7 +42,11 @@ class V(QtGui.QVBoxLayout):
         return self
 
 
-class H(QtGui.QHBoxLayout):
+class H(QtWidgets.QHBoxLayout):
+
+    def __init__(self, QWidget=None):
+        super().__init__(QWidget)
+
     def control(self, control, stretch=0):
         self.addWidget(control, stretch)
         return self
@@ -84,7 +92,7 @@ class H(QtGui.QHBoxLayout):
         return self
 
 
-class G(QtGui.QGridLayout):
+class G(QtWidgets.QGridLayout):
     dicAlineacion = {None: QtCore.Qt.AlignLeft, "d": QtCore.Qt.AlignRight, "c": QtCore.Qt.AlignCenter}
 
     def control(self, control, fila, columna, numFilas=1, numColumnas=1, alineacion=None):

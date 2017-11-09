@@ -1,6 +1,6 @@
 import os.path
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from Code import Util
 from Code import VarGen

@@ -1,7 +1,7 @@
 import random
 import time
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import ControlPosicion
 from Code.QT import Colocacion
@@ -12,7 +12,7 @@ from Code.QT import QTVarios
 from Code.QT import Tablero
 
 
-class WDatos(QtGui.QDialog):
+class WDatos(QtWidgets.QDialog):
     def __init__(self, wParent, txtcategoria, maxNivel):
         super(WDatos, self).__init__(wParent)
 
@@ -157,7 +157,7 @@ class WMemoria(QTVarios.WDialogo):
         self.tablero.borraPieza(desde)
 
     def creaCasilla(self, desde):
-        menu = QtGui.QMenu(self)
+        menu = QtWidgets.QMenu(self)
 
         siK = False
         sik = False
@@ -180,7 +180,7 @@ class WMemoria(QTVarios.WDialogo):
         for txt, pieza in liOpciones:
             icono = self.tablero.piezas.icono(pieza)
 
-            accion = QtGui.QAction(icono, txt, menu)
+            accion = QtWidgets.QAction(icono, txt, menu)
             accion.clave = pieza
             menu.addAction(accion)
 

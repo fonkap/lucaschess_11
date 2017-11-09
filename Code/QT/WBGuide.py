@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from Code import BookGuide
 from Code import DBgames
@@ -18,7 +18,7 @@ class WBGuide(QTVarios.WDialogo):
         icono = Iconos.BookGuide()
         extparam = "edicionMyOwnBook"
         titulo = _("Personal Opening Guide")
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion
@@ -41,7 +41,7 @@ class WBGuide(QTVarios.WDialogo):
 
         self.ultFocus = None
 
-        self.splitterMoves = QtGui.QSplitter(self)
+        self.splitterMoves = QtWidgets.QSplitter(self)
         self.splitterMoves.setOrientation(QtCore.Qt.Vertical)
         self.splitterMoves.addWidget(self.wmoves)
         self.splitterMoves.addWidget(self.wsummary)
@@ -53,7 +53,7 @@ class WBGuide(QTVarios.WDialogo):
 
         self.infoMove = WBG_InfoMove.WInfomove(self)
 
-        self.splitter = splitter = QtGui.QSplitter(self)
+        self.splitter = splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(self.infoMove)
         splitter.addWidget(self.tab)
 
@@ -91,7 +91,7 @@ class WBGuide(QTVarios.WDialogo):
         self.wsummary.setdbGames(self.dbGames)
 
     def tabChanged(self, ntab):
-        QtGui.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents()
         tablero = self.infoMove.tablero
         tablero.desactivaTodas()
         if ntab == 1:

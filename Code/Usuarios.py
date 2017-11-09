@@ -1,5 +1,5 @@
 from Code import Util
-import cPickle
+import pickle
 
 from Code import Configuracion
 
@@ -22,7 +22,7 @@ class Usuarios:
         try:
             with open(ant) as f:
                 s = f.read()
-                self.lista = cPickle.loads(s)
+                self.lista = pickle.loads(s)
                 self.save()
         except:
             pass

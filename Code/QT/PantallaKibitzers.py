@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code import Kibitzers
 from Code import EngineThread
@@ -18,7 +18,7 @@ class WKibitzers(QTVarios.WDialogo):
         titulo = _("Kibitzers")
         icono = Iconos.Kibitzer()
         extparam = "kibitzer"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.configuracion = procesador.configuracion
         self.procesador = procesador
@@ -39,7 +39,7 @@ class WKibitzers(QTVarios.WDialogo):
         )
         tb = Controles.TBrutina(self, liAcciones)
 
-        self.splitter = QtGui.QSplitter(self)
+        self.splitter = QtWidgets.QSplitter(self)
         self.registrarSplitter(self.splitter, "kibitzers")
 
         oColumnas = Columnas.ListaColumnas()
@@ -49,7 +49,7 @@ class WKibitzers(QTVarios.WDialogo):
         self.gridKibitzers.tipoLetra(puntos=self.configuracion.puntosPGN)
         self.registrarGrid(self.gridKibitzers)
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         ly = Colocacion.V().control(self.gridKibitzers).margen(0)
         w.setLayout(ly)
         self.splitter.addWidget(w)
@@ -61,7 +61,7 @@ class WKibitzers(QTVarios.WDialogo):
         self.gridValores.tipoLetra(puntos=self.configuracion.puntosPGN)
         self.registrarGrid(self.gridValores)
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         ly = Colocacion.V().control(self.gridValores).margen(0)
         w.setLayout(ly)
         self.splitter.addWidget(w)

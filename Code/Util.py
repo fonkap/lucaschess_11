@@ -1,6 +1,6 @@
 import atexit
 import base64
-import cPickle
+import pickle
 import codecs
 import collections
 import datetime
@@ -14,7 +14,7 @@ import sqlite3
 import time
 import zlib
 import threading
-from itertools import izip, cycle
+from itertools import cycle
 
 import chardet.universaldetector
 
@@ -25,7 +25,7 @@ def xor_crypt(data, key):
     Author = http://bytes.com/profile/247871/darktemp/
     """
     if key:
-        return ''.join(chr(ord(x) ^ ord(y)) for (x, y) in izip(data, cycle(key)))
+        return ''.join(chr(ord(x) ^ ord(y)) for (x, y) in zip(data, cycle(key)))
     else:
         return data
 
@@ -39,36 +39,36 @@ def nuevoID():
 
 def guardaDIC(dic, fich):
     with open(fich, "w") as q:
-        q.write(base64.encodestring(cPickle.dumps(dic)))
+        q.write(base64.encodebytes(pickle.dumps(dic)).decode("utf-8"))
 
 
 def recuperaDIC(fich):
     try:
         with open(fich) as f:
             s = f.read()
-        dic = cPickle.loads(base64.decodestring(s))
-    except:
+        dic = pickle.loads(base64.decodebytes(s.encode("utf-8")))
+    except Exception as e:
         dic = None
     return dic
 
 
 def guardaVar(fich, v):
     with open(fich, "w") as q:
-        q.write(cPickle.dumps(v))
+        q.write(pickle.dumps(v))
 
 
 def recuperaVar(fich):
     try:
         with open(fich) as f:
             s = f.read()
-        v = cPickle.loads(s)
-    except:
+        v = pickle.loads(s.encode("utf-8"))
+    except Exception as e:
         v = None
     return v
 
 
 def var2blob(var):
-    varp = cPickle.dumps(var)
+    varp = pickle.dumps(var)
     varz = zlib.compress(varp, 7)
     return sqlite3.Binary(varz)
 
@@ -77,7 +77,7 @@ def blob2var(blob):
     if blob is None:
         return None
     varp = zlib.decompress(blob)
-    return cPickle.loads(varp)
+    return pickle.loads(varp)
 
 
 def dic2blob(dic):
@@ -105,21 +105,22 @@ def blob2str(blob):
 
 
 def dic2txt(dic):
-    return base64.encodestring(cPickle.dumps(dic)).replace("\n", "|")
+    return base64.encodebytes(pickle.dumps(dic)).decode("utf-8").replace("\n", "|")
 
 
 def txt2dic(txt):
-    txt = txt.replace("|", "\n")
-    dic = cPickle.loads(base64.decodestring(txt))
+    txt = txt.replace("|".encode("utf-8"), "\n".encode("utf-8"))
+    data = base64.decodebytes(txt)
+    dic = pickle.loads(data, encoding='latin1')
     return dic
 
 
 def var2txt(var):
-    return cPickle.dumps(var)
+    return pickle.dumps(var)
 
 
 def txt2var(txt):
-    return cPickle.loads(txt)
+    return pickle.loads(txt)
 
 
 def renombraNum(origen):
@@ -450,7 +451,7 @@ class SymbolDict:
         self._dic = {}
         self._keys = []
         if dic:
-            for k, v in dic.iteritems():
+            for k, v in dic.items():
                 self.__setitem__(k, v)
 
     def __contains__(self, clave):
@@ -514,7 +515,7 @@ class IPC(object):
         cursor.execute(sql)
         reg = cursor.fetchone()
         if reg:
-            valor = cPickle.loads(str(reg[0]))
+            valor = pickle.loads(str(reg[0]))
             self.key = nk
         else:
             valor = None
@@ -523,7 +524,7 @@ class IPC(object):
 
     def push(self, valor):
         cursor = self._conexion.cursor()
-        dato = sqlite3.Binary(cPickle.dumps(valor))
+        dato = sqlite3.Binary(pickle.dumps(valor))
         sql = "INSERT INTO DATOS (dato) values(?)"
         cursor.execute(sql, [dato, ])
         cursor.close()
@@ -708,8 +709,8 @@ def listfiles(*lista):
     return glob.glob(f)
 
 
-def listdir(txt, siUnicode=False):
-    return os.listdir(unicode(txt)) if siUnicode else os.listdir(txt)
+def listdir(txt, siUnicode=True):
+    return os.listdir(txt) if siUnicode else os.listdir(txt.encode("utf-8"))
 
 
 def dirRelativo(dr):
@@ -733,7 +734,7 @@ def cX():
     c9 = ""
     while n7 > 0:
         nr = n7 % 10
-        n7 /= 10
+        n7 //= 10
         p3 += nr
         if p3 >= t1:
             p3 -= t1
@@ -858,7 +859,7 @@ class DicSQL(object):
         self.cache = collections.OrderedDict()
 
         self._conexion = sqlite3.connect(nomDB)
-        self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        #self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         atexit.register(self.close)
 
         cursor = self._conexion.cursor()
@@ -888,7 +889,7 @@ class DicSQL(object):
 
     def __setitem__(self, key, obj):
         cursor = self._conexion.cursor()
-        dato = base64.encodestring(cPickle.dumps(obj))
+        dato = base64.encodestring(pickle.dumps(obj))
         key = str(key)
         siYaEsta = key in self.stKeys
         if siYaEsta:
@@ -913,8 +914,8 @@ class DicSQL(object):
             cursor.execute(sql, (key,))
             li = cursor.fetchone()
             cursor.close()
-            dato = base64.decodestring(li[0])
-            obj = cPickle.loads(dato)
+            dato = base64.decodebytes(li[0])
+            obj = pickle.loads(dato)
             self.addCache(key, obj)
             return obj
         else:
@@ -958,8 +959,10 @@ class DicSQL(object):
         cursor.execute(sql)
         li = cursor.fetchall()
         for key, dato in li:
-            dato = base64.decodestring(dato)
-            dic[key] = cPickle.loads(dato)
+            if type(dato) is str:
+                dato = dato.encode("utf-8")
+            dato = base64.decodebytes(dato)
+            dic[key] = pickle.loads(dato)
         cursor.close()
 
         return dic
@@ -987,7 +990,7 @@ class LIdisk:
 
     def append(self, valor):
         sql = "INSERT INTO datos( DATO ) VALUES( ? )"
-        liValores = [cPickle.dumps(valor)]
+        liValores = [pickle.dumps(valor)]
 
         cursor = self._conexion.cursor()
         cursor.execute(sql, liValores)
@@ -1000,7 +1003,7 @@ class LIdisk:
         cursor.execute(sql)
         dato = cursor.fetchone()
         cursor.close()
-        return cPickle.loads(str(dato[0]))
+        return pickle.loads(str(dato[0]))
 
     def __len__(self):
         sql = "select COUNT(DATO) from datos"
@@ -1038,7 +1041,7 @@ class DicRaw:
         else:
             sql = "INSERT INTO %s (VALUE,KEY) values(?,?)" % self.table
         cursor = self._conexion.cursor()
-        dato = base64.encodestring(cPickle.dumps(obj))
+        dato = base64.encodestring(pickle.dumps(obj))
         cursor.execute(sql, (dato, key))
         cursor.close()
         self._conexion.commit()

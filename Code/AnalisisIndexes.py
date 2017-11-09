@@ -12,7 +12,7 @@ def calc_formula(cual, cp, mrm):  # , limit=200.0):
     mat = 0.0
     matw = matb = 0.0
     dmat = {"k": 3.0, "q": 9.9, "r": 5.5, "b": 3.5, "n": 3.1, "p": 1.0}
-    for k, v in cp.casillas.iteritems():
+    for k, v in cp.casillas.items():
         if v:
             m = dmat[v.lower()]
             mat += m

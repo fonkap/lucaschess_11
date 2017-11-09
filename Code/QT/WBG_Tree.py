@@ -1,6 +1,6 @@
 import collections
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code.QT import Controles
 from Code.QT import FormLayout
@@ -18,9 +18,9 @@ V_SIN, V_IGUAL, V_BLANCAS, V_NEGRAS, V_BLANCAS_MAS, V_NEGRAS_MAS, V_BLANCAS_MAS_
     0, 11, 14, 15, 16, 17, 18, 19)
 
 
-class TreeMoves(QtGui.QTreeWidget):
+class TreeMoves(QtWidgets.QTreeWidget):
     def __init__(self, wmoves):
-        QtGui.QTreeWidget.__init__(self)
+        QtWidgets.QTreeWidget.__init__(self)
         self.wmoves = wmoves
         self.itemActivo = None
         self.setAlternatingRowColors(True)
@@ -44,9 +44,9 @@ class TreeMoves(QtGui.QTreeWidget):
 
         self.setFont(ftxt)
 
-        self.connect(self, QtCore.SIGNAL("itemExpanded(QTreeWidgetItem *)"), self.expandido)
-        self.connect(self, QtCore.SIGNAL("itemSelectionChanged()"), self.seleccionadoISC)
-        self.connect(self, QtCore.SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.dobleClick)
+        self.itemExpanded.connect(self.expandido)
+        self.itemSelectionChanged.connect(self.seleccionadoISC)
+        self.itemDoubleClicked.connect(self.dobleClick)
 
         self.noIcon = QtGui.QIcon()
         self.iconBookmark = Iconos.Favoritos()
@@ -184,7 +184,7 @@ class TreeMoves(QtGui.QTreeWidget):
             comentario = unMove.commentLine()
             posicion = str(unMove.pos())
             puntos = unMove.etiPuntos()
-            item = QtGui.QTreeWidgetItem(itemBase, [pgn, "", "", puntos, comentario, posicion])
+            item = QtWidgets.QTreeWidgetItem(itemBase, [pgn, "", "", puntos, comentario, posicion])
             item.setTextAlignment(self.posAnalisis, QtCore.Qt.AlignRight)
             self.ponIconoValoracion(item, unMove.nag())
             self.ponIconoVentaja(item, unMove.adv())

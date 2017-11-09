@@ -3,7 +3,7 @@ import encodings
 import os
 
 import chardet.universaldetector
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code import PGN
 from Code.QT import Colocacion
@@ -20,9 +20,9 @@ from Code import Util
 from Code import VarGen
 
 
-class WBaseSave(QtGui.QWidget):
+class WBaseSave(QtWidgets.QWidget):
     def __init__(self, wowner, configuracion, with_remcomments=False):
-        QtGui.QWidget.__init__(self, wowner)
+        QtWidgets.QWidget.__init__(self, wowner)
 
         self.wowner = wowner
         self.file = ""
@@ -37,7 +37,7 @@ class WBaseSave(QtGui.QWidget):
 
         # Codec
         lb_codec = Controles.LB(self, _("Encoding") + ": ")
-        liCodecs = [k for k in set(v for k, v in encodings.aliases.aliases.iteritems())]
+        liCodecs = [k for k in set(v for k, v in encodings.aliases.aliases.items())]
         liCodecs.sort()
         liCodecs = [(k, k) for k in liCodecs]
         liCodecs.insert(0, (_("Same as file"), "file"))
@@ -198,7 +198,7 @@ class WSave(QTVarios.WDialogo):
 
         # Codec
         lb_codec = Controles.LB(self, _("Encoding") + ": ")
-        liCodecs = [k for k in set(v for k, v in encodings.aliases.aliases.iteritems())]
+        liCodecs = [k for k in set(v for k, v in encodings.aliases.aliases.items())]
         liCodecs.sort()
         liCodecs = [(k, k) for k in liCodecs]
         liCodecs.insert(0, (_("Same as file"), "file"))
@@ -212,7 +212,7 @@ class WSave(QTVarios.WDialogo):
         lyF = Colocacion.H().control(lb_file).control(self.bt_file).control(bt_history).control(bt_boxrooms).relleno(1)
         lyC = Colocacion.H().control(lb_codec).control(self.cb_codecs).relleno(1)
         ly = Colocacion.V().espacio(15).otro(lyF).otro(lyC).control(self.chb_overwrite).control(self.chb_remove_c_v).relleno(1)
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         w.setLayout(ly)
         tabs.nuevaTab(w, _("File"))
         self.chb_overwrite.hide()
@@ -237,7 +237,7 @@ class WSave(QTVarios.WDialogo):
 
         # Layout
         ly = Colocacion.V().control(tb_labels).control(self.grid_labels).margen(3)
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         w.setLayout(ly)
         tabs.nuevaTab(w, _("Labels"))
 

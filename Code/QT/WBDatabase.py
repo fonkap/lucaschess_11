@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from Code import BookGuide
 from Code import DBgames
@@ -44,7 +44,7 @@ class WBDatabase(QTVarios.WDialogo):
 
         self.infoMove = WBG_InfoMove.WInfomove(self, siMoves=False)
 
-        self.splitter = splitter = QtGui.QSplitter()
+        self.splitter = splitter = QtWidgets.QSplitter()
         splitter.addWidget(self.tab)
         splitter.addWidget(self.infoMove)
 
@@ -79,7 +79,7 @@ class WBDatabase(QTVarios.WDialogo):
         self.wgames.setdbGames(self.dbGames)
 
     def tabChanged(self, ntab):
-        QtGui.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents()
         tablero = self.infoMove.tablero
         tablero.desactivaTodas()
         if ntab == 0:

@@ -16,7 +16,7 @@ siempre que la rutina se haya definido en la ventana:
 
 """
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import QTUtil
 from Code import VarGen
@@ -59,7 +59,8 @@ class ControlGrid(QtCore.QAbstractTableModel):
         """
         Si hay un cambio del numero de registros, la llamada a esta rutina actualiza la visualizacion.
         """
-        self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
+        # self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
+        self.layoutAboutToBeChanged.emit()
         ant_ndatos = self.numDatos
         nue_ndatos = self.wParent.gridNumDatos(self.grid)
         if ant_ndatos != nue_ndatos:
@@ -76,7 +77,7 @@ class ControlGrid(QtCore.QAbstractTableModel):
             else:
                 self.removeColumns(nue_ncols, ant_ncols - nue_ncols)
 
-        self.emit(QtCore.SIGNAL("layoutChanged()"))
+        self.layoutChanged.emit()
 
     def columnCount(self, parent):
         """
@@ -176,24 +177,24 @@ class ControlGrid(QtCore.QAbstractTableModel):
         return None
 
 
-class Cabecera(QtGui.QHeaderView):
+class Cabecera(QtWidgets.QHeaderView):
     """
     Se crea esta clase para poder implementar el doble click en la cabecera.
     """
 
     def __init__(self, tvParent, siCabeceraMovible):
-        QtGui.QHeaderView.__init__(self, QtCore.Qt.Horizontal)
-        self.setMovable(siCabeceraMovible)
-        self.setClickable(True)
+        QtWidgets.QHeaderView.__init__(self, QtCore.Qt.Horizontal)
+        self.setSectionsMovable(siCabeceraMovible)
+        self.setSectionsClickable(True)
         self.tvParent = tvParent
 
     def mouseDoubleClickEvent(self, event):
         numColumna = self.logicalIndexAt(event.x(), event.y())
         self.tvParent.dobleClickCabecera(numColumna)
-        return QtGui.QHeaderView.mouseDoubleClickEvent(self, event)
+        return QtWidgets.QHeaderView.mouseDoubleClickEvent(self, event)
 
     def mouseReleaseEvent(self, event):
-        QtGui.QHeaderView.mouseReleaseEvent(self, event)
+        QtWidgets.QHeaderView.mouseReleaseEvent(self, event)
         numColumna = self.logicalIndexAt(event.x(), event.y())
         self.tvParent.mouseCabecera(numColumna)
 
@@ -209,7 +210,7 @@ class CabeceraHeight(Cabecera):
         return baseSize
 
 
-class Grid(QtGui.QTableView):
+class Grid(QtWidgets.QTableView):
     """
     Implementa un TableView, en base a la configuracion de una lista de columnas.
     """
@@ -225,7 +226,7 @@ class Grid(QtGui.QTableView):
 
         assert wParent is not None
 
-        QtGui.QTableView.__init__(self)
+        QtWidgets.QTableView.__init__(self)
 
         if VarGen.configuracion.tablaSelBackground:
             p = self.palette()
@@ -262,7 +263,7 @@ class Grid(QtGui.QTableView):
             hh.setVisible(False)
 
         vh = self.verticalHeader()
-        vh.setResizeMode(QtGui.QHeaderView.Fixed)
+        vh.setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         vh.setDefaultSectionSize(altoFila)
         vh.setVisible(False)
 
@@ -279,11 +280,11 @@ class Grid(QtGui.QTableView):
         self.setAlternatingRowColors(True)
 
     def seleccionaFilas(self, siSelecFilas, siSeleccionMultiple):
-        sel = QtGui.QAbstractItemView.SelectRows if siSelecFilas else QtGui.QAbstractItemView.SelectItems
+        sel = QtWidgets.QAbstractItemView.SelectRows if siSelecFilas else QtWidgets.QAbstractItemView.SelectItems
         if siSeleccionMultiple:
-            selMode = QtGui.QAbstractItemView.ExtendedSelection
+            selMode = QtWidgets.QAbstractItemView.ExtendedSelection
         else:
-            selMode = QtGui.QAbstractItemView.SingleSelection
+            selMode = QtWidgets.QAbstractItemView.SingleSelection
         self.setSelectionMode(selMode)
         self.setSelectionBehavior(sel)
 
@@ -307,7 +308,7 @@ class Grid(QtGui.QTableView):
         Se gestiona este evento, ante la posibilidad de que la ventana quiera controlar,
         cada tecla pulsada, llamando a la rutina correspondiente si existe (gridTeclaPulsada/gridTeclaControl)
         """
-        resp = QtGui.QTableView.keyPressEvent(self, event)
+        resp = QtWidgets.QTableView.keyPressEvent(self, event)
         k = event.key()
         m = int(event.modifiers())
         siShift = (m & QtCore.Qt.ShiftModifier) > 0
@@ -330,7 +331,7 @@ class Grid(QtGui.QTableView):
         if hasattr(self.wParent, "gridWheelEvent"):
             self.wParent.gridWheelEvent(self, event.delta() > 0)
         else:
-            QtGui.QTableView.wheelEvent(self, event)
+            QtWidgets.QTableView.wheelEvent(self, event)
 
     def mouseDoubleClickEvent(self, event):
         """
@@ -339,7 +340,7 @@ class Grid(QtGui.QTableView):
         con el numero de fila y el objeto columna como argumentos
         """
         if self.siEditable:
-            QtGui.QTableView.mouseDoubleClickEvent(self, event)
+            QtWidgets.QTableView.mouseDoubleClickEvent(self, event)
         if hasattr(self.wParent, "gridDobleClick") and event.button() == 1:
             fil, columna = self.posActual()
             self.wParent.gridDobleClick(self, fil, columna)
@@ -349,7 +350,7 @@ class Grid(QtGui.QTableView):
         Se gestiona este evento, ante la posibilidad de que la ventana quiera controlar,
         cada pulsacion del boton derecho, llamando a la rutina correspondiente si existe (gridBotonDerecho)
         """
-        QtGui.QTableView.mousePressEvent(self, event)
+        QtWidgets.QTableView.mousePressEvent(self, event)
         button = event.button()
         if button == 2:
             if hasattr(self.wParent, "gridBotonDerecho"):
@@ -422,7 +423,7 @@ class Grid(QtGui.QTableView):
         for columna in self.oColumnas.liColumnas:
             columna.recuperarConf(dic, self)
 
-        self.oColumnas.liColumnas.sort(lambda x, y: cmp(x.posicion, y.posicion))
+        self.oColumnas.liColumnas.sort(key = lambda x: x.posicion)
 
     def anchoColumnas(self):
         """
@@ -513,6 +514,6 @@ class Grid(QtGui.QTableView):
 
     def ponAltoFila(self, altoFila):
         vh = self.verticalHeader()
-        vh.setResizeMode(QtGui.QHeaderView.Fixed)
+        vh.setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         vh.setDefaultSectionSize(altoFila)
         vh.setVisible(False)

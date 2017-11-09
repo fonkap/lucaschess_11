@@ -1,7 +1,7 @@
 import codecs
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import AperturasStd
 from Code.QT import Colocacion
@@ -54,9 +54,9 @@ class WN_LB(Controles.ED):
         self.setFixedWidth(w)
 
 
-class WNavigator(QtGui.QWidget):
+class WNavigator(QtWidgets.QWidget):
     def __init__(self, wmoves):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.wmoves = wmoves
         self.move = None
@@ -106,9 +106,9 @@ class WNavigator(QtGui.QWidget):
         self.bt.ponTexto(texto, self.wmoves.width() - 36)
 
 
-class WMoves(QtGui.QWidget):
+class WMoves(QtWidgets.QWidget):
     def __init__(self, procesador, winBookGuide):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.winBookGuide = winBookGuide
         self.bookGuide = None  # <--setBookGuide

@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Columnas
@@ -185,9 +185,9 @@ class WHistoricoTacticas(QTVarios.WDialogo):
         self.tb.update()
 
 
-class WConfTactics(QtGui.QWidget):
+class WConfTactics(QtWidgets.QWidget):
     def __init__(self, owner, tactica, ncopia=None):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.owner = owner
         self.tacticaINI = tactica

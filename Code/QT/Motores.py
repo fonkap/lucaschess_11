@@ -182,7 +182,7 @@ class Motores:
 
         if tipo == FIXED:
             rival = None
-            for elo, lista in self.dicMotoresFixedElo.iteritems():
+            for elo, lista in self.dicMotoresFixedElo.items():
                 for cm in lista:
                     if cm.clave == clave:
                         rival = cm

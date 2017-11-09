@@ -1,13 +1,13 @@
 DIVISOR = 12
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import QTUtil
 from Code import VarGen
 
 
-class CapturaLista(QtGui.QWidget):
+class CapturaLista(QtWidgets.QWidget):
     def __init__(self, wParent, tablero):
         super(CapturaLista, self).__init__(wParent)
 
@@ -17,7 +17,7 @@ class CapturaLista(QtGui.QWidget):
 
         self.tipoMaterial = VarGen.configuracion.tipoMaterial
 
-        li = self.li = [["P", 8], ["N", 2], ["B", 2], ["R", 2], ["Q", 1]]
+        li = self.li = [[b'P', 8], [b'N', 2], [b'B', 2], [b'R', 2], [b'Q', 1]]
         self.dic = {}
         for pieza, numero in li:
             dW = self.dic[pieza] = []
@@ -32,7 +32,7 @@ class CapturaLista(QtGui.QWidget):
                 lbB.alinCentrado()
                 dB.append(lbB)
 
-        self.ponLayout(True)
+        # self.ponLayout(True)
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.RightButton:
@@ -40,7 +40,7 @@ class CapturaLista(QtGui.QWidget):
 
     def resetPZ(self, tablero):
         anchoPZ = int(tablero.ancho/DIVISOR)
-        for k, li in self.dic.iteritems():
+        for k, li in self.dic.items():
             for lb in li:
                 tablero.piezas.change_label(lb, anchoPZ)
         # self.setMinimumWidth(anchoPZ + 4)

@@ -3,7 +3,7 @@ import sys
 import time
 
 import LCEngine
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 import struct
 import psutil
@@ -1691,7 +1691,8 @@ class CPU:
     def lanzaVentana(self):
         app = QtGui.QApplication([])
 
-        app.setStyle(QtGui.QStyleFactory.create("CleanLooks"))
+
+        app.setStyle(QtWidgets.QStyleFactory.create("CleanLooks"))
         QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
 
         self.configuracion.releeTRA()

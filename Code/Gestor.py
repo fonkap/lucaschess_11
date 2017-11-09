@@ -1672,7 +1672,7 @@ class Gestor:
     def pgnInformacionMenu(self, dicEtiquetasPGN):
         menu = QTVarios.LCMenu(self.pantalla)
 
-        for clave, valor in dicEtiquetasPGN.iteritems():
+        for clave, valor in dicEtiquetasPGN.items():
             siFecha = clave.upper().endswith("DATE")
             if clave.upper() == "FEN":
                 continue

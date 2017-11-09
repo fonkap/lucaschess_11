@@ -2,7 +2,7 @@ import operator
 import os
 import random
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Books
 from Code import EnginesMicElo
@@ -31,7 +31,7 @@ class WMotores(QTVarios.WDialogo):
         icono = Iconos.MotoresExternos()
         titulo = _("External engines")
         extparam = "motoresExternos"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         liAcciones = [
@@ -253,7 +253,7 @@ class WMotores(QTVarios.WDialogo):
             self.grabar()
 
 
-class WMotor(QtGui.QDialog):
+class WMotor(QtWidgets.QDialog):
     def __init__(self, wParent, listaMotores, motorExterno, siTorneo=False):
 
         super(WMotor, self).__init__(wParent)
@@ -398,7 +398,7 @@ def genOpcionesME(owner, motorExterno):
             col = 0
         opcion.control = control
 
-    w = QtGui.QWidget(owner)
+    w = QtWidgets.QWidget(owner)
     w.setLayout(layout)
     scrollArea = QtGui.QScrollArea()
     scrollArea.setBackgroundRole(QtGui.QPalette.Light)
@@ -451,7 +451,7 @@ def selectEngine(wowner):
 
 class WEligeMotorElo(QTVarios.WDialogo):
     def __init__(self, gestor, elo, titulo, icono, tipo):
-        QTVarios.WDialogo.__init__(self, gestor.pantalla, titulo, icono, tipo.lower())
+        super().__init__(titulo=titulo, icono=icono, extparam=tipo.lower())
 
         self.siMicElo = tipo == "MICELO"
         self.siMicPer = tipo == "MICPER"

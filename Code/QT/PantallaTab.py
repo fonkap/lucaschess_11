@@ -1,6 +1,6 @@
 import collections
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -50,9 +50,9 @@ class SelectUna(Controles.LB):
                     self.owner.seleccionar(self)
 
 
-class SelectBanda(QtGui.QWidget):
+class SelectBanda(QtWidgets.QWidget):
     def __init__(self, owner):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         numElem, ancho = 10, 32
         self.owner = owner
@@ -115,14 +115,14 @@ class SelectBanda(QtGui.QWidget):
     def menu(self, lb, liMore=None):
         # Los dividimos por tipos
         dic = collections.OrderedDict()
-        for xid, (nom, pm, tipo) in self.dicDatos.iteritems():
+        for xid, (nom, pm, tipo) in self.dicDatos.items():
             if tipo not in dic:
                 dic[tipo] = collections.OrderedDict()
             dic[tipo][xid] = (nom, pm)
 
         menu = QTVarios.LCMenu(self)
         dicmenu = {}
-        for xid, (nom, pm, tp) in self.dicDatos.iteritems():
+        for xid, (nom, pm, tp) in self.dicDatos.items():
             if tp not in dicmenu:
                 ico = Iconos.PuntoVerde()
                 for txt, icot, rut in self.liTipos:
@@ -288,9 +288,9 @@ class DragUna(Controles.LB):
                 self.owner.startDrag(self)
 
 
-class DragBanda(QtGui.QWidget):
+class DragBanda(QtWidgets.QWidget):
     def __init__(self, owner, liElem, ancho, margen=None):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.owner = owner
         self.ancho = ancho
@@ -324,14 +324,14 @@ class DragBanda(QtGui.QWidget):
 
         # Los dividimos por tipos
         dic = collections.OrderedDict()
-        for xid, (nom, pm, tipo) in self.dicDatos.iteritems():
+        for xid, (nom, pm, tipo) in self.dicDatos.items():
             if tipo not in dic:
                 dic[tipo] = collections.OrderedDict()
             dic[tipo][xid] = (nom, pm)
 
         menu = QTVarios.LCMenu(self)
         dicmenu = {}
-        for xid, (nom, pm, tp) in self.dicDatos.iteritems():
+        for xid, (nom, pm, tp) in self.dicDatos.items():
             if tp not in dicmenu:
                 ico = Iconos.PuntoVerde()
                 for txt, icot, rut in liTipos:
@@ -375,14 +375,14 @@ class DragBanda(QtGui.QWidget):
 
         # Los dividimos por tipos
         dic = collections.OrderedDict()
-        for xid, (nom, pm, tipo) in self.dicDatos.iteritems():
+        for xid, (nom, pm, tipo) in self.dicDatos.items():
             if tipo not in dic:
                 dic[tipo] = collections.OrderedDict()
             dic[tipo][xid] = (nom, pm)
 
         menu = QTVarios.LCMenu(self)
         dicmenu = {}
-        for xid, (nom, pm, tp) in self.dicDatos.iteritems():
+        for xid, (nom, pm, tp) in self.dicDatos.items():
             if tp not in dicmenu:
                 dicmenu[tp] = menu.submenu(tp, Iconos.PuntoVerde())
                 menu.separador()

@@ -3,8 +3,8 @@ import sqlite3
 
 from Code import Util
 
-import DBF
-import DBFcache
+from . import DBF
+from . import DBFcache
 
 
 class DBBase:
@@ -14,10 +14,10 @@ class DBBase:
     """
 
     def __init__(self, nomFichero):
-        self.nomFichero = unicode(nomFichero)
+        self.nomFichero = nomFichero
         existe = Util.existeFichero(nomFichero)
         self.conexion = sqlite3.connect(self.nomFichero)
-        self.conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        # self.conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         if not existe:
             cursor = self.conexion.cursor()
             cursor.execute("PRAGMA page_size = 4096")

@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import VarGen
 from Code.QT import Controles
@@ -249,9 +249,9 @@ class Marker(Bloque):
         Bloque.__init__(self)
 
 
-class Pizarra(QtGui.QWidget):
+class Pizarra(QtWidgets.QWidget):
     def __init__(self, guion, tablero, ancho, editMode=False, withContinue=False):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.guion = guion
         self.tarea = None
@@ -274,7 +274,7 @@ class Pizarra(QtGui.QWidget):
         self.pbRight = Controles.PB(self, "", self.goRight).ponIcono(Iconos.SiguienteF()).anchoFijo(24)
         self.pbDown = Controles.PB(self, "", self.goDown).ponIcono(Iconos.Abajo()).anchoFijo(24)
 
-        cajon = QtGui.QWidget(self)
+        cajon = QtWidgets.QWidget(self)
         ly = Colocacion.H()
         ly.control(self.pbLeft).control(self.pbDown)
         ly.control(self.pbRight).margen(0)

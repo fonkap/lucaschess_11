@@ -2,7 +2,7 @@ import os.path
 import random
 
 import LCEngine
-from PyQt4 import QtSvg, QtCore
+from PyQt5 import QtSvg, QtCore
 
 from Code import Everest
 from Code import PGN
@@ -183,7 +183,7 @@ class WNewExpedition(QTVarios.WDialogo):
                     if len(lipv) > max_moves:
                         pv = " ".join(lipv[:max_moves])
                 dt = {
-                    "LABELS": [(k, v) for k, v in g.labels.iteritems()],
+                    "LABELS": [(k, v) for k, v in g.labels.items()],
                     "XPV": LCEngine.pv2xpv(pv)
                 }
                 games.append(dt)

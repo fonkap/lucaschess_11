@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Analisis
 from Code import Partida
@@ -21,9 +21,9 @@ from Code.QT import PantallaSavePGN
 from Code.QT import PantallaAnalisisParam
 
 
-class WGames(QtGui.QWidget):
+class WGames(QtWidgets.QWidget):
     def __init__(self, procesador, winBookGuide, dbGames, wsummary, siMoves=True):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.winBookGuide = winBookGuide
         self.dbGames = dbGames  # <--setdbGames
@@ -57,7 +57,7 @@ class WGames(QtGui.QWidget):
         self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True, xid="wgames")
 
         # Status bar
-        self.status = QtGui.QStatusBar(self)
+        self.status = QtWidgets.QStatusBar(self)
         self.status.setFixedHeight(22)
 
         # ToolBar

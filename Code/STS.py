@@ -40,7 +40,7 @@ class Elem:
     def bestA1H8(self):
         xa1h8 = ""
         xpt = 0
-        for a1h8, pt in self._dicResults.iteritems():
+        for a1h8, pt in self._dicResults.items():
             if pt > xpt:
                 xa1h8 = a1h8
                 xpt = pt
@@ -126,7 +126,7 @@ class ResultGroup:
     def points(self, group):
         tt = 0
         tp = 0
-        for num, a1h8 in self._dicElem.iteritems():
+        for num, a1h8 in self._dicElem.items():
             t, p = group.points(num, a1h8)
             tt += t
             tp += p

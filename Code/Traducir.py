@@ -1,4 +1,4 @@
-import __builtin__
+import builtins
 import gettext
 import os
 
@@ -43,6 +43,6 @@ def install(lang=None):
     else:
         gettext.install(DOMAIN, DIR_LOCALE)
 
-    __builtin__.__dict__['_X'] = _X
-    __builtin__.__dict__['_F'] = _F
-    __builtin__.__dict__['_SP'] = _SP
+    builtins.__dict__['_X'] = _X
+    builtins.__dict__['_F'] = _F
+    builtins.__dict__['_SP'] = _SP

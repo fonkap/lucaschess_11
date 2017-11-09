@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Columnas
@@ -15,7 +15,7 @@ from Code import VarGen
 from Code.Constantes import *
 
 
-class WBase(QtGui.QWidget):
+class WBase(QtWidgets.QWidget):
     def __init__(self, parent, gestor):
         super(WBase, self).__init__(parent)
 
@@ -34,15 +34,20 @@ class WBase(QtGui.QWidget):
         self.creaTablero()
 
         self.creaCapturas()
-        lyBI = self.creaBloqueInformacion()
-        self.lyBI = lyBI
+        # lyBI = self.creaBloqueInformacion()
+        # self.lyBI = lyBI
 
-        lyT = Colocacion.V().control(self.tablero).relleno()
+        l = QtWidgets.QVBoxLayout()
+        l.addWidget(self.tb)
+        l.addWidget(self.tablero)
 
-        lyAI = Colocacion.H().relleno(1).control(self.capturas).otroi(lyT).otroi(lyBI).relleno(1).margen(0)
-        ly = Colocacion.V().control(self.tb).relleno().otro(lyAI).relleno().margen(2)
 
-        self.setLayout(ly)
+        # lyT = Colocacion.V().control(self.tablero).relleno()
+        # lyAI = Colocacion.H().relleno(1).control(self.capturas).otroi(lyT)#.otroi(lyBI).relleno(1).margen(0)
+        # ly = Colocacion.V().control(self.tb).relleno().otro(lyAI).relleno().margen(2)
+
+        # self.setLayout(ly)
+        self.setLayout(l)
 
         self.preparaColoresPGN()
 
@@ -58,7 +63,7 @@ class WBase(QtGui.QWidget):
         self.gestor = gestor
 
     def creaToolBar(self):
-        self.tb = QtGui.QToolBar("BASICO", self)
+        self.tb = QtWidgets.QToolBar("BASICO", self)
         iconsTB = self.configuracion.iconsTB
         self.tb.setToolButtonStyle(iconsTB)
         sz = 32 if iconsTB == QtCore.Qt.ToolButtonTextUnderIcon else 16
@@ -113,14 +118,14 @@ class WBase(QtGui.QWidget):
                                                                                                                       "white").ponWrap()
         self.lbJugNegras = Controles.LB(self, ng).anchoFijo(nAnchoLabels).alinCentrado().ponFuente(f).ponColorFondoN("white",
                                                                                                                      "black").ponWrap()
-        self.lbJugBlancas.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Raised)
-        self.lbJugNegras.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Raised)
+        self.lbJugBlancas.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Raised)
+        self.lbJugNegras.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Raised)
 
         # Relojes
         f = Controles.TipoLetra("Arial Black", puntos=26, peso=75)
         def lbReloj():
             lb = Controles.LB(self, "00:00").ponFuente(f).alinCentrado().ponColorFondoN("#076C9F", "#EFEFEF").anchoMinimo(nAnchoLabels)
-            lb.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Raised)
+            lb.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Raised)
             return lb
         self.lbRelojBlancas = lbReloj()
         self.lbRelojNegras = lbReloj()
@@ -246,16 +251,23 @@ class WBase(QtGui.QWidget):
         font = Controles.TipoLetra(puntos=puntos, peso=peso)
 
         for titulo, icono, clave in liOpciones:
-            accion = QtGui.QAction(titulo, None)
+            accion = QtWidgets.QAction(titulo, None)
             accion.setIcon(icono)
             accion.setIconText(titulo)
             accion.setFont(font)
-            self.connect(accion, QtCore.SIGNAL("triggered()"), self.procesarAccion)
+            # self.connect(accion, QtCore.SIGNAL("triggered()"), self.procesarAccion)
+            accion.triggered.connect(self.procesarAccion)
             accion.clave = clave
             self.dicTB[clave] = accion
 
     def procesarAccion(self):
+        # try:
         self.gestor.procesarAccion(self.sender().clave)
+        # except Exception as e:
+        #      import traceback, sys
+        #      traceback.print_exc(file=sys.stderr)
+        #      raise e
+
 
     def ponToolBar(self, liAcciones, separator=False):
 

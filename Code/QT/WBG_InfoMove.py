@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import ControlPosicion
 from Code import Jugada
@@ -11,9 +11,9 @@ from Code.QT import Tablero
 from Code import VarGen
 
 
-class WInfomove(QtGui.QWidget):
+class WInfomove(QtWidgets.QWidget):
     def __init__(self, winBookGuide, siMoves=True):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.siMoves = siMoves
         self.winBookGuide = winBookGuide
@@ -44,19 +44,19 @@ class WInfomove(QtGui.QWidget):
         self.lbPGN.setOpenExternalLinks(False)
         def muestraPos(txt):
             self.colocatePartida(int(txt))
-        self.connect(self.lbPGN, QtCore.SIGNAL("linkActivated(QString)"), muestraPos)
+        self.lbPGN.linkActivated.connect(muestraPos)
 
         self.siFigurines = configuracion.figurinesPGN
 
         if siMoves:
             tree = winBookGuide.wmoves.tree
             # Valoracion
-            liOpciones = [(tit[0], k, tit[1]) for k, tit in tree.dicValoracion.iteritems()]
+            liOpciones = [(tit[0], k, tit[1]) for k, tit in tree.dicValoracion.items()]
             self.lbValoracion = Controles.LB(self, _("Rating") + ":")
             self.cbValoracion = Controles.CB(self, liOpciones, 0).capturaCambiado(self.cambiadoValoracion)
 
             # Ventaja
-            liOpciones = [(tit, k, icon) for k, (tit, icon) in tree.dicVentaja.iteritems()]
+            liOpciones = [(tit, k, icon) for k, (tit, icon) in tree.dicVentaja.items()]
             self.lbVentaja = Controles.LB(self, _("Advantage") + ":")
             self.cbVentaja = Controles.CB(self, liOpciones, 0).capturaCambiado(self.cambiadoVentaja)
 

@@ -160,7 +160,7 @@ class Transsiberian:
             random.shuffle(self.dicEndings[k])
 
         dic = Util.ini2dic(os.path.join(folder, "config.ini"))
-        for cline, txt in dic["PLAYING"].iteritems():
+        for cline, txt in dic["PLAYING"].items():
             line = self.lines[int(cline) - 1]
             reg = Reg()
             cengine, color, reg.label, reg.pv = txt.split("|")
@@ -168,7 +168,7 @@ class Transsiberian:
             line.opening = reg
             line.engine = int(cengine)
 
-        for cline, txt in dic["ENDING"].iteritems():
+        for cline, txt in dic["ENDING"].items():
             line = self.lines[int(cline) - 1]
             line.ending = txt
 
@@ -176,7 +176,7 @@ class Transsiberian:
         with open(base % "svg", "rb") as f:
             x = f.read()
             dic = TrListas.transsiberian()
-            for k, v in dic.iteritems():
+            for k, v in dic.items():
                 x = x.replace(k, v)
             return x
 
@@ -322,7 +322,7 @@ class Transsiberian:
     def time(self, state=None):
         if state is None:
             t = 0.0
-            for k, v in self._time.iteritems():
+            for k, v in self._time.items():
                 t += v
         else:
             t = self._time[state]

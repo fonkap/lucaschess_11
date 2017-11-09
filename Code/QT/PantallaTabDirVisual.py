@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from Code import Util
 from Code import TrListas
@@ -340,10 +340,10 @@ class WTabDirVisual(QTVarios.WDialogo):
 
     def gmas(self, siInsertar):
         ta = TabVisual.GT_Action(None)
-        liActions = [(_F(txt), Iconos.PuntoRojo(), "GTA_%s" % action) for action, txt in ta.dicTxt.iteritems()]
+        liActions = [(_F(txt), Iconos.PuntoRojo(), "GTA_%s" % action) for action, txt in ta.dicTxt.items()]
 
         # tc = TabVisual.GT_Configuration(None)
-        # liConfigurations = [(txt, Iconos.PuntoVerde(), "GTC_%s" % configuration) for configuration, txt in tc.dicTxt.iteritems()]
+        # liConfigurations = [(txt, Iconos.PuntoVerde(), "GTC_%s" % configuration) for configuration, txt in tc.dicTxt.items()]
 
         liMore = [
             (_("Text"), Iconos.Texto(), TabVisual.TP_TEXTO),
@@ -668,7 +668,7 @@ class WTabDirVisual(QTVarios.WDialogo):
 
     def listaFlechas(self):
         dic = self.dbFlechas.asDictionary()
-        li = [regFlecha for k, regFlecha in dic.iteritems()]
+        li = [regFlecha for k, regFlecha in dic.items()]
         li.sort(key=lambda x: x.ordenVista)
         return li
 
@@ -680,7 +680,7 @@ class WTabDirVisual(QTVarios.WDialogo):
 
     def listaMarcos(self):
         dic = self.dbMarcos.asDictionary()
-        li = [regMarco for k, regMarco in dic.iteritems()]
+        li = [regMarco for k, regMarco in dic.items()]
         li.sort(key=lambda x: x.ordenVista)
         return li
 
@@ -692,7 +692,7 @@ class WTabDirVisual(QTVarios.WDialogo):
 
     def listaSVGs(self):
         dic = self.dbSVGs.asDictionary()
-        li = [regSVG for k, regSVG in dic.iteritems()]
+        li = [regSVG for k, regSVG in dic.items()]
         li.sort(key=lambda x: x.ordenVista)
         return li
 
@@ -704,7 +704,7 @@ class WTabDirVisual(QTVarios.WDialogo):
 
     def listaMarkers(self):
         dic = self.dbMarkers.asDictionary()
-        li = [regMarker for k, regMarker in dic.iteritems()]
+        li = [regMarker for k, regMarker in dic.items()]
         li.sort(key=lambda x: x.ordenVista)
         return li
 
@@ -766,7 +766,7 @@ class WTabDirVisual(QTVarios.WDialogo):
                 TabVisual.TP_SVG: self.dbSVGs,
                 TabVisual.TP_MARKER: self.dbMarkers
         }
-        for k, sc in self.tablero.dicMovibles.iteritems():
+        for k, sc in self.tablero.dicMovibles.items():
             bd = sc.bloqueDatos
             try:
                 tp, xid = bd.tpid

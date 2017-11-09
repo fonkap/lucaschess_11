@@ -1,7 +1,7 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class BloqueEspSC(QtGui.QGraphicsItem):
+class BloqueEspSC(QtWidgets.QGraphicsItem):
     def __init__(self, escena, bloqueDatos):
 
         self.nAlrededor = 5
@@ -39,12 +39,12 @@ class BloqueEspSC(QtGui.QGraphicsItem):
         if siActivar:
             self.setSelected(True)
             self.siElegido = False
-            self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
-            self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable, True)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, True)
             self.setFocus()
         else:
-            self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, False)
-            self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable, False)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, False)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, False)
 
     def tipo(self):
         return self.__class__.__name__[6:-2]

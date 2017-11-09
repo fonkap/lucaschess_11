@@ -1,6 +1,6 @@
 import time
 
-from PyQt4.QtCore import Qt
+from PyQt5.QtCore import Qt
 
 from Code import Partida
 from Code import ControlPosicion
@@ -411,7 +411,7 @@ class GestorPartida(Gestor.Gestor):
         dic = self.dicRival = PantallaEntMaq.cambioRival(self.pantalla, self.configuracion, dicBase, siGestorSolo=True)
 
         if dic:
-            for k, v in dic.iteritems():
+            for k, v in dic.items():
                 self.reinicio[k] = v
 
             dr = dic["RIVAL"]

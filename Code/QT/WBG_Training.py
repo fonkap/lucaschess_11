@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -7,16 +7,16 @@ from Code.QT import QTUtil2
 from Code.QT import QTVarios
 
 
-class TConf(QtGui.QWidget):
+class TConf(QtWidgets.QWidget):
     def __init__(self, dicValoracion, dicVentaja):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         lyVal = Colocacion.V()
         self.chbVal = Controles.CHB(self, _("All/None"), True).capturaCambiado(self, self.capturaVal)
         lyVal.control(self.chbVal)
         lyVal.espacio(15)
         self.liVal = []
-        for k, (txt, ico) in dicValoracion.iteritems():
+        for k, (txt, ico) in dicValoracion.items():
             lb = Controles.LB(self).ponImagen(ico.pixmap(16, 16))
             chb = Controles.CHB(self, txt, True)
             chb.id = k
@@ -31,7 +31,7 @@ class TConf(QtGui.QWidget):
         lyVen.control(self.chbVen)
         lyVen.espacio(15)
         self.liVen = []
-        for k, (txt, ico) in dicVentaja.iteritems():
+        for k, (txt, ico) in dicVentaja.items():
             lb = Controles.LB(self).ponImagen(ico.pixmap(16, 16))
             chb = Controles.CHB(self, txt, True)
             chb.id = k

@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code import AperturasStd
 from Code import Partida
@@ -17,9 +17,9 @@ from Code.QT import QTVarios
 from Code.QT import WBG_Comun
 
 
-class WSummary(QtGui.QWidget):
+class WSummary(QtWidgets.QWidget):
     def __init__(self, procesador, winBookGuide, dbGames, siMoves=True):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.winBookGuide = winBookGuide
 

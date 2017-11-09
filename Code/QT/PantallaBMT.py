@@ -1,7 +1,7 @@
 import os.path
 import time
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 from Code import Analisis
 from Code import BMT

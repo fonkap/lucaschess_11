@@ -24,7 +24,7 @@ class WUsuarios(QTVarios.WDialogo):
         titulo = _("Users")
         icono = Iconos.Usuarios()
         extparam = "users"
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, extparam)
+        super().__init__(titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         liAcciones = ((_("Accept"), Iconos.Aceptar(), self.aceptar), None,

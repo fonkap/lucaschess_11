@@ -32,7 +32,7 @@ __license__ = __doc__
 
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -126,10 +126,10 @@ class Fichero:
         self.liHistorico = liHistorico
 
 
-class BotonFichero(QtGui.QPushButton):
+class BotonFichero(QtWidgets.QPushButton):
     def __init__(self, fichero, extension, siSave, siRelativo, anchoMinimo, ficheroDefecto):
-        QtGui.QPushButton.__init__(self)
-        self.connect(self, QtCore.SIGNAL("clicked()"), self.cambiaFichero)
+        QtWidgets.QPushButton.__init__(self)
+        self.clicked.connect(self.cambiaFichero)
         self.fichero = fichero
         self.extension = extension
         self.siSave = siSave
@@ -173,9 +173,9 @@ class BotonFichero(QtGui.QPushButton):
         self.setText(txt)
 
 
-class LBotonFichero(QtGui.QHBoxLayout):
+class LBotonFichero(QtWidgets.QHBoxLayout):
     def __init__(self, parent, config, fichero):
-        QtGui.QHBoxLayout.__init__(self)
+        QtWidgets.QHBoxLayout.__init__(self)
 
         if config.liHistorico and not config.ficheroDefecto:
             config.ficheroDefecto = os.path.dirname(config.liHistorico[0])
@@ -214,13 +214,13 @@ class LBotonFichero(QtGui.QHBoxLayout):
         self.boton.ponFichero("")
 
 
-class BotonColor(QtGui.QPushButton):
+class BotonColor(QtWidgets.QPushButton):
     def __init__(self, parent, ancho, alto, siSTR, dispatch):
-        QtGui.QPushButton.__init__(self, parent)
+        QtWidgets.QPushButton.__init__(self, parent)
 
         self.setFixedSize(ancho, alto)
 
-        self.connect(self, QtCore.SIGNAL("clicked()"), self.pulsado)
+        self.clicked.connect(self.pulsado)
 
         self.xcolor = "" if siSTR else -1
 
@@ -245,7 +245,7 @@ class BotonColor(QtGui.QPushButton):
         else:
             color = QtGui.QColor()
             color.setRgba(self.xcolor)
-        color = QtGui.QColorDialog.getColor(color, self.parentWidget(), _("Color"), QtGui.QColorDialog.ShowAlphaChannel|QtGui.QColorDialog.DontUseNativeDialog)
+        color = QtWidgets.QColorDialog.getColor(color, self.parentWidget(), _("Color"), QtWidgets.QColorDialog.ShowAlphaChannel|QtWidgets.QColorDialog.DontUseNativeDialog)
         if color.isValid():
             if self.siSTR:
                 self.ponColor(color.name())
@@ -258,12 +258,12 @@ class BotonColor(QtGui.QPushButton):
         return self.xcolor
 
 
-class BotonCheckColor(QtGui.QHBoxLayout):
+class BotonCheckColor(QtWidgets.QHBoxLayout):
     def __init__(self, parent, ancho, alto, dispatch):
-        QtGui.QHBoxLayout.__init__(self)
+        QtWidgets.QHBoxLayout.__init__(self)
 
         self.boton = BotonColor(parent, ancho, alto, False, dispatch)
-        self.checkbox = QtGui.QCheckBox(parent)
+        self.checkbox = QtWidgets.QCheckBox(parent)
         self.checkbox.setFixedSize(20, 20)
 
         self.connect(self.checkbox, QtCore.SIGNAL("clicked()"), self.pulsado)
@@ -313,7 +313,7 @@ class Edit(Controles.ED):
         if config.ancho:
             self.anchoFijo(config.ancho)
         if config.siPassword:
-            self.setEchoMode(QtGui.QLineEdit.Password)
+            self.setEchoMode(QtWidgets.QLineEdit.Password)
         self.tipo = config.tipoCampo
         self.decimales = config.decimales
 
@@ -339,22 +339,22 @@ class TextEdit(Controles.EM):
         return self.texto()
 
 
-class DialNum(QtGui.QHBoxLayout):
+class DialNum(QtWidgets.QHBoxLayout):
     def __init__(self, parent, config, dispatch):
-        QtGui.QHBoxLayout.__init__(self)
+        QtWidgets.QHBoxLayout.__init__(self)
 
-        self.dial = QtGui.QDial(parent)
+        self.dial = QtWidgets.QDial(parent)
         self.dial.setMinimum(config.minimo)
         self.dial.setMaximum(config.maximo)
         self.dial.setNotchesVisible(True)
         self.dial.setFixedSize(40, 40)
-        self.lb = QtGui.QLabel(parent)
+        self.lb = QtWidgets.QLabel(parent)
 
         self.dispatch = dispatch
 
         self.siporc = config.siporc
 
-        self.connect(self.dial, QtCore.SIGNAL("valueChanged (int)"), self.movido)
+        self.dial.valueChanged.connect(self.movido)
 
         self.addWidget(self.dial)
         self.addWidget(self.lb)
@@ -378,7 +378,7 @@ class DialNum(QtGui.QHBoxLayout):
         return self.dial.value()
 
 
-class FormWidget(QtGui.QWidget):
+class FormWidget(QtWidgets.QWidget):
     def __init__(self, data, comment="", parent=None, dispatch=None):
         super(FormWidget, self).__init__(parent)
         from copy import deepcopy
@@ -386,10 +386,10 @@ class FormWidget(QtGui.QWidget):
         self.data = deepcopy(data)
         self.widgets = []
         self.labels = []
-        self.formlayout = QtGui.QFormLayout(self)
+        self.formlayout = QtWidgets.QFormLayout(self)
         if comment:
-            self.formlayout.addRow(QtGui.QLabel(comment, self))
-            self.formlayout.addRow(QtGui.QLabel(" ", self))
+            self.formlayout.addRow(QtWidgets.QLabel(comment, self))
+            self.formlayout.addRow(QtWidgets.QLabel(" ", self))
 
         self.setup(dispatch)
 
@@ -398,7 +398,7 @@ class FormWidget(QtGui.QWidget):
 
             # Separador
             if label is None and value is None:
-                self.formlayout.addRow(QtGui.QLabel(" ", self), QtGui.QLabel(" ", self))
+                self.formlayout.addRow(QtWidgets.QLabel(" ", self), QtWidgets.QLabel(" ", self))
                 self.widgets.append(None)
                 self.labels.append(None)
 
@@ -411,11 +411,11 @@ class FormWidget(QtGui.QWidget):
 
             else:
                 # Otros tipos
-                if not isinstance(label, (str, unicode)):
+                if not isinstance(label, (bytes, str)):
                     config = label
                     tipo = config.tipo
                     if tipo == SPINBOX:
-                        field = QtGui.QSpinBox(self)
+                        field = QtWidgets.QSpinBox(self)
                         field.setMinimum(config.minimo)
                         field.setMaximum(config.maximo)
                         field.setValue(value)
@@ -432,7 +432,7 @@ class FormWidget(QtGui.QWidget):
                         field.lista = config.lista
                         if dispatch:
                             field.currentIndexChanged.connect(dispatch)
-                            # field = QtGui.QComboBox(self)
+                            # field = QtWidgets.QComboBox(self)
                             # for n, tp in enumerate(config.lista):
                             # if len(tp) == 3:
                             # field.addItem( tp[2], tp[0], tp[1] )
@@ -443,7 +443,7 @@ class FormWidget(QtGui.QWidget):
                             # if dispatch:
                             # field.currentIndexChanged.connect( dispatch )
                     elif tipo == FONTCOMBOBOX:
-                        field = QtGui.QFontComboBox(self)
+                        field = QtWidgets.QFontComboBox(self)
                         if value:
                             font = Controles.TipoLetra(value)
                             field.setCurrentFont(font)
@@ -487,13 +487,13 @@ class FormWidget(QtGui.QWidget):
                     siRelativo = value.get("SIRELATIVO", True)
                     field = BotonFichero(fichero, extension, siSave, siRelativo, 250, fichero)
                 # Texto
-                elif isinstance(value, (str, unicode)):
-                    field = QtGui.QLineEdit(value, self)
+                elif isinstance(value, (bytes, str)):
+                    field = QtWidgets.QLineEdit(value, self)
 
                 # Combo
                 elif isinstance(value, (list, tuple)):
                     selindex = value.pop(0)
-                    field = QtGui.QComboBox(self)
+                    field = QtWidgets.QComboBox(self)
                     if isinstance(value[0], (list, tuple)):
                         keys = [key for key, _val in value]
                         value = [val for _key, val in value]
@@ -510,7 +510,7 @@ class FormWidget(QtGui.QWidget):
 
                 # Checkbox
                 elif isinstance(value, bool):
-                    field = QtGui.QCheckBox(self)
+                    field = QtWidgets.QCheckBox(self)
                     field.setCheckState(QtCore.Qt.Checked if value else QtCore.Qt.Unchecked)
                     if dispatch:
                         field.stateChanged.connect(dispatch)
@@ -518,21 +518,21 @@ class FormWidget(QtGui.QWidget):
                 # Float segundos
                 elif isinstance(value, float):  # Para los segundos
                     v = "%0.1f" % value
-                    field = QtGui.QLineEdit(v, self)
+                    field = QtWidgets.QLineEdit(v, self)
                     field.setValidator(QtGui.QDoubleValidator(0.0, 36000.0, 1, field))  # Para los segundos
                     field.setAlignment(QtCore.Qt.AlignRight)
                     field.setFixedWidth(40)
 
                 # Numero
                 elif isinstance(value, int):
-                    field = QtGui.QSpinBox(self)
+                    field = QtWidgets.QSpinBox(self)
                     field.setMaximum(9999)
                     field.setValue(value)
                     field.setFixedWidth(80)
 
                 # Linea
                 else:
-                    field = QtGui.QLineEdit(repr(value), self)
+                    field = QtWidgets.QLineEdit(repr(value), self)
 
                 self.formlayout.addRow(label, field)
                 self.formlayout.setLabelAlignment(QtCore.Qt.AlignRight)
@@ -546,7 +546,7 @@ class FormWidget(QtGui.QWidget):
             if label is None:
                 # Separator / Comment
                 continue
-            elif not isinstance(label, (str, unicode)):
+            elif not isinstance(label, (bytes, str)):
                 config = label
                 tipo = config.tipo
                 if tipo == SPINBOX:
@@ -565,8 +565,8 @@ class FormWidget(QtGui.QWidget):
                 elif tipo == FICHERO:
                     value = field.boton.fichero
 
-            elif isinstance(value, (str, unicode)):
-                value = unicode(field.text())
+            elif isinstance(value, (bytes , str)):
+                value = field.text()
             elif isinstance(value, dict):
                 value = field.fichero
             elif isinstance(value, (list, tuple)):
@@ -597,15 +597,15 @@ class FormWidget(QtGui.QWidget):
         return None
 
 
-class FormComboWidget(QtGui.QWidget):
+class FormComboWidget(QtWidgets.QWidget):
     def __init__(self, datalist, comment="", parent=None):
         super(FormComboWidget, self).__init__(parent)
         layout = Colocacion.V()
         self.setLayout(layout)
-        self.combobox = QtGui.QComboBox(self)
+        self.combobox = QtWidgets.QComboBox(self)
         layout.control(self.combobox)
 
-        self.stackwidget = QtGui.QStackWidget(self)
+        self.stackwidget = QtWidgets.QStackWidget(self)
         layout.control(self.stackwidget)
         self.connect(self.combobox, QtCore.SIGNAL("currentIndexChanged(int)"),
                      self.stackwidget, QtCore.SLOT("setCurrentIndex(int)"))
@@ -621,11 +621,11 @@ class FormComboWidget(QtGui.QWidget):
         return [widget.get() for widget in self.widgetlist]
 
 
-class FormTabWidget(QtGui.QWidget):
+class FormTabWidget(QtWidgets.QWidget):
     def __init__(self, datalist, comment="", parent=None, dispatch=None):
         super(FormTabWidget, self).__init__(parent)
         layout = Colocacion.V()
-        self.tabwidget = QtGui.QTabWidget()
+        self.tabwidget = QtWidgets.QTabWidget()
         layout.control(self.tabwidget)
         self.setLayout(layout)
         self.widgetlist = []
@@ -645,7 +645,7 @@ class FormTabWidget(QtGui.QWidget):
         return self.widgetlist[numTab].getWidget(numero)
 
 
-class FormDialog(QtGui.QDialog):
+class FormDialog(QtWidgets.QDialog):
     """Form Dialog"""
 
     def __init__(self, data, title="", comment="",
@@ -675,7 +675,7 @@ class FormDialog(QtGui.QDialog):
 
         self.setWindowTitle(title)
         if not isinstance(icon, QtGui.QIcon):
-            icon = QtGui.QWidget().style().standardIcon(QtGui.QStyle.SP_MessageBoxQuestion)
+            icon = QtWidgets.QWidget().style().standardIcon(QtWidgets.QStyle.SP_MessageBoxQuestion)
         self.setWindowIcon(icon)
 
     def aceptar(self):
@@ -727,5 +727,5 @@ def fedit(data, title="", comment="", icon=None, parent=None, siDefecto=False, a
         dialog.setMinimumWidth(anchoMinimo)
     if dialog.exec_():
         QtCore.QCoreApplication.processEvents()
-        QtGui.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents()
         return dialog.get()

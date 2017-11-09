@@ -10,6 +10,7 @@ from Code import ControlPosicion
 from Code import Partida
 from Code import Util
 from Code import VarGen
+import hashlib
 
 posA1 = LCEngine.posA1
 a1Pos = LCEngine.a1Pos
@@ -180,7 +181,8 @@ class TreeSTAT:
         self._conexion.commit()
 
     def _fen2hash(self, fen):
-        return hash(fen2fenM2(fen))
+        fenm2 = fen2fenM2(fen)
+        return int.from_bytes(hashlib.md5(fenm2.encode("utf-8")).digest()[:4], byteorder='big')
 
     def _sum(self, hfen, rfather, xmove, w, b, d, o, tdepth ):
         alm = self._readRow(hfen, rfather, xmove)
@@ -243,7 +245,7 @@ class TreeSTAT:
             self.fsum = self.massive_sum
         else:
             self.fsum = self._sum
-            for (hfen, rfather), alm in self.massive.iteritems():
+            for (hfen, rfather), alm in self.massive.items():
                 self._writeRow(hfen, alm)
             self.massive = {}
 
@@ -407,7 +409,7 @@ class DBgames:
         self.liCamposAll.extend(self.liCamposBLOB)
 
         self._conexion = sqlite3.connect(self.nomFichero)
-        self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        # self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         self._conexion.row_factory = sqlite3.Row
         self._cursor = self._conexion.cursor()
         self.tabla = "games"
@@ -830,13 +832,13 @@ class DBgames:
                             else:
                                 stRegs.add(xpv)
                                 if sicodec:
-                                    for k, v in dCab.iteritems():
+                                    for k, v in dCab.items():
                                         dCab[k] = unicode(v, encoding=codec, errors="ignore")
                                     if pgn:
                                         pgn = unicode(pgn, encoding=codec, errors="ignore")
 
                                 if raw: # si no tiene variantes ni comentarios, se graba solo las tags que faltan
-                                    liRTags = [(k,v) for k, v in dCab.iteritems() if k not in liCabs] # k is always upper
+                                    liRTags = [(k,v) for k, v in dCab.items() if k not in liCabs] # k is always upper
                                     if liRTags:
                                         pgn = {}
                                         pgn["RTAGS"] = liRTags
@@ -967,7 +969,7 @@ class DBgames:
         rtags = None
         if xpgn:
             xpgn = Util.blob2var(xpgn)
-            if type(xpgn) in (str, unicode):  # Version -9
+            if type(xpgn) in (bytes, str):  # Version -9
                 p.readPGN(VarGen.configuracion, xpgn)
                 return p
             if "RTAGS" in xpgn:
@@ -1003,7 +1005,7 @@ class DBgames:
         rtags = None
         if xpgn:
             xpgn = Util.blob2var(xpgn)
-            if type(xpgn) in (str, unicode):
+            if type(xpgn) in (bytes, str):
                 return xpgn
             if "RTAGS" in xpgn:
                 rtags = xpgn["RTAGS"]

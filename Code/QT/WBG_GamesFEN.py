@@ -1,7 +1,7 @@
 import codecs
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Partida
 from Code import DBgamesFEN
@@ -19,9 +19,9 @@ from Code import TrListas
 from Code import Util
 
 
-class WGamesFEN(QtGui.QWidget):
+class WGamesFEN(QtWidgets.QWidget):
     def __init__(self, procesador, winBookGuide, dbGamesFEN):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.winBookGuide = winBookGuide
         self.dbGamesFEN = dbGamesFEN
@@ -51,7 +51,7 @@ class WGamesFEN(QtGui.QWidget):
         self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True, xid="wgamesfen")
 
         # Status bar
-        self.status = QtGui.QStatusBar(self)
+        self.status = QtWidgets.QStatusBar(self)
         self.status.setFixedHeight(22)
 
         # ToolBar
@@ -172,13 +172,15 @@ class WGamesFEN(QtGui.QWidget):
             self.gridCambiadoRegistro(None, recno, None)
 
     def gridCambiadoRegistro(self, grid, fila, oCol):
-        fen, pv = self.dbGamesFEN.dameFEN_PV(fila)
-        p = Partida.Partida(fen=fen)
-        p.leerPV(pv)
-        p.siTerminada()
-        self.infoMove.modoFEN(p, fen, -1)
-        self.setFocus()
-        self.grid.setFocus()
+        #TODO: revisar
+        if fila>=0:
+            fen, pv = self.dbGamesFEN.dameFEN_PV(fila)
+            p = Partida.Partida(fen=fen)
+            p.leerPV(pv)
+            p.siTerminada()
+            self.infoMove.modoFEN(p, fen, -1)
+            self.setFocus()
+            self.grid.setFocus()
 
     def tw_filtrar(self):
         w = PantallaPGN.WFiltrar(self, self.grid.oColumnas, self.liFiltro)
@@ -223,7 +225,7 @@ class WGamesFEN(QtGui.QWidget):
 
             nuevoPGN, pv, dicPGN = self.procesador.gestorUnPGN(self, pgn)
             if dicPGN:
-                liTags = [(clave, valor) for clave, valor in dicPGN.iteritems()]
+                liTags = [(clave, valor) for clave, valor in dicPGN.items()]
                 partida_completa = Partida.PartidaCompleta(fen=fen, liTags=liTags)
                 if pv:
                     partida_completa.leerPV(pv)

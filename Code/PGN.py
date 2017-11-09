@@ -22,7 +22,7 @@ class UnPGN:
 
     def listaCabeceras(self):
         li = []
-        for k, v in self.dic.iteritems():
+        for k, v in self.dic.items():
             li.append([k, v])
         return li
 
@@ -215,14 +215,14 @@ class PGN:
                 continue
 
             if not dbf:
-                for clave, valor in g.labels.iteritems():
+                for clave, valor in g.labels.items():
                     if valor == "?":
                         continue
                     dClaves[clave] = len(valor)
                 bd, dbf = iniDB()
 
             else:
-                for clave, valor in g.labels.iteritems():
+                for clave, valor in g.labels.items():
                     if valor == "?":
                         continue
                     tam = len(valor)
@@ -234,7 +234,7 @@ class PGN:
                             dClaves[clave] = tam
 
             dic = {}
-            for k, v in g.labels.iteritems():
+            for k, v in g.labels.items():
                 if v == "?":
                     continue
                 dic[k] = v
@@ -338,7 +338,7 @@ def rawPGN(pgn):
     p.leerPV(g.pv())
 
     txt = ""
-    for k, v in g.labels.iteritems():
+    for k, v in g.labels.items():
         txt += "[%s \"%s\"]\n" % (k, v)
     txt += "\n\n"
     txt += p.pgnBase()

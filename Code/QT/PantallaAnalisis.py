@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import VarGen
 from Code import Partida
@@ -60,7 +60,7 @@ class WAnalisisGraph(QTVarios.WDialogo):
         pbSave.ponIcono(Iconos.Grabar())
         ly0 = Colocacion.H().control(pbSave).relleno()
         ly = Colocacion.V().control(self.emIndexes).otro(ly0).relleno()
-        wIdx = QtGui.QWidget()
+        wIdx = QtWidgets.QWidget()
         wIdx.setLayout(ly)
 
         self.tabGrid = tabGrid = Controles.Tab()
@@ -143,7 +143,7 @@ class WAnalisisGraph(QTVarios.WDialogo):
         self.cambiadoShow()
 
     def tabChanged(self, ntab):
-        QtGui.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents()
         tab_vis = 0 if ntab == 3 else ntab
         if self.rbShowElo.isChecked():
             tab_vis += 3
@@ -249,7 +249,7 @@ def showGraph(wowner, gestor, alm, muestraAnalisis):
     w.exec_()
 
 
-class WMuestra(QtGui.QWidget):
+class WMuestra(QtWidgets.QWidget):
     def __init__(self, owner, um):
         super(WMuestra, self).__init__(owner)
 
@@ -594,7 +594,7 @@ class WAnalisis(QTVarios.WDialogo):
             self.crearMuestra(um)
 
 
-class WAnalisisVariantes(QtGui.QDialog):
+class WAnalisisVariantes(QtWidgets.QDialog):
     def __init__(self, oBase, ventana, segundosPensando, siBlancas, cPuntos, maxRecursion):
         super(WAnalisisVariantes, self).__init__(ventana)
 

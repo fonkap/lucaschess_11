@@ -192,8 +192,7 @@ class ThanksTo:
         dic[_("Slovenian")] = (r("si"), "")
         dic[_("Turkish")] = (r("tr"), "")
         # _("English"):"Lucas, Georg Pfefferle, Lolo S., bolokay",
-        li = dic.keys()
-        li.sort()
+        li = sorted(dic.keys())
         # random.shuffle(li)
         txt = self.tableIni()
 

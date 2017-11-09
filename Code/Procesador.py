@@ -117,7 +117,8 @@ class Procesador:
     def iniciarGUI(self):
         self.pantalla = Pantalla.PantallaWidget(self)
         self.pantalla.ponGestor(self)  # antes que muestra
-        self.pantalla.muestra()
+        self.pantalla.show()
+        # self.pantalla.muestra()
 
         self.tablero = self.pantalla.tablero
 
@@ -172,7 +173,7 @@ class Procesador:
         self.tablero.indicadorSC.setVisible(False)
         self.tablero.blindfoldQuitar()
         self.pantalla.ponToolBar(self.liOpcionesInicio)
-        self.pantalla.activaJuego(False, False)
+        # self.pantalla.activaJuego(False, False)
         self.tablero.exePulsadoNum = None
         self.tablero.ponPosicion(self.posicionInicial)
         self.pantalla.ajustaTam()

@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui, QtSvg
+from PyQt5 import QtCore, QtGui, QtSvg
 
 from Code.QT import TabBloques
 
@@ -95,7 +95,7 @@ class SVGSC(TabBloques.BloqueEspSC):
 
         db = self.distBordes
         self.tpSize = None
-        for k, v in dicEsquinas.iteritems():
+        for k, v in dicEsquinas.items():
             if distancia(p, v) <= db:
                 self.tpSize = k
                 return True
@@ -106,7 +106,7 @@ class SVGSC(TabBloques.BloqueEspSC):
         return _("Image")
 
     def mousePressEvent(self, event):
-        QtGui.QGraphicsItem.mousePressEvent(self, event)
+        QtWidgets.QGraphicsItem.mousePressEvent(self, event)
 
         p = event.scenePos()
         self.expX = p.x()
@@ -160,7 +160,7 @@ class SVGSC(TabBloques.BloqueEspSC):
         self.escena.update()
 
     def mouseReleaseEvent(self, event):
-        QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsItem.mouseReleaseEvent(self, event)
         if self.siActivo:
             if self.siMove or self.tpSize:
                 self.escena.update()

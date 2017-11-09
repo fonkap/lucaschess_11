@@ -1,7 +1,7 @@
 import datetime
 import random
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 import Code.SQL.Base as SQLBase
 from Code import STS
@@ -27,7 +27,7 @@ class RegWorkMap:
         return dic
 
     def _restore(self, dic):
-        for k, v in dic.iteritems():
+        for k, v in dic.items():
             setattr(self, k, v)
 
 
@@ -436,14 +436,14 @@ class WorkMap:
     def save(self):
         dicW = {}
         dicW["CURRENT"] = self.current
-        dicW["DIC"] = {iso: reg._save() for iso, reg in self.dic.iteritems()}
+        dicW["DIC"] = {iso: reg._save() for iso, reg in self.dic.items()}
         return Util.var2blob(dicW)
 
     def restore(self, xbin):
         dicW = Util.blob2var(xbin)
         self.current = dicW["CURRENT"]
         d = {}
-        for iso, v in dicW["DIC"].iteritems():
+        for iso, v in dicW["DIC"].items():
             reg = RegWorkMap()
             reg._restore(v)
             d[iso] = reg
@@ -454,7 +454,7 @@ class WorkMap:
         if self.current:
             li = [self.dic[iso] for iso in self.dic[self.current].border]
         else:
-            li = [v for k, v in self.dic.iteritems()]
+            li = [v for k, v in self.dic.items()]
         self.listaGrid = sorted(li, key=lambda alm: alm.name)
 
     def setWidget(self, widget):
@@ -462,7 +462,7 @@ class WorkMap:
 
     def resetWidget(self):
         lidone = []
-        for iso, alm in self.dic.iteritems():
+        for iso, alm in self.dic.items():
             if alm.donePV:
                 lidone.append(iso)
         if self.current:
@@ -521,7 +521,7 @@ class WorkMap:
         self.current = self.aim
         if not self.DEND:
             siEnd = True
-            for iso, reg in self.dic.iteritems():
+            for iso, reg in self.dic.items():
                 if not reg.donePV:
                     siEnd = False
                     break
@@ -533,7 +533,7 @@ class WorkMap:
     def calcINFO(self):
         if self.TIPO == "sts":
             sump = sumt = 0
-            for iso, alm in self.dic.iteritems():
+            for iso, alm in self.dic.items():
                 if alm.donePV:
                     sump += alm.puntos
                     sumt += alm.total
@@ -541,7 +541,7 @@ class WorkMap:
             info = "%d/%d (%0.02f%%)" % (sump, sumt, porc)
         elif self.TIPO == "mate":
             sum_m = sum_u = 0
-            for iso, alm in self.dic.iteritems():
+            for iso, alm in self.dic.items():
                 if alm.donePV:
                     sum_u += len(alm.donePV.split(" ")) // 2 + 1
                     sum_m += alm.mate
@@ -558,7 +558,7 @@ class WorkMap:
     def done(self):
         h = 0
         t = 0
-        for k, v in self.dic.iteritems():
+        for k, v in self.dic.items():
             if v.donePV:
                 h += 1
             t += 1
@@ -589,7 +589,7 @@ class WorkMap:
         ngroups = len(groups)
         liGroups = groups.lista
         random.shuffle(liGroups)
-        for iso, alm in self.dic.iteritems():
+        for iso, alm in self.dic.items():
             g = liGroups[ngroup]
             pos = random.randint(0, 99)
             while (ngroup, pos) in st:
@@ -656,7 +656,7 @@ class WorkMap:
                         li.extend([n + 1] * x)
                 return random.choice(li)
 
-            for iso, alm in self.dic.iteritems():
+            for iso, alm in self.dic.items():
                 mate = levelElo(alm.elo)
                 alm.fen = random.choice(dicMates[mate])
                 alm.donePV = ""
@@ -664,7 +664,7 @@ class WorkMap:
         else:
             def sel(desde, hasta):
                 st = set()
-                for iso, alm in self.dic.iteritems():
+                for iso, alm in self.dic.items():
                     mate = random.randint(desde, hasta)
                     li = dicMates[mate]
                     fen = random.choice(li)

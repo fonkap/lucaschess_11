@@ -2,7 +2,7 @@ import codecs
 import copy
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import ControlPosicion
 from Code import GM
@@ -82,7 +82,7 @@ class WElegir(QTVarios.WDialogo):
         self.liFiltro = self.estado.liFiltro if siRepite else []
 
         # Status bar-> antes que grid porque se actualiza en gridNumDatos
-        self.status = QtGui.QStatusBar(self)
+        self.status = QtWidgets.QStatusBar(self)
         self.status.setFixedHeight(22)
 
         # Lista
@@ -656,7 +656,7 @@ class WElegir(QTVarios.WDialogo):
         crearTactic(self.gestor.procesador, self, liRegistros, rutinaDatos)
 
 
-class WFiltrar(QtGui.QDialog):
+class WFiltrar(QtWidgets.QDialog):
     def __init__(self, wParent, oColumnas, liFiltro):
 
         super(WFiltrar, self).__init__(wParent)
@@ -837,7 +837,7 @@ class EM_SQL(Controles.EM):
 
 class WFiltrarRaw(QTVarios.WDialogo):
     def __init__(self, wParent, oColumnas, where):
-        QtGui.QDialog.__init__(self, wParent)
+        QtWidgets.QDialog.__init__(self, wParent)
 
         QTVarios.WDialogo.__init__(self, wParent, _("Filter"), Iconos.Filtrar(), "rawfilter")
 

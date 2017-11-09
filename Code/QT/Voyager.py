@@ -1,7 +1,7 @@
 import os
 
 from PIL import Image
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import ControlPosicion
 from Code import Jugada
@@ -45,7 +45,7 @@ def average_hash(img, hash_size=8):
     return int(bits, 2).__format__(hashformat)
 
 
-class WPosicion(QtGui.QWidget):
+class WPosicion(QtWidgets.QWidget):
     def __init__(self, wparent, is_game, partida):
         self.partida = partida
         self.posicion = partida.iniPosicion
@@ -55,7 +55,7 @@ class WPosicion(QtGui.QWidget):
 
         self.wparent = wparent
 
-        QtGui.QWidget.__init__(self, wparent)
+        QtWidgets.QWidget.__init__(self, wparent)
 
         liAcciones = (
             (_("Save"), Iconos.GrabarComo(), self.save), None,
@@ -229,7 +229,7 @@ class WPosicion(QtGui.QWidget):
         self.tablero.borraPieza(desde)
 
     def creaCasilla(self, desde):
-        menu = QtGui.QMenu(self)
+        menu = QtWidgets.QMenu(self)
 
         siK = False
         sik = False
@@ -252,7 +252,7 @@ class WPosicion(QtGui.QWidget):
         for txt, pieza in liOpciones:
             icono = self.tablero.piezas.icono(pieza)
 
-            accion = QtGui.QAction(icono, txt, menu)
+            accion = QtWidgets.QAction(icono, txt, menu)
             accion.clave = pieza
             menu.addAction(accion)
 
@@ -275,11 +275,11 @@ class WPosicion(QtGui.QWidget):
     def repitePieza(self, desde):
         pieza = self.ultimaPieza
         if pieza in "kK":
-            for pos, pz in self.casillas.iteritems():
+            for pos, pz in self.casillas.items():
                 if pz == pieza:
                     self.borraCasilla(pos)
                     break
-        if QtGui.QApplication.keyboardModifiers() & QtCore.Qt.ShiftModifier:
+        if QtWidgets.QApplication.keyboardModifiers() & QtCore.Qt.ShiftModifier:
             if pieza.islower():
                 pieza = pieza.upper()
             else:
@@ -331,7 +331,7 @@ class WPosicion(QtGui.QWidget):
         self.accept()
 
     def pegar(self):
-        cb = QtGui.QApplication.clipboard()
+        cb = QtWidgets.QApplication.clipboard()
         fen = cb.text()
         if fen:
             try:
@@ -341,7 +341,7 @@ class WPosicion(QtGui.QWidget):
                 pass
 
     def copiar(self):
-        cb = QtGui.QApplication.clipboard()
+        cb = QtWidgets.QApplication.clipboard()
         self.actPosicion()
         cb.setText(self.posicion.fen())
 
@@ -448,7 +448,7 @@ class WPosicion(QtGui.QWidget):
     def scanner_deduce_base(self):
         tolerance = self.sb_scanner_tolerance.valor()
         dic = {}
-        for pos, hs in self.dicscan_pos_hash.iteritems():
+        for pos, hs in self.dicscan_pos_hash.items():
             pz = None
             dt = 99999999
             cl = self.dic_pos_color[pos]
@@ -473,7 +473,7 @@ class WPosicion(QtGui.QWidget):
         self.actPosicion()
         self.resetPosicion()
         dic = self.scanner_deduce_base()
-        for pos, pz in dic.iteritems():
+        for pos, pz in dic.items():
             self.ponPieza(pos, pz)
 
     def scanner_learn(self):
@@ -483,7 +483,7 @@ class WPosicion(QtGui.QWidget):
         self.n_scan_last_added = len(self.li_scan_pch)
         dic_deduced = self.scanner_deduce_base()
 
-        for pos, pz_real in cp.casillas.iteritems():
+        for pos, pz_real in cp.casillas.items():
             if pz_real:
                 pz_deduced = dic_deduced.get(pos)
                 if (not pz_deduced) or (pz_real != pz_deduced):
@@ -608,13 +608,13 @@ class WPosicion(QtGui.QWidget):
         event.ignore()
 
 
-class WPGN(QtGui.QWidget):
+class WPGN(QtWidgets.QWidget):
     def __init__(self, wparent, partida):
         self.partida = partida
 
         self.wparent = wparent
         self.configuracion = configuracion = VarGen.configuracion
-        QtGui.QWidget.__init__(self, wparent)
+        QtWidgets.QWidget.__init__(self, wparent)
 
         liAcciones = (
             (_("Save"), Iconos.Grabar(), self.save), None,

@@ -1,4 +1,4 @@
-import cPickle
+import pickle
 
 from Code import ControlPosicion
 from Code import TrListas
@@ -52,7 +52,7 @@ class Jugada:
         self.siTablasFaltaMaterial = False
         self.siAbandono = NOABANDONO
         self.siDesconocido = False  # Si ha sido una terminacion de partida, por causas desconocidas
-        self.pgnBase = posicionBase.pgn(desde, hasta, coronacion)
+        self.pgnBase = posicionBase.pgn(desde, hasta, self.coronacion)
         self.liMovs = [("b", hasta), ("m", desde, hasta)]
         if self.posicion.liExtras:
             self.liMovs.extend(self.posicion.liExtras)
@@ -295,7 +295,7 @@ class Jugada:
         self.siDesconocido = xL(17)
 
         if len(li) > 18 and li[18]:
-            self.analisis = cPickle.loads(str(li[18].replace("#&", "\n")))
+            self.analisis = pickle.loads(li[18].replace("#&", "\n").encode("utf-8"))
 
         if len(li) > 19 and li[19]:
             self.criticaDirecta = li[19]

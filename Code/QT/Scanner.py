@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import QTUtil
 from Code import Util
@@ -30,9 +30,9 @@ class Scanner_vars:
         Util.dic8iniBase(self.fich_vars, dic)
 
 
-class Scanner(QtGui.QDialog):
+class Scanner(QtWidgets.QDialog):
     def __init__(self, folder_scanners, fich_png):
-        QtGui.QDialog.__init__(self)
+        QtWidgets.QDialog.__init__(self)
 
         self.vars = Scanner_vars(folder_scanners)
 
@@ -52,7 +52,7 @@ class Scanner(QtGui.QDialog):
         if ok:
             self.vars.write()
             rect = QtCore.QRect(self.x, self.y, self.width, self.width)
-            desktop = QtGui.QPixmap.grabWindow(QtGui.QApplication.desktop().winId(), 0, 0,
+            desktop = QtGui.QPixmap.grabWindow(QtWidgets.QApplication.desktop().winId(), 0, 0,
                                                QTUtil.anchoEscritorio(), QTUtil.altoEscritorio())
             selected_pixmap = desktop.copy(rect)
             selected_pixmap = selected_pixmap.scaled(256, 256, transformMode=QtCore.Qt.SmoothTransformation)

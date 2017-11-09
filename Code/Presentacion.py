@@ -117,24 +117,26 @@ class GestorChallenge101:
                         # q.write(line)
 
         with open(fmt) as f:
-            self.li_lineas_posicion = [linea for linea in f if linea.strip()]
+            self.li_lineas_posicion = [linea.encode("utf-8") for linea in f if linea.strip()]
 
         self.siguiente_posicion()
 
     def siguiente_posicion(self):
         num_lineas_posicion = len(self.li_lineas_posicion)
-        while True:
-            random_pos = random.randint(0, num_lineas_posicion-1)
-            if random_pos not in self.st_randoms:
-                self.st_randoms.add(random_pos)
-                break
-        self.fen, self.result, self.pgn_result, self.pgn, self.difficult = self.li_lineas_posicion[random_pos].strip().split("|")
+        # while True:
+        #     random_pos = random.randint(0, num_lineas_posicion-1)
+        #     #random_pos = random.randint(0, num_lineas_posicion-1)
+        #     if random_pos not in self.st_randoms:
+        #         self.st_randoms.add(random_pos)
+        #         break
+        random_pos = 0
+        self.fen, self.result, self.pgn_result, self.pgn, self.difficult = self.li_lineas_posicion[random_pos].strip().split(b'|')
         self.difficult = int(self.difficult)
 
         self.cp = ControlPosicion.ControlPosicion()
         self.cp.leeFen(self.fen)
 
-        self.siBlancas = " w " in self.fen
+        self.siBlancas = b' w ' in self.fen
         self.tablero.bloqueaRotacion(False)
         self.tablero.ponMensajero(self.mueveHumano)
         self.tablero.ponPosicion(self.cp)

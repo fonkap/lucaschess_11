@@ -66,7 +66,7 @@ def leeRivales():
 
     cm = ConfigMotor("gaia", "Jean-Francois Romang, David Rabel", "3.5", "http://gaiachess.free.fr")
     cm.path = "gaia32.exe"
-    cm.nombre = "Gaïa 3.5".decode("utf-8")
+    cm.nombre = "Gaïa 3.5"
     cm.elo = 2378
     cm.ordenUCI("Ponder", "false")
     mas(cm)
@@ -126,7 +126,7 @@ def leeRivales():
     cm.elo = 2720
     cm.ordenUCI("Hash", "32")
     cm.ordenUCI("Ponder", "false")
-    cm.nombre = "Gödel 3.4.9".decode("utf-8")
+    cm.nombre = "Gödel 3.4.9"
 
     mas(cm)
 

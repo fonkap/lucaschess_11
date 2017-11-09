@@ -2,7 +2,7 @@ import codecs
 import copy
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code import TabVisual
 from Code.QT import Colocacion
@@ -19,10 +19,10 @@ from Code import Util
 from Code import VarGen
 
 
-class WTV_Marker(QtGui.QDialog):
+class WTV_Marker(QtWidgets.QDialog):
     def __init__(self, owner, regMarker, xml=None, nombre=None):
 
-        QtGui.QDialog.__init__(self, owner)
+        QtWidgets.QDialog.__init__(self, owner)
 
         self.setWindowTitle(_("Marker"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)

@@ -288,8 +288,9 @@ class MRespuestaMotor:
         li = []
         setYa = set()
         dic = self.dicMultiPV
-        keys = dic.keys()
-        keys.sort(key= lambda k: int(k))
+        keys = sorted(dic.keys())
+        #TODO: comprobar
+        # keys.sort(key= lambda k: int(k))
         for k in keys:
             rm = dic[k]
             mov = rm.movimiento()
@@ -506,7 +507,7 @@ class MRespuestaMotor:
             dic = self.dicDepth[li_depths[npos]]
             li_best = []
             pmax = -999999
-            for mov, pts in dic.iteritems():
+            for mov, pts in dic.items():
                 if pts > pmax:
                     li_best = [mov,]
                     pmax = pts
@@ -820,11 +821,11 @@ class MRespuestaMotor:
         elif nTipo == kAjustarNivelBajo:
             dic = {kAjustarSimilar: 25, kAjustarInferior: 60, kAjustarInferiorM: 25, kAjustarInferiorMM: 10}
         tp = 0
-        for k, v in dic.iteritems():
+        for k, v in dic.items():
             tp += v
         sel = random.randint(1, tp)
         t = 0
-        for k, v in dic.iteritems():
+        for k, v in dic.items():
             t += v
             if sel <= t:
                 return k

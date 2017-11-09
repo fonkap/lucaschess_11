@@ -14,8 +14,7 @@ class WFavoritos(QTVarios.WDialogo):
         self.procesador = entrenamientos.procesador
         self.liFavoritos = self.procesador.configuracion.liFavoritos
 
-        QTVarios.WDialogo.__init__(self, self.procesador.pantalla, _("Training favorites"), Iconos.Corazon(),
-                                   "favoritos")
+        super().__init__(titulo=_("Training favorites"), icono=Iconos.Corazon(), extparam="favoritos")
 
         # Toolbar
         liAcciones = [

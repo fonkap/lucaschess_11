@@ -243,7 +243,7 @@ class Albumes:
             album = Album(key_db, alias)
             li = []
             pos = 0
-            for k, v in dic.iteritems():
+            for k, v in dic.items():
                 cromo = dig[k]
                 cromo.hecho = v
                 cromo.pos = pos

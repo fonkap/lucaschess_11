@@ -141,7 +141,7 @@ class Washing:
 
     def totalEngines(self, configuracion):
         n = 0
-        for k, m in configuracion.dicRivales.iteritems():
+        for k, m in configuracion.dicRivales.items():
             if m.elo < 3000:
                 n += 2
         return n
@@ -164,7 +164,7 @@ class Washing:
                 st.add((eng.clave, eng.color))
 
         li = []
-        for k, m in configuracion.dicRivales.iteritems():
+        for k, m in configuracion.dicRivales.items():
             if m.elo < 3000:
                 for color in (True, False):
                     if (m.clave, color) not in st:

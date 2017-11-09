@@ -8,7 +8,7 @@ import psutil
 from Code import VarGen
 from Code.Constantes import *
 
-DEBUG = False
+DEBUG = True
 
 
 def xpr(line):
@@ -90,7 +90,8 @@ class Engine(object):
     def put_line(self, line):
         assert xpr("put>>> %s\n" % line)
         self.stdin_lock.acquire()
-        self.stdin.write(line + "\n")
+        self.stdin.write((line + "\n").encode("utf-8"))
+        self.stdin.flush()
         self.stdin_lock.release()
 
     def get_lines(self):

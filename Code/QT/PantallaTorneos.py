@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from Code import Books
 from Code import ControlPosicion
@@ -44,7 +44,7 @@ class WResult(QTVarios.WDialogo):
         self.tab = tab = Controles.Tab()
 
         # Tab-configuracion --------------------------------------------------
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         # # Grid
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("NUMERO", _("N."), 35, siCentrado=True)
@@ -60,7 +60,7 @@ class WResult(QTVarios.WDialogo):
         tab.nuevaTab(w, _("Current"))
 
         # Tab-configuracion --------------------------------------------------
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         # Grid
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("NUMERO", _("N."), 35, siCentrado=True)
@@ -154,7 +154,7 @@ class WUnTorneo(QTVarios.WDialogo):
         self.tab = tab = Controles.Tab()
 
         # Tab-configuracion --------------------------------------------------
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         # # Nombre
         lbNombre = Controles.LB(self, _("Name") + ": ")
         self.edNombre = Controles.ED(w, torneo.nombre())
@@ -212,7 +212,7 @@ class WUnTorneo(QTVarios.WDialogo):
         tab.nuevaTab(w, _("Configuration"))
 
         # Tab-engines --------------------------------------------------
-        self.splitterEngines = QtGui.QSplitter(self)
+        self.splitterEngines = QtWidgets.QSplitter(self)
         self.registrarSplitter(self.splitterEngines, "engines")
         # TB
         liAcciones = [(_("New"), Iconos.TutorialesCrear(), "enNuevo"), None,
@@ -229,7 +229,7 @@ class WUnTorneo(QTVarios.WDialogo):
         self.gridEnginesAlias = Grid.Grid(self, oColumnas, siSelecFilas=True, xid="EA", siSeleccionMultiple=True)
         self.registrarGrid(self.gridEnginesAlias)
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         ly = Colocacion.V().control(self.gridEnginesAlias).margen(0)
         w.setLayout(ly)
         self.splitterEngines.addWidget(w)
@@ -240,14 +240,14 @@ class WUnTorneo(QTVarios.WDialogo):
         self.gridEnginesValores = Grid.Grid(self, oColumnas, siSelecFilas=False, xid="EV")
         self.registrarGrid(self.gridEnginesValores)
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         ly = Colocacion.V().control(self.gridEnginesValores).margen(0)
         w.setLayout(ly)
         self.splitterEngines.addWidget(w)
 
         self.splitterEngines.setSizes([250, 520])  # por defecto
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         ly = Colocacion.V().control(tbEnA).control(self.splitterEngines)
         w.setLayout(ly)
         tab.nuevaTab(w, _("Engines"))
@@ -255,7 +255,7 @@ class WUnTorneo(QTVarios.WDialogo):
         # Creamos
 
         # Tab-games --------------------------------------------------
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         # TB
         liAcciones = [(_("New"), Iconos.TutorialesCrear(), "gmCrear"), None,
                       (_("Remove"), Iconos.Borrar(), "gmBorrar"), None,
@@ -279,7 +279,7 @@ class WUnTorneo(QTVarios.WDialogo):
         tab.nuevaTab(w, _("Games"))
 
         # Tab-resultado --------------------------------------------------
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
 
         # Grid
         oColumnas = Columnas.ListaColumnas()
@@ -769,7 +769,7 @@ class WTorneos(QTVarios.WDialogo):
         titulo = _("Tournaments between engines")
         icono = Iconos.Torneos()
         extparam = "torneos"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.configuracion = VarGen.configuracion
 

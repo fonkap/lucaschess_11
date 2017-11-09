@@ -1,4 +1,4 @@
-from PyQt4 import QtSvg, QtCore
+from PyQt5 import QtSvg, QtCore
 
 from Code.QT import Colocacion
 from Code.QT import Controles

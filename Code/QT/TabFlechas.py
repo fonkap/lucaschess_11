@@ -1,6 +1,6 @@
 import copy
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code.QT import TabBloques
 
@@ -97,7 +97,7 @@ class FlechaSC(TabBloques.BloqueEspSC):
         return _("Arrow")
 
     def mousePressEvent(self, event):
-        QtGui.QGraphicsItem.mousePressEvent(self, event)
+        QtWidgets.QGraphicsItem.mousePressEvent(self, event)
         if self.poligonoSizeTop:
             self.siSizeTop = self.poligonoSizeTop.containsPoint(event.pos(), QtCore.Qt.OddEvenFill)
             self.siSizeBottom = self.poligonoSizeBottom.containsPoint(event.pos(), QtCore.Qt.OddEvenFill)
@@ -169,7 +169,7 @@ class FlechaSC(TabBloques.BloqueEspSC):
         self.escena.update()
 
     def mouseReleaseEvent(self, event):
-        QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsItem.mouseReleaseEvent(self, event)
         if self.siActivo:
             if self.siMove or self.siSizeTop or self.siSizeBottom:
                 self.xy2posicion()

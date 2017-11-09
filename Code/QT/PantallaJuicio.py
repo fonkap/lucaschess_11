@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Analisis
 from Code import Partida
@@ -257,9 +257,9 @@ class WJuicio(QTVarios.WDialogo):
         Analisis.AnalisisVariantes(self, self.xmotor, jg, self.posicion.siBlancas, pts)
 
 
-class MensajeF(QtGui.QDialog):
+class MensajeF(QtWidgets.QDialog):
     def __init__(self, parent, mens):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self.setWindowTitle(_("Result"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)

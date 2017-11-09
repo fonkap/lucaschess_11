@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code import DBgamesFEN
 from Code.QT import Colocacion
@@ -14,7 +14,7 @@ class WBDatabaseFEN(QTVarios.WDialogo):
         icono = Iconos.DatabaseF()
         extparam = "databasepositions"
         titulo = _("Positions Database")
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion
@@ -29,7 +29,7 @@ class WBDatabaseFEN(QTVarios.WDialogo):
 
         self.infoMove = WBG_InfoMove.WInfomove(self, siMoves=False)
 
-        self.splitter = splitter = QtGui.QSplitter(self)
+        self.splitter = splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(self.wgamesFEN)
         splitter.addWidget(self.infoMove)
         self.registrarSplitter(self.splitter, "base")

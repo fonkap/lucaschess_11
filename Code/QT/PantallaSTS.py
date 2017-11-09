@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import ControlPosicion
 from Code.QT import Colocacion
@@ -194,7 +194,7 @@ class WRun(QTVarios.WDialogo):
         # if columna.startswith("OTHER") or columna == "WORK":
         # mx_col = []
         # mx_pt = 0
-        # for col, work in self.dworks.iteritems():
+        # for col, work in self.dworks.items():
         # pt = self.sts.xdonePoints(work, fila)
         # if pt:
         # if pt == mx_pt:
@@ -249,7 +249,7 @@ class WRun(QTVarios.WDialogo):
         for ng in range(ngroups):
             mx = 0
             st = set()
-            for key, r in self.dworks.iteritems():
+            for key, r in self.dworks.items():
                 rl = r.labels[ng]
                 pt = rl.points
                 if pt > mx:
@@ -257,11 +257,11 @@ class WRun(QTVarios.WDialogo):
                     st = {key}
                 elif pt > 0 and pt == mx:
                     st.add(key)
-            for key, r in self.dworks.iteritems():
+            for key, r in self.dworks.items():
                 r.labels[ng].is_max = key in st
 
 
-class WWork(QtGui.QDialog):
+class WWork(QtWidgets.QDialog):
     def __init__(self, wParent, sts, work):
         super(WWork, self).__init__(wParent)
 
@@ -307,7 +307,7 @@ class WWork(QtGui.QDialog):
         ly.controld(lbSeconds, 3, 0).control(self.sbSeconds, 3, 1)
         ly.controld(lbSample, 4, 0).otro(lySample, 4, 1)
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         w.setLayout(ly)
         tab.nuevaTab(w, _("Basic data"))
 
@@ -337,7 +337,7 @@ class WWork(QtGui.QDialog):
             ly.control(chb, fil, col)
         ly.otroc(lyAN, mitad, 0, numColumnas=3)
 
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         w.setLayout(ly)
         tab.nuevaTab(w, _("Groups"))
 
@@ -577,7 +577,7 @@ class WSTS(QTVarios.WDialogo):
         titulo = _("STS: Strategic Test Suite")
         icono = Iconos.STS()
         extparam = "sts"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         # Datos
         self.procesador = procesador

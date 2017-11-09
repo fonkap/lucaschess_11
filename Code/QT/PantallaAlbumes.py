@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from Code.QT import Colocacion
 from Code.QT import Controles

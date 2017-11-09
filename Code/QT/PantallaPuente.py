@@ -3,7 +3,7 @@ import datetime
 import random
 import time
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code import ControlPosicion
 from Code.QT import Colocacion
@@ -123,9 +123,9 @@ class EDCelda(Controles.ED):
         Controles.ED.focusOutEvent(self, event)
 
 
-class WEdMove(QtGui.QWidget):
+class WEdMove(QtWidgets.QWidget):
     def __init__(self, owner, conj_piezas, siBlancas):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.owner = owner
 
@@ -222,7 +222,7 @@ class WEdMove(QtGui.QWidget):
             self.promocion = resp.clave
 
     def creaMenuPiezas(self, lista, siBlancas):
-        menu = QtGui.QMenu(self)
+        menu = QtWidgets.QMenu(self)
 
         dic = {"K": _("King"), "Q": _("Queen"), "R": _("Rook"), "B": _("Bishop"), "N": _("Knight"), "P": _("Pawn")}
 
@@ -236,7 +236,7 @@ class WEdMove(QtGui.QWidget):
                     pz = pz.lower()
                 icono = self.conj_piezas.icono(pz)
 
-            accion = QtGui.QAction(icono, txt, menu)
+            accion = QtWidgets.QAction(icono, txt, menu)
 
             accion.clave = pz.strip()
             menu.addAction(accion)

@@ -171,7 +171,7 @@ FILESW=%s:100
             f.close()
 
         cab = ""
-        for k, v in dicCab.iteritems():
+        for k, v in dicCab.items():
             ku = k.upper()
             if ku not in ("RESULT", "FEN"):
                 cab += '[%s "%s"]' % (k, v)
@@ -244,7 +244,7 @@ FILESW=%s:100
             jg0.variantes = variante
 
         cab = ""
-        for k, v in dicCab.iteritems():
+        for k, v in dicCab.items():
             ku = k.upper()
             if ku not in ("RESULT", "FEN"):
                 cab += '[%s "%s"]\n' % (k, v)

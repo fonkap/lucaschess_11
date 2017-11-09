@@ -1,6 +1,6 @@
 import copy
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code import TabVisual
 from Code.QT import Colocacion
@@ -18,10 +18,10 @@ from Code import Util
 from Code import VarGen
 
 
-class WTV_Marco(QtGui.QDialog):
+class WTV_Marco(QtWidgets.QDialog):
     def __init__(self, owner, regMarco):
 
-        QtGui.QDialog.__init__(self, owner)
+        QtWidgets.QDialog.__init__(self, owner)
 
         self.setWindowTitle(_("Box"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)

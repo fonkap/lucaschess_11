@@ -1,6 +1,6 @@
 import time
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from Code import Partida
 from Code.QT import Colocacion

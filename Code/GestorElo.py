@@ -180,7 +180,7 @@ class GestorElo(Gestor.Gestor):
         for elo, clave, depth in listaMotoresElo():
             m(elo, clave, depth)
 
-        for k, v in self.configuracion.dicRivales.iteritems():
+        for k, v in self.configuracion.dicRivales.items():
             if v.elo > 2000:
                 m(v.elo, v.clave, None)  # ponemos depth a None, para diferenciar del 0 de los motores internos
 

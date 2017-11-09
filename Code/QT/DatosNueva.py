@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -121,7 +121,7 @@ def dameCategoria(wParent, configuracion, procesador):
         return categoria
 
 
-class wDatos(QtGui.QDialog):
+class wDatos(QtWidgets.QDialog):
     def __init__(self, wParent, categoria, configuracion):
         super(wDatos, self).__init__(wParent)
 
@@ -144,15 +144,16 @@ class wDatos(QtGui.QDialog):
 
         lb.ponFuente(f)
         self.lbPuntos = Controles.LB(self).alinDerecha()
-        self.connect(self.ed, QtCore.SIGNAL("valueChanged(int)"), self.nivelCambiado)
+        self.ed.valueChanged.connect(self.nivelCambiado)
 
         siBlancas = not categoria.siHechoBlancas()
-        self.rbBlancas = QtGui.QRadioButton(_("White"))
+        self.rbBlancas = QtWidgets.QRadioButton(_("White"))
         self.rbBlancas.setChecked(siBlancas)
-        self.rbNegras = QtGui.QRadioButton(_("Black"))
+        self.rbNegras = QtWidgets.QRadioButton(_("Black"))
         self.rbNegras.setChecked(not siBlancas)
-        self.connect(self.rbBlancas, QtCore.SIGNAL("clicked()"), self.ponMaxPuntos)
-        self.connect(self.rbNegras, QtCore.SIGNAL("clicked()"), self.ponMaxPuntos)
+
+        self.rbBlancas.clicked.connect(self.ponMaxPuntos)
+        self.rbNegras.clicked.connect(self.ponMaxPuntos)
 
         # Rival
         rival = configuracion.rival
@@ -223,7 +224,7 @@ def numEntrenamiento(wParent, titulo, hasta, etiqueta=None, pos=None, mensAdicio
         return None
 
 
-class WNumEntrenamiento(QtGui.QDialog):
+class WNumEntrenamiento(QtWidgets.QDialog):
     def __init__(self, wParent, titulo, hasta, etiqueta=None, pos=None, mensAdicional=None):
         super(WNumEntrenamiento, self).__init__(wParent)
 

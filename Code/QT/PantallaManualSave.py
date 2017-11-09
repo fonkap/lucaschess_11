@@ -1,7 +1,7 @@
 import os
 import encodings
 import codecs
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import ControlPosicion
 from Code.QT import Voyager
@@ -24,7 +24,7 @@ class WManualSave(QTVarios.WDialogo):
         icono = Iconos.ManualSave()
         extparam = "manualsave"
         titulo = _("Save positions to FNS/PGN")
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, extparam)
+        super().__init__(titulo=titulo, icono=icono, extparam=extparam)
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion
@@ -92,7 +92,7 @@ class WManualSave(QTVarios.WDialogo):
         bt_no_fns = Controles.PB(self, "", self.fns_unselect).ponIcono(Iconos.Delete()).anchoFijo(16)
         ## Codec
         lb_codec = Controles.LB(self, _("Encoding") + ": ")
-        liCodecs = [k for k in set(v for k, v in encodings.aliases.aliases.iteritems())]
+        liCodecs = [k for k in set(v for k, v in encodings.aliases.aliases.items())]
         liCodecs.sort()
         liCodecs = [(k, k) for k in liCodecs]
         liCodecs.insert(0, ("%s: %s" % (_("By default"), _("UTF-8")), "default"))
@@ -151,7 +151,7 @@ class WManualSave(QTVarios.WDialogo):
         gb_analysis = Controles.GB(self, _("Analysis"), ly)
 
         # ZONA
-        splitter_right = QtGui.QSplitter(self)
+        splitter_right = QtWidgets.QSplitter(self)
         splitter_right.setOrientation(QtCore.Qt.Vertical)
         splitter_right.addWidget(gb_files)
         splitter_right.addWidget(gb_labels)
@@ -159,7 +159,7 @@ class WManualSave(QTVarios.WDialogo):
 
         self.registrarSplitter(splitter_right, "RIGHT")
         ##
-        splitter = QtGui.QSplitter(self)
+        splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(gb_left)
         splitter.addWidget(splitter_right)
 
@@ -177,7 +177,7 @@ class WManualSave(QTVarios.WDialogo):
         dic_vars = self.configuracion.leeVariables("manual_save")
         if dic_vars:
             fen = dic_vars.get("FEN", self.posicion.fen())
-            self.posicion.leeFen(fen)
+            self.posicion.leeFen(fen.encode("utf-8"))
 
             self.em_solucion.ponTexto(dic_vars.get("SOLUTION", ""))
 

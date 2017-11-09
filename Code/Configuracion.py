@@ -3,8 +3,8 @@
 import operator
 import os
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 
 from Code import BaseConfig
 from Code import CajonDesastre
@@ -368,9 +368,9 @@ class Configuracion:
         listaMotoresExt = MotoresExternos.ListaMotoresExternos(self.ficheroMExternos)
         listaMotoresExt.leer()
         for motor in listaMotoresExt.liMotores:
-            if motor.multiPV > 10:
+            if motor.multiPV >= 10:
                 li.append((motor.alias, motor.alias + " *"))
-        for clave, cm in self.dicRivales.iteritems():
+        for clave, cm in self.dicRivales.items():
             if cm.puedeSerTutor():
                 li.append((clave, cm.nombre))
         li = sorted(li, key=operator.itemgetter(1))
@@ -379,7 +379,7 @@ class Configuracion:
 
     def comboMotores(self):
         li = []
-        for clave, cm in self.dicRivales.iteritems():
+        for clave, cm in self.dicRivales.items():
             li.append((cm.nombre, clave))
         li.sort(key=lambda x:x[0])
         return li
@@ -404,7 +404,7 @@ class Configuracion:
             if motor.multiPV >= minimo:
                 liMotores.append((motor.alias + "*", "*" + motor.alias))
 
-        for clave, cm in self.dicRivales.iteritems():
+        for clave, cm in self.dicRivales.tems():
             if cm.multiPV >= minimo:
                 liMotores.append((cm.nombre, clave))
 
@@ -417,7 +417,7 @@ class Configuracion:
         listaMotoresExt.leer()
         for motor in listaMotoresExt.liMotores:
             li.append(("*" + motor.alias, motor.alias + " *"))
-        for clave, cm in self.dicRivales.iteritems():
+        for clave, cm in self.dicRivales.tems():
             li.append((clave, cm.nombre))
         li = sorted(li, key=operator.itemgetter(1))
         li.insert(0, cmotor)
@@ -425,7 +425,7 @@ class Configuracion:
 
     def estilos(self):
 
-        li = [(x, x) for x in QtGui.QStyleFactory.keys()]
+        li = [(x, x) for x in QtWidgets.QStyleFactory.keys()]
         li.insert(0, self.estilo)
         return li
 
@@ -540,7 +540,7 @@ class Configuracion:
         dic["CHECKFORUPDATE"] = self.checkforupdate
         dic["PALETTE"] = self.palette
 
-        for clave, rival in self.dicRivales.iteritems():
+        for clave, rival in self.dicRivales.items():
             dic["RIVAL_%s" % clave] = rival.graba()
         if aplazamiento:
             dic["APLAZAMIENTO"] = Util.dic2txt(aplazamiento)
@@ -675,7 +675,7 @@ class Configuracion:
                 for k in dic.keys():
                     if k.startswith("RIVAL_"):
                         claveK = k[6:]
-                        for clave, rival in self.dicRivales.iteritems():
+                        for clave, rival in self.dicRivales.items():
                             if rival.clave == claveK:
                                 rival.lee(dic[k])
                 if "APLAZAMIENTO" in dic:
@@ -693,7 +693,7 @@ class Configuracion:
                         "vietnamese": "vi", "swedish": "sv"}
 
         # Si viene de la instalacion
-        for k, v in self.dicTrad.iteritems():
+        for k, v in self.dicTrad.items():
             if os.path.isfile(v + '.pon'):
                 self.traductor = v
                 self.graba()
@@ -757,7 +757,7 @@ class Configuracion:
         return li
 
     def listaMotoresInternos(self):
-        li = [v for k, v in self.dicRivales.iteritems()]
+        li = [v for k, v in self.dicRivales.tems()]
         li = sorted(li, key=lambda cm: cm.nombre)
         return li
 
@@ -769,7 +769,7 @@ class Configuracion:
 
     def listaMotores(self):
         li = []
-        for k, v in self.dicRivales.iteritems():
+        for k, v in self.dicRivales.tems():
             li.append((v.nombre, v.autor, v.url))
         li = sorted(li, key=operator.itemgetter(0))
         return li

@@ -1,6 +1,7 @@
 import os
 
-from PyQt4 import QtCore, QtGui
+import sys
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Configuracion
 from Code.QT import Colocacion
@@ -11,15 +12,17 @@ from Code.QT import QTVarios
 from Code import Usuarios
 from Code import Util
 from Code import VarGen
+from Code import Sonido
+
+
 
 
 def lanzaGUI(procesador):
     """
     Lanzador del interfaz grafico de la aplicacion.
     """
-
     # Comprobamos el lenguaje
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
 
     liUsuarios = Usuarios.Usuarios().lista
     usuario = None
@@ -74,7 +77,7 @@ def lanzaGUI(procesador):
                 configuracion.graba()
 
     # Estilo
-    app.setStyle(QtGui.QStyleFactory.create(configuracion.estilo))
+    app.setStyle(QtWidgets.QStyleFactory.create(configuracion.estilo))
 
     if configuracion.palette:
         qpalette = QtGui.QPalette()
@@ -98,7 +101,7 @@ def lanzaGUI(procesador):
         qpalette.setColor(QtGui.QPalette.Link, cl("Link"))
 
     else:
-        qpalette = QtGui.QApplication.style().standardPalette()
+        qpalette = QtWidgets.QApplication.style().standardPalette()
 
     app.setPalette(qpalette)
 
@@ -115,14 +118,19 @@ def lanzaGUI(procesador):
     # Lanzamos la pantalla
     procesador.iniciarGUI()
 
-    resp = app.exec_()
+    def cleanUp():
+        print("aboutToQuit cleanUp")
 
-    return resp
+    app.aboutToQuit.connect(cleanUp)
+    sys.exit(app.exec_())
 
 
-class WPassword(QtGui.QDialog):
+
+
+
+class WPassword(QtWidgets.QDialog):
     def __init__(self, liUsuarios):
-        QtGui.QDialog.__init__(self, None)
+        QtWidgets.QDialog.__init__(self, None)
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
 
         main = liUsuarios[0]

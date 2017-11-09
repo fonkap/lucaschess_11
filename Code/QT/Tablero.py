@@ -1,10 +1,10 @@
-import StringIO
+# import StringIO
 import collections
 import copy
 import os
 
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -32,7 +32,7 @@ class RegKB:
         self.flags = flags
 
 
-class Tablero(QtGui.QGraphicsView):
+class Tablero(QtWidgets.QGraphicsView):
     def __init__(self, parent, confTablero, siMenuVisual=True, siDirector=True):
         super(Tablero, self).__init__(None)
 
@@ -42,7 +42,7 @@ class Tablero(QtGui.QGraphicsView):
         self.setDragMode(self.NoDrag)
         self.setInteractive(True)
         self.setTransformationAnchor(self.NoAnchor)
-        self.escena = QtGui.QGraphicsScene(self)
+        self.escena = QtWidgets.QGraphicsScene(self)
         self.escena.setItemIndexMethod(self.escena.NoIndex)
         self.setScene(self.escena)
         self.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
@@ -815,7 +815,7 @@ class Tablero(QtGui.QGraphicsView):
     def mousePressEvent(self, event):
         if self.dirvisual and self.dirvisual.mousePressEvent(event):
             return
-        QtGui.QGraphicsView.mousePressEvent(self, event)
+        QtWidgets.QGraphicsView.mousePressEvent(self, event)
         pos = event.pos()
         x = pos.x()
         y = pos.y()
@@ -829,12 +829,12 @@ class Tablero(QtGui.QGraphicsView):
                 siControl = (m & QtCore.Qt.ControlModifier) > 0
                 siAlt = (m & QtCore.Qt.AltModifier) > 0
                 self.pantalla.boardRightMouse(siShift, siControl, siAlt)
-            # QtGui.QGraphicsView.mousePressEvent(self,event)
+            # QtWidgets.QGraphicsView.mousePressEvent(self,event)
             return
         if not siDentro:
             if self.atajosRaton:
                 self.atajosRaton(None)
-            # QtGui.QGraphicsView.mousePressEvent(self,event)
+            # QtWidgets.QGraphicsView.mousePressEvent(self,event)
             return
         xc = 1 + int(float(x - self.margenCentro) / self.anchoCasilla)
         yc = 1 + int(float(y - self.margenCentro) / self.anchoCasilla)
@@ -858,7 +858,7 @@ class Tablero(QtGui.QGraphicsView):
                 if liC:
                     self.showCandidates(liC)
 
-                    # QtGui.QGraphicsView.mousePressEvent(self,event)
+                    # QtWidgets.QGraphicsView.mousePressEvent(self,event)
 
     def checkLEDS(self):
         if not hasattr(self, "dicXML"):
@@ -932,7 +932,7 @@ class Tablero(QtGui.QGraphicsView):
     def mouseMoveEvent(self, event):
         if self.dirvisual and self.dirvisual.mouseMoveEvent(event):
             return
-        QtGui.QGraphicsView.mouseMoveEvent(self, event)
+        QtWidgets.QGraphicsView.mouseMoveEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if self.dirvisual and self.dirvisual.mouseReleaseEvent(event):
@@ -944,7 +944,7 @@ class Tablero(QtGui.QGraphicsView):
             self.escena.update()
             self.update()
             self.pendingRelease = None
-        QtGui.QGraphicsView.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsView.mouseReleaseEvent(self, event)
 
     def mouseDoubleClickEvent(self, event):
         item = self.itemAt(event.pos())
@@ -953,7 +953,7 @@ class Tablero(QtGui.QGraphicsView):
                 self.flechaSC.hide()
 
     def wheelEvent(self, event):
-        if QtGui.QApplication.keyboardModifiers() == QtCore.Qt.ControlModifier:
+        if QtWidgets.QApplication.keyboardModifiers() == QtCore.Qt.ControlModifier:
             if self.permitidoResizeExterno():
                 salto = event.delta() < 0
                 ap = self.confTablero.anchoPieza()
@@ -1053,8 +1053,8 @@ class Tablero(QtGui.QGraphicsView):
             return int(8 - pos)
 
     def colocaPieza(self, bloquePieza, posA1H8):
-        bloquePieza.fila = int(posA1H8[1])
-        bloquePieza.columna = ord(posA1H8[0]) - 96
+        bloquePieza.fila = posA1H8[1] - 48
+        bloquePieza.columna = posA1H8[0] - 96
         self.recolocaPieza(bloquePieza)
 
     def recolocaPieza(self, bloquePieza):
@@ -1659,7 +1659,7 @@ class Tablero(QtGui.QGraphicsView):
     def exportaMovibles(self):
         if self.dicMovibles:
             li = []
-            for k, v in self.dicMovibles.iteritems():
+            for k, v in self.dicMovibles.items():
                 xobj = str(v)
                 if "Marco" in xobj:
                     tp = "M"
@@ -1781,10 +1781,10 @@ class Tablero(QtGui.QGraphicsView):
             self.dirvisual.terminar()
 
 
-class WTamTablero(QtGui.QDialog):
+class WTamTablero(QtWidgets.QDialog):
     def __init__(self, tablero):
 
-        QtGui.QDialog.__init__(self, tablero.parent())
+        QtWidgets.QDialog.__init__(self, tablero.parent())
 
         self.setWindowTitle(_("Change board size"))
         self.setWindowIcon(Iconos.TamTablero())
@@ -1944,7 +1944,7 @@ class PosTablero(Tablero):
                 if hasattr(self.parent(), "ponCursor"):
                     self.parent().ponCursor()
                     # ~ if siIzq:
-                    # ~ QtGui.QGraphicsView.mousePressEvent(self,event)
+                    # ~ QtWidgets.QGraphicsView.mousePressEvent(self,event)
                 if siDer:
                     if hasattr(self, "mensBorrar"):
                         self.mensBorrar(a1h8)
@@ -1962,7 +1962,7 @@ class PosTablero(Tablero):
             Tablero.mousePressEvent(self, event)
             return
         if siEvent:
-            QtGui.QGraphicsView.mousePressEvent(self, event)
+            QtWidgets.QGraphicsView.mousePressEvent(self, event)
 
     def ponDispatchDrop(self, dispatch):
         self.dispatchDrop = dispatch

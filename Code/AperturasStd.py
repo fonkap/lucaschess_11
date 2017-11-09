@@ -101,8 +101,7 @@ class ListaAperturasStd:
 
         self.dic = d
 
-        li = d.keys()
-        li.sort()
+        li = sorted(d.keys())
         for k in li:
             bloque = d[k]
             a1h8 = bloque.a1h8

@@ -226,7 +226,7 @@ class ControlPGN:
 
         dmore = getattr(self.gestor, "pgnLabelsAdded", None)
         if dmore:
-            for k, v in dmore().iteritems():
+            for k, v in dmore().items():
                 resp += '[%s "%s"]\n' % (k, v)
 
         resp += "\n" + self.gestor.partida.pgnBase()

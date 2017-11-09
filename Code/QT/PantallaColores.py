@@ -1,7 +1,7 @@
 import base64
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import ControlPosicion
 from Code.QT import Colocacion
@@ -19,9 +19,9 @@ from Code import Util
 from Code import VarGen
 
 
-class BotonTema(QtGui.QPushButton):
+class BotonTema(QtWidgets.QPushButton):
     def __init__(self, parent, rutina):
-        QtGui.QPushButton.__init__(self, parent)
+        QtWidgets.QPushButton.__init__(self, parent)
 
         self.setFixedSize(64, 64)
         self.qs = QtCore.QSize(64, 64)
@@ -30,7 +30,7 @@ class BotonTema(QtGui.QPushButton):
         self.rutina = rutina
         self.tema = None
 
-        self.connect(self, QtCore.SIGNAL("clicked()"), self.pulsado)
+        self.clicked.connect(self.pulsado)
 
     def ponTema(self, tema):
         self.setVisible(tema is not None)
@@ -44,15 +44,15 @@ class BotonTema(QtGui.QPushButton):
         self.rutina(self.tema)
 
 
-class BotonColor(QtGui.QPushButton):
+class BotonColor(QtWidgets.QPushButton):
     def __init__(self, parent, rut_actual, rut_actualiza):
-        QtGui.QPushButton.__init__(self, parent)
+        QtWidgets.QPushButton.__init__(self, parent)
 
         self.setFixedSize(32, 32)
 
         self.rut_actual = rut_actual
         self.rut_actualiza = rut_actualiza
-        self.connect(self, QtCore.SIGNAL("clicked()"), self.pulsado)
+        self.clicked.connect(self.pulsado)
 
         self.parent = parent
 
@@ -201,15 +201,16 @@ class DialNum(Colocacion.H):
     def __init__(self, parent, rut_actual, rut_actualiza):
         Colocacion.H.__init__(self)
 
-        self.dial = QtGui.QSlider(QtCore.Qt.Horizontal, parent)
+        self.dial = QtWidgets.QSlider(QtCore.Qt.Horizontal, parent)
         self.dial.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.dial.setTickPosition(QtGui.QSlider.TicksBothSides)
+        self.dial.setTickPosition(QtWidgets.QSlider.TicksBothSides)
         self.dial.setTickInterval(10)
         self.dial.setSingleStep(1)
         self.dial.setMinimum(0)
         self.dial.setMaximum(99)
-        self.connect(self.dial, QtCore.SIGNAL("valueChanged (int)"), self.movido)
-        self.lb = QtGui.QLabel(parent)
+
+        self.dial.valueChanged.connect(self.movido)
+        self.lb = QtWidgets.QLabel(parent)
 
         self.rut_actual = rut_actual
         self.rut_actualiza = rut_actualiza
@@ -236,7 +237,7 @@ class WColores(QTVarios.WDialogo):
         titulo = _("Colors")
         icono = Iconos.EditarColores()
         extparam = "WColores"
-        QTVarios.WDialogo.__init__(self, pantalla, titulo, icono, extparam)
+        super().__init__(titulo=titulo, icono=icono, extparam=extparam)
 
         self.tableroOriginal = tableroOriginal
         self.configuracion = VarGen.configuracion
@@ -370,11 +371,12 @@ class WColores(QTVarios.WDialogo):
 
         # _tipoLetra
         lbTipoLetra = creaLB(_("Font"))
-        self.cbTipoLetra = QtGui.QFontComboBox()
+        self.cbTipoLetra = QtWidgets.QFontComboBox()
         self.cbTipoLetra.setEditable(False)
         self.cbTipoLetra.setFontFilters(self.cbTipoLetra.ScalableFonts)
         self.cbTipoLetra.setCurrentFont(QtGui.QFont(self.confTablero.tipoLetra()))
-        self.connect(self.cbTipoLetra, QtCore.SIGNAL("currentIndexChanged(int)"), self.actualizaTableroM)
+        self.cbTipoLetra.currentIndexChanged.connect(self.actualizaTableroM)
+
         self.chbDefTipoLetra = xDefecto(self.confTablero.siDefTipoLetra())
         l2mas1(lyG, 1, lbTipoLetra, self.cbTipoLetra, self.chbDefTipoLetra)
 
@@ -900,7 +902,7 @@ def cambiaColores(parent, configuracion):
     liColor.append(separador)
 
     palette = configuracion.palette
-    palette_std = QtGui.QApplication.style().standardPalette()
+    palette_std = QtWidgets.QApplication.style().standardPalette()
 
     liPalette = []
     def xcolor(txt, tipo):

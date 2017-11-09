@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -23,8 +23,8 @@ def dicTeclas():
 def leeCarpeta(owner, carpeta, titulo=None):
     if titulo is None:
         titulo = _("Open Directory")
-    return QtGui.QFileDialog.getExistingDirectory(owner, titulo, carpeta,
-                                                  QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+    return QtWidgets.QFileDialog.getExistingDirectory(owner, titulo, carpeta,
+                                                  QtWidgets.QFileDialog.ShowDirsOnly | QtWidgets.QFileDialog.DontResolveSymlinks)
 
 
 def _lfTituloFiltro(extension, titulo):
@@ -42,7 +42,7 @@ def _lfTituloFiltro(extension, titulo):
 
 def leeFichero(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
-    resp = QtGui.QFileDialog.getOpenFileName(owner, titulo, carpeta, filtro)
+    resp = QtWidgets.QFileDialog.getOpenFileName(owner, titulo, carpeta, filtro)
     # if resp : #+pyside
     # resp = resp[0] #+pyside
     return resp
@@ -50,13 +50,13 @@ def leeFichero(owner, carpeta, extension, titulo=None):
 
 def leeFicheros(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
-    resp = QtGui.QFileDialog.getOpenFileNames(owner, titulo, carpeta, filtro)
+    resp = QtWidgets.QFileDialog.getOpenFileNames(owner, titulo, carpeta, filtro)
     return resp
 
 
 def creaFichero(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
-    resp = QtGui.QFileDialog.getSaveFileName(owner, titulo, carpeta, filtro)
+    resp = QtWidgets.QFileDialog.getSaveFileName(owner, titulo, carpeta, filtro)
     # if resp : #+pyside
     # resp = resp[0] #+pyside
     return resp
@@ -64,13 +64,13 @@ def creaFichero(owner, carpeta, extension, titulo=None):
 
 def leeCreaFichero(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
-    resp = QtGui.QFileDialog.getSaveFileName(owner, titulo, carpeta, filtro,
-                                             options=QtGui.QFileDialog.DontConfirmOverwrite)
+    resp = QtWidgets.QFileDialog.getSaveFileName(owner, titulo, carpeta, filtro,
+                                             options=QtWidgets.QFileDialog.DontConfirmOverwrite)
     # if resp : #+pyside
     # resp = resp[0] #+pyside
     return resp
     # titulo, filtro = _lfTituloFiltro(extension, titulo)
-    # fd = QtGui.QFileDialog(owner, titulo)
+    # fd = QtWidgets.QFileDialog(owner, titulo)
     # fd.setFilter(filtro)
     # fd.setDirectory(carpeta)
     # fd.setFileMode(fd.AnyFile)
@@ -83,16 +83,16 @@ def leeCreaFichero(owner, carpeta, extension, titulo=None):
 
 def salvaFichero(pantalla, titulo, carpeta, filtro, siConfirmarSobreescritura=True):
     if siConfirmarSobreescritura:
-        resp = QtGui.QFileDialog.getSaveFileName(pantalla, titulo, carpeta, filtro)
+        resp = QtWidgets.QFileDialog.getSaveFileName(pantalla, titulo, carpeta, filtro)
     else:
-        resp = QtGui.QFileDialog.getSaveFileName(pantalla, titulo, carpeta, filtro,
-                                                 options=QtGui.QFileDialog.DontConfirmOverwrite)
+        resp = QtWidgets.QFileDialog.getSaveFileName(pantalla, titulo, carpeta, filtro,
+                                                 options=QtWidgets.QFileDialog.DontConfirmOverwrite)
         # if resp : #+pyside
         # resp = resp[0] #+pyside
     return resp
 
 
-class MensEspera(QtGui.QWidget):
+class MensEspera(QtWidgets.QWidget):
     def __init__(self, parent, mensaje, siCancelar, siMuestraYa, opacity, posicion, fixedSize, titCancelar, background, pmImagen=None, puntos=12, conImagen=True):
 
         assert parent is not None
@@ -102,7 +102,7 @@ class MensEspera(QtGui.QWidget):
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.FramelessWindowHint)
         self.setStyleSheet("QWidget, QLabel { background: %s }" % background)
         if conImagen:
-            lbi = QtGui.QLabel(self)
+            lbi = QtWidgets.QLabel(self)
             lbi.setPixmap(pmImagen if pmImagen else Iconos.pmMensEspera())
 
         self.owner = parent
@@ -151,7 +151,7 @@ class MensEspera(QtGui.QWidget):
         return self
 
     def keyPressEvent(self, event):
-        QtGui.QWidget.keyPressEvent(self, event)
+        QtWidgets.QWidget.keyPressEvent(self, event)
         self.teclaPulsada = event.key()
 
     def rotulo(self, nuevo):
@@ -251,9 +251,9 @@ def mensajeTemporalSinImagen(pantalla, mensaje, segundos, background=None, punto
     return me
 
 
-class BarraProgreso2(QtGui.QDialog):
+class BarraProgreso2(QtWidgets.QDialog):
     def __init__(self, owner, titulo, formato1="%v/%m", formato2="%v/%m"):
-        QtGui.QDialog.__init__(self, owner)
+        QtWidgets.QDialog.__init__(self, owner)
 
         self.owner = owner
 
@@ -322,9 +322,9 @@ class BarraProgreso2(QtGui.QDialog):
         return self._siCancelado
 
 
-class BarraProgreso1(QtGui.QDialog):
+class BarraProgreso1(QtWidgets.QDialog):
     def __init__(self, owner, titulo, formato1="%v/%m"):
-        QtGui.QDialog.__init__(self, owner)
+        QtWidgets.QDialog.__init__(self, owner)
 
         self.owner = owner
 
@@ -384,7 +384,7 @@ class BarraProgreso1(QtGui.QDialog):
         return self._siCancelado
 
 
-class BarraProgreso(QtGui.QProgressDialog):
+class BarraProgreso(QtWidgets.QProgressDialog):
     # ~ bp = QTUtil2.BarraProgreso( self, "me", 5 ).mostrar()
     # ~ n = 0
     # ~ for n in range(5):
@@ -452,7 +452,7 @@ def mensaje(parent, mens, titulo=None, siResalta=True, siArribaDerecha=False):
     w.muestra()
 
 
-class Mensaje(QtGui.QDialog):
+class Mensaje(QtWidgets.QDialog):
     def __init__(self, parent, mens, titulo=None, siResalta=True):
         super(Mensaje, self).__init__(parent)
 
@@ -465,7 +465,7 @@ class Mensaje(QtGui.QDialog):
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
         # ~ self.setStyleSheet("QDialog, QLabel { background: #79b600 }")
 
-        lbi = QtGui.QLabel(self)
+        lbi = QtWidgets.QLabel(self)
         lbi.setPixmap(Iconos.pmInformacion())
 
         lbm = Controles.LB(self, mens)
@@ -576,7 +576,7 @@ def tbAcceptCancel(parent, siDefecto=False, siReject=True):
 # #~ while not self.waitForReadyRead(bloque):
 # #~ total -= bloque
 # #~ QtCore.QCoreApplication.processEvents()
-# #~ QtGui.QApplication.processEvents()
+# #~ QtWidgets.QApplication.processEvents()
 # #~ if total <= 0:
 # #~ return ""
 

@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Books
 from Code import ControlPosicion
@@ -136,9 +136,9 @@ class ListaMoves:
         return len(liMovesBook) > 0
 
 
-class TreeMoves(QtGui.QTreeWidget):
+class TreeMoves(QtWidgets.QTreeWidget):
     def __init__(self, owner):
-        QtGui.QTreeWidget.__init__(self)
+        QtWidgets.QTreeWidget.__init__(self)
         self.owner = owner
         self.setAlternatingRowColors(True)
         self.listaMoves = owner.listaMoves
@@ -167,7 +167,7 @@ class TreeMoves(QtGui.QTreeWidget):
             moveOwner = listaMoves.moveOwner
             padre = self if moveOwner is None else moveOwner.item
             for n, mov in enumerate(liMoves):
-                item = QtGui.QTreeWidgetItem(padre, [mov.pgn, mov.porcentaje, mov.absoluto,
+                item = QtWidgets.QTreeWidgetItem(padre, [mov.pgn, mov.porcentaje, mov.absoluto,
                                                      "%07d" % int(mov.absoluto.strip(VarGen.XSEP))])
                 item.setTextAlignment(1, QtCore.Qt.AlignRight)
                 item.setTextAlignment(2, QtCore.Qt.AlignRight)
@@ -209,7 +209,7 @@ class TreeMoves(QtGui.QTreeWidget):
             self.setFocus()
 
     def keyPressEvent(self, event):
-        resp = QtGui.QTreeWidget.keyPressEvent(self, event)
+        resp = QtWidgets.QTreeWidget.keyPressEvent(self, event)
         k = event.key()
         if k == 43:
             self.mas()
@@ -236,9 +236,9 @@ class TreeMoves(QtGui.QTreeWidget):
         return mov
 
 
-class WMoves(QtGui.QWidget):
+class WMoves(QtWidgets.QWidget):
     def __init__(self, owner, siEnviar):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.owner = owner
 
@@ -264,9 +264,9 @@ class WMoves(QtGui.QWidget):
             self.tree.mas()
 
 
-class InfoMove(QtGui.QWidget):
+class InfoMove(QtWidgets.QWidget):
     def __init__(self, fenActivo):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         confTablero = VarGen.configuracion.confTablero("INFOMOVE", 32)
         self.tablero = Tablero.Tablero(self, confTablero)
@@ -371,7 +371,7 @@ class PantallaArbolBook(QTVarios.WDialogo):
 
         self.wmoves = WMoves(self, self.siEnviar)
 
-        self.splitter = splitter = QtGui.QSplitter(self)
+        self.splitter = splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(self.infoMove)
         splitter.addWidget(self.wmoves)
 

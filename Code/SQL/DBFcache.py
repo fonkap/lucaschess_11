@@ -40,7 +40,7 @@ class DBFcache:
         return self.cache.get(recno, None)
 
     def clearCache(self):
-        li = [(recValores._ticket_, recno) for recno, recValores in self.cache.iteritems()]
+        li = [(recValores._ticket_, recno) for recno, recValores in self.cache.items()]
 
         li = sorted(li, key=lambda uno: uno[0])
         for x in range(self.minCache):

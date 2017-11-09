@@ -2,7 +2,7 @@ import base64
 import codecs
 import os
 
-from PyQt4 import QtCore, QtGui, QtSvg
+from PyQt5 import QtCore, QtGui, QtSvg, QtWidgets
 
 from Code import BaseConfig
 from Code.QT import Colocacion
@@ -115,23 +115,21 @@ class WSave():
         return False
 
 
-class WDialogo(QtGui.QDialog, WSave):
-    def __init__(self, pantalla, titulo, icono, extparam):
-        QtGui.QDialog.__init__(self, pantalla)
-        WSave.__init__(self, titulo, icono, QtCore.Qt.Dialog, extparam)
+class WDialogo(QtWidgets.QDialog, WSave):
+    def __init__(self, **kwds):
+        super().__init__(flag=QtCore.Qt.Dialog, **kwds)
 
 
-class WWidget(QtGui.QWidget, WSave):
-    def __init__(self, pantalla, titulo, icono, extparam):
-        QtGui.QWidget.__init__(self, pantalla)
-        WSave.__init__(self, titulo, icono, QtCore.Qt.Widget, extparam)
+class WWidget(QtWidgets.QWidget, WSave):
+    def __init__(self, **kwds):
+        super().__init__(flag=QtCore.Qt.Widget, **kwds)
 
     def accept(self):
         self.guardarVideo()
         self.close()
 
 
-class BlancasNegras(QtGui.QDialog):
+class BlancasNegras(QtWidgets.QDialog):
     def __init__(self, parent):
         super(BlancasNegras, self).__init__(parent)
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
@@ -162,9 +160,9 @@ def blancasNegras(owner):
     return None
 
 
-class BlancasNegrasTiempo(QtGui.QDialog):
+class BlancasNegrasTiempo(QtWidgets.QDialog):
     def __init__(self, parent):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
 
         icoP = VarGen.todasPiezas.iconoDefecto("K")
@@ -219,7 +217,7 @@ def blancasNegrasTiempo(owner):
     return None
 
 
-class Tiempo(QtGui.QDialog):
+class Tiempo(QtWidgets.QDialog):
     def __init__(self, parent, minMinutos, minSegundos, maxMinutos, maxSegundos):
         super(Tiempo, self).__init__(parent)
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
@@ -305,16 +303,16 @@ def lyBotonesMovimiento(owner, clave, siLibre=True, siMas=False, siTiempo=True,
     return ly, tb
 
 
-class LCNumero(QtGui.QWidget):
+class LCNumero(QtWidgets.QWidget):
     def __init__(self, maxdigits):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         f = Controles.TipoLetra("", 11, 80, False, False, False, None)
 
         ly = Colocacion.H()
         self.liLB = []
         for x in range(maxdigits):
-            lb = QtGui.QLabel(self)
+            lb = QtWidgets.QLabel(self)
             lb.setStyleSheet("* { border: 2px solid black; padding: 2px; margin: 0px;}")
             lb.setFont(f)
             ly.control(lb)
@@ -333,11 +331,11 @@ class LCNumero(QtGui.QWidget):
             self.liLB[x].hide()
 
 
-class TwoImages(QtGui.QLabel):
+class TwoImages(QtWidgets.QLabel):
     def __init__(self, pmTrue, pmFalse):
         self.pm = {True: pmTrue, False: pmFalse}
         self.pmFalse = pmFalse
-        QtGui.QLabel.__init__(self)
+        QtWidgets.QLabel.__init__(self)
         self.valor(False)
 
     def valor(self, ok=None):
@@ -354,7 +352,7 @@ class TwoImages(QtGui.QLabel):
 def svg2ico(svg, tam):
     pm = QtGui.QPixmap(tam, tam)
     pm.fill(QtCore.Qt.transparent)
-    qb = QtCore.QByteArray(svg)
+    qb = QtCore.QByteArray(svg.encode("utf-8"))
     render = QtSvg.QSvgRenderer(qb)
     painter = QtGui.QPainter()
     painter.begin(pm)
@@ -742,9 +740,9 @@ class LBPieza(Controles.LB):
             self.owner.startDrag(self)
 
 
-class ListaPiezas(QtGui.QWidget):
+class ListaPiezas(QtWidgets.QWidget):
     def __init__(self, owner, lista, tablero, tam=None, margen=None):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.owner = owner
         # self.tablero = tablero = owner.tablero
@@ -828,9 +826,9 @@ class LCMenu(Controles.Menu):
         # menu.setStyle(sc)
 
 
-class ImportarFichero(QtGui.QDialog):
+class ImportarFichero(QtWidgets.QDialog):
     def __init__(self, parent, titulo, siErroneos, icono):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
 
         self.setWindowTitle(titulo)
@@ -935,9 +933,9 @@ class ImportarFicheroDB(ImportarFichero):
         return ImportarFichero.actualiza(self, leidos, 0, duplicados, importados)
 
 
-class MensajeFics(QtGui.QDialog):
+class MensajeFics(QtWidgets.QDialog):
     def __init__(self, parent, mens):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self.setWindowTitle(_("Fics-Elo"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
@@ -980,9 +978,9 @@ class MensajeFics(QtGui.QDialog):
         QTUtil.refreshGUI()
 
 
-class MensajeFide(QtGui.QDialog):
+class MensajeFide(QtWidgets.QDialog):
     def __init__(self, parent, mens):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self.setWindowTitle(_("Fide-Elo"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)

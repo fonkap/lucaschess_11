@@ -3,7 +3,7 @@ import collections
 import os
 import shutil
 
-from PyQt4 import QtCore, QtGui, QtSvg
+from PyQt5 import QtCore, QtGui, QtSvg
 
 from Code.QT import Colocacion
 from Code.QT import Controles
@@ -26,11 +26,11 @@ class ConjuntoPiezas:
             for pieza in "rnbqkpRNBQKP":
                 fich = os.path.join("Pieces", nombre, "%s%s.svg" % ("w" if pieza.isupper() else "b", pieza.lower()))
                 f = codecs.open(fich, "r", 'utf-8', 'ignore')
-                qb = QtCore.QByteArray(f.read())
+                qb = QtCore.QByteArray(f.read().encode("utf-8"))
                 f.close()
-                dic[pieza] = qb
+                dic[pieza.encode("utf-8")] = qb
             return dic
-        except:
+        except FileNotFoundError as e:
             return self.leePiezas("Cburnett")
 
     def render(self, pieza):
@@ -60,7 +60,7 @@ class ConjuntoPiezas:
         return lb
 
     def change_label(self, lb, tam):
-        if lb.tam_pieza <> tam:
+        if lb.tam_pieza != tam:
             pm = self.pixmap(lb.pieza, tam)
             lb.ponImagen(pm)
 
@@ -89,7 +89,7 @@ class TodasPiezas:
     def icono(self, pieza, nombre):
         fich = os.path.join("Pieces", nombre, "%s%s.svg" % ("w" if pieza.isupper() else "b", pieza.lower()))
         f = codecs.open(fich, "r", 'utf-8', 'ignore')
-        qb = QtCore.QByteArray(f.read())
+        qb = QtCore.QByteArray(f.read().encode("utf-8"))
         f.close()
         pm = QtGui.QPixmap(32, 32)
         pm.fill(QtCore.Qt.transparent)
@@ -109,7 +109,7 @@ class TodasPiezas:
             for color in "wb":
                 fich = os.path.join("Pieces", nombre, "%s%s.svg" % (color, pieza))
                 f = codecs.open(fich, "r", 'utf-8', 'ignore')
-                qb = QtCore.QByteArray(f.read())
+                qb = QtCore.QByteArray(f.read().encode("utf-8"))
                 f.close()
                 pm = QtGui.QPixmap(px, px)
                 pm.fill(QtCore.Qt.transparent)
@@ -172,7 +172,7 @@ class Blindfold(ConjuntoPiezas):
         for pieza in "rnbqkpRNBQKP":
             fich = os.path.join(self.carpetaBF, "%s%s.svg" % ("w" if pieza.isupper() else "b", pieza.lower()))
             f = codecs.open(fich, "r", 'utf-8', 'ignore')
-            qb = QtCore.QByteArray(f.read())
+            qb = QtCore.QByteArray(f.read().encode("utf-8"))
             f.close()
             dic[pieza] = qb
         return dic

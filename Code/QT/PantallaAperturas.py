@@ -2,7 +2,7 @@ import copy
 import os
 import subprocess
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code import AperturasStd
 from Code import ControlPosicion
@@ -77,7 +77,7 @@ class WAperturas(QTVarios.WDialogo):
         lyI = Colocacion.V().control(self.tablero).otro(lyBM).control(self.lbPGN)
         gbIzquierda = Controles.GB(self, "", lyI)
 
-        splitter = QtGui.QSplitter(self)
+        splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(gbIzquierda)
         splitter.addWidget(gbDerecha)
         self.registrarSplitter(splitter, "splitter")
@@ -694,7 +694,7 @@ class AperturasPersonales(QTVarios.WDialogo):
         icono = Iconos.Apertura()
         titulo = _("Custom openings")
         extparam = "customopen"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         tb = Controles.TBrutina(self)

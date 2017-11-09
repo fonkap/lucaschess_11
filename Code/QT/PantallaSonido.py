@@ -2,7 +2,7 @@ import collections
 import os
 import time
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
 from Code.QT import Columnas
@@ -20,9 +20,9 @@ from Code import Util
 from Code import VarGen
 
 
-class MesaSonido(QtGui.QGraphicsView):
+class MesaSonido(QtWidgets.QGraphicsView):
     def __init__(self, parent):
-        QtGui.QGraphicsView.__init__(self)
+        QtWidgets.QGraphicsView.__init__(self)
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setRenderHint(QtGui.QPainter.TextAntialiasing)
@@ -156,7 +156,7 @@ class WEdicionSonido(QTVarios.WDialogo):
         self.confich = VarGen.configuracion.ficheroDirSound
 
         # toolbar
-        self.tb = QtGui.QToolBar("BASICO", self)
+        self.tb = QtWidgets.QToolBar("BASICO", self)
         self.tb.setIconSize(QtCore.QSize(32, 32))
         self.tb.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.preparaTB()
@@ -223,7 +223,7 @@ class WEdicionSonido(QTVarios.WDialogo):
                       )
 
         for titulo, icono, clave in liOpciones:
-            accion = QtGui.QAction(titulo, None)
+            accion = QtWidgets.QAction(titulo, None)
             accion.setIcon(icono)
             accion.setIconText(titulo)
             self.connect(accion, QtCore.SIGNAL("triggered()"), self.procesaTB)
@@ -391,7 +391,7 @@ class WSonidos(QTVarios.WDialogo):
         titulo = _("Custom sounds")
         icono = Iconos.S_Play()
         extparam = "sounds"
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, extparam)
+        super().__init__(titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         liAcciones = ((_("Close"), Iconos.MainMenu(), "terminar"), None,
@@ -522,7 +522,7 @@ class WSonidos(QTVarios.WDialogo):
         d["GANAMOSTIEMPO"] = _("You win on time")
         d["GANARIVALTIEMPO"] = _("Opponent has won on time")
 
-        for c, tr in d.iteritems():
+        for c, tr in d.items():
             self.liSonidos.append([c, tr, None])
 
         # self.liSonidos.append( [ None, "", None ] )

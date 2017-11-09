@@ -1,12 +1,12 @@
 import sys
 import time
-import StringIO
+from io import StringIO
 import audioop
 import wave
 
 import pyaudio
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 from Code.QT import QTUtil
 from Code import Util

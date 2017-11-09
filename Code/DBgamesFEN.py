@@ -42,7 +42,7 @@ class DBgamesFEN():
         self.liCamposAll.extend(self.liCamposBLOB)
 
         self._conexion = sqlite3.connect(self.nomFichero)
-        self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+        # self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         self._conexion.row_factory = sqlite3.Row
         self._cursor = self._conexion.cursor()
         self.select = ",".join(self.liCamposRead)
@@ -235,7 +235,7 @@ class DBgamesFEN():
                     else:
                         stRegs.add(fen)
                         if sicodec:
-                            for k, v in dCab.iteritems():
+                            for k, v in dCab.items():
                                 dCab[k] = unicode(v, encoding=codec, errors="ignore")
                             if pgn:
                                 pgn = unicode(pgn, encoding=codec, errors="ignore")
@@ -302,7 +302,7 @@ class DBgamesFEN():
         xpgn = raw["PGN"]
         if xpgn:
             xpgn = Util.blob2var(xpgn)
-            if type(xpgn) in (str, unicode):  # Version -9
+            if type(xpgn) in (bytes, str):  # Version -9
                 p.readPGN(VarGen.configuracion, xpgn)
                 return p
             p.restore(xpgn["FULLGAME"])

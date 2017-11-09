@@ -1,6 +1,6 @@
 import copy
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import TabVisual
 from Code.QT import Colocacion
@@ -27,10 +27,10 @@ def tiposDestino():
     return li
 
 
-class WTV_Flecha(QtGui.QDialog):
+class WTV_Flecha(QtWidgets.QDialog):
     def __init__(self, owner, regFlecha, siNombre):
 
-        QtGui.QDialog.__init__(self, owner)
+        QtWidgets.QDialog.__init__(self, owner)
 
         self.setWindowTitle(_("Arrow"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)

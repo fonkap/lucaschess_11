@@ -2,7 +2,7 @@ import codecs
 import copy
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code import TabVisual
 from Code.QT import Colocacion
@@ -57,10 +57,10 @@ estrellaSVG = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 </svg>"""
 
 
-class WTV_SVG(QtGui.QDialog):
+class WTV_SVG(QtWidgets.QDialog):
     def __init__(self, owner, regSVG, xml=None, nombre=None):
 
-        QtGui.QDialog.__init__(self, owner)
+        QtWidgets.QDialog.__init__(self, owner)
 
         self.setWindowTitle(_("Image"))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)

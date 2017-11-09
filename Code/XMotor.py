@@ -4,7 +4,7 @@ import signal
 import time
 import psutil
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 import subprocess
 
 from Code import VarGen
@@ -125,7 +125,7 @@ class XMotor:
         while True:
             lt = self.get_lines()
             for line in lt:
-                if txt in line:
+                if txt in line.decode("utf-8"):
                     ok = True
                     break
             li.extend(lt)
@@ -344,7 +344,7 @@ class XMotor:
         self.reset()
         self.put_line("uci")
         li, self.uci_ok = self.wait_list("uciok", 10000)
-        self.uci_lines = [x for x in li if x.startswith("id ") or x.startswith("option name")] if self.uci_ok else []
+        self.uci_lines = [x for x in li if x.startswith(b'id ') or x.startswith(b'option name')] if self.uci_ok else []
 
     def set_option(self, name, value):
         if value:

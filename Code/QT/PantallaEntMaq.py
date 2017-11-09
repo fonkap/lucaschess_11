@@ -1,6 +1,6 @@
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Books
 from Code import ControlPosicion
@@ -612,7 +612,7 @@ def entrenamientoMaquina(procesador, titulo):
         return None
 
 
-class WCambioRival(QtGui.QDialog):
+class WCambioRival(QtWidgets.QDialog):
     def __init__(self, wParent, configuracion, dic, siGestorSolo):
         super(WCambioRival, self).__init__(wParent)
 

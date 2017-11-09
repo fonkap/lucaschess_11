@@ -86,7 +86,7 @@ def FCpos(f, c):
     return f * 8 + c
 
 def posA1(pos):
-    return chr(pos % 8 + 97) + chr(pos / 8 + 49)
+    return chr(pos % 8 + 97) + chr(pos // 8 + 49)
 
 def a1Pos(a1):
     cdef int f, c
@@ -378,9 +378,9 @@ class InfoMove(object):
         self._from = info[1:3]
         self._to = info[3:5]
         self._promotion = info[5:6].strip()
-        self._check = "+" in san
-        self._mate = "#" in san
-        self._capture = "x" in san
+        self._check = b'+' in san
+        self._mate = b'#' in san
+        self._capture = b'x' in san
 
     def desde(self):
         return self._from
@@ -427,7 +427,7 @@ def getExMoves():
 
 def moveExPV(desde, hasta, coronacion):
     if not coronacion:
-        coronacion = ""
+        coronacion = b''
 
     num = searchMove( desde, hasta, coronacion )
     if num == -1:

@@ -1,6 +1,6 @@
 import copy
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code import VarGen
 
@@ -276,7 +276,7 @@ class ListaColumnas:
         Crea un nuevo objeto con solo las columnas mostrables.
         """
         cols = [columna for columna in self.liColumnas if columna.siMostrar]
-        cols.sort(lambda x, y: cmp(x.posicion, y.posicion))
+        cols.sort(key = lambda x: x.posicion)
         oColumnasR = ListaColumnas()
         oColumnasR.liColumnas = cols
         return oColumnasR

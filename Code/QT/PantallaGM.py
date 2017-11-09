@@ -3,7 +3,7 @@ import shutil
 import urllib
 import zipfile
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Books
 from Code import GM
@@ -538,7 +538,7 @@ def eligeJugada(gestor, liJugadas, siGM):
         return desde, hasta, coronacion
 
 
-class WImportar(QtGui.QDialog):
+class WImportar(QtWidgets.QDialog):
     def __init__(self, wParent, liGM):
 
         super(WImportar, self).__init__(wParent)

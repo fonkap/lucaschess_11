@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from PyQt4 import QtSvg, QtCore
+from PyQt5 import QtSvg, QtCore
 
 from Code import Util
 from Code import Washing

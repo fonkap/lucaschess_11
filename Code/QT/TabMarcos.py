@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from Code.QT import TabBloques
 
@@ -94,7 +94,7 @@ class MarcoSC(TabBloques.BloqueEspSC):
 
         db = self.distBordes
         self.tpSize = None
-        for k, v in dicEsquinas.iteritems():
+        for k, v in dicEsquinas.items():
             if distancia(p, v) <= db:
                 self.tpSize = k
                 return True
@@ -105,7 +105,7 @@ class MarcoSC(TabBloques.BloqueEspSC):
         return _("Box")
 
     def mousePressEvent(self, event):
-        QtGui.QGraphicsItem.mousePressEvent(self, event)
+        QtWidgets.QGraphicsItem.mousePressEvent(self, event)
         self.mousePressExt(event)
 
         p = event.scenePos()
@@ -179,7 +179,7 @@ class MarcoSC(TabBloques.BloqueEspSC):
         self.escena.update()
 
     def mouseReleaseEvent(self, event):
-        QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsItem.mouseReleaseEvent(self, event)
         if self.siActivo:
             if self.siMove or self.tpSize:
                 self.xy2posicion()

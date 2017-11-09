@@ -2,7 +2,7 @@ import os.path
 import time
 
 import LCEngine
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 from Code import ControlPosicion
 from Code.QT import Colocacion
@@ -567,7 +567,7 @@ class WPlay(QTVarios.WDialogo):
                     stAttacKed.add(mv.hasta())
 
         liSolucion = []
-        for posicion, pieza in self.cp.casillas.iteritems():
+        for posicion, pieza in self.cp.casillas.items():
             if pieza:
                 reg = Util.Almacen()
                 reg.pieza = pieza

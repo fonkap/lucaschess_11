@@ -4,7 +4,7 @@ Rutinas basicas para la edicion en las listas de registros.
 
 import os
 
-from PyQt4 import QtCore, QtGui, QtSvg
+from PyQt5 import QtCore, QtGui, QtSvg, QtWidgets
 
 from Code.QT import Iconos
 
@@ -16,12 +16,12 @@ dicNG = {}
 
 
 def generaPM(piezas):
-    dicPM["V"] = Iconos.pmComentario()
-    dicPM["R"] = Iconos.pmApertura()
-    dicPM["M"] = Iconos.pmComentarioMas()
-    dicPM["S"] = Iconos.pmAperturaComentario()
-    for k in "KQRNBkqrnb":
-        dicPZ[k] = piezas.render(k)
+    dicPM[b'V'] = Iconos.pmComentario()
+    dicPM[b'R'] = Iconos.pmApertura()
+    dicPM[b'M'] = Iconos.pmComentarioMas()
+    dicPM[b'S'] = Iconos.pmAperturaComentario()
+    for k in b'KQRNBkqrnb':
+        dicPZ[k] = piezas.render(bytes([k]))
 
     carpNAGs = "./IntFiles/NAGs"
     for f in os.listdir(carpNAGs):
@@ -32,9 +32,9 @@ def generaPM(piezas):
                 dicNG[nag] = QtSvg.QSvgRenderer(fsvg)
 
 
-class ComboBox(QtGui.QItemDelegate):
+class ComboBox(QtWidgets.QItemDelegate):
     def __init__(self, liTextos):
-        QtGui.QItemDelegate.__init__(self)
+        QtWidgets.QItemDelegate.__init__(self)
         self.liTextos = liTextos
 
     def createEditor(self, parent, option, index):
@@ -56,16 +56,16 @@ class ComboBox(QtGui.QItemDelegate):
         editor.setGeometry(option.rect)
 
 
-class LineaTexto(QtGui.QItemDelegate):
+class LineaTexto(QtWidgets.QItemDelegate):
     def __init__(self, parent=None, siPassword=False, siEntero=False):
-        QtGui.QItemDelegate.__init__(self, parent)
+        QtWidgets.QItemDelegate.__init__(self, parent)
         self.siPassword = siPassword
         self.siEntero = siEntero
 
     def createEditor(self, parent, option, index):
-        editor = QtGui.QLineEdit(parent)
+        editor = QtWidgets.QLineEdit(parent)
         if self.siPassword:
-            editor.setEchoMode(QtGui.QLineEdit.Password)
+            editor.setEchoMode(QtWidgets.QLineEdit.Password)
         if self.siEntero:
             editor.setValidator(QtGui.QIntValidator(self))
             editor.setAlignment(QtCore.Qt.AlignRight)
@@ -84,15 +84,15 @@ class LineaTexto(QtGui.QItemDelegate):
         editor.setGeometry(option.rect)
 
 
-class LineaTextoUTF8(QtGui.QItemDelegate):
+class LineaTextoUTF8(QtWidgets.QItemDelegate):
     def __init__(self, parent=None, siPassword=False):
-        QtGui.QItemDelegate.__init__(self, parent)
+        QtWidgets.QItemDelegate.__init__(self, parent)
         self.siPassword = siPassword
 
     def createEditor(self, parent, option, index):
-        editor = QtGui.QLineEdit(parent)
+        editor = QtWidgets.QLineEdit(parent)
         if self.siPassword:
-            editor.setEchoMode(QtGui.QLineEdit.Password)
+            editor.setEchoMode(QtWidgets.QLineEdit.Password)
         editor.installEventFilter(self)
         return editor
 
@@ -108,13 +108,13 @@ class LineaTextoUTF8(QtGui.QItemDelegate):
         editor.setGeometry(option.rect)
 
 
-class EtiquetaPGN(QtGui.QStyledItemDelegate):
+class EtiquetaPGN(QtWidgets.QStyledItemDelegate):
     def __init__(self, siBlancas, siAlineacion=False, siFondo=False):
         self.siBlancas = siBlancas  # None = no hacer
         self.siFigurinesPGN = siBlancas is not None
         self.siAlineacion = siAlineacion
         self.siFondo = siFondo
-        QtGui.QStyledItemDelegate.__init__(self, None)
+        QtWidgets.QStyledItemDelegate.__init__(self, None)
 
     def setWhite(self, isWhite):
         self.siBlancas = isWhite
@@ -249,13 +249,13 @@ class EtiquetaPGN(QtGui.QStyledItemDelegate):
                 x += wpz
 
 
-class PmIconosBMT(QtGui.QStyledItemDelegate):
+class PmIconosBMT(QtWidgets.QStyledItemDelegate):
     """
     Delegado para la muestra con html
     """
 
     def __init__(self, parent=None, dicIconos=None):
-        QtGui.QStyledItemDelegate.__init__(self, parent)
+        QtWidgets.QStyledItemDelegate.__init__(self, parent)
 
         if dicIconos:
             self.dicIconos = dicIconos
@@ -276,10 +276,10 @@ class PmIconosBMT(QtGui.QStyledItemDelegate):
         painter.restore()
 
 
-class PmIconosColor(QtGui.QStyledItemDelegate):
+class PmIconosColor(QtWidgets.QStyledItemDelegate):
     """ Usado en TurnOnLigths"""
     def __init__(self, parent=None):
-        QtGui.QStyledItemDelegate.__init__(self, parent)
+        QtWidgets.QStyledItemDelegate.__init__(self, parent)
 
         self.dicIconos = {"0": Iconos.pmGris32(),
                           "1": Iconos.pmAmarillo32(),
@@ -301,12 +301,12 @@ class PmIconosColor(QtGui.QStyledItemDelegate):
         painter.restore()
 
 
-class HTMLDelegate(QtGui.QStyledItemDelegate):
+class HTMLDelegate(QtWidgets.QStyledItemDelegate):
     def paint(self, painter, option, index):
         options = QtGui.QStyleOptionViewItemV4(option)
         self.initStyleOption(options,index)
 
-        style = QtGui.QApplication.style() if options.widget is None else options.widget.style()
+        style = QtWidgets.QApplication.style() if options.widget is None else options.widget.style()
 
         doc = QtGui.QTextDocument()
         doc.setHtml(options.text)
@@ -338,9 +338,9 @@ class HTMLDelegate(QtGui.QStyledItemDelegate):
         return QtCore.QSize(doc.idealWidth(), doc.size().height())
 
 
-class MultiEditor(QtGui.QItemDelegate):
+class MultiEditor(QtWidgets.QItemDelegate):
     def __init__(self, wparent):
-        QtGui.QItemDelegate.__init__(self, None)
+        QtWidgets.QItemDelegate.__init__(self, None)
         self.win_me = wparent
 
     def createEditor(self, parent, option, index):

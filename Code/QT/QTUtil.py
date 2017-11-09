@@ -1,6 +1,6 @@
 import gc
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class GarbageCollector(QtCore.QObject):
@@ -42,21 +42,21 @@ def beep():
     """
     Pitido del sistema
     """
-    QtGui.QApplication.beep()
+    QtWidgets.QApplication.beep()
 
 
 def backgroundGUI():
     """
     Background por defecto del GUI
     """
-    return QtGui.QApplication.palette().brush(QtGui.QPalette.Active, QtGui.QPalette.Window).color().name()
+    return QtWidgets.QApplication.palette().brush(QtGui.QPalette.Active, QtGui.QPalette.Window).color().name()
 
 
 def backgroundGUIlight(factor):
     """
     Background por defecto del GUI
     """
-    return QtGui.QApplication.palette().brush(QtGui.QPalette.Active, QtGui.QPalette.Window).color().light(factor).name()
+    return QtWidgets.QApplication.palette().brush(QtGui.QPalette.Active, QtGui.QPalette.Window).color().light(factor).name()
 
 
 def refreshGUI():
@@ -64,7 +64,7 @@ def refreshGUI():
     Procesa eventos pendientes para que se muestren correctamente las pantallas
     """
     QtCore.QCoreApplication.processEvents()
-    QtGui.QApplication.processEvents()
+    QtWidgets.QApplication.processEvents()
 
 
 def xrefreshGUI():
@@ -108,14 +108,14 @@ def centraWindow(window):
     """
     Centra la ventana en el escritorio
     """
-    screen = QtGui.QDesktopWidget().screenGeometry()
+    screen = QtWidgets.QDesktopWidget().screenGeometry()
     size = window.geometry()
     window.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
 
 
 def escondeWindow(window):
     pos = window.pos()
-    screen = QtGui.QDesktopWidget().screenGeometry()
+    screen = QtWidgets.QDesktopWidget().screenGeometry()
     window.move(screen.width()*2, 0)
     return pos
 
@@ -131,24 +131,24 @@ def tamEscritorio():
     """
     Devuelve ancho,alto del escritorio
     """
-    screen = QtGui.QDesktopWidget().availableGeometry()
+    screen = QtWidgets.QDesktopWidget().availableGeometry()
     return screen.width(), screen.height()
 
 
 def anchoEscritorio():
-    return QtGui.QDesktopWidget().availableGeometry().width()
+    return QtWidgets.QDesktopWidget().availableGeometry().width()
 
 
 def altoEscritorio():
-    return QtGui.QDesktopWidget().availableGeometry().height()
+    return QtWidgets.QDesktopWidget().availableGeometry().height()
 
 
 def salirAplicacion(xid):
-    QtGui.QApplication.exit(xid)
+    QtWidgets.QApplication.exit(0)
 
 
 def ponPortapapeles(dato, tipo="t"):
-    cb = QtGui.QApplication.clipboard()
+    cb = QtWidgets.QApplication.clipboard()
     if tipo == "t":
         cb.setText(dato)
     elif tipo == "i":
@@ -158,7 +158,7 @@ def ponPortapapeles(dato, tipo="t"):
 
 
 def traePortapapeles():
-    cb = QtGui.QApplication.clipboard()
+    cb = QtWidgets.QApplication.clipboard()
     texto = cb.text()
     texto = texto.encode("utf-8", "ignore")
     return texto
@@ -172,7 +172,7 @@ def shrink(widget):
 
 
 def kbdPulsado():
-    m = int(QtGui.QApplication.keyboardModifiers())
+    m = int(QtWidgets.QApplication.keyboardModifiers())
     siShift = (m & QtCore.Qt.ShiftModifier) > 0
     siControl = (m & QtCore.Qt.ControlModifier) > 0
     siAlt = (m & QtCore.Qt.AltModifier) > 0

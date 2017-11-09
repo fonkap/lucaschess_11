@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Books
 from Code.QT import Colocacion
@@ -14,10 +14,10 @@ from Code import Util
 from Code import VarGen
 
 
-class WBooksCrear(QtGui.QDialog):
+class WBooksCrear(QtWidgets.QDialog):
     def __init__(self, wParent):
 
-        QtGui.QDialog.__init__(self, wParent)
+        QtWidgets.QDialog.__init__(self, wParent)
 
         self.wParent = wParent
 
@@ -211,7 +211,7 @@ def polyglotUnir(owner):
         return
 
 
-class WBooks(QtGui.QDialog):
+class WBooks(QtWidgets.QDialog):
     def __init__(self, procesador):
 
         wParent = procesador.pantalla
@@ -219,7 +219,7 @@ class WBooks(QtGui.QDialog):
         self.procesador = procesador
         self.siCambios = False
 
-        QtGui.QDialog.__init__(self, wParent)
+        QtWidgets.QDialog.__init__(self, wParent)
 
         self.setWindowTitle(_("Training with a book"))
         self.setWindowIcon(Iconos.Libros())
@@ -245,9 +245,9 @@ class WBooks(QtGui.QDialog):
         tb = Controles.TB(self, liAcciones)
 
         # Color
-        self.rbBlancas = QtGui.QRadioButton(_("White"))
+        self.rbBlancas = QtWidgets.QRadioButton(_("White"))
         self.rbBlancas.setChecked(dic_siBlancas)
-        self.rbNegras = QtGui.QRadioButton(_("Black"))
+        self.rbNegras = QtWidgets.QRadioButton(_("Black"))
         self.rbNegras.setChecked(not dic_siBlancas)
 
         hbox = Colocacion.H().relleno().control(self.rbBlancas).espacio(10).control(self.rbNegras).relleno()

@@ -36,7 +36,7 @@ class Grupos:
     def __init__(self, conf):
         self.liGrupos = []
         li = []
-        for clave, cm in conf.dicRivales.iteritems():
+        for clave, cm in conf.dicRivales.items():
             li.append((cm.elo, clave, cm))
 
         self.liRivales = sorted(li, key=operator.itemgetter(0))
@@ -442,7 +442,7 @@ class ConfigTabTema:
         return bf
 
     def graba(self):
-        return str(self._colorExterior) + "#" \
+        result = str(self._colorExterior) + "#" \
                + str(self._colorBlancas) + "#" \
                + str(self._colorNegras) + "#" \
                + Util.dic2txt(self._fTransicion) + "#" \
@@ -460,6 +460,7 @@ class ConfigTabTema:
                + Util.dic2txt(self._fRival) + "#" \
                + self._png64Thumb + "#" \
                + ("1" if self._extendedColor else "0") + "#"
+        return result
 
     def lee(self, txt):
         self.defecto()
@@ -680,8 +681,8 @@ class ConfigTablero:
               + "" + "·" \
               + self._tema.graba() + "·" \
               + self._base.graba()
-        return "A" + base64.encodestring(
-                txt)  # nuevo metodo ya que daba problemas la grabacion de tableros en sqlite+cpickle
+        return "A" + base64.encodebytes(
+                txt.encode("utf-8")).decode("utf-8")  # nuevo metodo ya que daba problemas la grabacion de tableros en sqlite+cpickle
 
     def grabaTema(self):
         return self._tema.graba()
@@ -697,7 +698,7 @@ class ConfigTablero:
 
     def lee(self, txt):
         if txt.startswith("A"):  # metodo nuevo
-            txt = base64.decodestring(txt[1:])
+            txt = base64.decodebytes(txt[1:].encode("utf-8")).decode("utf-8")
         li = txt.split("·")
         nli = len(li)
         if nli >= 4:

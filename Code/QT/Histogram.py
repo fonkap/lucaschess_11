@@ -2,7 +2,7 @@
 
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Util
 from Code import VarGen
@@ -109,7 +109,7 @@ class HPoint:
         return HPoint(self.nummove, self.value, self.lostp, self.lostp_abs, self.tooltip, self.elo)
 
 
-class GraphPoint(QtGui.QGraphicsItem):
+class GraphPoint(QtWidgets.QGraphicsItem):
     def __init__(self, histogram, point, si_values):
         super(GraphPoint, self).__init__()
 
@@ -118,8 +118,8 @@ class GraphPoint(QtGui.QGraphicsItem):
 
         self.setAcceptHoverEvents(True)
 
-        self.setFlag(QtGui.QGraphicsItem.ItemSendsGeometryChanges)
-        self.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
+        self.setCacheMode(QtWidgets.QGraphicsItem.DeviceCoordinateCache)
         self.setZValue(2)
 
         self.tooltipping = False
@@ -156,15 +156,15 @@ class GraphPoint(QtGui.QGraphicsItem):
         self.histogram.dispatch_enter(self.point.gridPos)
 
 
-class GraphToolTip(QtGui.QGraphicsItem):
+class GraphToolTip(QtWidgets.QGraphicsItem):
     def __init__(self, graph):
         super(GraphToolTip, self).__init__()
 
         self.graph = graph
         self.texto = ""
 
-        self.setFlag(QtGui.QGraphicsItem.ItemSendsGeometryChanges)
-        self.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
+        self.setCacheMode(QtWidgets.QGraphicsItem.DeviceCoordinateCache)
         self.setZValue(2)
 
     def setDispatch(self, dispatch):
@@ -206,7 +206,7 @@ class GraphToolTip(QtGui.QGraphicsItem):
         painter.drawText( self.xrect, QtCore.Qt.AlignCenter, self.texto)
 
 
-class Histogram(QtGui.QGraphicsView):
+class Histogram(QtWidgets.QGraphicsView):
     def __init__(self, owner, hserie, grid, ancho, si_values, elo_medio=None):
         super(Histogram, self).__init__()
 
@@ -228,11 +228,11 @@ class Histogram(QtGui.QGraphicsView):
         scene.setSceneRect(-sz_height, -sz_height, sz_width, sz_height)
         self.setScene(scene)
         self.scene = scene
-        # self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
-        self.setViewportUpdateMode(QtGui.QGraphicsView.BoundingRectViewportUpdate)
+        # self.setCacheMode(QtWidgets.QGraphicsView.CacheBackground)
+        self.setViewportUpdateMode(QtWidgets.QGraphicsView.BoundingRectViewportUpdate)
         self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
+        self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorViewCenter)
 
         hserie.scenePoints(sz_width, sz_height, sz_left)
 

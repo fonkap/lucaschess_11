@@ -1,5 +1,5 @@
 import base64
-import cPickle
+import pickle
 import os
 import shutil
 import sqlite3
@@ -113,7 +113,7 @@ def dicDisk_SQL(backup, path, tabla=None, siAllTables=False, pickle=True):
         shutil.copy(path, fdest)
 
     conexion = sqlite3.connect(path)
-    conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+    #conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
 
     # Lista de tablas
     cursor = conexion.cursor()
@@ -472,7 +472,7 @@ class GMconvert:
                 self.leePartidasPV(gm, dicPVs, siBlancas)
 
             numSiError = -1  # para que haya siempre una, por el historico
-            for num, pv in dicPVs.iteritems():
+            for num, pv in dicPVs.items():
                 if pv:
                     numSiError = num
                     break

@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtSvg
+from PyQt5 import QtGui, QtSvg
 
 from Code import Analisis
 from Code import ControlPosicion
@@ -53,10 +53,10 @@ class WMap(QTVarios.WDialogo):
         wsvg.setPalette(p)
 
         ly = Colocacion.V().control(tbWork).control(self.lbInfo).control(self.grid)
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         w.setLayout(ly)
 
-        splitter = QtGui.QSplitter(self)
+        splitter = QtWidgets.QSplitter(self)
         splitter.addWidget(w)
         splitter.addWidget(wsvg)
         self.registrarSplitter(splitter, "splitter")
@@ -80,7 +80,7 @@ class WMap(QTVarios.WDialogo):
         tb = Controles.TBrutina(self, liAcciones, tamIcon=24)
 
         ly = Colocacion.V().control(tb).control(self.gridData)
-        w = QtGui.QWidget()
+        w = QtWidgets.QWidget()
         w.setLayout(ly)
 
         self.tab = Controles.Tab()
@@ -340,7 +340,7 @@ class WUnSTSMap(QTVarios.WDialogo):
         mx = 0
         ok = False
         stylePV = ' style="color:red;"'
-        for pv, points in dicResults.iteritems():
+        for pv, points in dicResults.items():
             if donePV == pv.lower():
                 ok = True
                 mas = stylePV

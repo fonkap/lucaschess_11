@@ -1,6 +1,6 @@
 import copy
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 VTEXTO = 0
 VENTERO = 1

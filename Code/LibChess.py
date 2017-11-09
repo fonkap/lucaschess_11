@@ -15,7 +15,7 @@ class T4:
         def x_wdl(xwdl):
             li_xmin_pv = []
             xmin_dtz = None
-            for pv, (wdl, dtz) in dic.iteritems():
+            for pv, (wdl, dtz) in dic.items():
                 if wdl == xwdl:
                     ok = False
                     if not li_xmin_pv:

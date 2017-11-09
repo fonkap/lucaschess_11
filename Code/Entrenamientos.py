@@ -178,15 +178,15 @@ class Entrenamientos:
                 li = Util.listdir(carpetaBase)
                 for nombre in li:
                     carpeta = os.path.join(carpetaBase, nombre)
-                    ini = os.path.join(carpeta, "Config.ini")
+                    ini = os.path.join(carpeta, b'Config.ini')
                     if os.path.isdir(carpeta) and os.path.isfile(ini):
-                        xopcion(menu1, "tactica|%s|%s|%s|%s" % (tipo, nombre, carpeta, ini), trTraining(nombre),
+                        xopcion(menu1, "tactica|%s|%s|%s|%s" % (tipo, nombre, carpeta, ini), trTraining(nombre.decode("utf-8")),
                                 nico.otro())
                         menu1.separador()
                         lista.append((carpeta, nombre))
             return lista
 
-        menuTacticas("B", "Tactics")
+        menuTacticas("B", b'Tactics')
         carpetaTacticasP = os.path.join(self.configuracion.dirPersonalTraining, "Tactics")
         lista = menuTacticas("P", carpetaTacticasP)
         if lista:
@@ -283,7 +283,7 @@ class Entrenamientos:
             4: ("n", "Spatial", _("Basic test") + ": a1"),
             5: ("N", "Cburnett", _("Basic test") + ": e4")
         }
-        menu2 = menu1.submenu(_("Becoming a knight tamer"), self.procesador.tablero.piezas.icono("N"))
+        menu2 = menu1.submenu(_("Becoming a knight tamer"), self.procesador.tablero.piezas.icono(b'N'))
         vicon = VarGen.todasPiezas.icono
         icl, icn, tit = hd[1]
         menu3 = menu2.submenu(tit, vicon(icl, icn))
