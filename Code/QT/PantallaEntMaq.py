@@ -23,8 +23,7 @@ from Code.Constantes import *
 
 class WEntMaquina(QTVarios.WDialogo):
     def __init__(self, procesador, titulo):
-
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, Iconos.Libre(), "entMaquina")
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=Iconos.Libre(), extparam="entMaquina")
 
         self.configuracion = procesador.configuracion
         self.procesador = procesador

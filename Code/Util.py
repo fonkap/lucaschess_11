@@ -276,7 +276,7 @@ def ini2dic(fichero):
 
     if os.path.isfile(fichero):
 
-        f = open(fichero, "rb")
+        f = open(fichero, "r")
 
         for linea in f:
             linea = linea.strip()
@@ -914,6 +914,8 @@ class DicSQL(object):
             cursor.execute(sql, (key,))
             li = cursor.fetchone()
             cursor.close()
+            #TODO revisar
+            # dato = base64.decodebytes(li[0].encode("utf-8"))
             dato = base64.decodebytes(li[0])
             obj = pickle.loads(dato)
             self.addCache(key, obj)
@@ -979,7 +981,6 @@ class LIdisk:
 
         self.nomFichero = nomFichero
         self._conexion = sqlite3.connect(nomFichero)
-        self._conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         atexit.register(self.close)
 
         try:
@@ -1003,7 +1004,7 @@ class LIdisk:
         cursor.execute(sql)
         dato = cursor.fetchone()
         cursor.close()
-        return pickle.loads(str(dato[0]))
+        return pickle.loads(dato[0].encode("latin1"))
 
     def __len__(self):
         sql = "select COUNT(DATO) from datos"
@@ -1054,8 +1055,8 @@ class DicRaw:
         cursor.close()
         if not li:
             return None
-        dato = base64.decodestring(li[0])
-        return cPickle.loads(dato)
+        dato = base64.decodebytes(li[0])
+        return pickle.loads(dato)
 
     def __delitem__(self, key):
         cursor = self._conexion.cursor()
@@ -1206,7 +1207,7 @@ class Timekeeper:
 
 class OpenCodec:
     def __init__(self, path):
-        with open(path) as f:
+        with open(path, "rb") as f:
             u = chardet.universaldetector.UniversalDetector()
             for n, x in enumerate(f):
                 u.feed(x)

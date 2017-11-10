@@ -34,7 +34,7 @@ class WBase(QtWidgets.QWidget):
         self.creaTablero()
 
         self.creaCapturas()
-        # lyBI = self.creaBloqueInformacion()
+        lyBI = self.creaBloqueInformacion()
         # self.lyBI = lyBI
 
         l = QtWidgets.QVBoxLayout()

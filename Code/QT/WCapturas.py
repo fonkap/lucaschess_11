@@ -17,7 +17,7 @@ class CapturaLista(QtWidgets.QWidget):
 
         self.tipoMaterial = VarGen.configuracion.tipoMaterial
 
-        li = self.li = [[b'P', 8], [b'N', 2], [b'B', 2], [b'R', 2], [b'Q', 1]]
+        li = self.li = [["P", 8], ["N", 2], ["B", 2], ["R", 2], ["Q", 1]]
         self.dic = {}
         for pieza, numero in li:
             dW = self.dic[pieza] = []

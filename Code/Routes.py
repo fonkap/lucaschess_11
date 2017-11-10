@@ -173,7 +173,7 @@ class Transsiberian:
             line.ending = txt
 
     def read_svg(self, base):
-        with open(base % "svg", "rb") as f:
+        with open(base % "svg", "r") as f:
             x = f.read()
             dic = TrListas.transsiberian()
             for k, v in dic.items():
@@ -184,7 +184,7 @@ class Transsiberian:
         lines = []
         line = None
         stage = 1
-        with open(base % "dat", "rb") as f:
+        with open(base % "dat", "r") as f:
             for linea in f:
                 li = linea.strip().split(",")
                 if len(li) == 3:

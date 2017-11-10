@@ -20,8 +20,8 @@ from Code import Util
 class WControl(QTVarios.WDialogo):
     def __init__(self, procesador, path_bloque):
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, _("The board at a glance"), Iconos.Gafas(),
-                                   "visualizaBase")
+        super().__init__(parent=procesador.pantalla, titulo=_("The board at a glance")
+                         , icono=Iconos.Gafas(), extparam="visualizaBase")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

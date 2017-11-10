@@ -18,7 +18,7 @@ class WTurnOnLights(QTVarios.WDialogo):
 
         titulo = _("Turn on the lights") + ": " + title
         extparam = "tol%s-%d" % (name, self.tol.work_level)
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.colorTheme = QTUtil.qtColor("#F0F0F0")
 

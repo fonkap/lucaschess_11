@@ -193,7 +193,7 @@ class GM:
 
 def dicGM():
     dic = {}
-    f = open("gm/listaGM.txt", "rb")
+    f = open("gm/listaGM.txt", "r")
     for linea in f:
         if linea:
             li = linea.split(VarGen.XSEP)

@@ -2,7 +2,7 @@ import LCEngine
 
 from Code import TrListas
 
-FEN_INICIAL = b'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+FEN_INICIAL = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 
 class ControlPosicion:
@@ -36,7 +36,7 @@ class ControlPosicion:
 
     def logo(self):
         #  self.leeFen( "8/4q1k1/1R2bpn1/1N2n1b1/1B2r1r1/1Q6/1PKNBR2/8 w - - 0 1" )
-        self.leeFen(b'8/4Q1K1/1r2BPN1/1n2N1B1/1b2R1R1/1q6/1pknbr2/8 w - - 0 1')
+        self.leeFen("8/4Q1K1/1r2BPN1/1n2N1B1/1b2R1R1/1q6/1pknbr2/8 w - - 0 1")
         return self
 
     def copia(self):
@@ -50,51 +50,51 @@ class ControlPosicion:
         return p
 
     def legal(self):
-        if self.enroques != b'-':
-            dic = {ord('K'): (b'K', b'R', b'e1', b'h1'), ord('k'): (b'k', b'r', b'e8', b'h8'), ord('Q'): (b'K', b'R', b'e1', b'a1'),
-                ord('q'): (b'k', b'r', b'e8', b'a8')}
-            def existe(tipo):
+        if self.enroques != '-':
+            dic = {"K": ("K", "R", "e1", "h1"), "k": ("k", "r", "e8", "h8"), "Q": ("K", "R", "e1", "a1"),
+                   "q": ("k", "r", "e8", "a8")}
+            enr = ""
+            for tipo in self.enroques:
                 rey, torre, posRey, posTorre = dic[tipo]
-                return self.siExistePieza(rey, posRey) and self.siExistePieza(torre, posTorre)
-            self.enroques = bytes(filter(existe, self.enroques))
-            if not self.enroques:
-                self.enroques = b'-'
+                if self.siExistePieza(rey, posRey) and self.siExistePieza(torre, posTorre):
+                    enr += tipo
+            self.enroques = enr if enr else "-"
 
     def leeFen(self, fen):
         fen = fen.strip()
-        if b'/' not in fen:
+        if "/" not in fen:
             fen = FEN_INICIAL
 
         d = {}
         for i in range(8):
             for j in range(8):
-                cCol = i + 97
-                cFil = j + 49
-                d[bytes([cCol, cFil])] = None
+                cCol = chr(i + 97)
+                cFil = chr(j + 49)
+                d[cCol + cFil] = None
         self.casillas = d
 
-        li = fen.split(b' ')
+        li = fen.split(" ")
         nli = len(li)
         if nli < 6:
             lid = ["w", "-", "-", "0", "1"]
             li.extend(lid[nli-1:])
         posicion, color, self.enroques, self.alPaso, mp, jg = li
 
-        self.siBlancas = color == b'w'
+        self.siBlancas = color == "w"
         self.jugadas = int(jg)
         if self.jugadas < 1:
             self.jugadas = 1
         self.movPeonCap = int(mp)
 
-        for x, linea in enumerate(posicion.split(b'/')):
-            cFil = 48 + 8 - x
+        for x, linea in enumerate(posicion.split("/")):
+            cFil = chr(48 + 8 - x)
             nc = 0
             for c in linea:
-                if chr(c).isdigit():
-                    nc += c - 48
+                if c.isdigit():
+                    nc += int(c)
                 else:
-                    cCol = nc + 97
-                    self.casillas[bytes([cCol, cFil])] = bytes([c])
+                    cCol = chr(nc + 97)
+                    self.casillas[cCol + cFil] = c
                     nc += 1
 
         self.legal()
@@ -102,39 +102,37 @@ class ControlPosicion:
         return self
 
     def setLCE(self):
-        return LCEngine.setFen(self.fen().encode("utf-8"))
+        return LCEngine.setFen(self.fen())
 
     def getExMoves(self):
         return LCEngine.getExMoves()
 
     def fenBase(self):
         nSin = 0
-        posicion = bytearray()
-        fila = bytearray()
+        posicion = ""
         for i in range(8, 0, -1):
-            fila.clear()
-            cFil = i + 48
+            cFil = chr(i + 48)
+            fila = ""
             for j in range(8):
-                cCol = j + 97
-                clave = bytes([cCol, cFil])
+                cCol = chr(j + 97)
+                clave = cCol + cFil
                 v = self.casillas[clave]
                 if v is None:
                     nSin += 1
                 else:
                     if nSin:
-                        fila += b'%d' % nSin
+                        fila += "%d" % nSin
                         nSin = 0
                     fila += v
             if nSin:
-                fila += b'%d' % nSin
+                fila += "%d" % nSin
                 nSin = 0
 
             posicion += fila
             if i > 1:
-                posicion += b'/'
-        color = b'w' if self.siBlancas else b'b'
-        posicion += color
-        return bytes(posicion)
+                posicion += "/"
+        color = "w" if self.siBlancas else "b"
+        return posicion + " " + color
 
     def fenDGT(self):
         nSin = 0
@@ -190,7 +188,7 @@ class ControlPosicion:
             dic[pieza] = num
             dic[pieza.lower()] = num
 
-        for pieza in self.casillas.itervalues():
+        for pieza in self.casillas.values():
             if pieza and dic[pieza] > 0:
                 dic[pieza] -= 1
 
@@ -202,7 +200,7 @@ class ControlPosicion:
     def mover(self, desdeA1H8, hastaA1H8, coronacion=""):
         self.setLCE()
 
-        mv = LCEngine.moveExPV(desdeA1H8.encode("utf-8"), hastaA1H8.encode("utf-8"), coronacion.encode("utf-8") if type(coronacion) == str else b'')
+        mv = LCEngine.moveExPV(desdeA1H8, hastaA1H8, coronacion)
         if not mv:
             return False, "Error"
 

@@ -28,7 +28,7 @@ class ConjuntoPiezas:
                 f = codecs.open(fich, "r", 'utf-8', 'ignore')
                 qb = QtCore.QByteArray(f.read().encode("utf-8"))
                 f.close()
-                dic[pieza.encode("utf-8")] = qb
+                dic[pieza] = qb
             return dic
         except FileNotFoundError as e:
             return self.leePiezas("Cburnett")

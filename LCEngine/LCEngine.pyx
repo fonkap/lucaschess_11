@@ -72,7 +72,7 @@ class PGNreader:
 
 def lc_pgn2pv(pgn1):
     cdef char pv[10];
-    resp = pgn2pv(pgn1, pv)
+    resp = pgn2pv(pgn1.encode("latin1"), pv)
     if resp == 9999:
         return ""
     else:
@@ -318,14 +318,14 @@ def runFen( fen, depth, ms, level ):
     return x
 
 def setFen(fen):
-    fen_board(fen)
+    fen_board(fen.encode("latin1"))
     return movegen()
 
 def getFen():
     cdef char fen[100]
     board_fen(fen)
     x = fen
-    return x
+    return x.decode("latin1")
 
 def getMoves():
     cdef char pv[10]
@@ -346,12 +346,12 @@ def getPGN(desdeA1H8, hastaA1H8, coronacion):
     if not coronacion:
         coronacion = ""
 
-    num = searchMove( desdeA1H8, hastaA1H8, coronacion )
+    num = searchMove( desdeA1H8.encode("latin1"), hastaA1H8.encode("latin1"), coronacion.encode("latin1") )
     if num == -1:
         return None
 
     toSan(num, san)
-    return san
+    return san.decode("latin1")
 
 def isCheck():
     return inCheck()
@@ -427,9 +427,9 @@ def getExMoves():
 
 def moveExPV(desde, hasta, coronacion):
     if not coronacion:
-        coronacion = b''
+        coronacion = ""
 
-    num = searchMove( desde, hasta, coronacion )
+    num = searchMove( desde.encode("latin1"), hasta.encode("latin1"), coronacion.encode("latin1") )
     if num == -1:
         return None
 
@@ -442,7 +442,7 @@ def movePV(desde, hasta, coronacion):
     if not coronacion:
         coronacion = ""
 
-    num = searchMove( desde, hasta, coronacion )
+    num = searchMove( desde.encode("latin1"), hasta.encode("latin1"), coronacion.encode("latin1") )
     if num == -1:
         return False
 
@@ -454,7 +454,7 @@ def makeMove(move):
     desde = move[:2]
     hasta = move[2:4]
     coronacion = move[4:]
-    num = searchMove( desde, hasta, coronacion )
+    num = searchMove( desde.encode("latin1"), hasta.encode("latin1"), coronacion.encode("latin1") )
     if num == -1:
         return False
 

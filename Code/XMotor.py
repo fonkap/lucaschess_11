@@ -61,12 +61,12 @@ class XMotor:
             self.ponMultiPV(nMultiPV)
             if not uci_analysemode:
                 for line in self.uci_lines:
-                    if "UCI_AnalyseMode" in line:
+                    if b"UCI_AnalyseMode" in line:
                         self.set_option("UCI_AnalyseMode", "true")
                         setoptions = True
         if setoptions:
             self.put_line("isready")
-            self.wait_mrm("readyok", 1000)
+            self.wait_mrm(b"readyok", 1000)
 
     def get_lines(self):
         li = self.engine.get_lines()

@@ -177,7 +177,7 @@ class WManualSave(QTVarios.WDialogo):
         dic_vars = self.configuracion.leeVariables("manual_save")
         if dic_vars:
             fen = dic_vars.get("FEN", self.posicion.fen())
-            self.posicion.leeFen(fen.encode("utf-8"))
+            self.posicion.leeFen(fen)
 
             self.em_solucion.ponTexto(dic_vars.get("SOLUTION", ""))
 

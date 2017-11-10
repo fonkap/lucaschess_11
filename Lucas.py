@@ -52,6 +52,7 @@ import Code.VarGen
 sys.path.append(os.path.join(current_dir, "Code"))
 sys.path.append(os.path.join(current_dir, Code.VarGen.folder_engines, "_tools"))
 
+
 import Code.Traducir as Traducir
 Traducir.install()
 

@@ -84,13 +84,19 @@ class Memoria:
         return False
 
     def dameListaFen(self, piezas):
+        import time as time_ #make sure we don't override time
+        def millis():
+            return int(round(time_.time() * 1000))
 
         me = self.procesador.unMomento()
 
         li = []
 
         fedu = Util.listfiles(".", "Trainings", "Checkmates by Eduardo Sadier", "*.fns")[0]
-        with open(fedu) as f:
+
+        tstamp = millis()
+
+        with open(fedu, "r", encoding="latin1") as f:
             for l in f:
                 if l:
                     pz = 0
@@ -105,4 +111,5 @@ class Memoria:
 
         me.final()
 
+        print("TIME", millis() - tstamp)
         return li

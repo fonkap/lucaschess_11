@@ -77,26 +77,6 @@ class GestorFideFics(Gestor.Gestor):
 
 
     def readID(self, xid):
-        def posA1(pos):
-            return chr(pos % 8 + 97) + chr(pos // 8 + 49)
-
-        def xpv2pv(xpv):
-            li = []
-            siBlancas = True
-            for c in xpv:
-                x = ord(c)
-                if x >= 58:
-                    move = posA1(x - 58)
-                    if siBlancas:
-                        base = move
-                    else:
-                        li.append(base + move)
-                    siBlancas = not siBlancas
-                else:
-                    c = {50: "q", 51: "r", 52: "b", 53: "n"}.get(x, "")
-                    li[-1] += c
-            return " ".join(li)
-
         db = Base.DBBase(self._db)
         dbf = db.dbfT("data", "LEVEL,WHITE,CABS,MOVS", condicion="ROWID=%d" % xid)
         dbf.leer()
@@ -109,7 +89,6 @@ class GestorFideFics(Gestor.Gestor):
         self.siRivalConBlancas = not siBlancas
 
         pv = LCEngine.xpv2pv(dbf.MOVS)
-        # pv = xpv2pv(dbf.MOVS)
         self.partidaObj = Partida.Partida()
         self.partidaObj.leerPV(pv)
         self.posJugadaObj = 0

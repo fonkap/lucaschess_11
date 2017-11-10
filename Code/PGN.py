@@ -27,7 +27,7 @@ class UnPGN:
         return li
 
     def leeTexto(self, texto):
-        game = PGNreader.read1Game(unicode(texto))
+        game = PGNreader.read1Game(texto)
         if game.erroneo:
             return False
         cp = ControlPosicion.ControlPosicion()

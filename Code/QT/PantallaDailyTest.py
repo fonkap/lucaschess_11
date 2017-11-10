@@ -22,8 +22,7 @@ from Code import Util
 
 class WDailyTestBase(QTVarios.WDialogo):
     def __init__(self, procesador):
-
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, _("Your daily test"), Iconos.DailyTest(), "nivelBase")
+        super().__init__(parent=procesador.pantalla, titulo=_("Your daily test"), icono=Iconos.DailyTest(), extparam="nivelBase")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

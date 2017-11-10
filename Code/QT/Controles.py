@@ -452,7 +452,7 @@ class RB(QtWidgets.QRadioButton):
     def __init__(self, wParent, texto, rutina=None):
         QtWidgets.QRadioButton.__init__(self, texto, wParent)
         if rutina:
-            wParent.connect(self, QtCore.SIGNAL("clicked()"), rutina)
+            self.clicked.connect(rutina)
 
     def activa(self, siActivar=True):
         self.setChecked(siActivar)
@@ -485,7 +485,7 @@ class GB(QtWidgets.QGroupBox):
     def conectar(self, rutina):
         self.setCheckable(True)
         self.setChecked(False)
-        self.wParent.connect(self, QtCore.SIGNAL("clicked()"), rutina)
+        self.clicked.connect(rutina)
         return self
 
     def ponTexto(self, texto):

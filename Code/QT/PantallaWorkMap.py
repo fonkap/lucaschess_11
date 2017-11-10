@@ -1,4 +1,4 @@
-from PyQt5 import QtGui, QtSvg
+from PyQt5 import QtGui, QtSvg, QtWidgets
 
 from Code import Analisis
 from Code import ControlPosicion
@@ -24,8 +24,7 @@ class WMap(QTVarios.WDialogo):
         dic = TrListas.maps()
         titulo = dic[mapa]
         icono = getattr(Iconos, mapa)()
-
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, mapa)
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=icono, extparam=mapa)
 
         self.procesador = procesador
 

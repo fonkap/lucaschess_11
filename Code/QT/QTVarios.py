@@ -117,11 +117,20 @@ class WSave():
 
 class WDialogo(QtWidgets.QDialog, WSave):
     def __init__(self, **kwds):
+        print("creating QDialog : ", self.__class__.__name__)
         super().__init__(flag=QtCore.Qt.Dialog, **kwds)
-
+    def accept(self):
+        self.close()
+    def reject(self):
+        self.close()
+    def closeEvent(self, event):  # Cierre con X
+#Evita excepción al salir del programa
+#ver: https://stackoverflow.com/a/36826593/3324704
+        self.deleteLater()
 
 class WWidget(QtWidgets.QWidget, WSave):
     def __init__(self, **kwds):
+        print("creating QWidget : ", self.__class__.__name__)
         super().__init__(flag=QtCore.Qt.Widget, **kwds)
 
     def accept(self):
@@ -814,14 +823,14 @@ class LCMenu(Controles.Menu):
         Controles.Menu.__init__(self, parent, puntos=puntos, siBold=bold)
 
         # def pixelMetric( metric, option = None, widget = None):
-        # s = QtGui.QStyle.pixelMetric(metric, option, widget)
+        # s = QtWidgets.QStyle.pixelMetric(metric, option, widget)
         # pr metric
-        # if metric == QtGui.QStyle.PM_SmallIconSize:
+        # if metric == QtWidgets.QStyle.PM_SmallIconSize:
         # s = 32
         # return s
 
         # def setEstiloMenu( menu, pixels ):
-        # sc = QtGui.QStyleFactory().create(VarGen.configuracion.estilo)
+        # sc = QtWidgets.QStyleFactory().create(VarGen.configuracion.estilo)
         # sc.pixelMetric = pixelMetric
         # menu.setStyle(sc)
 

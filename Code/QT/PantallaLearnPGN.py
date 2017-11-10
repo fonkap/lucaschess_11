@@ -51,7 +51,7 @@ class WLearnBase(QTVarios.WDialogo):
     def __init__(self, procesador):
 
         titulo = _("Memorize a game")
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, Iconos.LearnGame(), "learngame")
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=Iconos.LearnGame(), extparam="learngame")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

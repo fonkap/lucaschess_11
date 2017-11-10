@@ -56,7 +56,7 @@ class WMemoria(QTVarios.WDialogo):
         titulo = _("Check your memory on a chessboard")
         icono = Iconos.Memoria()
         extparam = "memoria"
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, extparam)
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=icono, extparam=extparam)
 
         f = Controles.TipoLetra(puntos=10, peso=75)
 

@@ -16,12 +16,12 @@ dicNG = {}
 
 
 def generaPM(piezas):
-    dicPM[b'V'] = Iconos.pmComentario()
-    dicPM[b'R'] = Iconos.pmApertura()
-    dicPM[b'M'] = Iconos.pmComentarioMas()
-    dicPM[b'S'] = Iconos.pmAperturaComentario()
-    for k in b'KQRNBkqrnb':
-        dicPZ[k] = piezas.render(bytes([k]))
+    dicPM["V"] = Iconos.pmComentario()
+    dicPM["R"] = Iconos.pmApertura()
+    dicPM["M"] = Iconos.pmComentarioMas()
+    dicPM["S"] = Iconos.pmAperturaComentario()
+    for k in "KQRNBkqrnb":
+        dicPZ[k] = piezas.render(k)
 
     carpNAGs = "./IntFiles/NAGs"
     for f in os.listdir(carpNAGs):
@@ -156,7 +156,7 @@ class EtiquetaPGN(QtWidgets.QStyledItemDelegate):
         xTotal = rect.x()
         yTotal = rect.y()
 
-        if option.state & QtGui.QStyle.State_Selected:
+        if option.state & QtWidgets.QStyle.State_Selected:
             painter.fillRect(rect, QtGui.QColor("#678DB2" if VarGen.configuracion.tablaSelBackground is None else VarGen.configuracion.tablaSelBackground))  # sino no se ve en CDE-Motif-Windows
             # painter.fillRect(option.rect, palette.highlight().color())
         elif self.siFondo:
@@ -303,7 +303,7 @@ class PmIconosColor(QtWidgets.QStyledItemDelegate):
 
 class HTMLDelegate(QtWidgets.QStyledItemDelegate):
     def paint(self, painter, option, index):
-        options = QtGui.QStyleOptionViewItemV4(option)
+        options = QtWidgets.QStyleOptionViewItemV4(option)
         self.initStyleOption(options,index)
 
         style = QtWidgets.QApplication.style() if options.widget is None else options.widget.style()
@@ -312,15 +312,15 @@ class HTMLDelegate(QtWidgets.QStyledItemDelegate):
         doc.setHtml(options.text)
 
         options.text = ""
-        style.drawControl(QtGui.QStyle.CE_ItemViewItem, options, painter)
+        style.drawControl(QtWidgets.QStyle.CE_ItemViewItem, options, painter)
 
         ctx = QtGui.QAbstractTextDocumentLayout.PaintContext()
-        if option.state & QtGui.QStyle.State_Selected:
+        if option.state & QtWidgets.QStyle.State_Selected:
             ctx.palette.setColor(QtGui.QPalette.Text, option.palette.color(QtGui.QPalette.Active, QtGui.QPalette.HighlightedText))
         else:
             ctx.palette.setColor(QtGui.QPalette.Text, option.palette.color(QtGui.QPalette.Active, QtGui.QPalette.HighlightedText))
 
-        textRect = style.subElementRect(QtGui.QStyle.SE_ItemViewItemText, options)
+        textRect = style.subElementRect(QtWidgets.QStyle.SE_ItemViewItemText, options)
         painter.save()
         painter.translate(textRect.topLeft())
         painter.setClipRect(textRect.translated(-textRect.topLeft()))
@@ -329,7 +329,7 @@ class HTMLDelegate(QtWidgets.QStyledItemDelegate):
         painter.restore()
 
     def sizeHint(self, option, index):
-        options = QtGui.QStyleOptionViewItemV4(option)
+        options = QtWidgets.QStyleOptionViewItemV4(option)
         self.initStyleOption(options,index)
 
         doc = QtGui.QTextDocument()

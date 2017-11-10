@@ -404,7 +404,7 @@ class Configuracion:
             if motor.multiPV >= minimo:
                 liMotores.append((motor.alias + "*", "*" + motor.alias))
 
-        for clave, cm in self.dicRivales.tems():
+        for clave, cm in self.dicRivales.items():
             if cm.multiPV >= minimo:
                 liMotores.append((cm.nombre, clave))
 
@@ -417,7 +417,7 @@ class Configuracion:
         listaMotoresExt.leer()
         for motor in listaMotoresExt.liMotores:
             li.append(("*" + motor.alias, motor.alias + " *"))
-        for clave, cm in self.dicRivales.tems():
+        for clave, cm in self.dicRivales.items():
             li.append((clave, cm.nombre))
         li = sorted(li, key=operator.itemgetter(1))
         li.insert(0, cmotor)
@@ -757,7 +757,7 @@ class Configuracion:
         return li
 
     def listaMotoresInternos(self):
-        li = [v for k, v in self.dicRivales.tems()]
+        li = [v for k, v in self.dicRivales.items()]
         li = sorted(li, key=lambda cm: cm.nombre)
         return li
 
@@ -769,7 +769,7 @@ class Configuracion:
 
     def listaMotores(self):
         li = []
-        for k, v in self.dicRivales.tems():
+        for k, v in self.dicRivales.items():
             li.append((v.nombre, v.autor, v.url))
         li = sorted(li, key=operator.itemgetter(0))
         return li

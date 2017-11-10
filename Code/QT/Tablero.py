@@ -1053,8 +1053,8 @@ class Tablero(QtWidgets.QGraphicsView):
             return int(8 - pos)
 
     def colocaPieza(self, bloquePieza, posA1H8):
-        bloquePieza.fila = posA1H8[1] - 48
-        bloquePieza.columna = posA1H8[0] - 96
+        bloquePieza.fila = int(posA1H8[1])
+        bloquePieza.columna = ord(posA1H8[0]) - 96
         self.recolocaPieza(bloquePieza)
 
     def recolocaPieza(self, bloquePieza):

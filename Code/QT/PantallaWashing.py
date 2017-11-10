@@ -36,7 +36,7 @@ class WWashing(QTVarios.WDialogo):
         titulo = _("The Washing Machine")
         extparam = "washing"
         icono = Iconos.WashingMachine()
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         tb = Controles.TBrutina(self)
@@ -81,7 +81,7 @@ class WWashing(QTVarios.WDialogo):
             svg = svg.replace(c_reinit, d_reinit)
             svg = svg.replace("TAC", ctac)
             svg = svg.replace(c_ia, d_ia)
-            wsvg.load(QtCore.QByteArray(svg))
+            wsvg.load(QtCore.QByteArray(svg.encode("utf-8")))
         p = 1.0
         wsvg.setFixedSize(287.79*p, 398.83*p)
 

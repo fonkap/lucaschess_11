@@ -259,7 +259,7 @@ class Jugada:
         txt += mas(self.critica)
         txt += masL(self.siDesconocido)
 
-        txt += mas(cPickle.dumps(self.analisis).replace("\r\n", "#&").replace("\n", "#&") if self.analisis else "")
+        txt += mas((pickle.dumps(self.analisis).replace(b"\r\n", b"#&").replace(b"\n", b"#&")).decode("latin1") if self.analisis else "")
 
         txt += mas(self.criticaDirecta)
         txt += masL(self.siTablasAcuerdo)

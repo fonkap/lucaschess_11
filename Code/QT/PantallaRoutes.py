@@ -16,7 +16,7 @@ class WTranssiberian(QTVarios.WDialogo):
         titulo = "%s (%d)" % (_("Transsiberian Railway"), route.level)
         icono = Iconos.Train()
         extparam = "transsiberian"
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, extparam)
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=icono, extparam=extparam)
 
         self.procesador = procesador
         wsvg = QtSvg.QSvgWidget()

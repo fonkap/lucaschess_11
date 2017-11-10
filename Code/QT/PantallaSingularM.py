@@ -15,7 +15,7 @@ class WSingularM(QTVarios.WDialogo):
         titulo = "%s: %s" % (_("Singular moves"), _("Calculate your strength"))
         icono = Iconos.Strength()
         extparam = "singularmoves"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.sm = SingularMoves.SingularMoves(configuracion.ficheroSingularMoves)
 

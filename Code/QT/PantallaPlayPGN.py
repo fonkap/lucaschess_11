@@ -52,9 +52,8 @@ class PlayPGNs(Util.DicSQL):
 
 class WPlayBase(QTVarios.WDialogo):
     def __init__(self, procesador):
-
         titulo = _("Play against a game")
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, Iconos.Law(), "playgame")
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=Iconos.Law(), extparam="playgame")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

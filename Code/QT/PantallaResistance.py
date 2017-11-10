@@ -24,7 +24,7 @@ class WResistance(QTVarios.WDialogo):
             elif tipo == "p2":
                 titulo += "-" + _("Hide only opponent pieces")
         extparam = "boxing"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
         # self.setStyleSheet("QWidget { background: #AFC3D7 }")
 
         # Tool bar ---------------------------------------------------------------

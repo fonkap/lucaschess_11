@@ -304,8 +304,8 @@ class WExpedition(QTVarios.WDialogo):
 class WEverest(QTVarios.WDialogo):
     def __init__(self, procesador):
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, _("Expeditions to the Everest"), Iconos.Trekking(),
-                                   "everestBase")
+        super().__init__(parent=procesador.pantalla, titulo=_("Expeditions to the Everest")
+                         , icono=Iconos.Trekking(), extparam="everestBase")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

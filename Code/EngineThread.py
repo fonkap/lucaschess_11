@@ -24,13 +24,13 @@ def xprli(li):
         t = time.time()
         dif = t - tdbg[0]
         for line in li:
-            prlk("%0.04f %s" % (dif, line))
+            prlk("%0.04f %s" % (dif, line.decode("latin1")))
         tdbg[0] = t
     return True
 
 if DEBUG:
     tdbg = [time.time()]
-    xpr("DEBUG XMOTOR")
+    xpr("DEBUG XMOTOR\n")
 
 
 class Priorities:

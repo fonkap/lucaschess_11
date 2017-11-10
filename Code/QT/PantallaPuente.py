@@ -248,7 +248,7 @@ class WPuenteBase(QTVarios.WDialogo):
     def __init__(self, procesador, nivel):
 
         titulo = "%s. %s %d" % (_("Moves between two positions"), _("Level"), nivel)
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, Iconos.Puente(), "puenteBase")
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=Iconos.Puente(), extparam="puenteBase")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

@@ -205,6 +205,8 @@ class Moves:
             pv = LCEngine.lc_pgn2pv(mv.pgn)
             if len(pv) < 4:
                 return False
+            #TODO: doble conversión, buscar mejor solución
+            pv = pv.decode("latin1")
             mv.pv = pv
             mv.desde = pv[:2]
             mv.hasta = pv[2:4]

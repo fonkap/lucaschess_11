@@ -482,7 +482,7 @@ class WorkMap:
         modif(self.ln_border, liborder)
         modif(self.ln_borderdone, liborderdone)
         x = "\n".join(self.lineasSVG)
-        self.widget.load(QtCore.QByteArray(x))
+        self.widget.load(QtCore.QByteArray(x.encode("utf-8")))
 
         self.resetListaGrid()
 

@@ -344,8 +344,8 @@ class WBlqMove(QtWidgets.QWidget):
 class WPotenciaBase(QTVarios.WDialogo):
     def __init__(self, procesador):
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, _("Determine your calculating power"), Iconos.Potencia(),
-                                   "potenciaBase")
+        super().__init__(parent=procesador.pantalla, titulo=_("Determine your calculating power")
+                         , icono=Iconos.Potencia(), extparam="potenciaBase")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion

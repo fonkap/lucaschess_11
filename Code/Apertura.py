@@ -26,10 +26,8 @@ class AperturaPol:
             siPTZ = 1 <= maxNivel <= 2
         self.fichero = VarGen.tbookPTZ if siPTZ else VarGen.tbook
         self.book = Books.Polyglot()
-        if not ((Util.tamFichero(self.fichero) / (len(self.fichero) - 9)) in (75876, 802116)):
-            import sys
-
-            sys.exit()
+        if not ((Util.tamFichero(self.fichero) // (len(self.fichero) - 9)) in (75876, 802116)):
+            raise "bad book"
         self.activa = True
         self.maxNivel = maxNivel * 2
         self.nivelActual = 0

@@ -32,7 +32,7 @@ class WGM(QTVarios.WDialogo):
         titulo = _("Play like a grandmaster")
         icono = Iconos.GranMaestro()
         extparam = "gm"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         flb = Controles.TipoLetra(puntos=10)
 

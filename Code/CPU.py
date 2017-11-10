@@ -70,7 +70,7 @@ class CPU:
             self.timer.stop()
             del self.timer
         self.timer = QtCore.QTimer(self.pantalla)
-        self.pantalla.connect(self.timer, QtCore.SIGNAL("timeout()"), self.run)
+        self.timer.timeout.connect(self.run)
         self.timer.start(self.junks)
 
     def stop(self):
@@ -88,7 +88,7 @@ class CPU:
             QTUtil.refreshGUI()
 
     def run(self):
-        li = self.dicTareas.keys()
+        li = sorted(self.dicTareas.keys())
         # li.sort()
         nPasos = 0
         for tid in li:

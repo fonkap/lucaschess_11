@@ -791,7 +791,7 @@ class WBMT(QTVarios.WDialogo):
         icono = Iconos.BMT()
         titulo = self.titulo()
         extparam = "bmt"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         liAcciones = [(_("Close"), Iconos.MainMenu(), self.terminar), None,
