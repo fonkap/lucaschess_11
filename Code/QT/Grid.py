@@ -329,7 +329,7 @@ class Grid(QtWidgets.QTableView):
 
     def wheelEvent(self, event):
         if hasattr(self.wParent, "gridWheelEvent"):
-            self.wParent.gridWheelEvent(self, event.delta() > 0)
+            self.wParent.gridWheelEvent(self, event.angleDelta().y() > 0)
         else:
             QtWidgets.QTableView.wheelEvent(self, event)
 

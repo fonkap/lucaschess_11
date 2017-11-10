@@ -321,7 +321,7 @@ class ControlPosicion:
         # Rey + alfil y Rey + alfil
         negras = ""
         blancas = ""
-        for v in self.casillas.itervalues():
+        for v in self.casillas.values():
             if v:
                 if v in "RrQqPp":
                     return False

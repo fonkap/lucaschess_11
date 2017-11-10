@@ -33,7 +33,9 @@ class Pantalla():
         self.informacionPGN = WInformacion.InformacionPGN(self)
         self.siInformacionPGN = False
         self.informacionPGN.hide()
+
         self.registrarSplitter(self.informacionPGN.splitter, "InformacionPGN")
+
 
         self.timer = None
         self.siTrabajando = False
@@ -50,19 +52,12 @@ class Pantalla():
         splitter.addWidget(self.base)
         splitter.addWidget(self.informacionPGN)
 
-        # ly = Colocacion.H().control(splitter).margen(0)
+        ly = Colocacion.H().control(splitter).margen(0)
+        self.setLayout(ly)
 
-        # self.setLayout(ly)
-        l = QtWidgets.QVBoxLayout()
-        # l.addWidget(self.base)
+        # l = QtWidgets.QVBoxLayout()
+        # l.addWidget(self.splitter)
         # self.setLayout(l)
-
-        gw = QtWidgets.QGraphicsView()
-        gw.setFixedSize(400,400)
-        l = QtWidgets.QVBoxLayout()
-        # l.addWidget(gw)
-        l.addWidget(self.splitter)
-        self.setLayout(l)
 
         ctrl1 = QtWidgets.QShortcut(self)
         ctrl1.setKey("Ctrl+1")

@@ -173,7 +173,7 @@ class Procesador:
         self.tablero.indicadorSC.setVisible(False)
         self.tablero.blindfoldQuitar()
         self.pantalla.ponToolBar(self.liOpcionesInicio)
-        # self.pantalla.activaJuego(False, False)
+        self.pantalla.activaJuego(False, False)
         self.tablero.exePulsadoNum = None
         self.tablero.ponPosicion(self.posicionInicial)
         self.pantalla.ajustaTam()

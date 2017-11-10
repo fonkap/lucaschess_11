@@ -35,19 +35,14 @@ class WBase(QtWidgets.QWidget):
 
         self.creaCapturas()
         lyBI = self.creaBloqueInformacion()
-        # self.lyBI = lyBI
+        self.lyBI = lyBI
 
-        l = QtWidgets.QVBoxLayout()
-        l.addWidget(self.tb)
-        l.addWidget(self.tablero)
+        lyT = Colocacion.V().control(self.tablero).relleno()
 
+        lyAI = Colocacion.H().relleno(1).control(self.capturas).otroi(lyT).otroi(lyBI).relleno(1).margen(0)
+        ly = Colocacion.V().control(self.tb).relleno().otro(lyAI).relleno().margen(2)
 
-        # lyT = Colocacion.V().control(self.tablero).relleno()
-        # lyAI = Colocacion.H().relleno(1).control(self.capturas).otroi(lyT)#.otroi(lyBI).relleno(1).margen(0)
-        # ly = Colocacion.V().control(self.tb).relleno().otro(lyAI).relleno().margen(2)
-
-        # self.setLayout(ly)
-        self.setLayout(l)
+        self.setLayout(ly)
 
         self.preparaColoresPGN()
 

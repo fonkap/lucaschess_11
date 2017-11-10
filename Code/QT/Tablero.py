@@ -967,7 +967,7 @@ class Tablero(QtWidgets.QGraphicsView):
                     return
 
         elif hasattr(self.pantalla, "tableroWheelEvent"):
-            self.pantalla.tableroWheelEvent(self, event.delta() < 0)
+            self.pantalla.tableroWheelEvent(self, event.angleDelta().y() < 0)
 
     def ponMensajero(self, mensajero, atajosRaton=None):
         if self.dirvisual:
