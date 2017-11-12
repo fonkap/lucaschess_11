@@ -1,6 +1,6 @@
 import copy
 
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import TabVisual
 from Code.QT import Colocacion

@@ -24,7 +24,7 @@ def xprli(li):
         t = time.time()
         dif = t - tdbg[0]
         for line in li:
-            prlk("%0.04f %s" % (dif, line.decode("latin1")))
+            prlk("%0.04f %s" % (dif, line))
         tdbg[0] = t
     return True
 
@@ -90,7 +90,7 @@ class Engine(object):
     def put_line(self, line):
         assert xpr("put>>> %s\n" % line)
         self.stdin_lock.acquire()
-        self.stdin.write((line + "\n").encode("utf-8"))
+        self.stdin.write((line + "\n"))
         self.stdin.flush()
         self.stdin_lock.release()
 
@@ -132,7 +132,7 @@ class Engine(object):
         curdir = os.path.abspath(os.curdir)  # problem with "." as curdir
         os.chdir(self.direxe)  # to fix problems with non ascii folders
         self.process = subprocess.Popen(self.args, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-                                         startupinfo=startupinfo, shell=False)
+                                         startupinfo=startupinfo, shell=False, encoding="latin1")
         os.chdir(curdir)
 
         self.pid = self.process.pid

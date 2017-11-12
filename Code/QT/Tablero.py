@@ -1038,7 +1038,7 @@ class Tablero(QtWidgets.QGraphicsView):
 
     def punto2fila(self, pos):
         pos -= self.margenCentro + self.margenPieza + 2
-        pos /= (self.anchoPieza + self.margenPieza * 2)
+        pos //= (self.anchoPieza + self.margenPieza * 2)
         if self.siBlancasAbajo:
             return int(8 - pos)
         else:

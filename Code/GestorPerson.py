@@ -24,6 +24,7 @@ class GestorPerson(GestorEntMaq.GestorEntMaq):
         self.estado = kJugando
         self.timekeeper = Util.Timekeeper()
 
+        self.siAnalizando = False
         self.summary = {}
         self.siSummary = dic.get("SUMMARY", False)
 

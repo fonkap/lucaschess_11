@@ -481,7 +481,7 @@ class WSummary(QtWidgets.QWidget):
         self.grid.gotop()
 
     def gridCambiadoRegistro(self, grid, fila, oCol):
-        if self.grid.hasFocus() or self.hasFocus():
+        if hasattr(self, "grid") and (self.grid.hasFocus() or self.hasFocus()):
             self.cambiaInfoMove()
 
     def cambiaInfoMove(self):

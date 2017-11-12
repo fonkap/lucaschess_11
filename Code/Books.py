@@ -647,7 +647,7 @@ class Polyglot:
         if len(cad) != l:
             return True, 0
         for c in cad:
-            r = (r << 8) + ord(c)
+            r = (r << 8) + c
         return False, r
 
     def entry_from_file(self):
@@ -681,20 +681,20 @@ class Polyglot:
 
         first = -1
         try:
-            if self.f.seek(-16, os.SEEK_END):
+            if not self.f.seek(-16, os.SEEK_END):
                 entry = Entry()
                 entry.key = key + 1
                 return -1, entry
-        except:
+        except Exception as e:
             return -1, None
 
-        last = self.f.tell() / 16
+        last = self.f.tell() // 16
         ret, last_entry = self.entry_from_file()
         while True:
             if last - first == 1:
                 return last, last_entry
 
-            middle = (first + last) / 2
+            middle = (first + last) // 2
             self.f.seek(16 * middle, os.SEEK_SET)
             ret, middle_entry = self.entry_from_file()
             if key <= middle_entry.key:

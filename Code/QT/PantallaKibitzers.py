@@ -232,10 +232,11 @@ class WKibitzers(QTVarios.WDialogo):
             self.goto(num)
 
     def goto(self, num):
-        self.gridKibitzers.goto(num, 0)
-        self.gridKibitzers.refresh()
-        self.actKibitzer()
-        self.gridValores.refresh()
+        if hasattr(self, "gridKibitzers"):
+            self.gridKibitzers.goto(num, 0)
+            self.gridKibitzers.refresh()
+            self.actKibitzer()
+            self.gridValores.refresh()
 
     def krecno(self):
         return self.gridKibitzers.recno()

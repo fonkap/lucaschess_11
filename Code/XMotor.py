@@ -61,12 +61,12 @@ class XMotor:
             self.ponMultiPV(nMultiPV)
             if not uci_analysemode:
                 for line in self.uci_lines:
-                    if b"UCI_AnalyseMode" in line:
+                    if "UCI_AnalyseMode" in line:
                         self.set_option("UCI_AnalyseMode", "true")
                         setoptions = True
         if setoptions:
             self.put_line("isready")
-            self.wait_mrm(b"readyok", 1000)
+            self.wait_mrm("readyok", 1000)
 
     def get_lines(self):
         li = self.engine.get_lines()
@@ -125,7 +125,7 @@ class XMotor:
         while True:
             lt = self.get_lines()
             for line in lt:
-                if txt in line.decode("utf-8"):
+                if txt in line:
                     ok = True
                     break
             li.extend(lt)
@@ -344,7 +344,7 @@ class XMotor:
         self.reset()
         self.put_line("uci")
         li, self.uci_ok = self.wait_list("uciok", 10000)
-        self.uci_lines = [x for x in li if x.startswith(b'id ') or x.startswith(b'option name')] if self.uci_ok else []
+        self.uci_lines = [x for x in li if x.startswith("id ") or x.startswith("option name")] if self.uci_ok else []
 
     def set_option(self, name, value):
         if value:

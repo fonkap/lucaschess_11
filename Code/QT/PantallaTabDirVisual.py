@@ -36,7 +36,7 @@ class WTabDirVisual(QTVarios.WDialogo):
         titulo = _("Director")
         icono = Iconos.Script()
         extparam = "tabvisualscript"
-        QTVarios.WDialogo.__init__(self, tablero, titulo, icono, extparam)
+        super().__init__(parent=tablero, titulo=titulo, icono=icono, extparam=extparam)
 
         self.siGrabar = False
         self.ant_foto = None

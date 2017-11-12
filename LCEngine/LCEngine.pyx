@@ -371,13 +371,13 @@ class InfoMove(object):
         self._castle_K = info[6] == "K"
         self._castle_Q = info[6] == "Q"
         self._ep = info[7]=="E"
-        self._pv = pv
-        self._san = san
+        self._pv = pv.decode("latin1")
+        self._san = san.decode("latin1")
 
-        self._piece = info[0:1]
-        self._from = info[1:3]
-        self._to = info[3:5]
-        self._promotion = info[5:6].strip()
+        self._piece = info[0:1].decode("latin1")
+        self._from = info[1:3].decode("latin1")
+        self._to = info[3:5].decode("latin1")
+        self._promotion = info[5:6].strip().decode("latin1")
         self._check = b'+' in san
         self._mate = b'#' in san
         self._capture = b'x' in san

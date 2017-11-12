@@ -892,7 +892,7 @@ class Tab(QtWidgets.QTabWidget):
         return self
 
     def dispatchChange(self, dispatch):
-        self.connect(self, QtCore.SIGNAL("currentChanged (int)"), dispatch)
+        self.currentChanged.connect(dispatch)
 
         # def formaTriangular( self ):
         # self.setTabShape(self.Triangular)
