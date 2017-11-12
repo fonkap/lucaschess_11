@@ -1,3 +1,5 @@
+from unittest.mock import _ANY
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code.QT import Colocacion
@@ -13,7 +15,7 @@ class WAbout(QtWidgets.QDialog):
 
         self.setWindowTitle(_("About"))
         self.setWindowIcon(Iconos.Aplicacion())
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
         self.setMaximumWidth(QTUtil.anchoEscritorio())
 
         f = Controles.TipoLetra(puntos=10)  # 0, peso=75 )

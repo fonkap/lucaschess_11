@@ -1,4 +1,4 @@
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import BookGuide
 from Code import DBgames

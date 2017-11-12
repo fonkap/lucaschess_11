@@ -21,7 +21,7 @@ class WSave():
         self.liSplitters = []
         self.setWindowTitle(titulo)
         self.setWindowIcon(icono)
-        flags = flag | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
+        flags = flag | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowCloseButtonHint
         self.setWindowFlags(flags)
 
     def closeEvent(self, event):
@@ -172,7 +172,7 @@ def blancasNegras(owner):
 class BlancasNegrasTiempo(QtWidgets.QDialog):
     def __init__(self, parent):
         QtWidgets.QDialog.__init__(self, parent)
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint )
 
         icoP = VarGen.todasPiezas.iconoDefecto("K")
         icop = VarGen.todasPiezas.iconoDefecto("k")

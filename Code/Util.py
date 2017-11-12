@@ -854,6 +854,7 @@ def creaID():
 
 class DicSQL(object):
     def __init__(self, nomDB, tabla="Data", maxCache=2048):
+        self.nomDB = nomDB #TODO: provisional, para debugging
         self.table = tabla
         self.maxCache = maxCache
         self.cache = collections.OrderedDict()
@@ -889,8 +890,7 @@ class DicSQL(object):
 
     def __setitem__(self, key, obj):
         cursor = self._conexion.cursor()
-        dato = base64.encodestring(pickle.dumps(obj))
-        key = str(key)
+        dato = base64.encodebytes(pickle.dumps(obj))
         siYaEsta = key in self.stKeys
         if siYaEsta:
             sql = "UPDATE %s SET VALUE=? WHERE KEY = ?" % self.table
@@ -915,7 +915,6 @@ class DicSQL(object):
             li = cursor.fetchone()
             cursor.close()
             #TODO revisar
-            # dato = base64.decodebytes(li[0].encode("utf-8"))
             dato = base64.decodebytes(li[0])
             obj = pickle.loads(dato)
             self.addCache(key, obj)
@@ -1004,7 +1003,7 @@ class LIdisk:
         cursor.execute(sql)
         dato = cursor.fetchone()
         cursor.close()
-        return pickle.loads(dato[0].encode("latin1"))
+        return pickle.loads(dato[0].encode("latin1"), encoding="latin1")
 
     def __len__(self):
         sql = "select COUNT(DATO) from datos"
