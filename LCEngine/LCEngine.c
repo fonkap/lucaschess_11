@@ -8251,7 +8251,7 @@ static PyObject *__pyx_pf_8LCEngine_36getMoves(CYTHON_UNUSED PyObject *__pyx_sel
  *     for x in range(nmoves):
  *         getMove(x+nbase, pv)             # <<<<<<<<<<<<<<
  *         r = pv
- *         li.append(r)
+ *         li.append(r.decode("latin1"))
  */
     getMove((__pyx_v_x + __pyx_v_nbase), __pyx_v_pv);
 
@@ -8259,7 +8259,7 @@ static PyObject *__pyx_pf_8LCEngine_36getMoves(CYTHON_UNUSED PyObject *__pyx_sel
  *     for x in range(nmoves):
  *         getMove(x+nbase, pv)
  *         r = pv             # <<<<<<<<<<<<<<
- *         li.append(r)
+ *         li.append(r.decode("latin1"))
  *     return li
  */
     __pyx_v_r = __pyx_v_pv;
@@ -8267,11 +8267,11 @@ static PyObject *__pyx_pf_8LCEngine_36getMoves(CYTHON_UNUSED PyObject *__pyx_sel
     /* "LCEngine.pyx":340
  *         getMove(x+nbase, pv)
  *         r = pv
- *         li.append(r)             # <<<<<<<<<<<<<<
+ *         li.append(r.decode("latin1"))             # <<<<<<<<<<<<<<
  *     return li
  * 
  */
-    __pyx_t_1 = __Pyx_PyBytes_FromString(__pyx_v_r); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_decode_c_string(__pyx_v_r, 0, strlen(__pyx_v_r), NULL, NULL, PyUnicode_DecodeLatin1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = __Pyx_PyList_Append(__pyx_v_li, __pyx_t_1); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -8279,7 +8279,7 @@ static PyObject *__pyx_pf_8LCEngine_36getMoves(CYTHON_UNUSED PyObject *__pyx_sel
 
   /* "LCEngine.pyx":341
  *         r = pv
- *         li.append(r)
+ *         li.append(r.decode("latin1"))
  *     return li             # <<<<<<<<<<<<<<
  * 
  * def getPGN(desdeA1H8, hastaA1H8, coronacion):

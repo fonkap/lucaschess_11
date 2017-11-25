@@ -310,12 +310,12 @@ class TreeMoves(QtWidgets.QTreeWidget):
 
         self.setFont(ftxt)
 
-        self.connect(self, QtCore.SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.seleccionado)
-        self.connect(self, QtCore.SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.editado)
+        self.currentItemChanged.connect(self.seleccionado)
+        self.itemDoubleClicked.connect(self.editado)
 
         hitem = self.header()
-        hitem.setClickable(True)
-        self.connect(hitem, QtCore.SIGNAL("sectionDoubleClicked(int)"), self.editadoH)
+        hitem.setSectionsClickable(True)
+        hitem.sectionDoubleClicked.connect(self.editadoH)
 
         self.dicItemMoves = {}
         self.ponMoves(self.listaMoves)
@@ -800,7 +800,7 @@ class PantallaArbol(QTVarios.WDialogo):
         titulo = _("Moves tree")
         icono = Iconos.Arbol()
         extparam = "moves"
-        QTVarios.WDialogo.__init__(self, pantalla, titulo, icono, extparam)
+        super().__init__(parent=pantalla, titulo=titulo, icono=icono, extparam=extparam)
 
         dicVideo = self.recuperarDicVideo()
 

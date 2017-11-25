@@ -337,7 +337,7 @@ def getMoves():
     for x in range(nmoves):
         getMove(x+nbase, pv)
         r = pv
-        li.append(r)
+        li.append(r.decode("latin1"))
     return li
 
 def getPGN(desdeA1H8, hastaA1H8, coronacion):
