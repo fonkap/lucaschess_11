@@ -31,6 +31,23 @@ import os
 import sip
 import sys
 
+EXCEPTION_HOOK = True
+
+if EXCEPTION_HOOK:
+    sys._excepthook = sys.excepthook
+
+    def my_exception_hook(exctype, value, tb):
+        # Print the error and traceback
+        print(exctype, value, tb)
+        # import traceback
+        # traceback.print_tb(tb)
+
+        # Call the normal Exception hook after
+        sys._excepthook(exctype, value, tb)
+        sys.exit(1)
+
+    sys.excepthook = my_exception_hook
+
 #reload(sys)
 # sys.setdefaultencoding("latin-1")
 sys.path.insert(0, os.curdir)

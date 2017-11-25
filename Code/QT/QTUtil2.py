@@ -43,8 +43,8 @@ def _lfTituloFiltro(extension, titulo):
 def leeFichero(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
     resp = QtWidgets.QFileDialog.getOpenFileName(owner, titulo, carpeta, filtro)
-    # if resp : #+pyside
-    # resp = resp[0] #+pyside
+    if resp:  #+pyside
+        resp = resp[0]  #+pyside
     return resp
 
 

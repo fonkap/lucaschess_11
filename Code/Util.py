@@ -53,16 +53,16 @@ def recuperaDIC(fich):
 
 
 def guardaVar(fich, v):
-    with open(fich, "w") as q:
+    with open(fich, "wb") as q:
         q.write(pickle.dumps(v))
 
 
 def recuperaVar(fich):
     try:
-        with open(fich) as f:
+        with open(fich, "rb") as f:
             s = f.read()
-        v = pickle.loads(s.encode("utf-8"))
-    except Exception as e:
+        v = pickle.loads(s)
+    except FileNotFoundError as e:
         v = None
     return v
 
@@ -105,7 +105,7 @@ def blob2str(blob):
 
 
 def dic2txt(dic):
-    return base64.encodebytes(pickle.dumps(dic)).decode("utf-8").replace("\n", "|")
+    return base64.encodebytes(pickle.dumps(dic)).decode("latin1").replace("\n", "|").encode("latin1")  #kibitzers:99
 
 
 def txt2dic(txt):
@@ -169,7 +169,7 @@ def primeraMayuscula(txt):
 
 def huella():
     m = hashlib.md5()
-    m.update(str(random.random()) + str(hoy()))
+    m.update((str(random.random()) + str(hoy())).encode("latin1"))
     return m.hexdigest()
 
 
@@ -515,7 +515,7 @@ class IPC(object):
         cursor.execute(sql)
         reg = cursor.fetchone()
         if reg:
-            valor = pickle.loads(str(reg[0]))
+            valor = pickle.loads(reg[0])
             self.key = nk
         else:
             valor = None
@@ -960,10 +960,11 @@ class DicSQL(object):
         cursor.execute(sql)
         li = cursor.fetchall()
         for key, dato in li:
+            #TODO solución temporal, no debería hacer falta
             if type(dato) is str:
-                dato = dato.encode("utf-8")
+                dato = dato.encode("latin1")
             dato = base64.decodebytes(dato)
-            dic[key] = pickle.loads(dato)
+            dic[key] = pickle.loads(dato, encoding="latin1")
         cursor.close()
 
         return dic

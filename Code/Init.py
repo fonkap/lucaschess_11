@@ -15,20 +15,8 @@ VERSION = "11.00.21b"
 if DEBUG:
     prlkn("DEBUG " * 20)
 
-sys._excepthook = sys.excepthook
-def my_exception_hook(exctype, value, tb):
-    # Print the error and traceback
-    print(exctype, value, tb)
-    # traceback.print_tb(tb)
-
-    # Call the normal Exception hook after
-    sys._excepthook(exctype, value, tb)
-    sys.exit(1)
-
 def init():
-    if DEBUG:
-        sys.excepthook = my_exception_hook
-    else:
+    if not DEBUG:
         sys.stderr = Util.Log("bug.log")
 
     mainProcesador = Procesador.Procesador()

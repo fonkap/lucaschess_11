@@ -3,7 +3,7 @@ import sys
 import time
 
 import LCEngine
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 import struct
 import psutil
@@ -29,15 +29,16 @@ from Code import VarGen
 from Code import XMotorRespuesta
 from Code import Kibitzers
 
+DEBUG = True
 CONFIGURACION = "C"
 FEN = "F"
 TERMINAR = "T"
 COPYCLIPBOARD = "P"
 
 
-class VentanaMultiPV(QtGui.QDialog):
+class VentanaMultiPV(QtWidgets.QDialog):
     def __init__(self, cpu):
-        QtGui.QDialog.__init__(self)
+        QtWidgets.QDialog.__init__(self)
 
         self.cpu = cpu
 
@@ -56,7 +57,8 @@ class VentanaMultiPV(QtGui.QDialog):
         self.setWindowTitle(cpu.titulo)
         self.setWindowIcon(Iconos.Motor())
 
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint |
+                            QtCore.Qt.WindowCloseButtonHint)
 
         self.setBackgroundRole(QtGui.QPalette.Light)
 
@@ -100,7 +102,7 @@ class VentanaMultiPV(QtGui.QDialog):
         self.siNegras = True
 
         self.timer = QtCore.QTimer(self)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"), cpu.compruebaInput)
+        self.timer.timeout.connect(cpu.compruebaInput)
         self.timer.start(200)
 
         if not self.siShowTablero:
@@ -207,6 +209,7 @@ class VentanaMultiPV(QtGui.QDialog):
     def lanzaMotor(self):
         self.motor = QtCore.QProcess()
 
+
         self.buffer = ""
 
         self.liOrdenes = []
@@ -224,8 +227,9 @@ class VentanaMultiPV(QtGui.QDialog):
 
         self.motor.setWorkingDirectory(direxe)
         self.motor.start(absexe, args, mode=QtCore.QIODevice.ReadWrite)
+        self.motor_stream = QtCore.QTextStream(self.motor)
         self.motor.waitForStarted()
-        self.connect(self.motor, QtCore.SIGNAL("readyReadStandardOutput()"), self.readOutput)
+        self.motor.readyReadStandardOutput.connect(self.readOutput)
 
         if self.cpu.prioridad:
             pid = self.motor.pid()
@@ -402,9 +406,9 @@ class VentanaMultiPV(QtGui.QDialog):
 
     def readOutput(self):
         if not self.lock:
-            txt = self.motor.readAllStandardOutput()
+            txt = bytes(self.motor.readAll()).decode("latin1")
             if txt:
-                self.buffer += str(txt)
+                self.buffer += txt
                 if self.esperaOK:
                     if self.esperaOK in self.buffer and self.buffer.endswith("\n"):
                         self.buffer = ""
@@ -454,7 +458,8 @@ class VentanaMultiPV(QtGui.QDialog):
             self.esperaOK = None
 
     def escribe(self, linea):
-        self.motor.write(str(linea) + "\n")
+        self.motor_stream << str(linea) + "\r\n"
+        self.motor_stream.flush()
 
     def confTablero(self):
         self.pause()
@@ -500,9 +505,9 @@ class VentanaMultiPV(QtGui.QDialog):
         self.grid.refresh()
 
 
-class Ventana(QtGui.QDialog):
+class Ventana(QtWidgets.QDialog):
     def __init__(self, cpu, siWidgets=True, flags=None):
-        QtGui.QDialog.__init__(self)
+        QtWidgets.QDialog.__init__(self)
 
         self.cpu = cpu
         self.ficheroVideo = cpu.ficheroVideo
@@ -561,7 +566,7 @@ class Ventana(QtGui.QDialog):
         self.creaRestoControles()
 
         self.timer = QtCore.QTimer(self)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"), cpu.compruebaInput)
+        self.timer.timeout.connect(cpu.compruebaInput)
         self.timer.start(200)
 
         self.recuperarVideo()
@@ -744,8 +749,9 @@ class Ventana(QtGui.QDialog):
 
         self.motor.setWorkingDirectory(os.path.abspath(os.path.dirname(exe)))
         self.motor.start(exe, args, mode=QtCore.QIODevice.Unbuffered | QtCore.QIODevice.ReadWrite)
+        self.motor_stream = QtCore.QTextStream(self.motor)
         self.motor.waitForStarted()
-        self.connect(self.motor, QtCore.SIGNAL("readyReadStandardOutput()"), self.readOutput)
+        self.motor.readyReadStandardOutput.connect(self.readOutput)
         if self.cpu.prioridad:
             pid = self.motor.pid()
             if VarGen.isWindows:
@@ -888,7 +894,7 @@ class Ventana(QtGui.QDialog):
 
     def readOutput(self):
         if not self.lock:
-            txt = self.motor.readAllStandardOutput()
+            txt = self.motor_stream.readAll()
             if txt:
                 self.buffer += str(txt)
                 if self.esperaOK:
@@ -974,7 +980,8 @@ class Ventana(QtGui.QDialog):
             self.esperaOK = None
 
     def escribe(self, linea):
-        self.motor.write(str(linea) + "\n")
+        self.motor_stream << str(linea) + "\r\n"
+        self.motor_stream.flush()
 
     def confTablero(self):
         self.pause()
@@ -1689,11 +1696,11 @@ class CPU:
             self.ventana.reject()
 
     def lanzaVentana(self):
-        app = QtGui.QApplication([])
+        app = QtWidgets.QApplication([])
 
 
         app.setStyle(QtWidgets.QStyleFactory.create("CleanLooks"))
-        QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
+        QtWidgets.QApplication.setPalette(QtWidgets.QApplication.style().standardPalette())
 
         self.configuracion.releeTRA()
 
@@ -1731,10 +1738,12 @@ class CPU:
 
 
 def run(fdb):
-    ferr = open("./bug.kibitzer", "at")
-    sys.stderr = ferr
+    if not DEBUG:
+        ferr = open("./bug.kibitzer", "at")
+        sys.stderr = ferr
 
     cpu = CPU(fdb)
     cpu.run()
 
-    ferr.close()
+    if not DEBUG:
+        ferr.close()

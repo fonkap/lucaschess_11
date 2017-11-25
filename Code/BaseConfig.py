@@ -445,19 +445,19 @@ class ConfigTabTema:
         result = str(self._colorExterior) + "#" \
                + str(self._colorBlancas) + "#" \
                + str(self._colorNegras) + "#" \
-               + Util.dic2txt(self._fTransicion) + "#" \
+               + Util.dic2txt(self._fTransicion).decode("latin1") + "#" \
                + str(self._colorTexto) + "#" \
                + str(self._colorFrontera) + "#" \
                + str(self._siTemaDefecto) + "#" \
-               + Util.dic2txt(self._fAlternativa) + "#" \
+               + Util.dic2txt(self._fAlternativa).decode("latin1") + "#" \
                + self._png64Blancas + "#" \
                + self._png64Negras + "#" \
                + str(self._transBlancas) + "#" \
                + str(self._transNegras) + "#" \
                + str(self._colorFondo) + "#" \
                + self._png64Fondo + "#" \
-               + Util.dic2txt(self._fActivo) + "#" \
-               + Util.dic2txt(self._fRival) + "#" \
+               + Util.dic2txt(self._fActivo).decode("latin1") + "#" \
+               + Util.dic2txt(self._fRival).decode("latin1") + "#" \
                + self._png64Thumb + "#" \
                + ("1" if self._extendedColor else "0") + "#"
         return result

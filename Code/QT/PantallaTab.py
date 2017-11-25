@@ -61,7 +61,7 @@ class SelectBanda(QtWidgets.QWidget):
 
         layout = Colocacion.G()
         layout.setSpacing(2)
-        layout.setContentsMargins(0)
+        layout.setContentsMargins(0,0,0,0)
         self.liLB = []
         self.liLB_F = []
         pm = Iconos.pmEnBlanco()

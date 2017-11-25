@@ -65,7 +65,7 @@ class BotonColor(QtWidgets.QPushButton):
     def pulsado(self):
         ncolor = self.rut_actual()
         color = QTUtil.qtColor(ncolor)
-        color = QtGui.QColorDialog.getColor(color, self.parent, _("Choose a color"))
+        color = QtWidgets.QColorDialog.getColor(color, self.parent, _("Choose a color"))
         if color.isValid():
             self.rut_actual(color.rgba())
             self.rut_actualiza()

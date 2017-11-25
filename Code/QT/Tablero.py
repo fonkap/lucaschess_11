@@ -1427,19 +1427,19 @@ class Tablero(QtWidgets.QGraphicsView):
         elif modo.startswith("ms"):
             resto = modo[2:]
             bf = copy.deepcopy(self.confTablero.fActivo())
-            bf.opacidad = int(resto) / 100.0
+            bf.opacidad = float(resto) / 100.0
             bf.anchoCasilla = self.anchoCasilla
 
         elif modo.startswith("mt"):
             resto = modo[2:]
             bf = self.confTablero.fRival().copia()
-            bf.opacidad = int(resto) / 100.0
+            bf.opacidad = float(resto) / 100.0
             bf.anchoCasilla = self.anchoCasilla
 
         elif modo.startswith("m1"):
             resto = modo[2:]
             bf = self.confTablero.fTransicion().copia()
-            bf.opacidad = int(resto) / 100.0
+            bf.opacidad = float(resto) / 100.0
             bf.anchoCasilla = self.anchoCasilla
 
         if self.anchoPieza > 24:

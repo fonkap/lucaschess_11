@@ -1,4 +1,4 @@
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, QtCore
 
 from Code import Kibitzers
 from Code import EngineThread
@@ -319,7 +319,7 @@ class WKibitzerLive(QTVarios.WDialogo):
         titulo = self.kibitzer.nombre
         icono = Iconos.Kibitzer()
         extparam = "kibitzerlive"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.configuracion = configuracion
 

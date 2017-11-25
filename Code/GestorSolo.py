@@ -566,7 +566,6 @@ class GestorSolo(Gestor.Gestor):
         self.procesador.valorPGN = nuevoPGN, pv, dicPGN
 
     def leeFichero(self, fich):
-        fich = fich[0]
         f = open(fich, "rb")
         txt = f.read()
         f.close()
