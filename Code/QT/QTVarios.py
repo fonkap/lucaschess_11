@@ -120,6 +120,7 @@ class WDialogo(QtWidgets.QDialog, WSave):
         print("creating QDialog : ", self.__class__.__name__)
         super().__init__(flag=QtCore.Qt.Dialog, **kwds)
     def accept(self):
+        super().accept()
         self.close()
     def reject(self):
         self.close()
@@ -784,20 +785,21 @@ class ListaPiezas(QtWidgets.QWidget):
 
         pixmap = lb.dragpixmap
         pieza = lb.pieza
-        itemData = QtCore.QByteArray(str(pieza))
+        itemData = QtCore.QByteArray(str(pieza).encode("latin1"))
 
         self.owner.ultimaPieza = pieza
-        self.owner.ponCursor()
+        if hasattr(self.owner, "ponCursor"):
+            self.owner.ponCursor()
 
-        mimeData = QtCore.QMimeData()
-        mimeData.setData('image/x-lc-dato', itemData)
+            mimeData = QtCore.QMimeData()
+            mimeData.setData('image/x-lc-dato', itemData)
 
-        drag = QtGui.QDrag(self)
-        drag.setMimeData(mimeData)
-        drag.setHotSpot(QtCore.QPoint(pixmap.width() / 2, pixmap.height() / 2))
-        drag.setPixmap(pixmap)
+            drag = QtGui.QDrag(self)
+            drag.setMimeData(mimeData)
+            drag.setHotSpot(QtCore.QPoint(pixmap.width() / 2, pixmap.height() / 2))
+            drag.setPixmap(pixmap)
 
-        drag.exec_(QtCore.Qt.MoveAction)
+            drag.exec_(QtCore.Qt.MoveAction)
 
 
 def rondoPuntos():

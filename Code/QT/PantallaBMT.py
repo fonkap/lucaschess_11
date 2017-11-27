@@ -145,7 +145,7 @@ class WEntrenarBMT(QTVarios.WDialogo):
         icono = Iconos.BMT()
         titulo = dbf.NOMBRE
         extparam = "bmtentrenar"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Juegan ---------------------------------------------------------------
         self.lbJuegan = Controles.LB(self, "").ponColorFondoN("white", "black").alinCentrado()
@@ -527,7 +527,7 @@ class WEntrenarBMT(QTVarios.WDialogo):
         segundos = self.bmt_uno.segundos
         if self.iniTiempo:
             segundos += int(time.time() - self.iniTiempo)
-        minutos = segundos / 60
+        minutos = segundos // 60
         segundos -= minutos * 60
 
         if minutos:
@@ -678,7 +678,7 @@ class WEntrenarBMT(QTVarios.WDialogo):
 
     def ponReloj(self):
         self.timer = QtCore.QTimer(self)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"), self.enlaceReloj)
+        self.timer.timeout.connect(self.enlaceReloj)
         self.timer.start(500)
 
     def quitaReloj(self):

@@ -152,8 +152,8 @@ class TreeMoves(QtWidgets.QTreeWidget):
 
         self.setFont(ftxt)
 
-        self.connect(self, QtCore.SIGNAL("currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)"), self.seleccionado)
-        self.connect(self, QtCore.SIGNAL("itemDoubleClicked(QTreeWidgetItem *,int)"), self.owner.aceptar)
+        self.currentItemChanged.connect(self.seleccionado)
+        self.itemDoubleClicked.connect(self.owner.aceptar)
 
         self.dicItemMoves = {}
         self.ponMoves(self.listaMoves)
@@ -195,7 +195,8 @@ class TreeMoves(QtWidgets.QTreeWidget):
                 self.owner.splitter.setSizes(sz)
 
     def menuContexto(self, position):
-        self.owner.wmoves.menuContexto()
+        if hasattr(self.owner.wmoves, "menuContexto"):
+            self.owner.wmoves.menuContexto()
 
     def goto(self, mov):
         mov = mov.listaMovesPadre.buscaMovVisibleDesde(mov)
@@ -349,7 +350,7 @@ class PantallaArbolBook(QTVarios.WDialogo):
         titulo = _("Consult a book")
         icono = Iconos.Libros()
         extparam = "treebook"
-        QTVarios.WDialogo.__init__(self, gestor.pantalla, titulo, icono, extparam)
+        super().__init__(parent=gestor.pantalla, titulo=titulo, icono=icono, extparam=extparam)
 
         # Se lee la lista de libros1
         self.listaLibros = Books.ListaLibros()

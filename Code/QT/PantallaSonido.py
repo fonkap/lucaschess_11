@@ -29,7 +29,7 @@ class MesaSonido(QtWidgets.QGraphicsView):
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setTransformationAnchor(self.NoAnchor)
-        self.escena = QtGui.QGraphicsScene(self)
+        self.escena = QtWidgets.QGraphicsScene(self)
         self.escena.setItemIndexMethod(self.escena.NoIndex)
         self.setScene(self.escena)
 

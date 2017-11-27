@@ -41,7 +41,7 @@ class ED(QtWidgets.QLineEdit):
         return self
 
     def capturaCambiado(self, rutina):
-        self.connect(self, QtCore.SIGNAL("textEdited(QString)"), rutina)
+        self.textEdited.connect(rutina)
         return self
 
     def ponTexto(self, texto):

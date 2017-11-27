@@ -22,7 +22,7 @@ class UnPGN:
 
     def listaCabeceras(self):
         li = []
-        for k, v in self.dic.items():
+        for k, v in self.dic.iteritems():  #TODO para GestorSolo:33, comprobar.
             li.append([k, v])
         return li
 

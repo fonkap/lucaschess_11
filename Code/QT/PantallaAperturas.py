@@ -2,7 +2,7 @@ import copy
 import os
 import subprocess
 
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import AperturasStd
 from Code import ControlPosicion
@@ -28,7 +28,7 @@ class WAperturas(QTVarios.WDialogo):
         icono = Iconos.Apertura()
         titulo = _("Select an opening")
         extparam = "selectOpening"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Variables--------------------------------------------------------------------------
         self.apStd = AperturasStd.ListaAperturasStd(configuracion, True, True)
@@ -279,7 +279,7 @@ class EntrenamientoApertura(QTVarios.WDialogo):
         icono = Iconos.Apertura()
         titulo = _("Learn openings by repetition")
         extparam = "opentrainingE"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         nombre = dicDatos.get("NOMBRE", "")
         self.listaAperturasStd = listaAperturasStd
@@ -421,7 +421,7 @@ class EntrenamientoAperturas(QTVarios.WDialogo):
         icono = Iconos.Apertura()
         titulo = _("Learn openings by repetition")
         extparam = "opentraining"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         liAcciones = [(_("Close"), Iconos.MainMenu(), self.terminar), None,

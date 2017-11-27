@@ -77,7 +77,7 @@ def blob2var(blob):
     if blob is None:
         return None
     varp = zlib.decompress(blob)
-    return pickle.loads(varp)
+    return pickle.loads(varp, encoding="latin1")
 
 
 def dic2blob(dic):

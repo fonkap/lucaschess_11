@@ -39,7 +39,7 @@ class ListaAperturasStd:
         self.lia1h8 = self.dic.keys()
 
         if siBasic:
-            for bl in self.dic.itervalues():
+            for bl in self.dic.values():
                 bl.trOrdena = ("A" if bl.siBasic else "B") + bl.trNombre.upper()
             self.hijos = self.ordena(self.hijos, 0)
 
@@ -175,8 +175,7 @@ class ListaAperturasStd:
         li = []
 
         # Las ordenamos para que esten antes las principales que las variantes
-        lik = self.dic.keys()
-        lik.sort()
+        lik = sorted(self.dic.keys())
 
         siBasic = len(partida) == 0
         if siTodas:

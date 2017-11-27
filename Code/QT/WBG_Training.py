@@ -73,7 +73,7 @@ class WTraining(QTVarios.WDialogo):
         icono = Iconos.TutorialesCrear()
         extparam = "trainingMyOwnBook"
         titulo = _("Create a training")
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         tb = QTUtil2.tbAcceptCancel(self)
 

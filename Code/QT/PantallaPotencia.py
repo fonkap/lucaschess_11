@@ -154,7 +154,7 @@ class PotenciaHistorico:
         br.SEGUNDOS = segundos
         br.MIN_MIN = min_min
         br.MIN_MAX = min_max
-        br.LINE = base64.encodestring(linea)
+        br.LINE = base64.encodebytes(linea.encode("latin1"))
         self.dbf.insertar(br)
 
     def __getitem__(self, num):
@@ -406,7 +406,7 @@ class WPotenciaBase(QTVarios.WDialogo):
         reg = self.historico[fil]
         linea = reg.LINE
         if linea:
-            linea = base64.decodestring(linea)
+            linea = base64.decodebytes(linea).decode("latin1")
             w = WPotencia(self, self.motor, self.segundos, self.min_min, self.min_max, linea, reg.REF)
             w.exec_()
             self.ghistorico.gotop()
@@ -516,8 +516,7 @@ class WPotenciaBase(QTVarios.WDialogo):
 
 class WPotencia(QTVarios.WDialogo):
     def __init__(self, owner, motor, segundos, min_min, min_max, linea=None, ref=None):
-
-        super(WPotencia, self).__init__(owner, _("Determine your calculating power"), Iconos.Potencia(), "potencia")
+        super().__init__(parent=owner, titulo=_("Determine your calculating power"), icono=Iconos.Potencia(), extparam="potencia")
 
         self.partida, self.dicPGN, info, self.jugadaInicial, self.linea = lee_1_linea_mfn(
                 linea) if linea else lee_linea_mfn()
@@ -615,7 +614,7 @@ class WPotencia(QTVarios.WDialogo):
 
     def consultar(self):
         pgn = ""
-        for k, v in self.dicPGN.items():
+        for k, v in self.dicPGN.iteritems():
             pgn += '[%s "%s"]\n' % (k, v)
         pgn += "\n" + self.partida.pgnBaseRAW()
 
@@ -649,7 +648,8 @@ class WPotencia(QTVarios.WDialogo):
         self.ultimaCelda = wmcelda
 
     def pensandoHastaMin(self):
-        dif = self.min_min * 60 - int(time.time() - self.baseTiempo)
+        secs = 60
+        dif = self.min_min * secs - int(time.time() - self.baseTiempo)
         if dif <= 0:
             self.ponToolBar([self.comprobar, self.cancelar])
             self.paraReloj()
@@ -674,7 +674,7 @@ class WPotencia(QTVarios.WDialogo):
             self.timer.stop()
 
         self.timer = QtCore.QTimer(self)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"), enlace)
+        self.timer.timeout.connect(enlace)
         self.timer.start(transicion)
 
     def paraReloj(self):

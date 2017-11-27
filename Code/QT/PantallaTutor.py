@@ -17,7 +17,7 @@ class PantallaTutor(QTVarios.WDialogo):
         titulo = _("Analyzing your move")
         icono = Iconos.Tutor()
         extparam = "tutor"
-        QTVarios.WDialogo.__init__(self, gestor.pantalla, titulo, icono, extparam)
+        super().__init__(parent=gestor.pantalla, titulo=titulo, icono=icono, extparam=extparam)
 
         self.tutor = tutor
         self.gestor0 = gestor.gestor
@@ -64,7 +64,7 @@ class PantallaTutor(QTVarios.WDialogo):
             liOpciones = self.tutor.opcionesAperturas()
             self.cbAperturas = Controles.CB(self, liOpciones, 0)
             self.cbAperturas.setFont(flba)
-            self.connect(self.cbAperturas, QtCore.SIGNAL("currentIndexChanged(int)"), self.tutor.cambiarApertura)
+            self.cbAperturas.currentIndexChanged.connect(self.tutor.cambiarApertura)
 
         # RM
         liRM = []
@@ -72,7 +72,7 @@ class PantallaTutor(QTVarios.WDialogo):
             liRM.append((uno[1], n))
 
         self.cbRM, self.lbRM = QTUtil2.comboBoxLB(self, liRM, liRM[0][1], _("Moves analyzed"))
-        self.connect(self.cbRM, QtCore.SIGNAL("currentIndexChanged (int)"), tutor.cambiadoRM)
+        self.cbRM.currentIndexChanged.connect(tutor.cambiadoRM)
         lyRM = Colocacion.H().control(self.lbRM).control(self.cbRM)
 
         lyTutor = Colocacion.V().relleno().control(self.lbTutorPuntuacion).relleno()
@@ -178,7 +178,7 @@ class PantallaTutor(QTVarios.WDialogo):
     def iniciaReloj(self, funcion):
         if not hasattr(self, "timer"):
             self.timer = QtCore.QTimer(self)
-            self.connect(self.timer, QtCore.SIGNAL("timeout()"), funcion)
+            self.timer.timeout.connect(funcion)
         self.timer.start(1000)
 
     def paraReloj(self):

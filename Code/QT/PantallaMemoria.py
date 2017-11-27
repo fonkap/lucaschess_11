@@ -161,7 +161,7 @@ class WMemoria(QTVarios.WDialogo):
 
         siK = False
         sik = False
-        for p in self.casillas.itervalues():
+        for p in self.casillas.values():
             if p == "K":
                 siK = True
             elif p == "k":
@@ -362,7 +362,7 @@ class WMemoria(QTVarios.WDialogo):
             del self.timer
 
         self.timer = QtCore.QTimer(self)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reloj)
+        self.timer.timeout.connect(self.reloj)
         self.timer.start(1000)
 
     def paraReloj(self):
@@ -374,7 +374,8 @@ class WMemoria(QTVarios.WDialogo):
 
 def lanzaMemoria(procesador, txtcategoria, nivel, segundos, listaFen, record):
     w = WMemoria(procesador, txtcategoria, nivel, segundos, listaFen, record)
-    if w.exec_():
+    ret = w.exec()
+    if ret:
         return w.tiempo
     else:
         return None

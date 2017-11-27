@@ -13,7 +13,7 @@ class SVGSC(TabBloques.BloqueEspSC):
 
         self.distBordes = 0.30 * bloqueImgSVG.anchoCasilla
 
-        self.pixmap = QtSvg.QSvgRenderer(QtCore.QByteArray(bloqueImgSVG.xml))
+        self.pixmap = QtSvg.QSvgRenderer(QtCore.QByteArray(bloqueImgSVG.xml.encode("latin1")))
 
         self.posicion2xy()
 

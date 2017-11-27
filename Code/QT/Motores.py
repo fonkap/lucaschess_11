@@ -103,8 +103,7 @@ class Motores:
 
         menu.separador()
         submenu = menu.submenu(_("Engines with fixed elo"), self.dicIconos[FIXED])
-        li = self.dicMotoresFixedElo.keys()
-        li.sort()
+        li = sorted(self.dicMotoresFixedElo.keys())
         for elo in li:
             icono = rp.otro()
             submenuElo = submenu.submenu(str(elo), icono)
@@ -129,7 +128,7 @@ class Motores:
             limenus.append(menu1.submenu("%d - %d"%(x,x+250), ico.otro()))
 
         for cm in self.liElo:
-            submenu = limenus[cm.elo/250-4]
+            submenu = limenus[cm.elo//250-4]
             submenu.opcion((ELO, cm), cm.nombre, ico.otro())
 
         return menu.lanza()

@@ -675,7 +675,7 @@ class Gestor:
         self.pgnMueve(fila, siBlancas)
 
     def ponteEnJugada(self, numJugada):
-        fila = (numJugada + 1) / 2 if self.partida.siEmpiezaConNegras else numJugada / 2
+        fila = (numJugada + 1) // 2 if self.partida.siEmpiezaConNegras else numJugada // 2
         jg = self.partida.jugada(numJugada)
         siBlancas = jg.posicionBase.siBlancas
         self.pantalla.pgnColocate(fila, siBlancas)

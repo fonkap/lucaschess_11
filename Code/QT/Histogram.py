@@ -223,8 +223,8 @@ class Histogram(QtWidgets.QGraphicsView):
         sz_width = self.steps * self.step
         sz_height = sz_left = ancho*300/900
 
-        scene = QtGui.QGraphicsScene(self)
-        scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
+        scene = QtWidgets.QGraphicsScene(self)
+        scene.setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
         scene.setSceneRect(-sz_height, -sz_height, sz_width, sz_height)
         self.setScene(scene)
         self.scene = scene

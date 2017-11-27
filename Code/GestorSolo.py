@@ -303,11 +303,14 @@ class GestorSolo(Gestor.Gestor):
         else:
             if self.siPGN:
                 self.pantalla.reject()
+                return True  # Parece que qt5 no cierra la ventana si se llama a reject desde el mismo evento de close
+                             # devolver true para evitar que se ignore dicho evento. TODO probar bien
             else:
                 self.procesador.inicio()
 
     def finalX(self):
-        self.finPartida()
+        if self.finPartida():
+            return True
         return False
 
     def siguienteJugada(self):

@@ -87,8 +87,8 @@ def salvaFichero(pantalla, titulo, carpeta, filtro, siConfirmarSobreescritura=Tr
     else:
         resp = QtWidgets.QFileDialog.getSaveFileName(pantalla, titulo, carpeta, filtro,
                                                  options=QtWidgets.QFileDialog.DontConfirmOverwrite)
-        # if resp : #+pyside
-        # resp = resp[0] #+pyside
+        if resp : #+pyside
+            resp = resp[0] #+pyside
     return resp
 
 
@@ -396,7 +396,7 @@ class BarraProgreso(QtWidgets.QProgressDialog):
     # ~ bp.cerrar()
 
     def __init__(self, owner, titulo, mensaje, total):
-        QtGui.QProgressDialog.__init__(self, mensaje, _("Cancel"), 0, total, owner)
+        QtWidgets.QProgressDialog.__init__(self, mensaje, _("Cancel"), 0, total, owner)
         self.total = total
         self.actual = 0
         self.setWindowModality(QtCore.Qt.WindowModal)

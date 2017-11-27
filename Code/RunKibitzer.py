@@ -522,7 +522,8 @@ class Ventana(QtWidgets.QDialog):
         self.setWindowIcon(Iconos.Motor())
 
         if not flags:
-            flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowStaysOnTopHint
+            flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | \
+                    QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint
         self.setWindowFlags(flags)
 
         self.setBackgroundRole(QtGui.QPalette.Light)

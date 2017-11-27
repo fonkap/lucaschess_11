@@ -197,8 +197,8 @@ class Pantalla():
              raise e
 
     def muestraVariantes(self, titulo):
-        flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
-
+        flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | \
+                QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowCloseButtonHint
         self.setWindowFlags(flags)
 
         self.setWindowTitle(titulo if titulo else "-")
@@ -351,7 +351,7 @@ class Pantalla():
             del self.timer
 
         self.timer = QtCore.QTimer(self)
-        self.connect(self.timer, QtCore.SIGNAL("timeout()"), enlace)
+        self.timer.timeout.connect(enlace)
         self.timer.start(transicion)
 
     def paraReloj(self):
@@ -433,7 +433,7 @@ class PantallaDialog(QTVarios.WDialogo, Pantalla):
         titulo = ""
         icono = Iconos.Aplicacion64()
         extparam = "maind"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
         Pantalla.__init__(self, gestor, owner)
 
     def closeEvent(self, event):  # Cierre con X

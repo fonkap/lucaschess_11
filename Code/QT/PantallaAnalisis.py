@@ -1,3 +1,5 @@
+from unittest.mock import _ANY
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import VarGen
@@ -23,8 +25,8 @@ class WAnalisisGraph(QTVarios.WDialogo):
         titulo = _("Result of analysis")
         icono = Iconos.Estadisticas()
         extparam = "estadisticasv1"
-        QTVarios.WDialogo.__init__(self, wowner, titulo, icono, extparam)
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint)
+        super().__init__(parent=wowner, titulo=titulo, icono=icono, extparam=extparam)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
         self.alm = alm
         self.procesador = gestor.procesador
@@ -161,21 +163,22 @@ class WAnalisisGraph(QTVarios.WDialogo):
         QTUtil2.mensajeTemporal(self, _("Saved"), 1.8)
 
     def gridBotonIzquierdo(self, grid, fila, columna):
-        self.tablero.quitaFlechas()
-        jg = self.dicLiJG[grid.id][fila]
-        self.tablero.ponPosicion(jg.posicion)
-        mrm, pos = jg.analisis
-        rm = mrm.liMultiPV[pos]
-        self.tablero.ponFlechaSC(rm.desde, rm.hasta)
-        rm = mrm.liMultiPV[0]
-        self.tablero.creaFlechaMulti(rm.movimiento(), False)
-        grid.setFocus()
-        ta = self.tabActive if self.tabActive < 3 else 0
-        self.htotal[ta].setPointActive(fila)
-        self.htotal[ta+3].setPointActive(fila)
+        if hasattr(self, "tablero"):
+            self.tablero.quitaFlechas()
+            jg = self.dicLiJG[grid.id][fila]
+            self.tablero.ponPosicion(jg.posicion)
+            mrm, pos = jg.analisis
+            rm = mrm.liMultiPV[pos]
+            self.tablero.ponFlechaSC(rm.desde, rm.hasta)
+            rm = mrm.liMultiPV[0]
+            self.tablero.creaFlechaMulti(rm.movimiento(), False)
+            grid.setFocus()
+            ta = self.tabActive if self.tabActive < 3 else 0
+            self.htotal[ta].setPointActive(fila)
+            self.htotal[ta+3].setPointActive(fila)
 
-        dic, siBlancas = jg.posicion.capturas()
-        self.capturas.pon(dic)
+            dic, siBlancas = jg.posicion.capturas()
+            self.capturas.pon(dic)
 
     def gridDobleClick(self, grid, fila, columna):
         jg = self.dicLiJG[grid.id][fila]
@@ -442,7 +445,7 @@ class WAnalisis(QTVarios.WDialogo):
         icono = Iconos.Tutor()
         extparam = "analysis"
 
-        QTVarios.WDialogo.__init__(self, ventana, titulo, icono, extparam)
+        super().__init__(parent=ventana, titulo=titulo, icono=icono, extparam=extparam)
 
         self.mAnalisis = mAnalisis
         self.muestraActual = None
@@ -603,7 +606,7 @@ class WAnalisisVariantes(QtWidgets.QDialog):
         # Creamos los controles
         self.setWindowTitle(_("Variants"))
 
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowMinimizeButtonHint)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint  )
         self.setWindowIcon(Iconos.Tutor())
 
         f = Controles.TipoLetra(puntos=12, peso=75)
@@ -659,7 +662,7 @@ class WAnalisisVariantes(QtWidgets.QDialog):
     def iniciaReloj(self, funcion):
         if not hasattr(self, "timer"):
             self.timer = QtCore.QTimer(self)
-            self.connect(self.timer, QtCore.SIGNAL("timeout()"), funcion)
+            self.timer.timeout.connect(funcion)
         self.timer.start(1000)
 
     def paraReloj(self):
