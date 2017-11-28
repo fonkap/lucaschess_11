@@ -151,7 +151,7 @@ class WEdicionSonido(QTVarios.WDialogo):
         # titulo = _("Sound edition" )
         icono = Iconos.S_Play()
         extparam = "sound"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.confich = VarGen.configuracion.ficheroDirSound
 
@@ -226,7 +226,7 @@ class WEdicionSonido(QTVarios.WDialogo):
             accion = QtWidgets.QAction(titulo, None)
             accion.setIcon(icono)
             accion.setIconText(titulo)
-            self.connect(accion, QtCore.SIGNAL("triggered()"), self.procesaTB)
+            accion.triggered.connect(self.procesaTB)
             accion.clave = clave
             self.dicTB[clave] = accion
 

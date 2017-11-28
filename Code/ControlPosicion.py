@@ -308,7 +308,7 @@ class ControlPosicion:
     def valor_material(self):
         valor = 0
         d = { "R": 5, "Q": 10, "B": 3, "N": 3, "P": 1, "K": 0 }
-        for v in self.casillas.itervalues():
+        for v in self.casillas.values():
             if v:
                 valor += d[v.upper()]
         return valor

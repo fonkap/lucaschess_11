@@ -1,6 +1,6 @@
 import sys
 import time
-from io import StringIO
+from io import BytesIO
 import audioop
 import wave
 
@@ -64,8 +64,8 @@ class RunSound:
 def msc(centesimas):
     t = centesimas
     cent = t % 100
-    t /= 100
-    mins = t / 60
+    t //= 100
+    mins = t // 60
     t -= mins * 60
     seg = t
     return mins, seg, cent
@@ -79,7 +79,7 @@ class TallerSonido:
         if not wav:
             self.centesimas = 0
         else:
-            f = StringIO.StringIO(self.wav)
+            f = BytesIO(self.wav)
 
             wf = wave.open(f, 'rb')
             self.centesimas = int(round(100.0 * wf.getnframes() / wf.getframerate(), 0))
@@ -111,10 +111,10 @@ class TallerSonido:
         self.stream.stop_stream()
         self.stream.close()
         self.p.terminate()
-        resp = "".join(self.datos)
+        resp = b''.join(self.datos)
         tx = audioop.lin2alaw(resp, 2)
         frames = audioop.alaw2lin(tx, 2)
-        io = StringIO.StringIO()
+        io = BytesIO()
         wf = wave.open(io, 'wb')
         wf.setnchannels(self.CHANNELS)
         wf.setsampwidth(self.p.get_sample_size(self.FORMAT))
@@ -141,7 +141,7 @@ class TallerSonido:
 
     def playInicio(self, cent_desde, cent_hasta):
 
-        f = StringIO.StringIO(self.wav)
+        f = BytesIO(self.wav)
 
         wf = self.wf = wave.open(f, 'rb')
 
@@ -182,7 +182,7 @@ class TallerSonido:
         self.p.terminate()
 
     def recorta(self, centDesde, centHasta):
-        f = StringIO.StringIO(self.wav)
+        f = BytesIO(self.wav)
 
         wf = wave.open(f, 'rb')
         nchannels, sampwidth, framerate, nframes, comptype, compname = wf.getparams()
@@ -195,7 +195,7 @@ class TallerSonido:
         frames = wf.readframes(maxFrame - minFrame)
         wf.close()
 
-        io = StringIO.StringIO()
+        io = BytesIO()
         wf = wave.open(io, 'wb')
         wf.setnchannels(nchannels)
         wf.setsampwidth(sampwidth)
@@ -310,7 +310,7 @@ class RunReplay:
 
     def add_bin(self, clave, xbin):
 
-        f = StringIO.StringIO(xbin)
+        f = BytesIO(xbin)
         self.add_wav(clave, f)
 
     def add_wav(self, clave, wav):
@@ -338,7 +338,7 @@ class RunReplay:
             if clave in self.dbw:
                 xformat, channels, rate, frames = self.dbw[clave]
                 li.append(frames)
-        frames = "".join(li)
+        frames = b''.join(li)
 
         if not frames:
             if 'MC' not in liClaves:

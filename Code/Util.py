@@ -1158,7 +1158,8 @@ class DicBLOB(object):
         cursor.close()
         self._conexion.commit()
 
-        del self.dic[clave]
+        if self.dic.get(clave):
+            del self.dic[clave]
 
     def __getitem__(self, clave):
         if clave in self.dic:

@@ -1046,7 +1046,7 @@ class Tablero(QtWidgets.QGraphicsView):
 
     def punto2columna(self, pos):
         pos -= self.margenCentro + self.margenPieza + 2
-        pos /= (self.anchoPieza + self.margenPieza * 2)
+        pos //= (self.anchoPieza + self.margenPieza * 2)
         if self.siBlancasAbajo:
             return int(pos + 1)
         else:

@@ -457,7 +457,7 @@ class WAnalisis(QTVarios.WDialogo):
         self.siBlancas = siBlancas
 
         tbWork = Controles.TBrutina(self, tamIcon=24)
-        tbWork.new(_("Close"), Iconos.MainMenu(), self.terminar)
+        tbWork.new(_("Close"), Iconos.MainMenu(), lambda: self.terminar(True))
         tbWork.new(_("New"), Iconos.NuevoMas(), self.crear)
 
         self.tablero = Tablero.Tablero(self, confTablero)
@@ -579,16 +579,17 @@ class WAnalisis(QTVarios.WDialogo):
         else:
             self.muestraActual.wmu.procesarTB(clave)
 
-    def iniciaReloj(self, funcion):
-        if not hasattr(self, "timer"):
-            self.timer = QtCore.QTimer(self)
-            self.connect(self.timer, QtCore.SIGNAL("timeout()"), funcion)
-        self.timer.start(1000)
-
-    def paraReloj(self):
-        if hasattr(self, "timer"):
-            self.timer.stop()
-            delattr(self, "timer")
+    # Usa lanzaTiempo en su lugar? TODO: comprobar
+    # def iniciaReloj(self, funcion):
+    #     if not hasattr(self, "timer"):
+    #         self.timer = QtCore.QTimer(self)
+    #         self.connect(self.timer, QtCore.SIGNAL("timeout()"), funcion)
+    #     self.timer.start(1000)
+    #
+    # def paraReloj(self):
+    #     if hasattr(self, "timer"):
+    #         self.timer.stop()
+    #         delattr(self, "timer")
 
     def crear(self):
         alm = PantallaAnalisisParam.paramAnalisis(self, VarGen.configuracion, False, siTodosMotores=True)
