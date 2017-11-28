@@ -61,7 +61,7 @@ class WElegir(QTVarios.WDialogo):
         titulo = _("Choose a game to view") if siElegir else _("PGN viewer")
         icono = Iconos.PGN()
         extparam = "pgnelegir"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.siElegir = siElegir
         self.gestor = gestor

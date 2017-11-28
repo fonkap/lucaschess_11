@@ -1,6 +1,6 @@
 import time
 
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Partida
 from Code.QT import Colocacion
@@ -136,7 +136,7 @@ class WLearnBase(QTVarios.WDialogo):
 class WLearn1(QTVarios.WDialogo):
     def __init__(self, owner, numRegistro):
 
-        QTVarios.WDialogo.__init__(self, owner, _("Learn a game"), Iconos.PGN(), "learn1game")
+        super().__init__(parent=owner, titulo=_("Learn a game"), icono=Iconos.PGN(), extparam="learn1game")
 
         self.owner = owner
         self.db = owner.db
@@ -278,8 +278,7 @@ class WLearnPuente(QTVarios.WDialogo):
     INICIO, FINAL_JUEGO, REPLAY, REPLAY_CONTINUE = range(4)
 
     def __init__(self, owner, partida, nivel, white, black, siClock):
-
-        QTVarios.WDialogo.__init__(self, owner, owner.rotulo(), Iconos.PGN(), "learnpuente")
+        super().__init__(parent=owner, titulo=owner.rotulo(), icono=Iconos.PGN(), extparam="learnpuente")
 
         self.owner = owner
         self.procesador = owner.procesador
@@ -318,7 +317,7 @@ class WLearnPuente(QTVarios.WDialogo):
         f = Controles.TipoLetra(puntos=30, peso=75)
         self.lbReloj = Controles.LB(self, "00:00").ponFuente(f).alinCentrado().ponColorFondoN("#076C9F",
                                                                                               "#EFEFEF").anchoMinimo(200)
-        self.lbReloj.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Raised)
+        self.lbReloj.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Raised)
 
         # Movimientos
         flb = Controles.TipoLetra(puntos=11)
@@ -337,7 +336,7 @@ class WLearnPuente(QTVarios.WDialogo):
 
         if siClock:
             self.timer = QtCore.QTimer(self)
-            self.connect(self.timer, QtCore.SIGNAL("timeout()"), self.ajustaReloj)
+            self.timer.timeout.connect(self.ajustaReloj)
             self.timer.start(500)
         else:
             self.lbReloj.hide()

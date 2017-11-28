@@ -215,14 +215,14 @@ class PGN:
                 continue
 
             if not dbf:
-                for clave, valor in g.labels.items():
+                for clave, valor in g.labels.iteritems():
                     if valor == "?":
                         continue
                     dClaves[clave] = len(valor)
                 bd, dbf = iniDB()
 
             else:
-                for clave, valor in g.labels.items():
+                for clave, valor in g.labels.iteritems():
                     if valor == "?":
                         continue
                     tam = len(valor)
@@ -234,7 +234,7 @@ class PGN:
                             dClaves[clave] = tam
 
             dic = {}
-            for k, v in g.labels.items():
+            for k, v in g.labels.iteritems():
                 if v == "?":
                     continue
                 dic[k] = v
