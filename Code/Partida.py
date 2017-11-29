@@ -410,7 +410,7 @@ class PartidaCompleta(Partida):
         return self.iniPosicion.siBlancas
 
     def save(self):
-        return Util.dic2txt(self.liTags) + "]" + self.guardaEnTexto()
+        return Util.dic2txt(self.liTags).decode("latin1") + "]" + self.guardaEnTexto()
 
     def restore(self, fromtxt):
         n = fromtxt.find("]")

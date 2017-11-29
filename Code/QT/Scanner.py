@@ -40,7 +40,7 @@ class Scanner(QtWidgets.QDialog):
 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setWindowOpacity(self.vars.opacity)
-        self.setGeometry(QtGui.QDesktopWidget().availableGeometry())
+        self.setGeometry(QtWidgets.QDesktopWidget().availableGeometry())
 
         self.path = None
         self.selecting = False
@@ -52,7 +52,7 @@ class Scanner(QtWidgets.QDialog):
         if ok:
             self.vars.write()
             rect = QtCore.QRect(self.x, self.y, self.width, self.width)
-            desktop = QtGui.QPixmap.grabWindow(QtWidgets.QApplication.desktop().winId(), 0, 0,
+            desktop = QtWidgets.QApplication.primaryScreen().grabWindow(QtWidgets.QApplication.desktop().winId(), 0, 0,
                                                QTUtil.anchoEscritorio(), QTUtil.altoEscritorio())
             selected_pixmap = desktop.copy(rect)
             selected_pixmap = selected_pixmap.scaled(256, 256, transformMode=QtCore.Qt.SmoothTransformation)

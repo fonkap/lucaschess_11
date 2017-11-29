@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from Code import Books
 from Code import ControlPosicion
@@ -31,7 +31,7 @@ class WResult(QTVarios.WDialogo):
         titulo = _("Results")
         icono = Iconos.Torneos()
         extparam = "unresulttorneo"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         # Datos
         self.torneo = torneo
@@ -133,7 +133,7 @@ class WUnTorneo(QTVarios.WDialogo):
         titulo = _("Competition")
         icono = Iconos.Torneos()
         extparam = "untorneo"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.configuracion = VarGen.configuracion
 
@@ -438,8 +438,9 @@ class WUnTorneo(QTVarios.WDialogo):
 
     def gridCambiadoRegistro(self, grid, fila, columna):
         if grid.id == "EA":
-            self.actEngine()
-            self.gridEnginesValores.refresh()
+            if hasattr(self, "gridEnginesAlias"):
+                self.actEngine()
+                self.gridEnginesValores.refresh()
 
     def actEngine(self):
         self.liEnActual = []

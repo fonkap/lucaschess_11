@@ -266,7 +266,7 @@ class BotonCheckColor(QtWidgets.QHBoxLayout):
         self.checkbox = QtWidgets.QCheckBox(parent)
         self.checkbox.setFixedSize(20, 20)
 
-        self.connect(self.checkbox, QtCore.SIGNAL("clicked()"), self.pulsado)
+        self.checkbox.clicked.connect(self.pulsado)
 
         self.dispatch = dispatch
 

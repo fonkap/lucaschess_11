@@ -26,7 +26,7 @@ class WNewExpedition(QTVarios.WDialogo):
         titulo = _("New expedition")
         icono = Iconos.Trekking()
         extparam = "newexpedition"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.selected = None
 
