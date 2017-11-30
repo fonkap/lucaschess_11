@@ -255,9 +255,10 @@ class Albumes:
             album = self.create_album(alias)
 
         li = self.dicAlbumes.keys()
-        for n, k in enumerate(li):
+        enum = enumerate(li)
+        for n, k in enum:
             if k == alias:
-                album.siguiente = li[n + 1] if n < len(li) - 1 else None
+                album.siguiente = next(enum) if n < len(li) - 1 else None
                 if album.siguiente:
                     dic_db = self.get_db(ALBUMSHECHOS)
                     if dic_db and dic_db.get(self.preClave + "_" + alias):

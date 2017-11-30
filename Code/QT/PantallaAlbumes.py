@@ -12,7 +12,7 @@ class WAlbum(QTVarios.WDialogo):
 
         self.album = album
         titulo = album.nombre
-        QTVarios.WDialogo.__init__(self, wowner, titulo, album.icono(), "albumes")
+        super().__init__(parent=wowner, titulo=titulo, icono=album.icono(), extparam="albumes")
 
         self.configuracion = procesador.configuracion
 
@@ -47,7 +47,7 @@ class WAlbum(QTVarios.WDialogo):
 
             lb = Controles.LB(self, cromo.nombre)
             lb.ponTipoLetra(puntos=10, peso=75)
-            fila = pos / divisor
+            fila = pos // divisor
             col = pos % divisor
             layout.controlc(pb, fila * 2, col)
             layout.controlc(lb, fila * 2 + 1, col)

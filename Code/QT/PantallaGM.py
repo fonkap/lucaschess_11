@@ -679,7 +679,7 @@ class SelectGame(QTVarios.WDialogo):
         titulo = "%s - %s" % (_("One game"), nombre)
         icono = Iconos.Uno()
         extparam = "gm1g"
-        QTVarios.WDialogo.__init__(self, wgm, titulo, icono, extparam)
+        super().__init__(parent=wgm, titulo=titulo, icono=icono, extparam=extparam)
 
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("NOMBRE", _("Opponent"), 180)

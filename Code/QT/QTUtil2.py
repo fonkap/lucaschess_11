@@ -51,6 +51,8 @@ def leeFichero(owner, carpeta, extension, titulo=None):
 def leeFicheros(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
     resp = QtWidgets.QFileDialog.getOpenFileNames(owner, titulo, carpeta, filtro)
+    if resp:
+        resp = resp[0]
     return resp
 
 
@@ -66,8 +68,8 @@ def leeCreaFichero(owner, carpeta, extension, titulo=None):
     titulo, filtro = _lfTituloFiltro(extension, titulo)
     resp = QtWidgets.QFileDialog.getSaveFileName(owner, titulo, carpeta, filtro,
                                              options=QtWidgets.QFileDialog.DontConfirmOverwrite)
-    # if resp : #+pyside
-    # resp = resp[0] #+pyside
+    if resp : #+pyside
+        resp = resp[0] #+pyside
     return resp
     # titulo, filtro = _lfTituloFiltro(extension, titulo)
     # fd = QtWidgets.QFileDialog(owner, titulo)

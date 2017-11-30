@@ -205,12 +205,12 @@ class WExpedition(QTVarios.WDialogo):
         titulo = _("Everest")
         icono = Iconos.Trekking()
         extparam = "expedition"
-        QTVarios.WDialogo.__init__(self, wowner, titulo, icono, extparam)
+        super().__init__(parent=wowner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.selected = False
 
         wsvg = QtSvg.QSvgWidget()
-        wsvg.load(QtCore.QByteArray(svg))
+        wsvg.load(QtCore.QByteArray(svg.encode("utf-8")))
         wsvg.setFixedSize(762, 762.0 * 520.0 / 1172.0)
         lySVG = Colocacion.H().relleno(1).control(wsvg).relleno(1)
 

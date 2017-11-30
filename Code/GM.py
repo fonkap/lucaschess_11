@@ -68,7 +68,7 @@ class GM:
 
     def read(self):
         ficheroGM = self.gm + ".xgm"
-        f = open(os.path.join(self.carpeta, ficheroGM), "rb")
+        f = open(os.path.join(self.carpeta, ficheroGM), "r")
         li = []
         for linea in f:
             linea = linea.strip()

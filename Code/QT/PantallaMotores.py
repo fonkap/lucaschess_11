@@ -400,7 +400,7 @@ def genOpcionesME(owner, motorExterno):
 
     w = QtWidgets.QWidget(owner)
     w.setLayout(layout)
-    scrollArea = QtGui.QScrollArea()
+    scrollArea = QtWidgets.QScrollArea()
     scrollArea.setBackgroundRole(QtGui.QPalette.Light)
     scrollArea.setWidget(w)
     scrollArea.setWidgetResizable(True)

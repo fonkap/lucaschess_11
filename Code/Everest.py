@@ -243,14 +243,14 @@ class Expeditions:
             lipesos = []
             t = 1
             for x in range(12):
-                t += x + 3 / (x + 1)
+                t += x + 3 // (x + 1)
                 lipesos.append(t)
 
             pt = num
             li_resp = []
             for n, peso in enumerate(lipesos[:-1]):
                 elem = int(peso * pt * 100.0 / sum(lipesos[n:]))
-                v = elem / 100
+                v = elem // 100
                 if elem % 100:
                     v += 1
 
@@ -380,7 +380,7 @@ class Everest:
 </svg>"""
         x = y = 0
         for n, uno in enumerate(self.li_points):
-            c_svg = c_svg.replace(uno[0], uno[4].encode("utf-8", 'ignore'))
+            c_svg = c_svg.replace(uno[0], uno[4])
             c_h = uno[1]
             if height == c_h:
                 x = uno[2]
@@ -411,6 +411,6 @@ class Everest:
             if num_game <= num:
                 n_0, h_0, x_0, y_0, n_t1 = self.li_points[tramo]
                 n_1, h_1, x_1, y_1, n_t2 = self.li_points[tramo + 1]
-                h = h_0 + (h_1 - h_0) * num_game / num
+                h = h_0 + (h_1 - h_0) * num_game // num
                 return h, self._svg(h)
             num_game -= num

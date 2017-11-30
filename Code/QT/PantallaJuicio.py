@@ -32,7 +32,7 @@ class WJuicio(QTVarios.WDialogo):
         titulo = _("Analysis")
         icono = Iconos.Analizar()
         extparam = "jzgm"
-        QTVarios.WDialogo.__init__(self, gestor.pantalla, titulo, icono, extparam)
+        super().__init__(parent=gestor.pantalla, titulo=titulo, icono=icono, extparam=extparam)
 
         self.colorNegativo = QTUtil.qtColorRGB(255, 0, 0)
         self.colorImpares = QTUtil.qtColorRGB(231, 244, 254)
@@ -180,7 +180,8 @@ class WJuicio(QTVarios.WDialogo):
         self.maxMoves = self.partida.numJugadas()
         self.mueve(siInicio=True)
 
-        self.grid.setFocus()
+        if hasattr(self, "grid"):
+            self.grid.setFocus()
 
     def mueve(self, siInicio=False, nSaltar=0, siFinal=False, siBase=False):
         if nSaltar:

@@ -172,7 +172,7 @@ class WSave(QTVarios.WDialogo):
         titulo = _("Save to PGN")
         icono = Iconos.PGN()
         extparam = "savepgn"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.pgn_read(pgn)
         self.configuracion = configuracion
@@ -498,7 +498,7 @@ class WSaveVarios(QTVarios.WDialogo):
         titulo = _("Save to PGN")
         icono = Iconos.PGN()
         extparam = "savepgnvarios"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Opciones
         liOpciones = [
