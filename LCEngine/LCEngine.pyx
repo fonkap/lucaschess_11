@@ -102,9 +102,9 @@ def move2num(a1h8q):
 
 def num2move(num):
     a1 = posA1(num%64)
-    num /= 64
+    num //= 64
     h8 = posA1(num%64)
-    num /= 64
+    num //= 64
     if num:
         q = {1:"q", 2:"r", 3:"b", 4:"n"}.get(num)
     else:

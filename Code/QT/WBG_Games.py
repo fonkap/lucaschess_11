@@ -260,7 +260,8 @@ class WGames(QtWidgets.QWidget):
                 QTUtil2.mensError(self, _("This game already exists."))
             else:
                 self.actualiza(True)
-                self.grid.goto(recno, 0)
+                if recno:
+                    self.grid.goto(recno, 0)
 
     def tw_nuevo(self):
         recno = None

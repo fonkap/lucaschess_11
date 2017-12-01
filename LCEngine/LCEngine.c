@@ -3328,7 +3328,7 @@ static PyObject *__pyx_pf_8LCEngine_10move2num(CYTHON_UNUSED PyObject *__pyx_sel
  * 
  * def num2move(num):             # <<<<<<<<<<<<<<
  *     a1 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  */
 
 /* Python wrapper */
@@ -3364,7 +3364,7 @@ static PyObject *__pyx_pf_8LCEngine_12num2move(CYTHON_UNUSED PyObject *__pyx_sel
  * 
  * def num2move(num):
  *     a1 = posA1(num%64)             # <<<<<<<<<<<<<<
- *     num /= 64
+ *     num //= 64
  *     h8 = posA1(num%64)
  */
   __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_posA1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 104, __pyx_L1_error)
@@ -3423,20 +3423,20 @@ static PyObject *__pyx_pf_8LCEngine_12num2move(CYTHON_UNUSED PyObject *__pyx_sel
   /* "LCEngine.pyx":105
  * def num2move(num):
  *     a1 = posA1(num%64)
- *     num /= 64             # <<<<<<<<<<<<<<
+ *     num //= 64             # <<<<<<<<<<<<<<
  *     h8 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  */
-  __pyx_t_1 = __Pyx_PyNumber_InPlaceDivide(__pyx_v_num, __pyx_int_64); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FloorDivideObjC(__pyx_v_num, __pyx_int_64, 64, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_num, __pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "LCEngine.pyx":106
  *     a1 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  *     h8 = posA1(num%64)             # <<<<<<<<<<<<<<
- *     num /= 64
+ *     num //= 64
  *     if num:
  */
   __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_posA1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
@@ -3493,20 +3493,20 @@ static PyObject *__pyx_pf_8LCEngine_12num2move(CYTHON_UNUSED PyObject *__pyx_sel
   __pyx_t_1 = 0;
 
   /* "LCEngine.pyx":107
- *     num /= 64
+ *     num //= 64
  *     h8 = posA1(num%64)
- *     num /= 64             # <<<<<<<<<<<<<<
+ *     num //= 64             # <<<<<<<<<<<<<<
  *     if num:
  *         q = {1:"q", 2:"r", 3:"b", 4:"n"}.get(num)
  */
-  __pyx_t_1 = __Pyx_PyNumber_InPlaceDivide(__pyx_v_num, __pyx_int_64); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FloorDivideObjC(__pyx_v_num, __pyx_int_64, 64, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_num, __pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "LCEngine.pyx":108
  *     h8 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  *     if num:             # <<<<<<<<<<<<<<
  *         q = {1:"q", 2:"r", 3:"b", 4:"n"}.get(num)
  *     else:
@@ -3515,7 +3515,7 @@ static PyObject *__pyx_pf_8LCEngine_12num2move(CYTHON_UNUSED PyObject *__pyx_sel
   if (__pyx_t_6) {
 
     /* "LCEngine.pyx":109
- *     num /= 64
+ *     num //= 64
  *     if num:
  *         q = {1:"q", 2:"r", 3:"b", 4:"n"}.get(num)             # <<<<<<<<<<<<<<
  *     else:
@@ -3535,7 +3535,7 @@ static PyObject *__pyx_pf_8LCEngine_12num2move(CYTHON_UNUSED PyObject *__pyx_sel
 
     /* "LCEngine.pyx":108
  *     h8 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  *     if num:             # <<<<<<<<<<<<<<
  *         q = {1:"q", 2:"r", 3:"b", 4:"n"}.get(num)
  *     else:
@@ -3578,7 +3578,7 @@ static PyObject *__pyx_pf_8LCEngine_12num2move(CYTHON_UNUSED PyObject *__pyx_sel
  * 
  * def num2move(num):             # <<<<<<<<<<<<<<
  *     a1 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  */
 
   /* function exit code */
@@ -12609,7 +12609,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * def num2move(num):             # <<<<<<<<<<<<<<
  *     a1 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  */
   __pyx_tuple__80 = PyTuple_Pack(4, __pyx_n_s_num, __pyx_n_s_a1, __pyx_n_s_h8, __pyx_n_s_q); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(0, 103, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__80);
@@ -13563,7 +13563,7 @@ static int __pyx_pymod_exec_LCEngine(PyObject *__pyx_pyinit_module)
  * 
  * def num2move(num):             # <<<<<<<<<<<<<<
  *     a1 = posA1(num%64)
- *     num /= 64
+ *     num //= 64
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8LCEngine_13num2move, NULL, __pyx_n_s_LCEngine); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

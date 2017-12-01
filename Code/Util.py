@@ -109,6 +109,9 @@ def dic2txt(dic):
 
 
 def txt2dic(txt):
+    if isinstance(txt, str):
+        #TODO temporary fix
+        txt = txt.encode("utf-8")
     txt = txt.replace("|".encode("utf-8"), "\n".encode("utf-8"))
     data = base64.decodebytes(txt)
     dic = pickle.loads(data, encoding='latin1')

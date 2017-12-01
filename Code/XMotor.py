@@ -438,7 +438,7 @@ class FastEngine(object):
         curdir = os.path.abspath(os.curdir)
         os.chdir(direxe)
         self.process = subprocess.Popen(xargs, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-                                         startupinfo=startupinfo, shell=False)
+                                         startupinfo=startupinfo, shell=False, encoding="latin1")
         os.chdir(curdir)
 
         self.pid = self.process.pid

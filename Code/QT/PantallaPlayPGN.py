@@ -143,7 +143,7 @@ class WPlayBase(QTVarios.WDialogo):
 class WPlay1(QTVarios.WDialogo):
     def __init__(self, owner, numRegistro):
 
-        QTVarios.WDialogo.__init__(self, owner, _("Play against a game"), Iconos.PlayGame(), "play1game")
+        super().__init__(parent=owner, titulo=_("Play against a game"), icono=Iconos.PlayGame(), extparam="play1game")
 
         self.owner = owner
         self.db = owner.db

@@ -464,44 +464,46 @@ class ConfigTabTema:
 
     def lee(self, txt):
         self.defecto()
-        try:
-            li = txt.split("#")
-            nli = len(li)
-            falt = None
-            if nli >= 6:
-                self._colorExterior = int(li[0])
-                self._colorBlancas = int(li[1])
-                self._colorNegras = int(li[2])
-                self._fTransicion = Util.txt2dic(li[3])
-                self._colorTexto = int(li[4])
-                self._colorFrontera = int(li[5])
-                if nli >= 7:
-                    self._siTemaDefecto = li[6] == "True"
-                    if nli >= 8:
-                        falt = Util.txt2dic(li[7])
-                        if nli >= 9:
-                            self._png64Blancas = li[8]
-                            self._png64Negras = li[9]
-                            self._transBlancas = int(li[10])
-                            self._transNegras = int(li[11])
-                            self._colorFondo = int(li[12])
-                            self._png64Fondo = li[13]
-                            self._fActivo = Util.txt2dic(li[14])
-                            self._fRival = Util.txt2dic(li[15])
-                            if nli >= 17:
-                                self._png64Thumb = li[16]
-                                if nli >= 18:
-                                    self._extendedColor = li[17] == "1"
+        # TODO unncoment back
+        # try:
+        li = txt.split("#")
+        nli = len(li)
+        falt = None
+        if nli >= 6:
+            self._colorExterior = int(li[0])
+            self._colorBlancas = int(li[1])
+            self._colorNegras = int(li[2])
+            self._fTransicion = Util.txt2dic(li[3])
+            self._colorTexto = int(li[4])
+            self._colorFrontera = int(li[5])
+            if nli >= 7:
+                self._siTemaDefecto = li[6] == "True"
+                if nli >= 8:
+                    falt = Util.txt2dic(li[7])
+                    if nli >= 9:
+                        self._png64Blancas = li[8]
+                        self._png64Negras = li[9]
+                        self._transBlancas = int(li[10])
+                        self._transNegras = int(li[11])
+                        self._colorFondo = int(li[12])
+                        self._png64Fondo = li[13]
+                        self._fActivo = Util.txt2dic(li[14])
+                        self._fRival = Util.txt2dic(li[15])
+                        if nli >= 17:
+                            self._png64Thumb = li[16]
+                            if nli >= 18:
+                                self._extendedColor = li[17] == "1"
 
-            if falt is None:
-                falt = copy.deepcopy(self._fTransicion)
-                falt.grosor = 3
-                falt.forma = "a"
-                falt.tipo = 2
-            self._fAlternativa = falt
+        if falt is None:
+            falt = copy.deepcopy(self._fTransicion)
+            falt.grosor = 3
+            falt.forma = "a"
+            falt.tipo = 2
+        self._fAlternativa = falt
 
-        except:
-            pass
+        # except:
+        #
+        #     pass
 
     def copia(self):
         ct = ConfigTabTema()

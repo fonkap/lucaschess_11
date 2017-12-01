@@ -26,7 +26,7 @@ class WRun(QTVarios.WDialogo):
         titulo = "%s - %s - %s" % (sts.name, work.ref, work.pathToExe())
         icono = Iconos.STS()
         extparam = "runsts"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         self.work = work
         self.sts = sts
@@ -383,7 +383,7 @@ class WUnSTS(QTVarios.WDialogo):
         titulo = sts.name
         icono = Iconos.STS()
         extparam = "unsts"
-        QTVarios.WDialogo.__init__(self, wParent, titulo, icono, extparam)
+        super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
         # Datos
         self.sts = sts
@@ -392,7 +392,7 @@ class WUnSTS(QTVarios.WDialogo):
         # Toolbar
         liAcciones = [(_("Close"), Iconos.MainMenu(), self.terminar), None,
                       (_("Run"), Iconos.Run(), self.wkRun), None,
-                      (_("New"), Iconos.NuevoMas(), self.wkNew), None,
+                      (_("New"), Iconos.NuevoMas(), lambda : self.wkNew(None)), None,
                       (_("Edit"), Iconos.Modificar(), self.wkEdit), None,
                       (_("Copy"), Iconos.Copiar(), self.wkCopy), None,
                       (_("Remove"), Iconos.Borrar(), self.wkRemove), None,

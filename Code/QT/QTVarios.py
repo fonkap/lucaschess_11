@@ -121,7 +121,10 @@ class WDialogo(QtWidgets.QDialog, WSave):
         super().__init__(flag=QtCore.Qt.Dialog, **kwds)
     def accept(self):
         super().accept()
-        self.close()
+        # self.close()
+#Evita excepción al salir del programa
+#ver: https://stackoverflow.com/a/36826593/3324704
+        self.deleteLater()
     def reject(self):
         self.close()
     def closeEvent(self, event):  # Cierre con X
