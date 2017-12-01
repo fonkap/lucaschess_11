@@ -75,7 +75,7 @@ class WSave():
                 self.move(x, y)
             for grid in self.liGrids:
                 grid.recuperarVideo(dic)
-                grid.ponAnchosColumnas()
+                grid.releerColumnas()
             for sp, name in self.liSplitters:
                 k = "SP_%s" % name
                 if k in dic:
@@ -1070,3 +1070,58 @@ def list_irina():
         ("Snake", _("Snake"), Iconos.Snake()),
         ("Steven", _("Steven"), Iconos.Steven())
     )
+
+
+def listaDB(configuracion, siFEN):
+    if siFEN:
+        ext = "lcf"
+        base = configuracion.ficheroDBgamesFEN
+    else:
+        ext = "lcg"
+        base = configuracion.ficheroDBgames
+    base = os.path.abspath(base)
+    lista = [fich for fich in os.listdir(configuracion.carpeta)
+             if fich.endswith("." + ext) and os.path.abspath(os.path.join(configuracion.carpeta, fich)) != base
+        ]
+    return lista
+
+    # menu = LCMenu(owner)
+    # if lista:
+    #     rp = rondoPuntos()
+    #     for fich in lista:
+    #         menu.opcion(fich, _F(fich[:-4]), rp.otro())
+    #     menu.separador()
+    # database = menu.lanza()
+    # if database is None:
+    #     return None
+
+    # if database == other:
+    #     database = QTUtil2.leeCreaFichero(owner, carpeta, ext, rot)
+    #     if database:
+    #         if not database.lower().endswith("." + ext):
+    #             database = database + "." + ext
+    # else:
+    #     database = os.path.join(carpeta, database)
+    # if siFEN:
+    #     configuracion.ficheroDBgamesFEN = database
+    # else:
+    #     configuracion.ficheroDBgames = database
+    # configuracion.graba()
+    # return database
+
+
+def createDB(owner, configuracion, siFEN):
+    if siFEN:
+        ext = "lcf"
+        rot = _("Positions Database")
+        base = configuracion.ficheroDBgamesFEN
+    else:
+        ext = "lcg"
+        rot = _("Database of complete games")
+        base = configuracion.ficheroDBgames
+    carpeta = os.path.abspath(os.path.dirname(base))
+    database = QTUtil2.leeCreaFichero(owner, carpeta, ext, rot)
+    if database:
+        if not database.lower().endswith("." + ext):
+            database = database + "." + ext
+    return database

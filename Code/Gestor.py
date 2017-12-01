@@ -12,6 +12,8 @@ from Code import ControlPGN
 from Code import DGT
 from Code import Jugada
 from Code import Partida
+from Code import DBgames
+from Code import DBgamesFEN
 from Code.QT import Histogram
 from Code.QT import FormLayout
 from Code.QT import Iconos
@@ -25,7 +27,7 @@ from Code.QT import Pelicula
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
 from Code.QT import QTVarios
-from Code.QT import WBGuide
+from Code.QT import WOpeningGuide
 from Code import Util
 from Code import VarGen
 from Code import Kibitzers
@@ -63,7 +65,7 @@ class Gestor:
 
         self.partida = Partida.Partida()
 
-        self.listaAperturasStd = AperturasStd.ListaAperturasStd(self.configuracion, False, False)
+        self.listaAperturasStd = AperturasStd.ap
 
         self.teclaPanico = procesador.teclaPanico
         self.siTeclaPanico = False
@@ -1210,6 +1212,21 @@ class Gestor:
         menu.opcion("ontop", "%s: %s" % (rotulo, _("window on top")),
                     Iconos.Bottom() if self.pantalla.onTop else Iconos.Top())
 
+        # Logs of engines
+        listaGMotores = VarGen.listaGestoresMotor.listaActivos() if VarGen.listaGestoresMotor else []
+        menu.separador()
+        smenu = menu.submenu(_("Save engines log"), Iconos.Grabar())
+        if len(listaGMotores) > 0:
+            for pos, gmotor in enumerate(listaGMotores):
+                ico = Iconos.Cancelar() if gmotor.ficheroLog else Iconos.PuntoVerde()
+                smenu.opcion("log_%d"%pos, gmotor.nombre, ico)
+
+        smenu.separador()
+        if self.configuracion.siLogEngines:
+            smenu.opcion("log_noall", _("Always deactivated for all engines"), Iconos.Cancelar())
+        else:
+            smenu.opcion("log_yesall", _("Always activated for all engines"), Iconos.Aceptar())
+
         menu.separador()
 
         # Mas Opciones
@@ -1228,6 +1245,10 @@ class Gestor:
                 for clave, rotulo, icono in liMasOpciones:
                     if resp == clave:
                         return resp
+
+            if resp.startswith("log_"):
+                resp = resp[4:]
+                self.log_engines(resp)
 
             if resp.startswith("vista_"):
                 resp = resp[6:]
@@ -1267,6 +1288,27 @@ class Gestor:
 
         return None
 
+    def log_engines(self, resp):
+        if resp.isdigit():
+            resp = int(resp)
+            motor = VarGen.listaGestoresMotor.listaActivos()[resp]
+            if motor.ficheroLog:
+                motor.log_close()
+            else:
+                motor.log_open()
+        else:
+            listaGMotores = VarGen.listaGestoresMotor.listaActivos()
+            if resp == "yesall":
+                self.configuracion.siLogEngines = True
+            else:
+                self.configuracion.siLogEngines = False
+            for gmotor in listaGMotores:
+                if resp == "yesall":
+                    gmotor.log_open()
+                else:
+                    gmotor.log_close()
+            self.configuracion.graba()
+
     def config_sonido(self):
         separador = FormLayout.separador
         liSon = [separador]
@@ -1297,35 +1339,38 @@ class Gestor:
         icoFichero = Iconos.GrabarFichero()
         icoCamara = Iconos.Camara()
         icoClip = Iconos.Clip()
-        icoAzul = Iconos.PuntoAzul()
 
         trFichero = _("Save to a file")
         trPortapapeles = _("Copy to clipboard")
 
-        menuGR = menu.submenu(_("Save"), icoGrabar)
+        menuSave = menu.submenu(_("Save"), icoGrabar)
 
-        menuGR.opcion("pgnfichero", _("PGN Format"), icoAzul)
+        menuSave.opcion("pgnfichero", _("PGN Format"), Iconos.PGN())
 
-        menuGR.separador()
+        menuSave.separador()
 
-        menuFEN = menuGR.submenu(_("FEN Format"), icoAzul)
+        menuFEN = menuSave.submenu(_("FEN Format"), Iconos.Naranja())
         menuFEN.opcion("fenfichero", trFichero, icoFichero)
         menuFEN.opcion("fenportapapeles", trPortapapeles, icoClip)
 
-        menuGR.separador()
+        menuSave.separador()
 
-        menuFNS = menuGR.submenu(_("List of FENs"), icoAzul)
+        menuFNS = menuSave.submenu(_("List of FENs"), Iconos.InformacionPGNUno())
         menuFNS.opcion("fnsfichero", trFichero, icoFichero)
         menuFNS.opcion("fnsportapapeles", trPortapapeles, icoClip)
 
-        menuGR.separador()
+        menuSave.separador()
 
-        menuGR.opcion("pksfichero", "%s -> %s" % (_("PKS Format"), _("Create your own game")),
+        menuSave.opcion("pksfichero", "%s -> %s" % (_("PKS Format"), _("Create your own game")),
                       Iconos.JuegaSolo())
 
-        menuGR.separador()
+        menuSave.separador()
 
-        menuV = menuGR.submenu(_("Board -> Image"), icoCamara)
+        menuSave.opcion("dbfichero", _("Database"), Iconos.DatabaseCNew())
+
+        menuSave.separador()
+
+        menuV = menuSave.submenu(_("Board -> Image"), icoCamara)
         menuV.opcion("volfichero", trFichero, icoFichero)
         menuV.opcion("volportapapeles", trPortapapeles, icoClip)
 
@@ -1412,9 +1457,6 @@ class Gestor:
         elif resp == "pelicula":
             self.pelicula()
 
-        elif resp.startswith("trastero"):
-            self.trasteros(resp[9:])
-
         elif resp.startswith("kibitzer_"):
             self.kibitzers(resp[9:])
 
@@ -1438,6 +1480,9 @@ class Gestor:
         elif resp == "pgnfichero":
             self.salvaPGN()
 
+        elif resp == "dbfichero":
+            self.salvaDB()
+
         elif resp.startswith("fen") or resp.startswith("fns"):
             extension = resp[:3]
             si_fichero = resp.endswith("fichero")
@@ -1452,11 +1497,37 @@ class Gestor:
         um.final()
         PantallaAnalisis.showGraph(self.pantalla, self, alm, Analisis.muestraAnalisis)
 
+    def salvaDB(self):
+        siFen = not self.partida.siFenInicial()
+        database = QTVarios.selectDB(self.pantalla, self.configuracion, siFen)
+        if database is None:
+            return
+
+        pgn = self.listado("pgn")
+        liTags = []
+        for linea in pgn.split("\n"):
+            if linea.startswith("["):
+                ti = linea.split('"')
+                if len(ti) == 3:
+                    clave = ti[0][1:].strip()
+                    valor = ti[1].strip()
+                    liTags.append([clave, valor])
+            else:
+                break
+
+        pc = Partida.PartidaCompleta(liTags=liTags)
+        pc.leeOtra(self.partida)
+
+        db = DBgamesFEN.DBgamesFEN(database) if siFen else DBgames.DBgames(database)
+        resp = db.inserta(pc)
+        db.close()
+        if resp:
+            QTUtil2.mensaje(self.pantalla, _("Saved"))
+        else:
+            QTUtil2.mensError(self.pantalla, _("This game already exists."))
+
     def salvaPKS(self):
         pgn = self.listado("pgn")
-        # p rint "jjjjjjjjjjjjjjjjjjjjj-abajo"
-        # dic = self.procesador.saveAsJSON(self.estado, self.partida, pgn)
-        # p rint str(dic)
         dic = self.procesador.saveAsPKS(self.estado, self.partida, pgn)
         extension = "pks"
         fichero = self.configuracion.dirJS
@@ -1576,7 +1647,7 @@ class Gestor:
             fenM2 = self.partida.iniPosicion.fenM2()
             move = None
 
-        w = WBGuide.WBGuide(self.pantalla, self, fenM2inicial=fenM2, pvInicial=move)
+        w = WOpeningGuide.WOpeningGuide(self.pantalla, self, fenM2inicial=fenM2, pvInicial=move)
         w.exec_()
 
     # Para elo games + entmaq

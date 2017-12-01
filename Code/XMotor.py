@@ -8,6 +8,7 @@ from PyQt4 import QtCore
 import subprocess
 
 from Code import VarGen
+from Code import Util
 from Code import XMotorRespuesta
 from Code import EngineThread
 
@@ -27,6 +28,8 @@ class XMotor:
         self.whoDispatch = nombre
         self.uci_ok = False
         self.pid = None
+
+        self.log = None
 
         self.uci_lines = []
 
@@ -68,12 +71,29 @@ class XMotor:
             self.put_line("isready")
             self.wait_mrm("readyok", 1000)
 
+    def log_open(self, fichero):
+        self.log = open(fichero, "ab")
+        self.log.write("%s %s\n\n" % (str(Util.hoy()), "-"*70))
+
+    def log_close(self):
+        if self.log:
+            self.log.close()
+            self.log = None
+
+    def log_write(self, line):
+        self.log.write(line)
+
     def get_lines(self):
         li = self.engine.get_lines()
+        if self.log:
+            for line in li:
+                self.log_write(line)
         return li
 
     def put_line(self, line):
         self.engine.put_line(line)
+        if self.log:
+            self.log_write(">>> %s\n" % line)
 
     def reset(self):
         self.get_lines()
@@ -265,11 +285,12 @@ class XMotor:
         self.ac_lee()
         self.mrm.ordena()
         rm = self.mrm.mejorMov()
-        dt = rm.time
-        while dt < minimoTiempo:
+        tm = rm.time # problema cuando da por terminada la lectura y el rm.time siempre es el mismo
+        while rm.time < minimoTiempo and tm < minimoTiempo:
             self.ac_lee()
             time.sleep(0.1)
-            dt += 100
+            tm += 100
+            rm = self.mrm.mejorMov()
         self.lockAC = lockAC
         return self.ac_estado()
 
@@ -277,11 +298,10 @@ class XMotor:
         self.ac_lee()
         self.mrm.ordena()
         rm = self.mrm.mejorMov()
-        dt = rm.time
-        while dt < minTime or rm.depth < minDepth:
+        while rm.time < minTime or rm.depth < minDepth:
             self.ac_lee()
             time.sleep(0.1)
-            dt += 100
+            rm = self.mrm.mejorMov()
         self.lockAC = lockAC
         return self.ac_estado()
 
@@ -339,6 +359,8 @@ class XMotor:
                 os.kill(self.pid, signal.SIGTERM)
                 sys.stderr.write("INFO X CLOSE: except - the engine %s won't close properly.\n" % self.nombre)
             self.pid = None
+        if self.log:
+            self.log_close()
 
     def order_uci(self):
         self.reset()
@@ -415,6 +437,8 @@ class FastEngine(object):
         self.uci_ok = False
         self.pid = None
 
+        self.log = None
+
         self.uci_lines = []
 
         if not os.path.isfile(exe):
@@ -466,6 +490,20 @@ class FastEngine(object):
 
     def put_line(self, line):
         self.stdin.write(line + "\n")
+        if self.log:
+            self.log_write(">>> %s" % line)
+
+    def log_open(self, fichero):
+        self.log = open(fichero, "ab")
+        self.log.write("%s %s\n\n" % (str(Util.hoy()), "-"*70))
+
+    def log_close(self):
+        if self.log:
+            self.log.close()
+            self.log = None
+
+    def log_write(self, line):
+        self.log.write("%s\n" % line)
 
     def pwait_list(self, orden, txt_busca, maxtime):
         self.put_line(orden)
@@ -473,6 +511,8 @@ class FastEngine(object):
         li = []
         while time.time()-ini < maxtime:
             line = self.stdout.readline()
+            if self.log:
+                self.log_write(line.strip())
             li.append(line.strip())
             if line.startswith(txt_busca):
                 return li, True
@@ -538,3 +578,5 @@ class FastEngine(object):
                     self.process.terminate()
 
             self.pid = None
+        if self.log:
+            self.log_close()

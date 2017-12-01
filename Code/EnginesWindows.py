@@ -257,6 +257,7 @@ def leeRivales():
     cm.path = "Hamsters.exe"
     cm.elo = 2487
     cm.ordenUCI("OwnBook", "false")
+    cm.removeLog("problem_log.txt")
     mas(cm)
 
     cm = ConfigMotor("toga", "WHMoweryJr,Thomas Gaksch,Fabien Letouzey", "deepTogaNPS 1.9.6",
@@ -313,7 +314,6 @@ def leeRivales():
     cm.elo = 3050
     cm.removeLog("log.txt")
     mas(cm)
-
 
     cm = ConfigMotor("spike", "Volker Böhm and Ralf Schäfer", "1.4", "http://spike.lazypics.de/index_en.html")
     cm.path = "Spike1.4.exe"

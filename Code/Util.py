@@ -483,11 +483,11 @@ class SymbolDict:
     def keys(self):
         return self._keys[:]
 
-        # def __str__( self ):
-        # x = ""
-        # for t in self._keys:
-        # x+= "[%s]=[%s]\n"%(t, str(self.__getitem__(t)) )
-        # return x.strip()
+    def __str__( self ):
+        x = ""
+        for t in self._keys:
+           x += "[%s]=[%s]\n"%(t, str(self.__getitem__(t)) )
+        return x.strip()
 
 
 class IPC(object):
@@ -969,6 +969,12 @@ class DicSQL(object):
         cursor.execute("VACUUM")
         cursor.close()
         self._conexion.commit()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, xtype, value, traceback):
+        self.close()
 
 
 class LIdisk:

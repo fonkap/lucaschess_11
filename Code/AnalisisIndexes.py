@@ -291,55 +291,36 @@ def genIndexes(configuracion, partida, alm):
     efficientmobility = {True: 0.0, False: 0.0}
     piecesactivity = {True: 0.0, False: 0.0}
     exchangetendency = {True: 0.0, False: 0.0}
-    # elo = {True: 0.0, False: 0.0}
-    elo_real = {True: 0.0, False: 0.0}
-    elo_real_OME = {
-            Partida.OPENING: {True: [0, 0.0], False: [0, 0.0], None:[0, 0.0]},
-            Partida.MIDDLEGAME: {True: [0, 0.0], False: [0, 0.0], None:[0, 0.0]},
-            Partida.ENDGAME: {True: [0, 0.0], False: [0, 0.0], None:[0, 0.0]}
-    }
-    st_EMO = set()
-    nfactor = {True: 0, False: 0}
-    partida.asigna_OME(configuracion)
+
+    elos = partida.calc_elos(configuracion)
+
     n = {True: 0, False: 0}
     for jg in partida.liJugadas:
-        if hasattr(jg, "analisis"):
-            if jg.analisis:
-                mrm, pos = jg.analisis
-                siB = jg.siBlancas()
-                pts = mrm.liMultiPV[pos].puntosABS()
-                if pts > 100:
-                    domination[siB] += 1
-                elif pts < -100:
-                    domination[not siB] += 1
-                average[siB] += mrm.liMultiPV[0].puntosABS() - pts
-                if not hasattr(jg, "complexity"):
-                    cp = jg.posicionBase
-                    jg.complexity = calc_complexity(cp, mrm)
-                    jg.winprobability = calc_winprobability(cp, mrm)
-                    jg.narrowness = calc_narrowness(cp, mrm)
-                    jg.efficientmobility = calc_efficientmobility(cp, mrm)
-                    jg.piecesactivity = calc_piecesactivity(cp, mrm)
-                    jg.exchangetendency = calc_exchangetendency(cp, mrm)
-                complexity[siB] += jg.complexity
-                narrowness[siB] += jg.narrowness
-                efficientmobility[siB] += jg.efficientmobility
-                piecesactivity[siB] += jg.piecesactivity
-                n[siB] += 1
-                exchangetendency[siB] += jg.exchangetendency
-                # elo[siB] += jg.elo
-                nf = jg.elo_factor
-                elo_real[siB] += jg.elo_real*nf
-                nfactor[siB] += nf
-                elo_real_OME[jg.estadoOME][siB][0] += nf
-                elo_real_OME[jg.estadoOME][siB][1] += jg.elo_real*nf
-                elo_real_OME[jg.estadoOME][None][0] += nf
-                elo_real_OME[jg.estadoOME][None][1] += jg.elo_real*nf
-                st_EMO.add(jg.estadoOME)
+        if jg.analisis:
+            mrm, pos = jg.analisis
+            siB = jg.siBlancas()
+            pts = mrm.liMultiPV[pos].puntosABS()
+            if pts > 100:
+                domination[siB] += 1
+            elif pts < -100:
+                domination[not siB] += 1
+            average[siB] += mrm.liMultiPV[0].puntosABS() - pts
+            if not hasattr(jg, "complexity"):
+                cp = jg.posicionBase
+                jg.complexity = calc_complexity(cp, mrm)
+                jg.winprobability = calc_winprobability(cp, mrm)
+                jg.narrowness = calc_narrowness(cp, mrm)
+                jg.efficientmobility = calc_efficientmobility(cp, mrm)
+                jg.piecesactivity = calc_piecesactivity(cp, mrm)
+                jg.exchangetendency = calc_exchangetendency(cp, mrm)
+            complexity[siB] += jg.complexity
+            narrowness[siB] += jg.narrowness
+            efficientmobility[siB] += jg.efficientmobility
+            piecesactivity[siB] += jg.piecesactivity
+            n[siB] += 1
+            exchangetendency[siB] += jg.exchangetendency
 
     t = n[True] + n[False]
-    tfactor = nfactor[True] + nfactor[False]
-    eloT_real = (elo_real[True]+elo_real[False])/tfactor if tfactor else 0
     for color in (True, False):
         b1 = n[color]
         if b1:
@@ -349,17 +330,8 @@ def genIndexes(configuracion, partida, alm):
             efficientmobility[color] = efficientmobility[color] * 1.0 / b1
             piecesactivity[color] = piecesactivity[color] * 1.0 / b1
             exchangetendency[color] = exchangetendency[color] * 1.0 / b1
-            # elo[x] = elo[x] * 1.0 / b1
-            elo_real[color] = elo_real[color]*1.0/nfactor[color] if nfactor[color] else 0.0
         if t:
             domination[color] = domination[color] * 100.0 / t
-
-    elo_real_OME_total = [0, 0, 0]
-    for color in (True, False, None):
-        for estado_ome in (Partida.OPENING, Partida.MIDDLEGAME, Partida.ENDGAME):
-            nfactor_ome, elo_ome = elo_real_OME[estado_ome][color]
-            elo_real_OME[estado_ome][color] = elo_ome*1.0/nfactor_ome if nfactor_ome else 0.0
-            elo_real_OME_total[estado_ome] += elo_real_OME[estado_ome][color]
 
     complexityT = (complexity[True] + complexity[False]) / 2.0
     narrownessT = (narrowness[True] + narrowness[False]) / 2.0
@@ -394,14 +366,11 @@ def genIndexes(configuracion, partida, alm):
     txt += plantillaC % (_("Pieces activity"), xac(piecesactivity[True]), xac(piecesactivity[False]), xac(piecesactivityT))
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txt += plantillaL % ( "%", alm.porcW, prc, alm.porcB, prc, alm.porcT, prc)
-    txt += plantillaC % ( _("Elo performance"), int(elo_real[True]), int(elo_real[False]), int(eloT_real))
+    txt += plantillaC % ( _("Elo performance"), elos[True][Partida.ALLGAME], elos[False][Partida.ALLGAME], elos[None][Partida.ALLGAME])
 
-    if Partida.OPENING in st_EMO:
-        txt += plantillaC % ( _("Opening"), int(elo_real_OME[Partida.OPENING][True]), int(elo_real_OME[Partida.OPENING][False]), int(elo_real_OME[Partida.OPENING][None]))
-    if Partida.MIDDLEGAME in st_EMO:
-        txt += plantillaC % ( _("Middle game"), int(elo_real_OME[Partida.MIDDLEGAME][True]), int(elo_real_OME[Partida.MIDDLEGAME][False]), int(elo_real_OME[Partida.MIDDLEGAME][None]))
-    if Partida.ENDGAME in st_EMO:
-        txt += plantillaC % ( _("End game"), int(elo_real_OME[Partida.ENDGAME][True]), int(elo_real_OME[Partida.ENDGAME][False]), int(elo_real_OME[Partida.ENDGAME][None]))
+    for std, tit in ((Partida.OPENING, _("Opening")), (Partida.MIDDLEGAME, _("Middle game")), (Partida.ENDGAME, _("End game"))):
+        if elos[None][std]:
+            txt += plantillaC % ( tit, int(elos[True][std]), int(elos[False][std]), int(elos[None][std]))
 
     txtHTML = '<table border="1" cellpadding="5" cellspacing="1" >%s%s</table>' % (cab, txt)
 
@@ -423,4 +392,4 @@ def genIndexes(configuracion, partida, alm):
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txtRAW = txt
 
-    return txtHTML, txtRAW, int(elo_real[True]), int(elo_real[False]), int(eloT_real)
+    return txtHTML, txtRAW, elos[True][Partida.ALLGAME], elos[False][Partida.ALLGAME], elos[None][Partida.ALLGAME]

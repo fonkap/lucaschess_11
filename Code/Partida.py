@@ -3,7 +3,7 @@ from Code import ControlPosicion
 from Code import Jugada
 from Code import AperturasStd
 
-OPENING, MIDDLEGAME, ENDGAME = range(3)
+OPENING, MIDDLEGAME, ENDGAME, ALLGAME = range(4)
 
 
 class Partida:
@@ -182,19 +182,33 @@ class Partida:
 
     def pgnBase(self, numJugada=None):
         resp = self.pgnBaseRAW(numJugada)
-        li = resp.split(" ")
-
-        n = 0
-        rp = ""
-        for x in li:
-            n += len(x) + 1
-            if n > 80:
-                rp += "\n" + x
-                n = len(x)
-            else:
-                rp += " " + x
-
-        return rp.strip()
+        li = []
+        ln = len(resp)
+        pos = 0
+        while pos < ln:
+            while resp[pos] == " ":
+                pos += 1
+            final = pos + 80
+            txt = resp[pos:final]
+            if txt[-1] == " ":
+                txt = txt[:-1]
+            elif final < ln:
+                if resp[final] == " ":
+                    final += 1
+                else:
+                    while final > pos and resp[final - 1] != " ":
+                        final -= 1
+                    if final > pos:
+                        txt = resp[pos:final]
+                    else:
+                        final = pos + 80
+            li.append(txt)
+            pos = final
+        if li:
+            li[-1] = li[-1].strip()
+            return "\n".join(li)
+        else:
+            return ""
 
     def setFirstComment(self, txt, siReplace=False):
         if siReplace or not self.firstComment:
@@ -367,19 +381,79 @@ class Partida:
         for jg in self.liJugadas:
             jg.analisis = None
 
-    def asigna_OME(self, configuracion):
+    def calc_elo_color(self, formula, siBlancas):
+        bad_moves = {OPENING:0, MIDDLEGAME:0, ENDGAME:0}
+        verybad_moves = {OPENING:0, MIDDLEGAME:0, ENDGAME:0}
+        nummoves = {OPENING:0, MIDDLEGAME:0, ENDGAME:0}
+        sumelos = {OPENING:0, MIDDLEGAME:0, ENDGAME:0}
+        for jg in self.liJugadas:
+            if jg.analisis:
+                if jg.siBlancas() != siBlancas:
+                    continue
+                if jg.siApertura:
+                    std = jg.estadoOME = OPENING
+                else:
+                    material = jg.posicionBase.valor_material()
+                    std = jg.estadoOME = ENDGAME if material < 15 else MIDDLEGAME
+                jg.calc_elo(formula)
+                if jg.bad_move:
+                    bad_moves[std] += 1
+                elif jg.verybad_move:
+                    verybad_moves[std] += 1
+                nummoves[std] += 1
+                sumelos[std] += jg.elo
+
+        def calc_tope(verybad, bad, nummoves):
+            if verybad or bad:
+                return int(max(3500 - 16000.0*verybad/nummoves - 4000.0*bad/nummoves, 1200.0))
+            else:
+                return 3500
+
+        topes = {}
+        elos = {}
+        for std in (OPENING, MIDDLEGAME, ENDGAME):
+            nume = nummoves[std]
+            sume = sumelos[std]
+            tope = topes[std] = calc_tope(verybad_moves[std], bad_moves[std], nummoves[std])
+            if nume:
+                elos[std] = int((sume*1.0/nume)*tope/3500.0)
+            else:
+                elos[std] = 0
+
+        sume = 0
+        nume = 0
+        tope = 3500
+        for std in (OPENING, MIDDLEGAME, ENDGAME):
+            sume += sumelos[std]
+            nume += nummoves[std]
+            if topes[std] < tope:
+                tope = topes[std]
+
+        if nume:
+            elos[ALLGAME] = int((sume*1.0/nume)*tope/3500.0)
+        else:
+            elos[ALLGAME] = 0
+
+        return elos
+
+    def calc_elos(self, configuracion):
         if self.siFenInicial():
-            aps = AperturasStd.ListaAperturasStd(configuracion, False, False)
-            aps.asignaApertura(self)
+            AperturasStd.ap.asignaApertura(self)
         else:
             for jg in self.liJugadas:
                 jg.siApertura = False
-        for jg in self.liJugadas:
-            if jg.siApertura:
-                jg.estadoOME = OPENING
-            else:
-                material = jg.posicionBase.valor_material()
-                jg.estadoOME = ENDGAME if material < 15 else MIDDLEGAME
+        with open("IntFiles/Formulas/eloperformance.formula") as f:
+            formula = f.read().strip()
+
+        elos = {}
+        for siBlancas in (True, False):
+            elos[siBlancas] = self.calc_elo_color(formula, siBlancas)
+
+        elos[None] = {}
+        for std in (OPENING, MIDDLEGAME, ENDGAME, ALLGAME):
+            elos[None][std] = int((elos[True][std] + elos[False][std])/2.0)
+
+        return elos
 
 
 def pv_san(fen, pv):
@@ -441,9 +515,11 @@ class PartidaCompleta(Partida):
         self.liTags = unpgn.listaCabeceras()
         return self
 
-    def asignaApertura(self, configuracion):
-        ap = AperturasStd.ListaAperturasStd(configuracion, False, False)
+    def asignaApertura_raw(self, ap):
         ap.asignaApertura(self)
+
+    def asignaApertura(self, configuracion):
+        AperturasStd.ap.asignaApertura(self)
 
     def pgn(self):
         li = ['[%s "%s"]\n'%(k,v) for k,v in self.liTags]

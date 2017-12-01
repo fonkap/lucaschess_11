@@ -122,12 +122,16 @@ class WTabDirVisual(QTVarios.WDialogo):
                 self.selectBanda.seleccionar(None)
             else:
                 self.addText()
+        elif numero == 0 and siCtrl:  # Ctrl+F1
+            self.borraUltimo()
+        elif numero == 1 and siCtrl:  # Ctrl+F2
+            self.borraTodos()
         else:
             self.selectBanda.seleccionarNum(numero)
 
     def grabar(self):
         li = self.guion.guarda()
-        self.configuracion.save_dbFEN(self.fenM2, li)
+        self.tablero.dbVisual_save(self.fenM2, li)
 
         self.siGrabar = False
         self.tb.setAccionVisible(self.grabar, False)
@@ -260,6 +264,13 @@ class WTabDirVisual(QTVarios.WDialogo):
             return nombre
         return None
 
+    def borrarPizarraActiva(self):
+        for n in range(len(self.guion)):
+            tarea = self.guion.tarea(n)
+            if tarea.tp() == TabVisual.TP_TEXTO:
+                if tarea.marcado():
+                    self.gborrar([n,])
+
     def gmarcar(self):
         if len(self.guion):
             menu = QTVarios.LCMenu(self)
@@ -332,7 +343,7 @@ class WTabDirVisual(QTVarios.WDialogo):
             self.configuracion.ficheroFEN = Util.dirRelativo(fich)
             self.configuracion.graba()
 
-            self.configuracion.close_dbFEN()
+            self.tablero.dbVisual_close()
 
             self.tablero.borraMovibles()
             self.guion.cierraPizarra()
@@ -390,7 +401,7 @@ class WTabDirVisual(QTVarios.WDialogo):
     #     config = FormLayout.Editbox(_("Time in milliseconds"), 80, tipo=int)
     #     liGen.append((config, ""))
     #     ico = Iconos.Configurar()
-    #
+
     #     resultado = FormLayout.fedit(liGen, title=txt, parent=self, icon=ico)
     #     if resultado:
     #         accion, liResp = resultado
@@ -410,8 +421,19 @@ class WTabDirVisual(QTVarios.WDialogo):
     def ginsertar(self):
         self.gmas(True)
 
-    def gborrar(self):
-        li = self.g_guion.recnosSeleccionados()
+    def borraUltimo(self):
+        fila = len(self.guion) - 1
+        if fila >= 0:
+            lista = [fila,]
+            self.gborrar(lista)
+
+    def borraTodos(self):
+        num = len(self.guion)
+        if num:
+            self.gborrar(range(num))
+
+    def gborrar(self, lista=None):
+        li = self.g_guion.recnosSeleccionados() if lista is None else lista
         if li:
             li.sort(reverse=True)
             for fila in li:
@@ -880,8 +902,32 @@ class DirVisual():
     def mousePressEvent(self, event):
         p = event.pos()
         a1h8 = self.punto2a1h8(p)
-        if event.button() == QtCore.Qt.RightButton:
+        if event.button() == QtCore.Qt.LeftButton:
+            m = int(event.modifiers())
+            siCtrl = (m & QtCore.Qt.ControlModifier) > 0
+            if siCtrl:
+                li_tareas = self.guion.tareasPosicion(p)
+                if li_tareas:
+                    pos_guion, tarea = li_tareas[0]
+                    self.w.g_guion.goto(pos_guion, 0)
+                    self.w.gborrar([pos_guion,])
+                    return
+                a1h8 = self.punto2a1h8(p)
+                pz_borrar = self.tablero.dameNomPiezaEn(a1h8)
+                if pz_borrar:
+                    self.w.creaTarea("B", pz_borrar, a1h8, -1)
+                    return
+
+        elif event.button() == QtCore.Qt.RightButton:
+            m = int(event.modifiers())
+            siCtrl = (m & QtCore.Qt.ControlModifier) > 0
             li_tareas = self.guion.tareasPosicion(p)
+            if siCtrl and li_tareas:
+                pos_guion, tarea = li_tareas[0]
+                self.w.g_guion.goto(pos_guion, 0)
+                self.w.gborrar()
+                return
+
             pz_borrar = self.tablero.dameNomPiezaEn(a1h8)
             menu = Controles.Menu(self.tablero)
             dicPieces = TrListas.dicNomPiezas()

@@ -41,6 +41,8 @@ def opciones(parent, configuracion):
     liEng.append((_("OS 64bits BMI2 compatible") + ":", configuracion.bmi2))
     liEng.append(separador)
     liEng.append((_("Do not work in background when possible") + ":", configuracion.notbackground))
+    liEng.append(separador)
+    liEng.append((_("Save engines log") + ":", configuracion.siLogEngines))
 
     # Aspect
     liAsp = []
@@ -182,6 +184,8 @@ def opciones(parent, configuracion):
     liPos = [configuracion.positionToolBoard, ("B", _("Bottom")), ("T", _("Top"))]
     liT.append((_("Configuration icon position") + ":", liPos))
     liT.append(separador)
+    liT.append((_("Show icon when position has graphic information"), configuracion.directorIcon))
+    liT.append(separador)
 
     lista = []
     lista.append((liGen, _("General"), ""))
@@ -224,13 +228,14 @@ def opciones(parent, configuracion):
 
         (configuracion.eloNC, configuracion.micheloNC, configuracion.ficsNC, configuracion.fideNC) = liNC
 
-        (configuracion.centipawns, configuracion.bmi2, configuracion.notbackground) = liEng
+        (configuracion.centipawns, configuracion.bmi2, configuracion.notbackground, configuracion.siLogEngines) = liEng
 
         (configuracion.vistaTutor,
             configuracion.efectosVisuales, rapidezMovPiezas,
             configuracion.siAtajosRaton, configuracion.showCandidates, configuracion.showVariantes,
             configuracion.cursorThinking, configuracion.siActivarCapturas, configuracion.tipoMaterial,
-            configuracion.siActivarInformacion, siDGT, toolIcon, configuracion.positionToolBoard) = liT
+            configuracion.siActivarInformacion, siDGT, toolIcon, configuracion.positionToolBoard,
+            configuracion.directorIcon) = liT
         configuracion.opacityToolBoard = 10 if toolIcon else 1
         configuracion.rapidezMovPiezas = drap[rapidezMovPiezas]
         if configuracion.siDGT != siDGT:
