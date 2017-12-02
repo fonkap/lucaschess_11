@@ -207,6 +207,9 @@ class GestorMicElo(Gestor.Gestor):
 
         self.ponPosicionDGT()
 
+        if not self.siJugamosConBlancas:
+            QTUtil2.mensaje(self.pantalla, "Press the continue button to start.")
+
         self.siguienteJugada()
 
     def ponToolBar(self):
@@ -263,6 +266,7 @@ class GestorMicElo(Gestor.Gestor):
             aplazamiento["TIEMPONEGRAS"] = self.tiempo[False].tiempoAplazamiento()
 
             self.configuracion.graba(aplazamiento)
+            self.estado = kFinJuego
             self.pantalla.accept()
 
     def finalX(self):

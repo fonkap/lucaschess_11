@@ -470,7 +470,7 @@ def genHistograms(partida, sicentipawns):
             siBlancas = jg.siBlancas()
             pts = mrm.liMultiPV[pos].puntosABS_5()
             pts0 = mrm.liMultiPV[0].puntosABS_5()
-            lostp_abs = pts0 - pts
+            jg.lostp_abs = lostp_abs = pts0 - pts
 
             elo_base = int(eval(eloformula.replace("xlost", str(lostp_abs))))
             jg.elo_real = max(elo_base, 0)

@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtSvg
+from PyQt5 import QtCore, QtGui, QtSvg, QtWidgets
 
 from Code.QT import TabBloques
 

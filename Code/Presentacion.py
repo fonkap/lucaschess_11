@@ -123,13 +123,11 @@ class GestorChallenge101:
 
     def siguiente_posicion(self):
         num_lineas_posicion = len(self.li_lineas_posicion)
-        # while True:
-        #     random_pos = random.randint(0, num_lineas_posicion-1)
-        #     #random_pos = random.randint(0, num_lineas_posicion-1)
-        #     if random_pos not in self.st_randoms:
-        #         self.st_randoms.add(random_pos)
-        #         break
-        random_pos = 0
+        while True:
+            random_pos = random.randint(0, num_lineas_posicion-1)
+            if random_pos not in self.st_randoms:
+                self.st_randoms.add(random_pos)
+                break
         self.fen, self.result, self.pgn_result, self.pgn, self.difficult = self.li_lineas_posicion[random_pos].strip().split("|")
         self.difficult = int(self.difficult)
 

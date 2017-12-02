@@ -674,7 +674,7 @@ class WCambioRival(QtWidgets.QDialog):
         ## Color + Atras
         hAC = Colocacion.H().control(gbColor).control(gbAtras)
         if siGestorSolo:
-            gbColor.hide()
+            # gbColor.hide()
             gbAtras.hide()
 
         # Motores

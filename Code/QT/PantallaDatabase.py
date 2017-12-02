@@ -27,7 +27,7 @@ class WBDatabase(QTVarios.WDialogo):
 
         dicVideo = self.recuperarDicVideo()
 
-        self.bookGuide = BookGuide.BookGuide(self)
+        self.bookGuide = OpeningGuide.OpeningGuide(self)
         self.wsummary = WBG_Summary.WSummary(procesador, self, self.dbGames, siMoves=False)
 
         self.wgames = WBG_Games.WGames(procesador, self, self.dbGames, self.wsummary, siMoves=False)

@@ -52,7 +52,7 @@ class Jugada:
         self.siTablasFaltaMaterial = False
         self.siAbandono = NOABANDONO
         self.siDesconocido = False  # Si ha sido una terminacion de partida, por causas desconocidas
-        self.pgnBase = posicionBase.pgn(desde, hasta, self.coronacion)
+        self.pgnBase = posicionBase.pgn(desde, hasta, coronacion)
         self.liMovs = [("b", hasta), ("m", desde, hasta)]
         if self.posicion.liExtras:
             self.liMovs.extend(self.posicion.liExtras)
@@ -69,7 +69,7 @@ class Jugada:
         self.siAbandono = ABANDONORIVAL
 
     def masCritica1_4(self, critica):
-        li = self.critica.split(" ")
+        li = self.critica.strip().split(" ")
         ln = []
         for x in li:
             if x not in ("1", "2", "3", "4"):
@@ -295,7 +295,7 @@ class Jugada:
         self.siDesconocido = xL(17)
 
         if len(li) > 18 and li[18]:
-            self.analisis = pickle.loads(li[18].replace("#&", "\n").encode("utf-8"))
+            self.analisis = pickle.loads(li[18].replace("#&", "\n").encode("latin1"))
 
         if len(li) > 19 and li[19]:
             self.criticaDirecta = li[19]
@@ -401,6 +401,20 @@ class Jugada:
         self.comentario = ""
         self.critica = ""
         self.criticaDirecta = ""
+
+    def calc_elo(self, formula):
+        if self.analisis:
+            mrm, pos = self.analisis
+            pts = mrm.liMultiPV[pos].puntosABS_5()
+            pts0 = mrm.liMultiPV[0].puntosABS_5()
+            lostp_abs = pts0 - pts
+            self.elo = min(max(int(eval(formula.replace("xlost", str(lostp_abs)))), 800), 3500)
+            self.verybad_move = lostp_abs > 200
+            self.bad_move = lostp_abs > 90 if not self.verybad_move else False
+        else:
+            self.elo = 0
+            self.bad_move = False
+            self.verybad_move = False
 
 
 def dameJugada(posicionBase, desde, hasta, coronacion):

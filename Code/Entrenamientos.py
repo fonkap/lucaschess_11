@@ -7,13 +7,11 @@ from Code import Gestor60
 from Code import GestorAperturas
 from Code import GestorBooks
 from Code import GestorResistance
-from Code import GestorEntTac
+from Code import GestorTacticas
 from Code import GestorTurnOnLights
 from Code import GestorGM
 from Code import GestorMate
-from Code import GestorUnJuego
 from Code import Memoria
-from Code import Partida
 from Code.QT import DatosNueva
 from Code.QT import Iconos
 from Code.QT import PantallaAperturas
@@ -25,7 +23,6 @@ from Code.QT import PantallaEverest
 from Code.QT import PantallaGM
 from Code.QT import PantallaHorses
 from Code.QT import PantallaLearnPGN
-from Code.QT import PantallaPlayPGN
 from Code.QT import PantallaPotencia
 from Code.QT import PantallaPuente
 from Code.QT import PantallaTacticas
@@ -104,7 +101,8 @@ class Entrenamientos:
         self.procesador = procesador
         self.parent = procesador.pantalla
         self.configuracion = procesador.configuracion
-        self.menu, self.dicMenu = self.creaMenu()
+        self.menu = None
+        self.dicMenu = None
 
     def menuFNS(self, menu, rotulo, xopcion):
         td = TrainingDir("Trainings")
@@ -457,7 +455,7 @@ class Entrenamientos:
                     self.learnPGN()
 
                 elif resp == "playPGN":
-                    self.playPGN()
+                    self.procesador.playPGN()
 
                 elif resp == "lucaselo":
                     self.procesador.lucaselo(False)
@@ -559,7 +557,7 @@ class Entrenamientos:
                 um.final()
             self.procesador.tipoJuego = kJugEntTac
             self.procesador.estado = kJugando
-            self.procesador.gestor = GestorEntTac.GestorEntTac(self.procesador)
+            self.procesador.gestor = GestorTacticas.GestorTacticas(self.procesador)
             self.procesador.gestor.inicio(tactica)
 
     def entrenaGM(self):
@@ -622,21 +620,6 @@ class Entrenamientos:
     def learnPGN(self):
         w = PantallaLearnPGN.WLearnBase(self.procesador)
         w.exec_()
-
-    def playPGN(self):
-        w = PantallaPlayPGN.WPlayBase(self.procesador)
-        if w.exec_():
-            recno = w.recno
-            if recno is not None:
-                siBlancas = w.siBlancas
-                db = PantallaPlayPGN.PlayPGNs(self.configuracion.ficheroPlayPGN)
-                reg = db.leeRegistro(recno)
-                partidaObj = Partida.Partida()
-                partidaObj.recuperaDeTexto(reg["PARTIDA"])
-                nombreObj = reg.get("WHITE" if siBlancas else "BLACK", _("Player"))
-                self.procesador.gestor = GestorUnJuego.GestorUnJuego(self.procesador)
-                self.procesador.gestor.inicio(recno, partidaObj, nombreObj, siBlancas, db.rotulo(recno))
-                db.close()
 
     def everest(self):
         PantallaEverest.everest(self.procesador)

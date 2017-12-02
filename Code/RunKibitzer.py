@@ -8,6 +8,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import struct
 import psutil
 
+from Code import AperturasStd
 from Code import AnalisisIndexes
 from Code import ControlPosicion
 from Code import Configuracion
@@ -208,7 +209,6 @@ class VentanaMultiPV(QtWidgets.QDialog):
 
     def lanzaMotor(self):
         self.motor = QtCore.QProcess()
-
 
         self.buffer = ""
 
@@ -1660,6 +1660,7 @@ class CPU:
             self.configuracion.lee()
             self.configuracion.leeConfTableros()
             VarGen.configuracion = self.configuracion
+            AperturasStd.reset()
             self.numkibitzer = orden.dv["NUMKIBITZER"]
             kibitzers = Kibitzers.Kibitzers()
             self.kibitzer = kibitzers.kibitzer(self.numkibitzer)
@@ -1698,7 +1699,6 @@ class CPU:
 
     def lanzaVentana(self):
         app = QtWidgets.QApplication([])
-
 
         app.setStyle(QtWidgets.QStyleFactory.create("CleanLooks"))
         QtWidgets.QApplication.setPalette(QtWidgets.QApplication.style().standardPalette())

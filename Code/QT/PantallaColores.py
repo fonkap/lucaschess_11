@@ -376,7 +376,6 @@ class WColores(QTVarios.WDialogo):
         self.cbTipoLetra.setFontFilters(self.cbTipoLetra.ScalableFonts)
         self.cbTipoLetra.setCurrentFont(QtGui.QFont(self.confTablero.tipoLetra()))
         self.cbTipoLetra.currentIndexChanged.connect(self.actualizaTableroM)
-
         self.chbDefTipoLetra = xDefecto(self.confTablero.siDefTipoLetra())
         l2mas1(lyG, 1, lbTipoLetra, self.cbTipoLetra, self.chbDefTipoLetra)
 

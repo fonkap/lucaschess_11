@@ -16,6 +16,7 @@ posA1 = LCEngine.posA1
 a1Pos = LCEngine.a1Pos
 pv2xpv = LCEngine.pv2xpv
 xpv2pv = LCEngine.xpv2pv
+xpv2pgn = LCEngine.xpv2pgn
 PGNreader = LCEngine.PGNreader
 setFen = LCEngine.setFen
 makeMove = LCEngine.makeMove
@@ -25,6 +26,12 @@ fen2fenM2 = LCEngine.fen2fenM2
 makePV = LCEngine.makePV
 num2move = LCEngine.num2move
 move2num = LCEngine.move2num
+
+rots = ["Event", "Site", "Date", "Round", "White", "Black", "Result",
+        "WhiteTitle", "BlackTitle", "WhiteElo", "BlackElo", "WhiteUSCF", "BlackUSCF", "WhiteNA", "BlackNA",
+        "WhiteType", "BlackType", "EventDate", "EventSponsor", "ECO", "UTCTime", "UTCDate", "TimeControl",
+        "SetUp", "FEN", "PlyCount"]
+drots = {x.upper(): x for x in rots}
 
 
 class TreeSTAT:
@@ -39,7 +46,6 @@ class TreeSTAT:
 
         self.fsum = self._sum  # called method needed to massive append
 
-        self.cursor = self._conexion.cursor()
         atexit.register(self.close)
 
     def checkTable(self, depth):
@@ -79,7 +85,6 @@ class TreeSTAT:
 
     def close(self):
         if self._conexion:
-            self.cursor.close()
             self._conexion.close()
             self._conexion = None
 
@@ -88,12 +93,12 @@ class TreeSTAT:
         Util.borraFichero(self.nomFichero)
         self._conexion = sqlite3.connect(self.nomFichero)
         self.depth, self.riniFen = self.checkTable(depth)
-        self.cursor = self._conexion.cursor()
 
     def _readRow(self, hfen, rfather, xmove):
         sql = "SELECT ROWID, W, B, D, O, RFATHER, XMOVE FROM STATS WHERE HASHFEN = ?"
-        self.cursor.execute(sql, (hfen,))
-        liRows = self.cursor.fetchall()
+        cursor = self._conexion.cursor()
+        cursor.execute(sql, (hfen,))
+        liRows = cursor.fetchall()
         if liRows:
             for row in liRows:
                 RFATHER = row[5]
@@ -120,16 +125,20 @@ class TreeSTAT:
 
     def _readRowExt(self, rfather, hashFen, fen):
         sql = "SELECT ROWID, W, B, D, O, RFATHER, XMOVE FROM STATS WHERE HASHFEN = ?"
-        self.cursor.execute(sql, (hashFen,))
-        liRows = self.cursor.fetchall()
+        cursor = self._conexion.cursor()
+        cursor.execute(sql, (hashFen,))
+        liRows = cursor.fetchall()
         basefenM2 = fen2fenM2(fen)
 
         def history(xmove, rfather):
             li = [xmove,]
             sql = "SELECT RFATHER, XMOVE FROM STATS WHERE ROWID = ?"
             while rfather != self.riniFen:
-                self.cursor.execute(sql, (rfather,))
-                rfather, xmove = self.cursor.fetchone()
+                cursor.execute(sql, (rfather,))
+                resp = cursor.fetchone()
+                if resp is None:
+                    break
+                rfather, xmove = resp
                 li.insert(0, xmove)
             li = [num2move(x) for x in li]
             pv = " ".join(li)
@@ -164,18 +173,21 @@ class TreeSTAT:
         alm.O = tO
         alm.BASE = alm_base
         alm.LIALMS = liAlms
+        cursor.close()
         return alm
 
     def _writeRow(self, hashFen, alm):
         rowid = alm.ROWID
+        cursor = self._conexion.cursor()
         if rowid is None:
             sql = "INSERT INTO STATS( HASHFEN, W, B, D, O, RFATHER, XMOVE ) VALUES( ?, ?, ?, ?, ?, ?, ? )"
-            self.cursor.execute(sql, (hashFen, alm.W, alm.B, alm.D, alm.O, alm.RFATHER, alm.XMOVE))
-            return self.cursor.lastrowid
+            cursor.execute(sql, (hashFen, alm.W, alm.B, alm.D, alm.O, alm.RFATHER, alm.XMOVE))
+            rowid = cursor.lastrowid
         else:
             sql = "UPDATE STATS SET W=?, B=?, D=?, O=? WHERE ROWID=?"
-            self.cursor.execute(sql, (alm.W, alm.B, alm.D, alm.O, rowid))
-            return rowid
+            cursor.execute(sql, (alm.W, alm.B, alm.D, alm.O, rowid))
+        cursor.close()
+        return rowid
 
     def commit(self):
         self._conexion.commit()
@@ -196,7 +208,7 @@ class TreeSTAT:
             alm.O += o
         return self._writeRow(hfen, alm)
 
-    def append(self, pv, result, r=+1):
+    def append(self, pv, result, r=+1, siCommit=False):
         w = b = d = o = 0
         if result == "1-0":
             w += r
@@ -440,9 +452,9 @@ class DBgames:
         with Util.DicRaw(self.nomFichero, "config") as dbconf:
             dbconf[clave] = valor
 
-    def recuperaConfig(self, clave):
+    def recuperaConfig(self, clave, default=None):
         with Util.DicRaw(self.nomFichero, "config") as dbconf:
-            return dbconf[clave]
+            return dbconf.get(clave, default)
 
     def guardaOrden(self):
         self.guardaConfig("LIORDEN", self.liOrden)
@@ -631,6 +643,7 @@ class DBgames:
             self.dbSTAT.append(pv, result, -1)
             self._cursor.execute(cSQL,(self.liRowids[recno],))
             del self.liRowids[recno]
+        self.dbSTAT.commit()
         self._conexion.commit()
 
     def getSummary(self, pvBase, dicAnalisis, siFigurinesPGN, allmoves=True):
@@ -1000,41 +1013,31 @@ class DBgames:
 
     def leePGNRecno(self, recno):
         raw = self.leeAllRecno(recno)
-
         xpgn = raw["PGN"]
+        result = raw["RESULT"]
         rtags = None
         if xpgn:
             xpgn = Util.blob2var(xpgn)
             if type(xpgn) in (bytes, str):
-                return xpgn
+                return xpgn, result
             if "RTAGS" in xpgn:
                 rtags = xpgn["RTAGS"]
             else:
                 p = Partida.PartidaCompleta()
                 p.restore(xpgn["FULLGAME"])
-                return p.pgn()
-
-        p = Partida.PartidaCompleta()
-
-        p.leerPV(xpv2pv(raw["XPV"]))
-        rots = ["Event", "Site", "Date", "Round", "White", "Black", "Result",
-                "WhiteTitle", "BlackTitle", "WhiteElo", "BlackElo", "WhiteUSCF", "BlackUSCF", "WhiteNA", "BlackNA",
-                "WhiteType", "BlackType", "EventDate", "EventSponsor", "ECO", "UTCTime", "UTCDate", "TimeControl",
-                "SetUp", "FEN", "PlyCount"]
-        drots = {x.upper(): x for x in rots}
+                return p.pgn(), result
+        pgn = xpv2pgn(raw["XPV"])
         drots["PLIES"] = "PlyCount"
-
         litags = []
         for field in self.liCamposBase:
             v = raw[field]
             if v:
-                litags.append((drots.get(field, field), str(v)))
+                litags.append('[%s "%s"]' % (drots.get(field, field), str(v)))
         if rtags:
-            litags.extend(rtags)
-
-        p.setTags(litags)
-        p.asignaApertura(VarGen.configuracion)
-        return p.pgn()
+            for k, v in rtags:
+                litags.append('[%s "%s"]' % (k, v))
+        tags = "\n".join(litags)
+        return "%s\n\n%s\n" % (tags, pgn), result
 
     def blankPartida(self):
         hoy = Util.hoy()
@@ -1087,6 +1090,7 @@ class DBgames:
         resNue = dTags.get("RESULT", "*")
         self.dbSTAT.append(pvAnt, resAnt, -1)
         self.dbSTAT.append(pvNue, resNue, +1)
+        self.dbSTAT.commit()
 
         del self.cache[rowid]
 
@@ -1096,7 +1100,8 @@ class DBgames:
         pv = partidaCompleta.pv()
         xpv = pv2xpv(pv)
         self._cursor.execute("SELECT COUNT(*) FROM games WHERE XPV = ?", (xpv,))
-        num = self._cursor.fetchone()[0]
+        raw = self._cursor.fetchone()
+        num = raw[0]
         if num > 0:
             return False
 
@@ -1118,6 +1123,9 @@ class DBgames:
         self._cursor.execute(sql, data)
         self._conexion.commit()
         self.dbSTAT.append(pv, dTags.get("RESULT", "*"), +1)
+        self.dbSTAT.commit()
+
+        self.liRowids.append(self._cursor.lastrowid)
 
         return True
 
@@ -1194,3 +1202,58 @@ class DBgames:
             return _("This game already exists.")
 
         return None
+
+    def genPGNopen(self):
+        conexion = sqlite3.connect(self.nomFichero)
+        selectAll = ",".join(self.liCamposAll)
+        sql = "SELECT %s FROM %s"%(selectAll, self.tabla)
+        if self.filter:
+            sql += " WHERE %s"%self.filter
+        if self.order:
+            sql += " ORDER BY %s"%self.order
+        cursor = conexion.cursor()
+        cursor.execute(sql)
+        return conexion, cursor
+
+    def genPGN(self, cursor):
+        dicCampoPos = {campo:pos for pos, campo in enumerate(self.liCamposAll)}
+        posPGN = dicCampoPos["PGN"]
+        posRESULT = dicCampoPos["RESULT"]
+        posXPV = dicCampoPos["XPV"]
+        while True:
+            raw = cursor.fetchone()
+            if not raw:
+                break
+            xpgn = raw[posPGN]
+            rtags = None
+            result = raw[posRESULT]
+            if xpgn:
+                xpgn = Util.blob2var(xpgn)
+                if type(xpgn) in (str, unicode):
+                    yield xpgn, result
+                if "RTAGS" in xpgn:
+                    rtags = xpgn["RTAGS"]
+                else:
+                    p = Partida.PartidaCompleta()
+                    p.restore(xpgn["FULLGAME"])
+                    yield p.pgn(), result
+            pgn = xpv2pgn(raw[posXPV])
+            drots["PLIES"] = "PlyCount"
+            litags = []
+            for field in self.liCamposBase:
+                v = raw[dicCampoPos[field]]
+                if v:
+                    litags.append('[%s "%s"]' % (drots.get(field, field), str(v)))
+            if rtags:
+                for k, v in rtags:
+                     litags.append('[%s "%s"]' % (k, v))
+
+            tags = "\n".join(litags)
+            tags += "\n\n"
+
+            pgn = "%s\n\n%s" % (tags, pgn)
+            yield pgn, result
+
+    def genPGNclose(self, conexion, cursor):
+        cursor.close()
+        conexion.close()

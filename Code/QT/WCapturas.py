@@ -32,7 +32,7 @@ class CapturaLista(QtWidgets.QWidget):
                 lbB.alinCentrado()
                 dB.append(lbB)
 
-        # self.ponLayout(True)
+        self.ponLayout(True)
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.RightButton:

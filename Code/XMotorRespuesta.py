@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import codecs
 import random
 
@@ -302,6 +304,11 @@ class MRespuestaMotor:
     def __len__(self):
         return len(self.liMultiPV)
 
+    def getTime(self):
+        if len(self.liMultiPV):
+            return self.liMultiPV[0].time
+        return 0
+
     def miraPV(self, pvBase):
         dClaves = self.miraClaves(pvBase, st_uci_claves)
 
@@ -318,8 +325,8 @@ class MRespuestaMotor:
 
         if "score" in dClaves:
             if "mate 0 " in pvBase or \
-                "mate -0 " in pvBase or \
-                "mate +0 " in pvBase:
+                    "mate -0 " in pvBase or \
+                    "mate +0 " in pvBase:
                 return
 
         if "multipv" in dClaves:
@@ -547,6 +554,13 @@ class MRespuestaMotor:
             if rm.movimiento() == movimiento:
                 return rm, n
         return None, -1
+
+    def contiene(self, movimiento):
+        movimiento = movimiento.lower()
+        for n, rm in enumerate(self.liMultiPV):
+            if rm.movimiento() == movimiento:
+                return True
+        return False
 
     def mejorMovQue(self, movimiento):
         if self.liMultiPV:
@@ -1036,3 +1050,58 @@ class MRespuestaMotor:
 
                 elif dif < minpuntos:  # primeras depths ya se sabia que era buena jugada
                     return
+
+    def setNAG_Color(self, rm):
+        # NAG_1=Jugada buena NAG_2=Jugada mala NAG_3=Muy buena jugada NAG_4=Muy mala jugada
+        NORMAL, GOOD, BAD, VERYGOOD, VERYBAD = range(5)
+        if rm.nivelBrillante():
+            return VERYGOOD, VERYGOOD
+        mj_pts = self.liMultiPV[0].puntosABS()
+        rm_pts = rm.puntosABS()
+        nb = mj_pts - rm_pts
+        if nb:
+            if nb > 300:
+                return VERYBAD, VERYBAD
+            elif nb > 80:
+                return BAD, BAD
+            return NORMAL, NORMAL
+
+        libest = self.bestmoves()
+        if rm not in libest:
+            return NORMAL, NORMAL
+
+        # Si la mayoría son buenos movimientos
+        if len(libest)*1.0/len(self.liMultiPV) >= 0.8:
+            return NORMAL, GOOD
+
+        # Si en la depth que se encontró era menor que 4
+        dic = self.dicDepth
+        if dic:
+            li = dic.keys()
+            li.sort()
+            firstDepth = 0
+            mv = rm.movimiento()
+            for depth in li:
+                dicDepth = dic[depth]
+                if mv in dicDepth:
+                    pts = dicDepth[mv]
+                    ok = True
+                    for m, v in dicDepth.iteritems():
+                        if v > pts:
+                            ok = False
+                            break
+                    if ok:
+                        firstDepth = depth
+                        break
+            if firstDepth >= 5:
+                nag = VERYGOOD
+                color = VERYGOOD
+            elif firstDepth >= 3:
+                nag = GOOD
+                color = GOOD
+            else:
+                nag = NORMAL
+                color = GOOD
+            return nag, color
+
+        return GOOD, GOOD

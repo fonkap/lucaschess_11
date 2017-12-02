@@ -681,14 +681,14 @@ class Polyglot:
 
         first = -1
         try:
-            if not self.f.seek(-16, os.SEEK_END):
+            if self.f.seek(-16, os.SEEK_END):
                 entry = Entry()
                 entry.key = key + 1
                 return -1, entry
         except Exception as e:
             return -1, None
 
-        last = self.f.tell() // 16
+        last = self.f.tell() / 16
         ret, last_entry = self.entry_from_file()
         while True:
             if last - first == 1:

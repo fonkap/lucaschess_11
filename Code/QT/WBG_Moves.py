@@ -481,7 +481,7 @@ class WMoves(QtWidgets.QWidget):
         dicVen = {True: reVenW, False: reVenB}
         siAddOpening = dic["ADDSTD"]
         if siAddOpening:
-            listaAperturasStd = AperturasStd.ListaAperturasStd(VarGen.configuracion, False, False)
+            listaAperturasStd = AperturasStd.ap
         tactica.SHOWTEXT = [0 if siAddOpening else 1, ]
 
         # Leemos todas las lineas=listas de movimientos

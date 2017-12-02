@@ -87,10 +87,12 @@ class WBooksCrear(QtWidgets.QDialog):
         if not self.fichero:
             return
 
-        me = QTUtil2.unMomento(self)
-
         # Creamos el pgn
-        fichTemporal = self.wParent.damePGNtemporal()
+        fichTemporal = self.wParent.damePGNtemporal(self)
+        if not fichTemporal:
+            return
+
+        me = QTUtil2.unMomento(self)
 
         # Creamos la linea de ordenes
         if VarGen.isWindows:
@@ -211,7 +213,7 @@ def polyglotUnir(owner):
         return
 
 
-class WBooks(QtWidgets.QDialog):
+class WBooks(QtGui.QDialog):
     def __init__(self, procesador):
 
         wParent = procesador.pantalla
@@ -219,7 +221,7 @@ class WBooks(QtWidgets.QDialog):
         self.procesador = procesador
         self.siCambios = False
 
-        QtWidgets.QDialog.__init__(self, wParent)
+        QtGui.QDialog.__init__(self, wParent)
 
         self.setWindowTitle(_("Training with a book"))
         self.setWindowIcon(Iconos.Libros())

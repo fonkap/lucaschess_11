@@ -646,7 +646,7 @@ class Menu(QtWidgets.QMenu):
         self.setFont(f)
         return self
 
-    def opcion(self, clave, rotulo, icono=None, siDeshabilitado=False, tipoLetra=None, siCheckable=False, siChecked=False):
+    def opcion(self, clave, rotulo, icono=None, siDeshabilitado=False, tipoLetra=None, siChecked=False):
         if icono:
             accion = QtWidgets.QAction(icono, rotulo, self)
         else:
@@ -656,7 +656,7 @@ class Menu(QtWidgets.QMenu):
             accion.setDisabled(True)
         if tipoLetra:
             accion.setFont(tipoLetra)
-        if siCheckable:
+        if siChecked is not None:
             accion.setCheckable(True)
             accion.setChecked(siChecked)
 
@@ -846,9 +846,6 @@ class TBrutina(QtWidgets.QToolBar):
 class TipoLetra(QtGui.QFont):
     def __init__(self, nombre="", puntos=8, peso=50, siCursiva=False, siSubrayado=False, siTachado=False, txt=None):
         QtGui.QFont.__init__(self)
-        if nombre == "":
-            nombre = QtWidgets.QApplication.instance().font().family()
-        self.setStyleStrategy(QtGui.QFont.PreferAntialias)
         if txt is None:
             cursiva = 1 if siCursiva else 0
             subrayado = 1 if siSubrayado else 0

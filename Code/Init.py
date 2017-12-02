@@ -7,13 +7,13 @@ from Code import Sonido
 from Code.QT import Gui
 
 from Code.Constantes import *
-import traceback
 
 DEBUG = True
-VERSION = "11.00.21b"
+VERSION = "11.03"
 
 if DEBUG:
     prlkn("DEBUG " * 20)
+
 
 def init():
     if not DEBUG:
@@ -21,9 +21,7 @@ def init():
 
     mainProcesador = Procesador.Procesador()
     mainProcesador.setVersion(VERSION)
-
     runSound = Sonido.RunSound()
-
     resp = Gui.lanzaGUI(mainProcesador)
     runSound.close()
     mainProcesador.pararMotores()
@@ -35,5 +33,3 @@ def init():
         else:
             exe = "Lucas.exe" if VarGen.isWindows else "Lucas"
         VarGen.startfile(exe)
-
-    sys.exit(resp)

@@ -516,6 +516,7 @@ class WPotenciaBase(QTVarios.WDialogo):
 
 class WPotencia(QTVarios.WDialogo):
     def __init__(self, owner, motor, segundos, min_min, min_max, linea=None, ref=None):
+
         super().__init__(parent=owner, titulo=_("Determine your calculating power"), icono=Iconos.Potencia(), extparam="potencia")
 
         self.partida, self.dicPGN, info, self.jugadaInicial, self.linea = lee_1_linea_mfn(

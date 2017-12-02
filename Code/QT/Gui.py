@@ -12,9 +12,6 @@ from Code.QT import QTVarios
 from Code import Usuarios
 from Code import Util
 from Code import VarGen
-from Code import Sonido
-
-
 
 
 def lanzaGUI(procesador):

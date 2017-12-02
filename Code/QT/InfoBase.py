@@ -123,8 +123,8 @@ class ThanksTo:
             return txt
 
         # Version 11
-        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob", "Giovanni di Maria", "vga"]
-        liResto = []
+        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob", "Giovanni di Maria", "vga", "Remes", "Péter Rabi"]
+        liResto = ["Immortalchess forum",]
         txt += version(11, liBase, liResto)
 
         # Version 10
@@ -167,7 +167,7 @@ class ThanksTo:
             _("French"): ("Max Aloyau", "Lolo S."),
             _("Russian"): ("Nils Andersson, Reinhard, Vladimir", "Slavik Pavlov"),
             _("German"): ("Alfons", "Georg Pfefferle"),
-            _("Italiano"): ("Maurizio Peroni,Michele Tumbarello", ""),
+            _("Italiano"): ("Michele Tumbarello", "Maurizio Peroni"),
             _("Azeri"): ("Shahin Jafarli (shahinjy)", ""),
             _("Catalan"): ("Salvador Morral i Esteve", ""),
             _("Polish"): ("Miroslaw Kaminski,Dariusz Popadowski", ""),

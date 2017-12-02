@@ -177,7 +177,7 @@ class Transsiberian:
             x = f.read()
             dic = TrListas.transsiberian()
             for k, v in dic.items():
-                x = x.replace(k, v)
+                x = x.replace(">%s<" % k, ">%s<" % v)
             return x
 
     def read_dat(self, base):

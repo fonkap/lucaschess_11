@@ -3067,3 +3067,11 @@ def pmLampara():
 def Lampara():
     return QtGui.QIcon(pmLampara())
 
+
+def pmFile():
+    return PM(919634,921934)
+
+
+def File():
+    return QtGui.QIcon(pmFile())
+

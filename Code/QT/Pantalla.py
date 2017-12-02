@@ -33,9 +33,7 @@ class Pantalla():
         self.informacionPGN = WInformacion.InformacionPGN(self)
         self.siInformacionPGN = False
         self.informacionPGN.hide()
-
         self.registrarSplitter(self.informacionPGN.splitter, "InformacionPGN")
-
 
         self.timer = None
         self.siTrabajando = False
@@ -190,6 +188,7 @@ class Pantalla():
                     # ct.guardaEnDisco()
                     # self.tablero.ponAncho()
                     # self.ajustaTam()
+        #TODO temporary, remove
         except Exception as e:
              import traceback
              import sys
@@ -366,12 +365,8 @@ class Pantalla():
         self.base.columnas60(siPoner, cNivel)
 
     def pulsadoShortcutCtrl1(self):
-        try:
-            if self.gestor and hasattr(self.gestor, "control1"):
-                self.gestor.control1()
-            pass
-        except Exception as e:
-            pass
+        if self.gestor and hasattr(self.gestor, "control1"):
+            self.gestor.control1()
 
     def pulsadoShortcutCtrl0(self):
         if self.gestor and hasattr(self.gestor, "control0"):

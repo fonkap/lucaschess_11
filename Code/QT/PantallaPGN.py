@@ -35,8 +35,8 @@ class EstadoWpgn:
         # grid
         grid = window.grid
         self.recno = grid.recno()
-        self.dicVideoGrid = {}
-        grid.guardarVideo(self.dicVideoGrid)
+        # self.dicVideoGrid = {}
+        # grid.guardarVideo(self.dicVideoGrid)
 
         # ventana
         self.pos = window.pos()
@@ -107,8 +107,9 @@ class WElegir(QTVarios.WDialogo):
                 creaCol(clave.upper(), rotulo, clave != "EVENT")
                 self.liOrdenClaves.append(clave.upper())
 
-        dicVideoGrid = self.estado.dicVideoGrid if siRepite else None
-        self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, dicVideo=dicVideoGrid, siSeleccionMultiple=True)
+        # dicVideoGrid = self.estado.dicVideoGrid if siRepite else None
+        # self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, dicVideo=dicVideoGrid, siSeleccionMultiple=True)
+        self.grid = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True)
         self.registrarGrid(self.grid)
 
         if siRepite:

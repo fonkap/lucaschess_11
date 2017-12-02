@@ -99,7 +99,6 @@ class Engine(object):
         li = self.liBuffer
         self.liBuffer = []
         self.stdout_lock.release()
-        assert xprli(li)
         return li
 
     def hay_datos(self):
@@ -112,6 +111,7 @@ class Engine(object):
         try:
             while self.working:
                 line = stdout.readline()
+                assert xpr(line)
                 if not line:
                     break
                 lock.acquire()

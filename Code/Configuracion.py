@@ -102,6 +102,8 @@ class Configuracion:
         self.opacityToolBoard = 10
         self.positionToolBoard = "T"
 
+        self.directorIcon = False
+
         self.coloresPGNdefecto()
 
         self.tablaSelBackground = None
@@ -169,6 +171,8 @@ class Configuracion:
 
         self.checkforupdate = False
 
+        self.siLogEngines = False
+
         self.palette = {}
 
         self.grupos = BaseConfig.Grupos(self)
@@ -177,8 +181,6 @@ class Configuracion:
         self.grupos.nuevo("Greko", 2401, 2599, 1800)
         self.grupos.nuevo("Alaric", 2600, 2799, 3600)
         self.grupos.nuevo("Rybka", 2800, 3400, 6000)
-
-        self._dbFEN = None
 
     def start(self, version):
         self.lee()
@@ -368,9 +370,9 @@ class Configuracion:
         listaMotoresExt = MotoresExternos.ListaMotoresExternos(self.ficheroMExternos)
         listaMotoresExt.leer()
         for motor in listaMotoresExt.liMotores:
-            if motor.multiPV >= 10:
+            if motor.multiPV > 10:
                 li.append((motor.alias, motor.alias + " *"))
-        for clave, cm in self.dicRivales.items():
+        for clave, cm in self.dicRivales.iteritems():
             if cm.puedeSerTutor():
                 li.append((clave, cm.nombre))
         li = sorted(li, key=operator.itemgetter(1))
@@ -476,6 +478,8 @@ class Configuracion:
         dic["TUTORACTIVODEFECTO"] = self.tutorActivoPorDefecto
         dic["TUTOR_MULTIPV"] = self.tutorMultiPV
 
+        dic["SILOGENGINES"] = self.siLogEngines
+
         dic["SINOMPIEZASEN"] = self.siNomPiezasEN
 
         dic["DBGAMES"] = Util.dirRelativo(self.ficheroDBgames)
@@ -487,6 +491,8 @@ class Configuracion:
 
         dic["OPACITYTOOLBOARD"] = self.opacityToolBoard
         dic["POSITIONTOOLBOARD"] = self.positionToolBoard
+
+        dic["DIRECTORICON"] = self.directorIcon
 
         dic["FICHEROBMT"] = self.ficheroBMT
         dic["FICHEROFEN"] = self.ficheroFEN
@@ -603,6 +609,8 @@ class Configuracion:
                 self.tutorActivoPorDefecto = dg("TUTORACTIVODEFECTO", True)
                 self.tutorMultiPV = dg("TUTOR_MULTIPV", "MX")
 
+                self.siLogEngines = dg("SILOGENGINES", False)
+
                 fich = dg("DBGAMES", self.ficheroDBgames)
                 if os.path.isfile(fich):
                     self.ficheroDBgames = fich
@@ -626,6 +634,8 @@ class Configuracion:
 
                 self.opacityToolBoard = dg("OPACITYTOOLBOARD", self.opacityToolBoard)
                 self.positionToolBoard = dg("POSITIONTOOLBOARD", self.positionToolBoard)
+
+                self.directorIcon = dg("DIRECTORICON", self.directorIcon)
 
                 self.familia = dg("FAMILIA", self.familia)
 
@@ -868,24 +878,6 @@ class Configuracion:
 
     def dicMotoresFixedElo(self):
         return Engines.dicMotoresFixedElo()
-
-    def fich_dbFEN(self):
-        if self._dbFEN is None:
-            self._dbFEN = Util.DicSQL(self.ficheroFEN, tabla="FEN")
-        return self._dbFEN
-
-    def close_dbFEN(self):
-        if self._dbFEN is not None:
-            self._dbFEN.close()
-            self._dbFEN = None
-
-    def dbFEN(self, fenM2):
-        dbFEN = self.fich_dbFEN()
-        return dbFEN[fenM2]
-
-    def esta_dbFEN(self, fenM2):
-        dbFEN = self.fich_dbFEN()
-        return fenM2 in dbFEN
 
     def save_dbFEN(self, fenM2, data):
         dbFEN = self.fich_dbFEN()

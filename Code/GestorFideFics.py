@@ -74,8 +74,6 @@ class GestorFideFics(Gestor.Gestor):
         db.cerrar()
         return xid
 
-
-
     def readID(self, xid):
         db = Base.DBBase(self._db)
         dbf = db.dbfT("data", "LEVEL,WHITE,CABS,MOVS", condicion="ROWID=%d" % xid)
@@ -103,8 +101,6 @@ class GestorFideFics(Gestor.Gestor):
 
         dbf.cerrar()
         db.cerrar()
-
-
 
     def inicio(self, idGame, siCompetitivo, aplazamiento=None):
         self.siCompetitivo = siCompetitivo
@@ -226,6 +222,7 @@ class GestorFideFics(Gestor.Gestor):
             aplazamiento["PUNTOS"] = self.puntos
 
             self.configuracion.graba(aplazamiento)
+            self.estado = kFinJuego
             self.pantalla.accept()
 
     def finalX(self):

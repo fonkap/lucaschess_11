@@ -391,6 +391,7 @@ class GestorEntMaq(Gestor.Gestor):
     def aplazar(self):
         if QTUtil2.pregunta(self.pantalla, _("Do you want to adjourn the game?")):
             self.configuracion.graba(self.genAplazamiento())
+            self.estado = kFinJuego
             self.pantalla.accept()
 
     def pausa(self):
@@ -639,6 +640,25 @@ class GestorEntMaq(Gestor.Gestor):
         self.relojStart(True)
         self.timekeeper.start()
         self.activaColor(siBlancas)
+
+        # posicion = self.partida.ultPosicion.copia()
+        # from Code import LibChess
+        # t4 = LibChess.T4()
+        # fen = posicion.fen()
+        # pv0 = pv = t4.best_move(fen)
+        # dic = t4.checkFen(fen)
+
+        # # n = 0
+        # # while pv:
+        # #     n += 1
+        # #     print n, pv,
+        # #     posicion.moverPV(pv)
+        # #     fen = posicion.fen()
+        # #     pv = t4.best_move(fen)
+        # # print
+        # print pv0, "[MATE %d]" % ((dic[pv][1]+2)/2, )
+        # t4.close()
+        # print
 
     def juegaRival(self):
         self.pensando(True)

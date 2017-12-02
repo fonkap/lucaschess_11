@@ -3,6 +3,7 @@ import random
 import sys
 import webbrowser
 
+from Code import AperturasStd
 from Code import Routes
 from Code import Util
 from Code import VarGen
@@ -32,6 +33,7 @@ from Code import GestorPartida
 from Code import GestorTorneo
 from Code import Presentacion
 from Code import GestorWashing
+from Code import GestorPlayPGN
 from Code.QT import DatosNueva
 from Code.QT import Iconos
 from Code.QT import Info
@@ -53,6 +55,7 @@ from Code.QT import PantallaTorneos
 from Code.QT import PantallaUsuarios
 from Code.QT import PantallaWashing
 from Code.QT import PantallaWorkMap
+from Code.QT import PantallaPlayPGN
 from Code.QT import Piezas
 from Code.QT import QTUtil
 from Code.QT import QTUtil2
@@ -60,7 +63,7 @@ from Code.QT import QTVarios
 from Code.QT import PantallaDatabase
 from Code.QT import PantallaManualSave
 from Code.QT import WBDatabaseFEN
-from Code.QT import WBGuide
+from Code.QT import WOpeningGuide
 from Code.QT import PantallaKibitzers
 
 
@@ -85,6 +88,7 @@ class Procesador:
         self.configuracion = Configuracion.Configuracion(user)
         self.configuracion.start(self.version)
         VarGen.configuracion = self.configuracion
+        AperturasStd.reset()
 
         VarGen.todasPiezas = Piezas.TodasPiezas()
 
@@ -117,8 +121,7 @@ class Procesador:
     def iniciarGUI(self):
         self.pantalla = Pantalla.PantallaWidget(self)
         self.pantalla.ponGestor(self)  # antes que muestra
-        self.pantalla.show()
-        # self.pantalla.muestra()
+        self.pantalla.muestra()
 
         self.tablero = self.pantalla.tablero
 
@@ -752,7 +755,7 @@ class Procesador:
             elif resp == "aperturaspers":
                 self.aperturaspers()
             elif resp == "bookguide":
-                w = WBGuide.WBGuide(self.pantalla, self)
+                w = WOpeningGuide.WOpeningGuide(self.pantalla, self)
                 w.exec_()
 
     def kibitzers(self):
@@ -833,10 +836,13 @@ class Procesador:
         dic["FINEXIT"] = True
         self.gestor.inicio(dic)
 
-    def jugarSolo(self, fichero=None, pgn=None):
+    def jugarSolo(self, fichero=None, pgn=None, partida=None):
         self.gestor = GestorSolo.GestorSolo(self)
-        if pgn:
+        if pgn is not None:
             dic = GestorSolo.pgn_pks(kJugando, pgn)
+            self.gestor.inicio(dic)
+        elif partida is not None:
+            dic = GestorSolo.partida_pks(kJugando, partida)
             self.gestor.inicio(dic)
         else:
             self.gestor.inicio(fichero=fichero)
@@ -877,6 +883,25 @@ class Procesador:
     def showEverest(self, recno):
         if PantallaEverest.show_expedition(self.pantalla, self.configuracion, recno):
             self.playEverest(recno)
+
+    def playPGN(self):
+        w = PantallaPlayPGN.WPlayBase(self)
+        if w.exec_():
+            recno = w.recno
+            if recno is not None:
+                siBlancas = w.siBlancas
+                self.gestor = GestorPlayPGN.GestorUnJuego(self)
+                self.gestor.inicio(recno, siBlancas)
+
+    def playPGNshow(self, recno):
+        db = PantallaPlayPGN.PlayPGNs(self.configuracion.ficheroPlayPGN)
+        w = PantallaPlayPGN.WPlay1(self.pantalla, self.configuracion, db, recno)
+        if w.exec_():
+            if w.recno is not None:
+                siBlancas = w.siBlancas
+                self.gestor = GestorPlayPGN.GestorUnJuego(self)
+                self.gestor.inicio(w.recno, siBlancas)
+        db.close()
 
     def showTurnOnLigths(self, name):
         self.entrenamientos.turn_on_lights(name)
@@ -1007,12 +1032,7 @@ class Procesador:
     def saveAsPKS(self, estado, partida, pgn):
         dic = GestorSolo.pgn_pks(estado, pgn)
         dic["PARTIDA"] = partida.guardaEnTexto()
-
         return dic
-
-    # def saveAsJSON(self, estado, partida, pgn):
-    #     dic = GestorSolo.pgn_json(estado, pgn)
-    #     return dic
 
 
 class ProcesadorVariantes(Procesador):

@@ -91,10 +91,14 @@ class WBaseSave(QtWidgets.QWidget):
         self.codec = dicVariables.get("CODEC", "default")
 
     def vars_save(self):
-        dicVariables = {}
-        dicVariables["LIHISTORICO"] = self.history_list
-        dicVariables["CODEC"] = self.cb_codecs.valor()
-        self.configuracion.escVariables("SAVEPGN", dicVariables)
+        if self.file:
+            dicVariables = self.configuracion.leeVariables("SAVEPGN")
+            if self.file in self.history_list:
+                del self.history_list[self.history_list.index(self.file)]
+            self.history_list.insert(0, self.file)
+            dicVariables["LIHISTORICO"] = self.history_list
+            dicVariables["CODEC"] = self.cb_codecs.valor()
+            self.configuracion.escVariables("SAVEPGN", dicVariables)
 
     def history(self):
         menu = QTVarios.LCMenu(self, puntos=9)
@@ -536,9 +540,19 @@ class FileSavePGN:
         self.file = dic_vars["FILE"]
         self.overwrite = dic_vars["OVERWRITE"]
         self.codec = dic_vars["CODEC"]
-        if self.codec == "default":
-            self.codec = "UTF-8"
-
+        if self.codec == "default" or self.codec is None:
+            self.codec = "utf-8"
+        elif self.codec == "file":
+            self.codec = "utf-8"
+            if Util.existeFichero(self.file):
+                with open(self.file) as f:
+                    u = chardet.universaldetector.UniversalDetector()
+                    for n, x in enumerate(f):
+                        u.feed(x)
+                        if n == 1000:
+                            break
+                    u.close()
+                    self.codec = u.result.get("encoding", "utf-8")
         self.xum = None
 
     def open(self):
@@ -548,7 +562,7 @@ class FileSavePGN:
             self.is_new = self.overwrite or not os.path.isfile(self.file)
             return True
         except:
-            QTUtil2.mensError(self.owner, QTUtil2.mensError(self, "%s : %s\n" % (_("Unable to save"), self.file)))
+            QTUtil2.mensError(self.owner, "%s : %s\n" % (_("Unable to save"), self.file))
             return False
 
     def write(self, pgn):
