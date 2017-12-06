@@ -117,7 +117,7 @@ class WTV_Marker(QtWidgets.QDialog):
         pm = self.liEjemplos[0].pixmapX()
         bf = QtCore.QBuffer()
         pm.save(bf, "PNG")
-        regMarker.png = str(bf.buffer())
+        regMarker.png = bf.buffer().data()
 
         self.regMarker = regMarker
         self.accept()
@@ -129,7 +129,7 @@ class WTV_Markers(QTVarios.WDialogo):
         titulo = _("Markers")
         icono = Iconos.Markers()
         extparam = "markers"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.owner = owner
 

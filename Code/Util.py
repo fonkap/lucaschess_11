@@ -33,7 +33,7 @@ def xor_crypt(data, key):
 def nuevoID():
     d = datetime.datetime.now()
     r = random.randint
-    t = (((((r(1, d.year) * 12 + r(1, d.month)) * 31 + d.day) * 24 + d.hour) * 60 + d.minute) * 60 + d.second) * 1000 + r(1, d.microsecond + 737) / 1000
+    t = (((((r(1, d.year) * 12 + r(1, d.month)) * 31 + d.day) * 24 + d.hour) * 60 + d.minute) * 60 + d.second) * 1000 + r(1, d.microsecond + 737) // 1000
     return t
 
 

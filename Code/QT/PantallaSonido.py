@@ -546,6 +546,7 @@ class WSonidos(QTVarios.WDialogo):
         # self.liSonidos.append( [ c+f, c+f, None ] )
 
 
+#TODO clase sin usar? comprobar
 class WSonidosGuion(QTVarios.WDialogo):
     def __init__(self, owner, db):
 
@@ -556,7 +557,7 @@ class WSonidosGuion(QTVarios.WDialogo):
         titulo = _("Custom sounds")
         icono = Iconos.S_Play()
         extparam = "sounds"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         liAcciones = ((_("Close"), Iconos.MainMenu(), "terminar"), None,

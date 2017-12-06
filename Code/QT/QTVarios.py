@@ -385,7 +385,7 @@ def fsvg2ico(fsvg, tam):
 def svg2pm(svg, tam):
     pm = QtGui.QPixmap(tam, tam)
     pm.fill(QtCore.Qt.transparent)
-    qb = QtCore.QByteArray(svg)
+    qb = QtCore.QByteArray(svg.encode("utf-8"))
     render = QtSvg.QSvgRenderer(qb)
     painter = QtGui.QPainter()
     painter.begin(pm)

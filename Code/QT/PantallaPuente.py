@@ -376,7 +376,7 @@ class WPuenteBase(QTVarios.WDialogo):
 class WPuente(QTVarios.WDialogo):
     def __init__(self, owner, fenIni, fenFin, liMV, info):
 
-        QTVarios.WDialogo.__init__(self, owner, _("Moves between two positions"), Iconos.Puente(), "puente")
+        super().__init__(parent=owner, titulo=_("Moves between two positions"), icono=Iconos.Puente(), extparam="puente")
 
         self.owner = owner
         self.historico = owner.historico

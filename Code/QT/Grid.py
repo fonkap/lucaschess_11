@@ -163,7 +163,8 @@ class ControlGrid(QtCore.QAbstractTableModel):
             nfila = index.row()
             self.wParent.gridPonValor(self.grid, nfila, columna, valor)
             index2 = self.createIndex(nfila, 1)
-            self.emit(QtCore.SIGNAL('dataChanged(const QModelIndex &,const QModelIndex &)'), index2, index2)
+            # self.emit(QtCore.SIGNAL('dataChanged(const QModelIndex &,const QModelIndex &)'), index2, index2)
+            self.dataChanged.emit(index2, index2)
 
         return True
 

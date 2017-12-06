@@ -211,7 +211,7 @@ class WHorsesBase(QTVarios.WDialogo):
 class WHorses(QTVarios.WDialogo):
     def __init__(self, owner, test, procesador, titulo, icono):
 
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, "horses")
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam="horses")
 
         self.historico = owner.historico
         self.procesador = owner.procesador

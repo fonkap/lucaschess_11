@@ -16,7 +16,7 @@ class WEtiquetasPGN(QTVarios.WDialogo):
         icono = Iconos.PGN()
         extparam = "editlabels"
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, icono, extparam)
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=icono, extparam=extparam)
         self.procesador = procesador
         self.creaLista(liPGN)
 

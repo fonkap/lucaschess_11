@@ -213,7 +213,7 @@ def polyglotUnir(owner):
         return
 
 
-class WBooks(QtGui.QDialog):
+class WBooks(QtWidgets.QDialog):
     def __init__(self, procesador):
 
         wParent = procesador.pantalla
@@ -221,7 +221,7 @@ class WBooks(QtGui.QDialog):
         self.procesador = procesador
         self.siCambios = False
 
-        QtGui.QDialog.__init__(self, wParent)
+        QtWidgets.QDialog.__init__(self, wParent)
 
         self.setWindowTitle(_("Training with a book"))
         self.setWindowIcon(Iconos.Libros())

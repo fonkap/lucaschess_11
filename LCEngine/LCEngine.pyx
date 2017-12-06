@@ -500,10 +500,12 @@ def fen2fenM2(fen):
     sp2 = fen.rfind(" ", 0, sp1)
     return fen[:sp2]
 
-
-def makePV(pv):
+def setFenInicial():
     inifen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     setFen(inifen)
+
+def makePV(pv):
+    setFenInicial()
     if pv:
         for move in pv.split(" "):
             makeMove(move)

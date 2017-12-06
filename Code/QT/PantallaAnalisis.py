@@ -175,8 +175,8 @@ class WAnalisisGraph(QTVarios.WDialogo):
             self.htotal[ta].setPointActive(fila)
             self.htotal[ta+3].setPointActive(fila)
 
-        dic, siBlancas = jg.posicion.capturas()
-        self.capturas.pon(dic)
+            dic, siBlancas = jg.posicion.capturas()
+            self.capturas.pon(dic)
 
     def gridDobleClick(self, grid, fila, columna):
         jg = self.dicLiJG[grid.id][fila]

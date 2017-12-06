@@ -12,7 +12,7 @@ class MarkerSC(TabBloques.BloqueEspSC):
 
         self.distBordes = 0.20 * bloqueMarker.anchoCasilla
 
-        self.pixmap = QtSvg.QSvgRenderer(QtCore.QByteArray(bloqueMarker.xml))
+        self.pixmap = QtSvg.QSvgRenderer(QtCore.QByteArray(bloqueMarker.xml.encode("utf8")))
 
         self.posicion2xy()
 
@@ -23,7 +23,7 @@ class MarkerSC(TabBloques.BloqueEspSC):
 
         self.siRecuadro = False
         if siEditando:
-            self.setAcceptsHoverEvents(True)
+            self.setAcceptHoverEvents(True)
 
     def hoverEnterEvent(self, event):
         self.siRecuadro = True

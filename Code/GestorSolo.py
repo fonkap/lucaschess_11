@@ -518,7 +518,7 @@ class GestorSolo(Gestor.Gestor):
             self.guardarHistorico(fichero)
             return True
 
-        except:
+        except Exception as e:
             QTUtil2.mensError(self.pantalla, "%s : %s" % (_("Unable to save"), fichero))
             return False
 

@@ -126,7 +126,7 @@ class WTV_Marco(QtWidgets.QDialog):
         pm = self.liEjemplos[0].pixmap()
         bf = QtCore.QBuffer()
         pm.save(bf, "PNG")
-        self.regMarco.png = str(bf.buffer())
+        self.regMarco.png = bf.buffer().data()
 
         self.accept()
 
@@ -137,7 +137,7 @@ class WTV_Marcos(QTVarios.WDialogo):
         titulo = _("Boxes")
         icono = Iconos.Marcos()
         extparam = "marcos"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.owner = owner
 

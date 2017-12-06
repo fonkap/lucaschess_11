@@ -150,7 +150,7 @@ class WTV_SVG(QtWidgets.QDialog):
         pm = self.liEjemplos[0].pixmapX()
         bf = QtCore.QBuffer()
         pm.save(bf, "PNG")
-        self.regSVG.png = str(bf.buffer())
+        self.regSVG.png = bf.buffer().data()
 
         self.accept()
 
@@ -161,7 +161,7 @@ class WTV_SVGs(QTVarios.WDialogo):
         titulo = _("Images")
         icono = Iconos.SVGs()
         extparam = "svgs"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.owner = owner
 

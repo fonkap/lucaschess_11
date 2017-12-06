@@ -210,7 +210,7 @@ class WMap(QTVarios.WDialogo):
         clave = oColumna.clave
         return self.workmap.dato(fila, clave) if grid.id == "W" else self.workmap.db.dato(fila, clave)
 
-
+#TODO sin testear!
 class WUnSTSMap(QTVarios.WDialogo):
     def __init__(self, owner):
 
@@ -219,7 +219,7 @@ class WUnSTSMap(QTVarios.WDialogo):
         self.configuracion = self.procesador.configuracion
         self.alm = self.workmap.getAim()
 
-        QTVarios.WDialogo.__init__(self, owner, _("STS: Strategic Test Suite"), Iconos.STS(), "stsmap")
+        super().__init__(parent=owner, titulo=_("STS: Strategic Test Suite"), icono=Iconos.STS(), extparam="stsmap")
 
         # Tablero
         confTablero = self.configuracion.confTablero("STSMAP", 48)

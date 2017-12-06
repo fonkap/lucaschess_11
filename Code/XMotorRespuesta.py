@@ -1077,8 +1077,7 @@ class MRespuestaMotor:
         # Si en la depth que se encontró era menor que 4
         dic = self.dicDepth
         if dic:
-            li = dic.keys()
-            li.sort()
+            li = sorted(dic.keys())
             firstDepth = 0
             mv = rm.movimiento()
             for depth in li:
@@ -1086,7 +1085,7 @@ class MRespuestaMotor:
                 if mv in dicDepth:
                     pts = dicDepth[mv]
                     ok = True
-                    for m, v in dicDepth.iteritems():
+                    for m, v in dicDepth.items():
                         if v > pts:
                             ok = False
                             break

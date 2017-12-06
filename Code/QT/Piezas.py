@@ -210,7 +210,7 @@ class WBlindfold(QTVarios.WDialogo):
         titulo = _("Blindfold") + " - " + _("Configuration")
         icono = Iconos.Ojo()
         extparam = "wblindfold"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.config = BlindfoldConfig(nomPiezasOri)
         self.nomPiezasOri = nomPiezasOri

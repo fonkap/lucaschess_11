@@ -1,4 +1,4 @@
-# import StringIO
+from io import BytesIO
 import collections
 import copy
 import os
@@ -1592,7 +1592,7 @@ class Tablero(QtWidgets.QGraphicsView):
         if self.flechaSC:
             self.flechaSC.hide()
 
-        pm = QtGui.QPixmap.grabWidget(self)
+        pm = self.grab()
         thumb = pm.scaled(ancho, ancho, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
 
         # mostramos piezas+flechas
@@ -1609,9 +1609,9 @@ class Tablero(QtWidgets.QGraphicsView):
         xbuffer.open(QtCore.QIODevice.WriteOnly)
         thumb.save(xbuffer, 'PNG')
 
-        string_io = StringIO.StringIO(byte_array)
-        contents = string_io.getvalue()
-        string_io.close()
+        bytes_io = BytesIO(byte_array)
+        contents = bytes_io.getvalue()
+        bytes_io.close()
 
         return contents
 

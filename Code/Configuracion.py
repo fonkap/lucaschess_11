@@ -372,7 +372,7 @@ class Configuracion:
         for motor in listaMotoresExt.liMotores:
             if motor.multiPV > 10:
                 li.append((motor.alias, motor.alias + " *"))
-        for clave, cm in self.dicRivales.iteritems():
+        for clave, cm in self.dicRivales.items():
             if cm.puedeSerTutor():
                 li.append((clave, cm.nombre))
         li = sorted(li, key=operator.itemgetter(1))

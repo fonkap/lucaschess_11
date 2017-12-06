@@ -49,7 +49,7 @@ class WHistorialBMT(QTVarios.WDialogo):
         icono = Iconos.Historial()
         titulo = _("Track record") + ": " + dbf.NOMBRE
         extparam = "bmthistorial"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         # Toolbar
         tb = Controles.TBrutina(self)

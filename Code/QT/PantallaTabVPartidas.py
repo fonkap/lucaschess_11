@@ -18,14 +18,14 @@ def texto2partida(owner, texto):
         return None
     return pgn.partida
 
-
+#TODO clase sin usar? comprobar
 class W_EligeMovimientos(QTVarios.WDialogo):
     def __init__(self, owner, partida):
 
         titulo = _("Choose moves")
         icono = Iconos.Camara()
         extparam = "tabvpart"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.owner = owner
         self.partida = partida

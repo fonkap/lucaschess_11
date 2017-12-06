@@ -195,7 +195,7 @@ class WTV_Flecha(QtWidgets.QDialog):
         pm = TabFlechas.pixmapArrow(bf, 32, 32)
         buf = QtCore.QBuffer()
         pm.save(buf, "PNG")
-        regFlecha.png = str(buf.buffer())
+        regFlecha.png = buf.buffer().data()
         self.regFlecha = regFlecha
         self.accept()
 
@@ -206,7 +206,7 @@ class WTV_Flechas(QTVarios.WDialogo):
         titulo = _("Arrows")
         icono = Iconos.Flechas()
         extparam = "flechas"
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.owner = owner
 

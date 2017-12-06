@@ -22,7 +22,7 @@ class SVGSC(TabBloques.BloqueEspSC):
 
         self.siRecuadro = False
         if siEditando:
-            self.setAcceptsHoverEvents(True)
+            self.setAcceptHoverEvents(True)
 
     def hoverEnterEvent(self, event):
         self.siRecuadro = True
@@ -39,7 +39,7 @@ class SVGSC(TabBloques.BloqueEspSC):
     def reset(self):
         self.posicion2xy()
         bm = self.bloqueDatos
-        self.pixmap = QtSvg.QSvgRenderer(QtCore.QByteArray(bm.xml))
+        self.pixmap = QtSvg.QSvgRenderer(QtCore.QByteArray(bm.xml.encode("utf8")))
         self.setOpacity(bm.opacidad)
         self.setZValue(bm.posicion.orden)
         self.update()

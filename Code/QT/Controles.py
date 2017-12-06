@@ -846,6 +846,8 @@ class TBrutina(QtWidgets.QToolBar):
 class TipoLetra(QtGui.QFont):
     def __init__(self, nombre="", puntos=8, peso=50, siCursiva=False, siSubrayado=False, siTachado=False, txt=None):
         QtGui.QFont.__init__(self)
+        if nombre == "":
+            nombre = QtWidgets.QApplication.instance().font().family()
         if txt is None:
             cursiva = 1 if siCursiva else 0
             subrayado = 1 if siSubrayado else 0

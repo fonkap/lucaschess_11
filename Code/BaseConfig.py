@@ -375,7 +375,7 @@ class ConfigTabTema:
         self._png64Fondo = ""
         self._fActivo = self.flechaActivoDefecto()
         self._fRival = self.flechaRivalDefecto()
-        self._png64Thumb = ""
+        self._png64Thumb = b""
         self._extendedColor = False
 
     def flechaDefecto(self):
@@ -457,7 +457,7 @@ class ConfigTabTema:
                + self._png64Fondo + "#" \
                + Util.dic2txt(self._fActivo).decode("latin1") + "#" \
                + Util.dic2txt(self._fRival).decode("latin1") + "#" \
-               + self._png64Thumb + "#" \
+               + self._png64Thumb.decode("latin1") + "#" \
                + ("1" if self._extendedColor else "0") + "#"
         return result
 
@@ -481,17 +481,18 @@ class ConfigTabTema:
                     falt = Util.txt2dic(li[7])
                     if nli >= 9:
                         self._png64Blancas = li[8]
-                        self._png64Negras = li[9]
-                        self._transBlancas = int(li[10])
-                        self._transNegras = int(li[11])
-                        self._colorFondo = int(li[12])
-                        self._png64Fondo = li[13]
-                        self._fActivo = Util.txt2dic(li[14])
-                        self._fRival = Util.txt2dic(li[15])
-                        if nli >= 17:
-                            self._png64Thumb = li[16]
-                            if nli >= 18:
-                                self._extendedColor = li[17] == "1"
+                        if nli >= 10:
+                            self._png64Negras = li[9]
+                            self._transBlancas = int(li[10])
+                            self._transNegras = int(li[11])
+                            self._colorFondo = int(li[12])
+                            self._png64Fondo = li[13]
+                            self._fActivo = Util.txt2dic(li[14])
+                            self._fRival = Util.txt2dic(li[15])
+                            if nli >= 17:
+                                self._png64Thumb = li[16].encode("latin1")
+                                if nli >= 18:
+                                    self._extendedColor = li[17] == "1"
 
         if falt is None:
             falt = copy.deepcopy(self._fTransicion)

@@ -49,7 +49,7 @@ class WTabDirVisual(QTVarios.WDialogo):
                       (_("Save"), Iconos.Grabar(), self.grabar),
                       (_("New"), Iconos.Nuevo(), self.gnuevo),
                       (_("Insert"), Iconos.Insertar(), self.ginsertar),
-                      (_("Remove"), Iconos.Borrar(), self.gborrar), None,
+                      (_("Remove"), Iconos.Borrar(), lambda: self.gborrar(None)), None,
                       (_("Up"), Iconos.Arriba(), self.garriba),
                       (_("Down"), Iconos.Abajo(), self.gabajo), None,
                       (_("Mark"), Iconos.Marcar(), self.gmarcar), None,
@@ -809,7 +809,6 @@ class WTabDirVisual(QTVarios.WDialogo):
             lb_sel = self.selectBanda.seleccionada
             if lb_sel:
                 nada, tp, nid = lb_sel.id.split("_")
-                nid = int(nid)
                 if tp == TabVisual.TP_FLECHA:
                     self.siGrabarInicio = self.siGrabar
                 self.datos_new = self.creaTarea(tp, nid, origin+origin, -1)

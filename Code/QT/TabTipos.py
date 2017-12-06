@@ -275,7 +275,7 @@ class Pizarra(QtWidgets.QWidget):
         self.pbDown = Controles.PB(self, "", self.goDown).ponIcono(Iconos.Abajo()).anchoFijo(24)
         self.pbClose = Controles.PB(self, "", self.borrar).ponIcono(Iconos.CancelarPeque()).anchoFijo(24)
 
-        cajon = QtGui.QWidget(self)
+        cajon = QtWidgets.QWidget(self)
         ly = Colocacion.H()
         ly.control(self.pbLeft).control(self.pbDown)
         ly.control(self.pbRight).control(self.pbClose).margen(0)

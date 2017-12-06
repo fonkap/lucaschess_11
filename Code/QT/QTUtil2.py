@@ -89,8 +89,8 @@ def salvaFichero(pantalla, titulo, carpeta, filtro, siConfirmarSobreescritura=Tr
     else:
         resp = QtWidgets.QFileDialog.getSaveFileName(pantalla, titulo, carpeta, filtro,
                                                  options=QtWidgets.QFileDialog.DontConfirmOverwrite)
-        if resp : #+pyside
-            resp = resp[0] #+pyside
+    if resp : #+pyside
+        resp = resp[0] #+pyside
     return resp
 
 
