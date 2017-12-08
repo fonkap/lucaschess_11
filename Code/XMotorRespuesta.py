@@ -291,7 +291,6 @@ class MRespuestaMotor:
         setYa = set()
         dic = self.dicMultiPV
         keys = sorted(dic.keys())
-        #TODO: comprobar
         # keys.sort(key= lambda k: int(k))
         for k in keys:
             rm = dic[k]
@@ -299,7 +298,7 @@ class MRespuestaMotor:
             if mov not in setYa:
                 setYa.add(mov)
                 li.append(rm)
-        self.liMultiPV = li #sorted(li, key=lambda rm: -rm.puntosABS())  # de mayor a menor
+        self.liMultiPV = sorted(li, key=lambda rm: -rm.puntosABS())  # de mayor a menor
 
     def __len__(self):
         return len(self.liMultiPV)

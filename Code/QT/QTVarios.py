@@ -134,6 +134,7 @@ class WDialogo(QtWidgets.QDialog, WSave):
 
 class WWidget(QtWidgets.QWidget, WSave):
     def __init__(self, **kwds):
+        #TODO: ayuda al seguimiento de la ejecución, quitar.
         print("creating QWidget : ", self.__class__.__name__)
         super().__init__(flag=QtCore.Qt.Widget, **kwds)
 

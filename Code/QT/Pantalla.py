@@ -151,49 +151,42 @@ class Pantalla():
         self.ponTitulo()
 
     def changeEvent(self, event):
-        try :
-            QtWidgets.QWidget.changeEvent(self, event)
-            if event.type() != QtCore.QEvent.WindowStateChange:
-                return
+        QtWidgets.QWidget.changeEvent(self, event)
+        if event.type() != QtCore.QEvent.WindowStateChange:
+            return
 
-            nue = EstadoWindow(self.windowState())
-            ant = EstadoWindow(event.oldState())
+        nue = EstadoWindow(self.windowState())
+        ant = EstadoWindow(event.oldState())
 
-            ct = self.tablero.confTablero
+        ct = self.tablero.confTablero
 
-            if getattr(self.gestor, "siPresentacion", False):
-                self.gestor.presentacion(False)
+        if getattr(self.gestor, "siPresentacion", False):
+            self.gestor.presentacion(False)
 
-            if nue.fullscreen:
-                self.base.tb.hide()
-                self.tablero.siF11 = True
-                self.antiguoAnchoPieza = 1000 if ant.maximizado else ct.anchoPieza()
-                self.tablero.maximizaTam(True)
-            else:
-                if ant.fullscreen:
-                    self.base.tb.show()
-                    self.tablero.normalTam(self.antiguoAnchoPieza)
-                    self.ajustaTam()
-                    if self.antiguoAnchoPieza == 1000:
-                        self.setWindowState(QtCore.Qt.WindowMaximized)
-                elif nue.maximizado:
-                    self.antiguoAnchoPieza = ct.anchoPieza()
-                    self.tablero.maximizaTam(False)
-                elif ant.maximizado:
-                    if not self.antiguoAnchoPieza or self.antiguoAnchoPieza == 1000:
-                        self.antiguoAnchoPieza = self.tablero.calculaAnchoMXpieza()
-                    self.tablero.normalTam(self.antiguoAnchoPieza)
-                    self.ajustaTam()
-                    # ct.anchoPieza(self.antiguoAnchoPieza)
-                    # ct.guardaEnDisco()
-                    # self.tablero.ponAncho()
-                    # self.ajustaTam()
-        #TODO temporary, remove
-        except Exception as e:
-             import traceback
-             import sys
-             traceback.print_exc(file=sys.stderr)
-             raise e
+        if nue.fullscreen:
+            self.base.tb.hide()
+            self.tablero.siF11 = True
+            self.antiguoAnchoPieza = 1000 if ant.maximizado else ct.anchoPieza()
+            self.tablero.maximizaTam(True)
+        else:
+            if ant.fullscreen:
+                self.base.tb.show()
+                self.tablero.normalTam(self.antiguoAnchoPieza)
+                self.ajustaTam()
+                if self.antiguoAnchoPieza == 1000:
+                    self.setWindowState(QtCore.Qt.WindowMaximized)
+            elif nue.maximizado:
+                self.antiguoAnchoPieza = ct.anchoPieza()
+                self.tablero.maximizaTam(False)
+            elif ant.maximizado:
+                if not self.antiguoAnchoPieza or self.antiguoAnchoPieza == 1000:
+                    self.antiguoAnchoPieza = self.tablero.calculaAnchoMXpieza()
+                self.tablero.normalTam(self.antiguoAnchoPieza)
+                self.ajustaTam()
+                # ct.anchoPieza(self.antiguoAnchoPieza)
+                # ct.guardaEnDisco()
+                # self.tablero.ponAncho()
+                # self.ajustaTam()
 
     def muestraVariantes(self, titulo):
         flags = QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | \
