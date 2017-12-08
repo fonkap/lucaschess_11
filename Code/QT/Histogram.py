@@ -423,7 +423,7 @@ class Histogram(QtWidgets.QGraphicsView):
             menu.opcion("file", _("Save") + " png", Iconos.GrabarFichero())
             resp = menu.lanza()
             if resp:
-                pm = QtGui.QPixmap.grabWidget(self)
+                pm = self.grab()
                 if resp == "clip":
                     QTUtil.ponPortapapeles(pm, tipo="p")
                 else:

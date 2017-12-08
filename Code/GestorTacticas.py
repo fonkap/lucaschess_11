@@ -553,7 +553,7 @@ class GestorTacticas(Gestor.Gestor):
         jg = self.partida.last_jg()
         mv = jg.movimiento()
         fenM2 = jg.posicion.fenM2()
-        for k, liOpciones in self.dicDirigidoFenM2.iteritems():
+        for k, liOpciones in self.dicDirigidoFenM2.items():
             for siMain, jg1 in liOpciones:
                 if jg1.posicion.fenM2() == fenM2 and jg1.movimiento() == mv:
                     if jg1.critica and not jg.critica:

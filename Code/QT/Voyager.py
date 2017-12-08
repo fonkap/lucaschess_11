@@ -517,11 +517,11 @@ class WPosicion(QtWidgets.QWidget):
                         QTUtil2.mensError(self, _("This scanner already exists."))
                         continue
                     try:
-                        with open(fich, "wb") as f:
+                        with open(fich, "w") as f:
                             f.write("")
                         self.scanner_reread(name)
                         return
-                    except:
+                    except Exception as e:
                         QTUtil2.mensError(self, _("This name is not valid to create a scanner file."))
                         continue
             return
@@ -532,7 +532,10 @@ class WPosicion(QtWidgets.QWidget):
 
     def scanner_change(self):
         fich_scanner = self.cb_scanner_select.valor()
-        self.vars_scanner.scanner = os.path.basename(fich_scanner)[:-4]
+        if fich_scanner:
+            self.vars_scanner.scanner = os.path.basename(fich_scanner)[:-4]
+        else:
+            self.vars_scanner.scanner = None
         self.scanner_read()
 
     def scanner_reread(self, label_default):
@@ -579,7 +582,7 @@ class WPosicion(QtWidgets.QWidget):
 
         tam = len(self.li_scan_pch)
         if tam > self.n_scan_last_save:
-            with open(fich_scanner, "ab") as q:
+            with open(fich_scanner, "a") as q:
                 for x in range(self.n_scan_last_save, tam):
                     q.write(str(self.li_scan_pch[x]).replace(" ", ""))
                     q.write("\n")

@@ -1555,7 +1555,7 @@ class Tablero(QtWidgets.QGraphicsView):
                 self.scriptSC_menu.hide()
 
         if not (siCtrl or siAlt):
-            pm = QtGui.QPixmap.grabWidget(self)
+            pm = self.grab()
         else:
             x = 0
             y = 0
@@ -1571,7 +1571,7 @@ class Tablero(QtWidgets.QGraphicsView):
                 y += self.margenCentro
                 w -= self.margenCentro*2
                 h -= self.margenCentro*2
-            pm = QtGui.QPixmap.grabWidget(self, x, y, w, h)
+            pm = self.grab(QtCore.QRect(x, y, w, h))
         if fichero is None:
             QTUtil.ponPortapapeles(pm, tipo="p")
         else:

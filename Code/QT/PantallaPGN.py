@@ -838,9 +838,7 @@ class EM_SQL(Controles.EM):
 
 class WFiltrarRaw(QTVarios.WDialogo):
     def __init__(self, wParent, oColumnas, where):
-        QtWidgets.QDialog.__init__(self, wParent)
-
-        QTVarios.WDialogo.__init__(self, wParent, _("Filter"), Iconos.Filtrar(), "rawfilter")
+        super().__init__(parent=wParent, titulo=_("Filter"), icono=Iconos.Filtrar(), extparam="rawfilter")
 
         self.where = ""
         liCampos = [(x.cabecera, x.clave) for x in oColumnas.liColumnas if x.clave != "numero"]

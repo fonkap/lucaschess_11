@@ -14,8 +14,8 @@ class Scanner_vars:
     def read(self):
         dic = Util.iniBase8dic(self.fich_vars)
         self.opacity = float(dic.get("OPACITY", 0.3))
-        self.last_width = int(dic.get("LAST_WIDTH", 0))
-        self.last_height = int(dic.get("LAST_HEIGHT", self.last_width))
+        self.last_width = int(float(dic.get("LAST_WIDTH", 0)))
+        self.last_height = int(float(dic.get("LAST_HEIGHT", self.last_width)))
         self.tolerance = int(dic.get("TOLERANCE", 6))
         self.scanner = dic.get("SCANNER", "")
         self.ask = dic.get("ASK", "True") == "True"
@@ -73,7 +73,7 @@ class Scanner(QtWidgets.QDialog):
     def setPath(self, point):
         width = point.x() - self.x
         height = point.y() - self.y
-        siAltModifier = (int(QtGui.QApplication.keyboardModifiers()) & QtCore.Qt.AltModifier) > 0
+        siAltModifier = (int(QtWidgets.QApplication.keyboardModifiers()) & QtCore.Qt.AltModifier) > 0
         if siAltModifier:
             if width > 0 and height > 0:
                 self.width = width

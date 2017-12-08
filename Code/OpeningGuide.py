@@ -271,7 +271,6 @@ class OpeningGuide:
         self.dicPtes = {}
         self.nomFichero = nomFichero
         self.conexion = sqlite3.connect(nomFichero)
-        self.conexion.text_factory = lambda x: unicode(x, "utf-8", "ignore")
         atexit.register(self.cerrar)
         self.tablaDatos = "GUIDE"
 

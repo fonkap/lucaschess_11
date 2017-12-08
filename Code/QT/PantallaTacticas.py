@@ -19,7 +19,7 @@ def consultaHistorico(pantalla, tactica, icono):
 class WHistoricoTacticas(QTVarios.WDialogo):
     def __init__(self, pantalla, tactica, icono):
 
-        QTVarios.WDialogo.__init__(self, pantalla, tactica.titulo, icono, "histoTacticas")
+        super().__init__(parent=pantalla, titulo=tactica.titulo, icono=icono, extparam="histoTacticas")
 
         self.liHistorico = tactica.historico()
         self.tactica = tactica
@@ -545,8 +545,7 @@ class WConfTactics(QtWidgets.QWidget):
 class WEditaTactica(QTVarios.WDialogo):
     def __init__(self, owner, tactica, ncopia):
 
-        QTVarios.WDialogo.__init__(self, owner, _X(_("Configuration of %1"), tactica.titulo), Iconos.Tacticas(),
-                                   "editaTactica")
+        super().__init__(parent=owner, titulo=_X(_("Configuration of %1"), tactica.titulo), icono=Iconos.Tacticas(), extparam="editaTactica")
 
         self.tactica = tactica
 

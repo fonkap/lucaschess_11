@@ -1,6 +1,7 @@
 from PyQt5 import QtGui, QtWidgets
 
 from Code import BookGuide
+from Code import OpeningGuide
 from Code import DBgames
 from Code.QT import Colocacion
 from Code.QT import Controles

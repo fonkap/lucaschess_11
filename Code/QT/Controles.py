@@ -37,7 +37,7 @@ class ED(QtWidgets.QLineEdit):
         return self
 
     def capturaIntro(self, rutina):
-        self.connect(self, QtCore.SIGNAL("returnPressed()"), rutina)
+        self.returnPressed.connect(rutina)
         return self
 
     def capturaCambiado(self, rutina):

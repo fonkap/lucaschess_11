@@ -136,7 +136,7 @@ class Pantalla():
 
     def muestra(self):
         flags = QtCore.Qt.Dialog if self.owner else QtCore.Qt.Widget
-        flags |= QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint
+        flags |= QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowCloseButtonHint
         if self.onTop:
             flags |= QtCore.Qt.WindowStaysOnTopHint
 
