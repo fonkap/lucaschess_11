@@ -130,6 +130,7 @@ class EtiquetaPGN(QtWidgets.QStyledItemDelegate):
             if liNAGs:
                 li = []
                 for x in liNAGs:
+                    x = str(x)
                     if x in dicNG:
                         li.append(dicNG[x])
                 liNAGs = li
