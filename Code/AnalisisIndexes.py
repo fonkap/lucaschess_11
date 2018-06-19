@@ -1,13 +1,12 @@
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from Code import VarGen
 from Code import Partida
 
 
 def calc_formula(cual, cp, mrm):  # , limit=200.0):
-    f = open("./IntFiles/Formulas/%s.formula" % cual, "r")
-    formula = f.read()
-    f.close()
+    with open("./IntFiles/Formulas/%s.formula" % cual, "r") as f:
+        formula = f.read()
     piew = pieb = 0
     mat = 0.0
     matw = matb = 0.0
@@ -283,7 +282,7 @@ def tp_gamestage(cp, mrm):
     return _("Game stage"), calc_gamestage(cp, mrm), get_gamestage(cp, mrm)
 
 
-def genIndexes(partida, elos, alm):
+def genIndexes(partida, elos, elosFORM, alm):
     average = {True: 0, False: 0}
     domination = {True: 0, False: 0}
     complexity = {True: 0.0, False: 0.0}
@@ -364,11 +363,21 @@ def genIndexes(partida, elos, alm):
     txt += plantillaC % (_("Pieces activity"), xac(piecesactivity[True]), xac(piecesactivity[False]), xac(piecesactivityT))
     txt += plantillaC % (_("Exchange tendency"), xac(exchangetendency[True]), xac(exchangetendency[False]), xac(exchangetendencyT))
     txt += plantillaL % ( "%", alm.porcW, prc, alm.porcB, prc, alm.porcT, prc)
-    txt += plantillaC % ( _("Elo performance"), elos[True][Partida.ALLGAME], elos[False][Partida.ALLGAME], elos[None][Partida.ALLGAME])
 
+    # txt += plantillaC % ( _("Elo performance"), elos[True][Partida.ALLGAME], elos[False][Partida.ALLGAME], elos[None][Partida.ALLGAME])
+    # for std, tit in ((Partida.OPENING, _("Opening")), (Partida.MIDDLEGAME, _("Middle game")), (Partida.ENDGAME, _("End game"))):
+    #     if elos[None][std]:
+    #         txt += plantillaC % ( tit, int(elos[True][std]), int(elos[False][std]), int(elos[None][std]))
+    #
+    # txt += plantillaC % ("Elo WITH FORMULA", elosFORM[True][Partida.ALLGAME], elosFORM[False][Partida.ALLGAME], elosFORM[None][Partida.ALLGAME])
+    # for std, tit in ((Partida.OPENING, _("Opening")), (Partida.MIDDLEGAME, _("Middle game")), (Partida.ENDGAME, _("End game"))):
+    #     if elos[None][std]:
+    #         txt += plantillaC % ( tit, int(elosFORM[True][std]), int(elosFORM[False][std]), int(elosFORM[None][std]))
+
+    txt += plantillaC % ( _("Elo performance"), elosFORM[True][Partida.ALLGAME], elosFORM[False][Partida.ALLGAME], elosFORM[None][Partida.ALLGAME])
     for std, tit in ((Partida.OPENING, _("Opening")), (Partida.MIDDLEGAME, _("Middle game")), (Partida.ENDGAME, _("End game"))):
         if elos[None][std]:
-            txt += plantillaC % ( tit, int(elos[True][std]), int(elos[False][std]), int(elos[None][std]))
+            txt += plantillaC % ( tit, int(elosFORM[True][std]), int(elosFORM[False][std]), int(elosFORM[None][std]))
 
     txtHTML = '<table border="1" cellpadding="5" cellspacing="1" >%s%s</table>' % (cab, txt)
 

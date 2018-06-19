@@ -1,7 +1,7 @@
 # Stockfish, a UCI chess playing engine derived from Glaurung 2.1
 # Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
 # Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad
-# Copyright (C) 2015-2016 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
+# Copyright (C) 2015-2018 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
 #
 # Stockfish is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,15 +21,13 @@
 ### Section 1. General Configuration
 ### ==========================================================================
 
-### Establish the operating system name
-KERNEL = $(shell uname -s)
-ifeq ($(KERNEL),Linux)
-	OS = $(shell uname -o)
-endif
-
 ### Executable name
-EXE = SF-McBrain-27
-# bench =  5127083
+ifeq ($(COMP),mingw)
+EXE = McBrain-91.exe
+else
+EXE = McBrain-91
+endif
+##### bench nodes:  6045167
 
 ### Installation dir definitions
 PREFIX = /usr/local
@@ -37,12 +35,17 @@ BINDIR = $(PREFIX)/bin
 
 ### Built-in benchmark for pgo-builds
 PGOBENCH = ./$(EXE) bench
-PGOBENCH2 = ./$(EXE) bench 16 2 10
 
 ### Object files
 OBJS = benchmark.o bitbase.o bitboard.o endgame.o evaluate.o main.o \
 	material.o misc.o movegen.o movepick.o pawns.o position.o psqt.o \
-	search.o thread.o timeman.o tt.o uci.o ucioption.o tbprobe.o tzbook.o
+	search.o thread.o timeman.o tt.o uci.o ucioption.o polybook.o syzygy/tbprobe.o
+
+### Establish the operating system name
+KERNEL = $(shell uname -s)
+ifeq ($(KERNEL),Linux)
+	OS = $(shell uname -o)
+endif
 
 ### ==========================================================================
 ### Section 2. High-level Configuration
@@ -143,7 +146,7 @@ endif
 
 ### 3.1 Selecting compiler (default = gcc)
 
-CXXFLAGS += -Wall -Wcast-qual -fno-exceptions -fno-rtti -std=c++11 $(EXTRACXXFLAGS)
+CXXFLAGS += -Wall -Wcast-qual -fno-exceptions -std=c++11 $(EXTRACXXFLAGS)
 DEPENDFLAGS += -std=c++11
 LDFLAGS += $(EXTRALDFLAGS)
 
@@ -154,7 +157,7 @@ endif
 ifeq ($(COMP),gcc)
 	comp=gcc
 	CXX=g++
-	CXXFLAGS += -pedantic -Wextra -Wshadow -static-libstdc++
+	CXXFLAGS += -pedantic -Wextra -Wshadow
 
 	ifeq ($(ARCH),armv7)
 		ifeq ($(OS),Android)
@@ -206,9 +209,12 @@ ifeq ($(COMP),clang)
 	comp=clang
 	CXX=clang++
 	CXXFLAGS += -pedantic -Wextra -Wshadow
-ifneq ($(KERNEL),Darwin)
-	LDFLAGS += -latomic
-endif
+
+	ifneq ($(KERNEL),Darwin)
+	ifneq ($(KERNEL),OpenBSD)
+		LDFLAGS += -latomic
+	endif
+	endif
 
 	ifeq ($(ARCH),armv7)
 		ifeq ($(OS),Android)
@@ -279,37 +285,14 @@ ifeq ($(optimize),yes)
 	CXXFLAGS += -O3
 
 	ifeq ($(comp),gcc)
-
-		ifeq ($(KERNEL),Darwin)
-			ifeq ($(arch),i386)
-				CXXFLAGS += -mdynamic-no-pic
-			endif
-			ifeq ($(arch),x86_64)
-				CXXFLAGS += -mdynamic-no-pic
-			endif
-		endif
-
 		ifeq ($(OS), Android)
 			CXXFLAGS += -fno-gcse -mthumb -march=armv7-a -mfloat-abi=softfp
 		endif
 	endif
-
-	ifeq ($(comp),icc)
+	
+	ifeq ($(comp),$(filter $(comp),gcc clang icc))
 		ifeq ($(KERNEL),Darwin)
 			CXXFLAGS += -mdynamic-no-pic
-		endif
-	endif
-
-	ifeq ($(comp),clang)
-		ifeq ($(KERNEL),Darwin)
-				CXXFLAGS += -flto
-				LDFLAGS += $(CXXFLAGS)
-			ifeq ($(arch),i386)
-				CXXFLAGS += -mdynamic-no-pic
-			endif
-			ifeq ($(arch),x86_64)
-				CXXFLAGS += -mdynamic-no-pic
-			endif
 		endif
 	endif
 endif
@@ -349,24 +332,20 @@ endif
 ### 3.8 Link Time Optimization, it works since gcc 4.5 but not on mingw under Windows.
 ### This is a mix of compile and link time options because the lto link phase
 ### needs access to the optimization flags.
-ifeq ($(comp),gcc)
-	ifeq ($(optimize),yes)
-	ifeq ($(debug),no)
-		CXXFLAGS += -flto -fno-rtti
+ifeq ($(optimize),yes)
+ifeq ($(debug), no)
+	ifeq ($(comp),$(filter $(comp),gcc clang))
+		CXXFLAGS += -flto
 		LDFLAGS += $(CXXFLAGS)
 	endif
-	endif
-endif
 
-ifeq ($(comp),mingw)
+	ifeq ($(comp),mingw)
 	ifeq ($(KERNEL),Linux)
-	ifeq ($(optimize),yes)
-	ifeq ($(debug),no)
 		CXXFLAGS += -flto
 		LDFLAGS += $(CXXFLAGS)
 	endif
 	endif
-	endif
+endif
 endif
 
 ### 3.9 Android 5 can only run position independent executables. Note that this
@@ -433,28 +412,21 @@ help:
 
 build: config-sanity
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) all
-	strip $(EXE)
-	cp $(EXE) /Users/michaelbyrne/cluster.mfb/$(EXE)
 
 profile-build: config-sanity objclean profileclean
 	@echo ""
-	@echo "Step 1/5. Building instrumented executable ..."
+	@echo "Step 1/4. Building instrumented executable ..."
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) $(profile_make)
 	@echo ""
-	@echo "Step 2/5. Running benchmark for pgo-build ..."
+	@echo "Step 2/4. Running benchmark for pgo-build ..."
 	$(PGOBENCH) > /dev/null
 	@echo ""
-	@echo "Step 3/5. Running benchmark for pgo-build ..."
-	$(PGOBENCH2) > /dev/null
-	@echo ""
-	@echo "Step 4/5. Building optimized executable ..."
+	@echo "Step 3/4. Building optimized executable ..."
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) objclean
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) $(profile_use)
 	@echo ""
-	@echo "Step 5/5. Deleting profile data ..."
+	@echo "Step 4/4. Deleting profile data ..."
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) profileclean
-	strip $(EXE)
-	cp $(EXE) /Users/michaelbyrne/cluster.mfb/$(EXE)
 
 strip:
 	strip $(EXE)
@@ -545,7 +517,7 @@ gcc-profile-make:
 
 gcc-profile-use:
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) \
-	EXTRACXXFLAGS='-fprofile-use -fprofile-correction  -fno-peel-loops -fno-tracer' \
+	EXTRACXXFLAGS='-fprofile-use -fno-peel-loops -fno-tracer' \
 	EXTRALDFLAGS='-lgcov' \
 	all
 

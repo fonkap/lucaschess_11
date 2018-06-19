@@ -1,22 +1,23 @@
 /*
-  Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
-  Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad
-  Copyright (C) 2015-2017 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
-
-  Stockfish is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Stockfish is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ McBrain, a UCI chess playing engine derived from Stockfish and Glaurung 2.1
+ Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
+ Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad (Stockfish Authors)
+ Copyright (C) 2015-2016 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad (Stockfish Authors)
+ Copyright (C) 2017-2018 Michael Byrne, Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad (McBrain Authors)
+ 
+ McBrain is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ McBrain is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef POSITION_H_INCLUDED
 #define POSITION_H_INCLUDED
@@ -52,7 +53,7 @@ struct StateInfo {
   Piece      capturedPiece;
   StateInfo* previous;
   Bitboard   blockersForKing[COLOR_NB];
-  Bitboard   pinnersForKing[COLOR_NB];
+  Bitboard   pinners[COLOR_NB];
   Bitboard   checkSquares[PIECE_TYPE_NB];
 };
 
@@ -105,8 +106,7 @@ public:
 
   // Checking
   Bitboard checkers() const;
-  Bitboard discovered_check_candidates() const;
-  Bitboard pinned_pieces(Color c) const;
+  Bitboard blockers_for_king(Color c) const;
   Bitboard check_squares(PieceType pt) const;
 
   // Attacks to/from a given square
@@ -153,6 +153,8 @@ public:
   bool is_chess960() const;
   Thread* this_thread() const;
   bool is_draw(int ply) const;
+  bool has_game_cycle(int ply) const;
+  bool has_repeated() const;
   int rule50_count() const;
   Score psq_score() const;
   Value non_pawn_material(Color c) const;
@@ -296,12 +298,8 @@ inline Bitboard Position::checkers() const {
   return st->checkersBB;
 }
 
-inline Bitboard Position::discovered_check_candidates() const {
-  return st->blockersForKing[~sideToMove] & pieces(sideToMove);
-}
-
-inline Bitboard Position::pinned_pieces(Color c) const {
-  return st->blockersForKing[c] & pieces(c);
+inline Bitboard Position::blockers_for_king(Color c) const {
+  return st->blockersForKing[c];
 }
 
 inline Bitboard Position::check_squares(PieceType pt) const {

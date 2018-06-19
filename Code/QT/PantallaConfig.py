@@ -42,7 +42,7 @@ def opciones(parent, configuracion):
     liEng.append(separador)
     liEng.append((_("Do not work in background when possible") + ":", configuracion.notbackground))
     liEng.append(separador)
-    liEng.append((_("Save engines log") + ":", configuracion.siLogEngines))
+    liEng.append(("%s -> %s:" %(_("Save engines log"), "UsrData/EngineLogs"), configuracion.siLogEngines))
 
     # Aspect
     liAsp = []
@@ -52,7 +52,6 @@ def opciones(parent, configuracion):
 
     ## font general
     liAsp.append((FormLayout.FontCombobox(_("Font")), configuracion.familia))
-    liAsp.append(separador)
 
     ## Menus
     liAsp.append((None, _("Menus") + ":"))
@@ -116,6 +115,16 @@ def opciones(parent, configuracion):
     liTT.append(separador)
     liTT.append((_("Tutor enabled"), configuracion.tutorActivoPorDefecto))
     liTT.append(separador)
+
+    # Mostrando el tutor
+    # kTutorH, kTutorH2_1, kTutorH1_2, kTutorV
+    liPosTutor = [configuracion.vistaTutor, (kTutorH, _("Horizontal")),
+                  (kTutorH2_1, _("Horizontal") + " 2+1"),
+                  (kTutorH1_2, _("Horizontal") + " 1+2"),
+                  (kTutorV, _("Vertical"))]
+    liTT.append((_("Tutor boards position") + ":", liPosTutor))
+    liTT.append(separador)
+    liTT.append(separador)
     liTT.append((None, _("Sensitivity")))
     liTT.append((FormLayout.Spinbox(_("Minimum difference in points"), 0, 1000, 70), configuracion.tutorDifPts))
     liTT.append((FormLayout.Spinbox(_("Minimum difference in %"), 0, 1000, 70), configuracion.tutorDifPorc))
@@ -141,6 +150,7 @@ def opciones(parent, configuracion):
     liNC.append((FormLayout.Spinbox(_("Tourney-Elo"), 0, 3200, 70), configuracion.micheloNC))
     liNC.append((FormLayout.Spinbox(_("Fics-Elo"), 0, 3200, 70), configuracion.ficsNC))
     liNC.append((FormLayout.Spinbox(_("Fide-Elo"), 0, 3200, 70), configuracion.fideNC))
+    liNC.append((FormLayout.Spinbox(_("Lichess-Elo"), 0, 3200, 70), configuracion.lichessNC))
 
     # Salvado automatico
     liSA = [separador]
@@ -157,59 +167,52 @@ def opciones(parent, configuracion):
     liSA.append((config, configuracion.salvarCSV))
 
     # Boards
-    liT = [separador]
+    liB = [separador]
 
-    # Mostrando el tutor
-    # kTutorH, kTutorH2_1, kTutorH1_2, kTutorV
-    liPosTutor = [configuracion.vistaTutor, (kTutorH, _("Horizontal")),
-                  (kTutorH2_1, _("Horizontal") + " 2+1"),
-                  (kTutorH1_2, _("Horizontal") + " 1+2"),
-                  (kTutorV, _("Vertical"))]
-    liT.append((_("Tutor boards position") + ":", liPosTutor))
-    liT.append(separador)
-    liT.append((_("Visual effects") + ":", configuracion.efectosVisuales))
+    liB.append((_("Visual effects") + ":", configuracion.efectosVisuales))
 
     drap = {1: 100, 2: 150, 3: 200, 4: 250, 5: 300, 6: 350, 7: 400, 8: 450, 9: 500}
     drapV = {}
     for x in drap:
         drapV[drap[x]] = x
-    liT.append((FormLayout.Dial("%s (%s=1)" % (_("Speed"), _("Default")), 1, len(drap), siporc=False),
+    liB.append((FormLayout.Dial("%s (%s=1)" % (_("Speed"), _("Default")), 1, len(drap), siporc=False),
                 drapV.get(configuracion.rapidezMovPiezas, 100)))
-    liT.append(separador)
+    liB.append(separador)
 
     liMouseSH = [configuracion.siAtajosRaton,
                  (False, _("Type fixed: you must always indicate origin and destination")),
                  (True, _("Type predictive: program tries to guess your intention"))]
-    liT.append((_("Mouse shortcuts") + ":", liMouseSH))
-    liT.append((_("Show candidates") + ":", configuracion.showCandidates))
-    liT.append((_("Show arrows of variants") + ":", configuracion.showVariantes))
-    liT.append(separador)
-    liT.append((_("Show cursor when engine is thinking") + ":", configuracion.cursorThinking))
-    liT.append(separador)
-    liT.append((_("Enable captured material window by default") + ":", configuracion.siActivarCapturas))
+    liB.append((_("Mouse shortcuts") + ":", liMouseSH))
+    liB.append((_("Show candidates") + ":", configuracion.showCandidates))
+    liB.append((_("Show arrows of variants") + ":", configuracion.showVariantes))
+    liB.append((_("Always promote to queen\nALT key allows to change") + ":", configuracion.autocoronacion))
+    liB.append((_("Show cursor when engine is thinking") + ":", configuracion.cursorThinking))
+    liB.append(separador)
+    liB.append((_("Enable captured material window by default") + ":", configuracion.siActivarCapturas))
     liMat = [configuracion.tipoMaterial, ("D", _("Difference material")), ("C", _("Captured material at beginning")), ("M", _("Material advantage"))]
-    liT.append((_("Show material") + ":", liMat))
-    liT.append(separador)
-    liT.append((_("Enable information panel by default") + ":", configuracion.siActivarInformacion))
-    liT.append(separador)
-    liT.append((_X(_("Enable %1"), _("DGT board")) + ":", configuracion.siDGT))
-    liT.append(separador)
+    liB.append((_("Show material") + ":", liMat))
+    liB.append(separador)
+    liB.append((_("Enable information panel by default") + ":", configuracion.siActivarInformacion))
+    liB.append(separador)
+    liB.append((_X(_("Enable %1"), _("DGT board")) + ":", configuracion.siDGT))
+    liB.append(separador)
     # liT.append((FormLayout.Dial(_("Opacity of tool icon"), 1, 9, siporc=False), configuracion.opacityToolBoard))
-    liT.append((_("Show configuration icon"), configuracion.opacityToolBoard > 6))
+    liB.append((_("Show configuration icon"), configuracion.opacityToolBoard > 6))
     liPos = [configuracion.positionToolBoard, ("B", _("Bottom")), ("T", _("Top"))]
-    liT.append((_("Configuration icon position") + ":", liPos))
-    liT.append(separador)
-    liT.append((_("Show icon when position has graphic information"), configuracion.directorIcon))
-    liT.append(separador)
+    liB.append((_("Configuration icon position") + ":", liPos))
+    liB.append(separador)
+    liB.append((_("Show icon when position has graphic information"), configuracion.directorIcon))
+
+    liB.append(separador)
 
     lista = []
     lista.append((liGen, _("General"), ""))
     lista.append((liSon, _("Sounds"), ""))
     lista.append((liTT, _("Tutor"), ""))
-    lista.append((liT, _("Boards"), ""))
+    lista.append((liB, _("Boards"), ""))
     lista.append((liEng, _("Engines"), ""))
     lista.append((liAsp, _("Appearance"), ""))
-    lista.append((liPR, _("Perfomance"), ""))
+    lista.append((liPR, _("Performance"), ""))
     lista.append((liSA, _("Autosave"), ""))
     lista.append((liNC, _("Non competitive mode"), ""))
 
@@ -219,7 +222,7 @@ def opciones(parent, configuracion):
     if resultado:
         accion, resp = resultado
 
-        liGen, liSon, liTT, liT, liEng, liAsp, liPR, liSA, liNC = resp
+        liGen, liSon, liTT, liB, liEng, liAsp, liPR, liSA, liNC = resp
 
         (configuracion.jugador, configuracion.estilo, configuracion.traductor, configuracion.checkforupdate) = liGen
 
@@ -236,22 +239,25 @@ def opciones(parent, configuracion):
         if configuracion.familia == "System":
             configuracion.familia = ""
 
-        (configuracion.siSuenaBeep, configuracion.siSuenaResultados, configuracion.siSuenaJugada, configuracion.siSuenaNuestro) = liSon
+        (configuracion.siSuenaBeep, configuracion.siSuenaResultados,
+         configuracion.siSuenaJugada, configuracion.siSuenaNuestro) = liSon
 
         (configuracion.tutor.clave, tiempoTutor, configuracion.depthTutor, configuracion.tutorMultiPV,
-            configuracion.tutorActivoPorDefecto, configuracion.tutorDifPts, configuracion.tutorDifPorc) = liTT
+            configuracion.tutorActivoPorDefecto, configuracion.vistaTutor,
+            configuracion.tutorDifPts, configuracion.tutorDifPorc ) = liTT
         configuracion.tiempoTutor = int(tiempoTutor * 1000)
 
-        (configuracion.eloNC, configuracion.micheloNC, configuracion.ficsNC, configuracion.fideNC) = liNC
+        (configuracion.eloNC, configuracion.micheloNC, configuracion.ficsNC,
+         configuracion.fideNC, configuracion.lichessNC) = liNC
 
         (configuracion.centipawns, configuracion.bmi2, configuracion.notbackground, configuracion.siLogEngines) = liEng
 
-        (configuracion.vistaTutor,
-            configuracion.efectosVisuales, rapidezMovPiezas,
+        (configuracion.efectosVisuales, rapidezMovPiezas,
             configuracion.siAtajosRaton, configuracion.showCandidates, configuracion.showVariantes,
+            configuracion.autocoronacion,
             configuracion.cursorThinking, configuracion.siActivarCapturas, configuracion.tipoMaterial,
             configuracion.siActivarInformacion, siDGT, toolIcon, configuracion.positionToolBoard,
-            configuracion.directorIcon) = liT
+            configuracion.directorIcon) = liB
         configuracion.opacityToolBoard = 10 if toolIcon else 1
         configuracion.rapidezMovPiezas = drap[rapidezMovPiezas]
         if configuracion.siDGT != siDGT:

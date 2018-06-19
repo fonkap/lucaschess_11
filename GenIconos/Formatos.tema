@@ -17,7 +17,7 @@ Utilidades gnome 64px-Gnome-applications-utilities.png
 
 Terminar woocons application-exit.png
 NuevaPartida nuvola run.png
-Opciones woocons cog.png
+Opciones woocons Cog.png
 Entrenamiento nuvola edu_miscellaneous.png
 Aplazar nuvola history_clear.png
 Capturas nuvola kmines.png
@@ -97,7 +97,7 @@ Pegar16 silk paste_plain.png
 
 RivalesMP nuvola konquest.png
 
-Camara woocons camera.png
+Camara woocons Camera.png
 
 Usuarios nuvola kuser.png
 
@@ -143,6 +143,7 @@ Colores nuvola colorize.png
 EditarColores woocons Button_Color_Circle.png
 
 GranMaestro nuvola knotify.png
+WGranMaestro windows8 Music_16px.png
 
 Favoritos nuvola services.png
 
@@ -189,7 +190,6 @@ Memoria nuvola bell.png
 
 Entrenar nuvola cache.png
 Enviar nuvola cache.png
-
 
 Trasteros gnome 64px-Add-files-to-archive2.png
 Trastero silk bullet_blue.png
@@ -264,7 +264,7 @@ BookGuide silk book_open.png
 Mas qt4 addtab(3).png
 MasR qt4 addtab(3)R.png
 
-MasDoc woocons file_Add.png
+MasDoc woocons File_Add.png
 
 NuevaDB gnome 64px-Gnome-text-x-preview_qt.png
 Potencia silk lightning.png
@@ -331,7 +331,7 @@ Add silk add.png
 Mas22 qt4 plus-sign.png
 Menos22 qt4 minus-sign.png
 
-Transposition silk arrow_joinR.png
+Transposition windows8 Connect_18px.png
 
 Rat cartoon/animals Mouse.png
 
@@ -451,10 +451,11 @@ WorldMap nuvola homepage.png
 Africa lucas BlankMap-Africa.png
 Maps qt4 icon-m-ovi-service-maps.png
 
-Sol gnome 64px-Gnome-weather-clear.png
-SolNubes gnome 64px-Gnome-weather-few-clouds.png
-Nubes gnome 64px-Gnome-weather-overcast.png
-Tormenta gnome 64px-Gnome-weather-storm.png
+Sol windows8 Summer_32px.png
+SolNubes windows8 Partly_Cloudy_Day_32px.png
+SolNubesLluvia windows8 Rain_Cloud_32px.png
+Lluvia windows8 Rain_32px.png
+Invierno windows8 Snowflake_32px.png
 
 Words gnome 64px-Im-nov.png
 AdaptVoice gnome 64px-Gnome-preferences-desktop.png
@@ -521,3 +522,26 @@ Lampara windows8 solutions-32.png
 File nuvola folder_open.png
 
 Calculo windows8 Fog_Lamp_32px.png
+
+OpeningLines windows8 Museum_32px.png
+Study windows8 Reading_32px.png
+
+Lichess otros lichess.png
+Miniatura windows8 Microscope_26px.png
+
+Locomotora windows8 Steam_Engine_26px.png
+Positions nuvola runMono.png
+
+TrainSequential windows8 Running_32px.png
+TrainStatic windows8 Gymnastics_32px.png
+TrainPositions windows8 Pullups_32px.png
+
+Error gnome 64px-Gnome-process-stop.png
+
+Atajos windows8 Pin_in_circle_24px.png
+
+TOLline windows8 Network_32px.png
+
+TOLchange gnome edit-redo.png
+
+Pack qt4 icon_list-all_circ.png

@@ -297,7 +297,7 @@ class WMotor(QtWidgets.QDialog):
             # # Comprobamos que todos esten accesibles
             self.listaLibros.comprueba()
             li = [(x.nombre, x.path) for x in self.listaLibros.lista]
-            li.insert(0, ("* " + _("Engine book"), "-"))
+            li.insert(0, ("* " + _("None"), "-"))
             li.insert(0, ("* " + _("Default"), "*"))
             self.cbBooks = Controles.CB(self, li, motorExterno.book())
             btNuevoBook = Controles.PB(self, "", self.nuevoBook, plano=False).ponIcono(Iconos.Nuevo(), tamIcon=16)
@@ -432,15 +432,15 @@ def selectEngine(wowner):
     """
     # Pedimos el ejecutable
     folderEngines = VarGen.configuracion.leeVariables("FOLDER_ENGINES")
-    exeMotor = QTUtil2.leeFichero(wowner, folderEngines if folderEngines else ".", "*", _("Engine"))
+    exeMotor = QTUtil2.leeFichero(wowner, folderEngines if folderEngines else ".", "%s EXE (*.exe)" % _("File"), _("Engine"))
     if not exeMotor:
         return None
     folderEngines = Util.dirRelativo(os.path.dirname(exeMotor))
     VarGen.configuracion.escVariables("FOLDER_ENGINES", folderEngines)
 
     # Leemos el UCI
-    um = QTUtil2.unMomento(wowner)
     me = MotoresExternos.MotorExterno()
+    um = QTUtil2.unMomento(wowner)
     resp = me.leerUCI(exeMotor)
     um.final()
     if not resp:

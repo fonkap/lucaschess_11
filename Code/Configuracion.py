@@ -2,6 +2,7 @@
 
 import operator
 import os
+import shutil
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
@@ -70,6 +71,7 @@ class Perfomance:
         self.good_depth = 3
 
     def elo(self, xlost):
+        # 3500.0 - ((60 * xlost) / (xgmo ** 0.4)) + abs(xeval ** 0.8)
         return min(max(int(self.limit_max - self.lost_factor * (xlost ** self.lost_exp)), self.limit_min), self.limit_max)
 
     def elo_bad_vbad(self, xlost):
@@ -154,6 +156,9 @@ class Configuracion:
         self.fide = 1600
         self.fideNC = 1600
 
+        self.lichess = 1600
+        self.lichessNC = 1600
+
         self.siDGT = False
 
         self.opacityToolBoard = 10
@@ -170,6 +175,8 @@ class Configuracion:
         self.puntosPGN = 10
         self.altoFilaPGN = 22
         self.figurinesPGN = True
+
+        self.autocoronacion = False
 
         self.showVariantes = False
         self.tipoMaterial = "D"
@@ -272,14 +279,17 @@ class Configuracion:
 
         self.siPrimeraVez = not Util.existeFichero(self.fichero)
 
-        Util.creaCarpeta(self.carpeta + "/confvid")
-        self.plantillaVideo = self.carpeta + "/confvid/%s.video"
+        # Util.creaCarpeta()
+        # self.plantillaVideo = self.carpeta + "/confvid/%s.video"
+
+        self.ficheroVideo = "%s/confvid.pkd" % self.carpeta
 
         self.ficheroSounds = "%s/sounds.pkd" % self.carpeta
         self.fichEstadElo = "%s/estad.pkli" % self.carpeta
         self.fichEstadMicElo = "%s/estadMic.pkli" % self.carpeta
         self.fichEstadFicsElo = "%s/estadFics.pkli" % self.carpeta
         self.fichEstadFideElo = "%s/estadFide.pkli" % self.carpeta
+        self.fichEstadLichessElo = "%s/estadLichess.pkli" % self.carpeta
         self.ficheroBooks = "%s/books.lkv" % self.carpeta
         self.ficheroTrainBooks = "%s/booksTrain.lkv" % self.carpeta
         self.ficheroMate = "%s/mate.ddb" % self.carpeta
@@ -325,11 +335,19 @@ class Configuracion:
 
         self.ficheroVariables = "%s/Variables.pk" % self.carpeta
 
+        self.ficheroFiltrosPGN = "%s/pgnFilters.db" % self.carpeta
+
         Util.creaCarpeta(self.dirPersonalTraining)
 
-        self.ficheroDBgames = "%s/%s.lcg" % (self.carpeta, _("Initial Database Games"))
+        self.carpetaGames = "%s/%s" % (self.carpeta, "DatabasesGames")
+        Util.creaCarpeta(self.carpetaGames)
 
-        self.ficheroDBgamesFEN = "%s/%s.lcf" % (self.carpeta, _("Positions Database"))
+        self.carpetaPositions = "%s/%s" % (self.carpeta, "DatabasesPositions")
+        Util.creaCarpeta(self.carpetaPositions)
+
+        self.ficheroDBgames = "%s/%s.lcg" % (self.carpetaGames, _("Initial Database Games"))
+
+        self.ficheroDBgamesFEN = "%s/%s.lcf" % (self.carpetaPositions, _("Positions Database"))
 
         self.carpetaSTS = "%s/sts" % self.carpeta
 
@@ -342,6 +360,11 @@ class Configuracion:
         if not Util.existeFichero(self.ficheroRecursos):
             Util.copiaFichero("IntFiles/recursos.dbl", self.ficheroRecursos)
 
+        self.folderOpenings = os.path.join(self.carpeta, "OpeningLines")
+        Util.creaCarpeta(self.folderOpenings)
+
+        if os.path.isdir(self.carpeta + "/confvid"):
+            self.salto_version()
 
     def compruebaBMT(self):
         if not Util.existeFichero(self.ficheroBMT):
@@ -509,7 +532,7 @@ class Configuracion:
         dic = {}
         dic["VERSION"] = self.version
         dic["ID"] = self.id
-        dic["JUGADOR"] = self.jugador
+        dic["JUGADOR"] = self.jugador if self.jugador else _("User")
         dic["ESTILO"] = self.estilo
         dic["TIEMPOTUTOR"] = self.tiempoTutor
         dic["DEPTHTUTOR"] = self.depthTutor
@@ -585,6 +608,7 @@ class Configuracion:
         dic["PUNTOSPGN"] = self.puntosPGN
         dic["ALTOFILAPGN"] = self.altoFilaPGN
         dic["FIGURINESPGN"] = self.figurinesPGN
+        dic["AUTOCORONACION"] = self.autocoronacion
 
         dic["SHOW_VARIANTES"] = self.showVariantes
         dic["TIPOMATERIAL"] = self.tipoMaterial
@@ -597,6 +621,8 @@ class Configuracion:
         dic["FICSNC"] = self.ficsNC
         dic["FIDE"] = self.fide
         dic["FIDENC"] = self.fideNC
+        dic["LICHESS"] = self.lichess
+        dic["LICHESSNC"] = self.lichessNC
         dic["TRASTEROS"] = self.liTrasteros
         dic["FAVORITOS"] = self.liFavoritos
         dic["PERSONALIDADES"] = self.liPersonalidades
@@ -636,7 +662,7 @@ class Configuracion:
                 dg = dic.get
                 self.id = dic["ID"]
                 self.version = dic.get("VERSION", "")
-                self.jugador = dic["JUGADOR"]
+                self.jugador = dic["JUGADOR"] if dic["JUGADOR"] else _("User")
                 self.estilo = dg("ESTILO", "Cleanlooks")
                 self.tiempoTutor = dic["TIEMPOTUTOR"]
                 self.depthTutor = dg("DEPTHTUTOR", 0)
@@ -696,6 +722,8 @@ class Configuracion:
                 self.ficsNC = dg("FICSNC", self.ficsNC)
                 self.fide = dg("FIDE", self.fide)
                 self.fideNC = dg("FIDENC", self.fideNC)
+                self.lichess = dg("LICHESS", self.fide)
+                self.lichessNC = dg("LICHESSNC", self.fideNC)
 
                 self.siDGT = dg("SIDGT", False)
 
@@ -727,6 +755,8 @@ class Configuracion:
                 self.puntosPGN = dg("PUNTOSPGN", self.puntosPGN)
                 self.altoFilaPGN = dg("ALTOFILAPGN", self.altoFilaPGN)
                 self.figurinesPGN = dg("FIGURINESPGN", False)
+
+                self.autocoronacion = dg("AUTOCORONACION", self.autocoronacion)
                 self.showVariantes = dg("SHOW_VARIANTES", False)
                 self.tipoMaterial = dg("TIPOMATERIAL", self.tipoMaterial)
 
@@ -735,6 +765,7 @@ class Configuracion:
 
                 self.liTrasteros = dg("TRASTEROS", [])
                 self.liFavoritos = dg("FAVORITOS", [])
+                self.testFavoritos()
                 self.liPersonalidades = dg("PERSONALIDADES", [])
 
                 self.centipawns = dg("CENTIPAWNS", self.centipawns)
@@ -787,6 +818,11 @@ class Configuracion:
 
         TrListas.ponPiecesLNG(self.siNomPiezasEN or self.traductor == "en")
 
+    def testFavoritos(self):
+        if len(self.liFavoritos) > 0:
+            if type(self.liFavoritos[0]) != type({}):
+                self.liFavoritos = [{"OPCION": valor} for valor in self.liFavoritos]
+
     def releeTRA(self):
         Traducir.install(self.traductor)
 
@@ -801,6 +837,9 @@ class Configuracion:
 
     def fideActivo(self, siModoCompetitivo):
         return self.fide if siModoCompetitivo else self.fideNC
+
+    def lichessActivo(self, siModoCompetitivo):
+        return self.lichess if siModoCompetitivo else self.lichessNC
 
     def ponEloActivo(self, elo, siModoCompetitivo):
         if siModoCompetitivo:
@@ -826,14 +865,20 @@ class Configuracion:
         else:
             self.fideNC = elo
 
+    def ponLichessActivo(self, elo, siModoCompetitivo):
+        if siModoCompetitivo:
+            self.lichess = elo
+        else:
+            self.lichessNC = elo
+
     def listaTraducciones(self):
         li = []
         dlang = "Locale"
         for uno in Util.listdir(dlang):
-            fini = os.path.join(dlang, uno, "lang.ini")
+            fini = os.path.join(dlang, uno.name, "lang.ini")
             if os.path.isfile(fini):
                 dic = Util.iniBase8dic(fini)
-                li.append((uno, dic["NAME"], dic["%"], dic["AUTHOR"]))
+                li.append((uno.name, dic["NAME"], dic["%"], dic["AUTHOR"]))
         li = sorted(li, key=lambda lng: lng[0])
         return li
 
@@ -873,8 +918,8 @@ class Configuracion:
     def limpiaTemporal(self):
         try:
             dirTmp = os.path.join(self.carpeta, "tmp")
-            for f in Util.listdir(dirTmp):
-                Util.borraFichero(os.path.join(dirTmp, f))
+            for entry in Util.listdir(dirTmp):
+                Util.borraFichero(entry.path)
         except:
             pass
 
@@ -958,4 +1003,47 @@ class Configuracion:
     def save_dbFEN(self, fenM2, data):
         dbFEN = self.fich_dbFEN()
         dbFEN[fenM2] = data
+
+    def save_video(self, key, dic):
+        db = Util.DicSQL(self.ficheroVideo)
+        db[key] = dic
+        db.close()
+
+    def restore_video(self, key):
+        db = Util.DicSQL(self.ficheroVideo)
+        dic = db[key]
+        db.close()
+        return dic
+
+    def salto_version(self):
+        def cambio_confvid():
+            try:
+                folder = self.carpeta + "/confvid"
+                if os.path.isdir(folder):
+                    db = Util.DicSQL(self.ficheroVideo)
+                    li = os.listdir(folder)
+                    for fichero in li:
+                        if fichero.endswith(".video") and not fichero.startswith("MOS"):
+                            key = fichero[:-6]
+                            dic = Util.recuperaDIC(os.path.join(folder, fichero))
+                            if dic:
+                                db[key] = dic
+                    db.pack()
+                    db.close()
+            except:
+                pass
+            shutil.rmtree(folder)
+
+        def cambio_databases():
+            li = os.listdir(self.carpeta)
+            for fichero in li:
+                if fichero.endswith(".lcg") or fichero.endswith(".lcg_s1"):
+                    origen = os.path.join(self.carpeta, fichero)
+                    shutil.move(origen, self.carpetaGames)
+                elif fichero.endswith(".lcf"):
+                    origen = os.path.join(self.carpeta, fichero)
+                    shutil.move(origen, self.carpetaPositions)
+
+        cambio_confvid()
+        cambio_databases()
 

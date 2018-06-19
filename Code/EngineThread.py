@@ -8,11 +8,10 @@ import psutil
 from Code import VarGen
 from Code.Constantes import *
 
-DEBUG = True
-
+DEBUG_ENGINE = True
 
 def xpr(line):
-    if DEBUG:
+    if DEBUG_ENGINE:
         t = time.time()
         prlk("%0.04f %s" % (t - tdbg[0], line))
         tdbg[0] = t
@@ -20,7 +19,7 @@ def xpr(line):
 
 
 def xprli(li):
-    if DEBUG:
+    if DEBUG_ENGINE:
         t = time.time()
         dif = t - tdbg[0]
         for line in li:
@@ -28,7 +27,7 @@ def xprli(li):
         tdbg[0] = t
     return True
 
-if DEBUG:
+if DEBUG_ENGINE:
     tdbg = [time.time()]
     xpr("DEBUG XMOTOR\n")
 
@@ -131,6 +130,12 @@ class Engine(object):
             startupinfo = None
         curdir = os.path.abspath(os.curdir)  # problem with "." as curdir
         os.chdir(self.direxe)  # to fix problems with non ascii folders
+
+        if VarGen.isLinux:
+            argv0 = self.args[0]
+            if "/" not in argv0:
+                self.args[0] = os.path.join(os.path.abspath(os.curdir), argv0)
+
         self.process = subprocess.Popen(self.args, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
                                          startupinfo=startupinfo, shell=False, encoding="latin1")
         os.chdir(curdir)

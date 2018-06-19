@@ -624,6 +624,9 @@ class MRespuestaMotor:
                     break
         return li
 
+    def getdepth0(self):
+        return self.liMultiPV[0].depth if self.liMultiPV else 0
+
     def mejorMovDetectaBlunders(self, fdbg, mindifpuntos, maxmate):
         rm0 = self.liMultiPV[0]
         if maxmate:
@@ -688,7 +691,8 @@ class MRespuestaMotor:
 
         # Miramos todas las propuestas
         for num, rm in enumerate(self.liMultiPV):
-            partida = Partida.Partida(cp).leerPV(rm.pv)
+            partida = Partida.Partida(cp)
+            partida.leerPV(rm.pv)
             jg0 = partida.jugada(0)
             ps0 = partida.iniPosicion
             psZ = partida.ultPosicion
@@ -802,7 +806,8 @@ class MRespuestaMotor:
         if dbg:
             fdbg.write("Result :\n")
             for num, rm in enumerate(self.liMultiPV):
-                partida = Partida.Partida(cp).leerPV(rm.pv)
+                partida = Partida.Partida(cp)
+                partida.leerPV(rm.pv)
 
                 pgn = ""
                 si = False
@@ -1092,8 +1097,12 @@ class MRespuestaMotor:
                         firstDepth = depth
                         break
             if firstDepth >= perf.very_good_depth:
-                nag = VERYGOOD
-                color = VERYGOOD
+                if len(libest) == 1 and (mj_pts - self.liMultiPV[1].puntosABS()) > 70:
+                    nag = VERYGOOD
+                    color = VERYGOOD
+                else:
+                    nag = GOOD
+                    color = GOOD
             elif firstDepth >= perf.good_depth:
                 nag = GOOD
                 color = GOOD

@@ -1,11 +1,13 @@
+import time
+
 from Code import Books
 from Code import Gestor
 from Code import Jugada
 from Code import Partida
 from Code.QT import PantallaTorneos
 from Code import Util
-from Code import VarGen
 from Code import XGestorMotor
+from Code.QT import QTUtil
 from Code.Constantes import *
 
 
@@ -17,13 +19,13 @@ class GestorTorneo(Gestor.Gestor):
         self.torneo = torneo
         self.torneoTMP = torneo.clone()
         self.torneoTMP._liGames = liGames
-        self.fenInicial = self.torneo.fenNorman()
         self.liGames = liGames
         self.pantalla.ponActivarTutor(False)
         self.ponPiezasAbajo(True)
         self.mostrarIndicador(True)
         self.siTerminar = False
-        self.pantalla.ponToolBar((k_cancelar,))
+        self.siPausa = False
+        self.pantalla.ponToolBar((k_cancelar, k_peliculaPausa))
         self.colorJugando = True
         self.ponCapPorDefecto()
 
@@ -33,6 +35,7 @@ class GestorTorneo(Gestor.Gestor):
         numGames = len(self.liGames)
         for ng, gm in enumerate(self.liGames):
             self.siguienteJuego(gm, ng + 1, numGames)
+            self.procesador.pararMotores()
             if self.siTerminar:
                 break
             if self.wresult:
@@ -43,6 +46,8 @@ class GestorTorneo(Gestor.Gestor):
 
     def siguienteJuego(self, gm, ngame, numGames):
         self.estado = kJugando
+        self.fenInicial = self.torneo.fenNorman()
+        self.siPausa = False
 
         self.gm = gm
         self.maxSegundos = self.gm.minutos() * 60.0
@@ -71,8 +76,8 @@ class GestorTorneo(Gestor.Gestor):
 
             bk = rv.book()
             if bk == "*":
-                bk = VarGen.tbook
-            elif bk == "-":
+                bk = self.torneo.book()
+            if bk == "-":  # Puede que el torneo tenga "-"
                 bk = None
             if bk:
                 self.book[color] = Books.Libro("P", bk, bk, True)
@@ -103,8 +108,11 @@ class GestorTorneo(Gestor.Gestor):
         self.refresh()
 
         self.finPorTiempo = None
-        while self.siguienteJugada():
-            pass
+        while self.siPausa or self.siguienteJugada():
+            QTUtil.refreshGUI()
+            if self.siPausa:
+                time.sleep(0.1)
+
 
         self.xmotor[True].terminar()
         self.xmotor[False].terminar()
@@ -118,14 +126,14 @@ class GestorTorneo(Gestor.Gestor):
             txt = "<b>[%s]</b> (%s) %s" % (rm.nombre, rm.abrTexto(), p.pgnSP())
             self.ponRotulo3(txt)
             self.showPV(rm.pv, 3)
-            # self.ponFlechaSC( rm.pv[:2], rm.pv[2:4] )
-            # QTUtil.refreshGUI()
         self.refresh()
         return not self.siTerminar
 
     def compruebaFinal(self):
         if self.partida.numJugadas() == 0:
             return False
+
+        adjudication = None
 
         if self.finPorTiempo is not None:
             result = self.finPorTiempo
@@ -175,12 +183,19 @@ class GestorTorneo(Gestor.Gestor):
                         pTut = -rmTut.mejorMov().puntosABS()
                         if pTut >= rs:
                             result = 1 if jgAnt.posicion.siBlancas else 2
+                            adjudication = True
 
             if result is None:
                 return False
 
         self.gm.partida(self.partida)
         self.gm.result(result)
+        termination = "normal"
+        if self.finPorTiempo:
+            termination = "time forfeit"
+        elif adjudication:
+            termination = "adjudication"
+        self.gm.termination(termination)
         self.torneo.grabar()
 
         return True
@@ -242,7 +257,6 @@ class GestorTorneo(Gestor.Gestor):
         return not self.siTerminar
 
     def ponReloj(self):
-
         # if (not self.siPrimeraJugadaHecha) or (self.estado != kJugando):
         if self.estado != kJugando:
             return
@@ -278,6 +292,12 @@ class GestorTorneo(Gestor.Gestor):
     def procesarAccion(self, clave):
         if clave == k_cancelar:
             self.siTerminar = True
+        elif clave == k_peliculaPausa:
+            self.siPausa = True
+            self.pantalla.ponToolBar((k_cancelar, k_peliculaSeguir))
+        elif clave == k_peliculaSeguir:
+            self.siPausa = False
+            self.pantalla.ponToolBar((k_cancelar, k_peliculaPausa))
 
     def finalX(self):
         self.siTerminar = True
@@ -286,12 +306,13 @@ class GestorTorneo(Gestor.Gestor):
         return False
 
     def eligeJugadaBook(self, book, tipo):
-        fen = self.fenUltimo()
-        pv = book.eligeJugadaTipo(fen, tipo)
-        if pv:
-            return True, pv[:2], pv[2:4], pv[4:]
-        else:
-            return False, None, None, None
+        bdepth = self.torneo.bookDepth()
+        if bdepth == 0 or self.partida.numJugadas() < bdepth:
+            fen = self.fenUltimo()
+            pv = book.eligeJugadaTipo(fen, tipo)
+            if pv:
+                return True, pv[:2], pv[2:4], pv[4:]
+        return False, None, None, None
 
     def masJugada(self, jg):
         if self.siTerminada():
@@ -300,7 +321,7 @@ class GestorTorneo(Gestor.Gestor):
 
         self.partida.append_jg(jg)
         if self.partida.pendienteApertura:
-            self.listaAperturasStd.asignaApertura(self.partida)
+            self.partida.asignaApertura()
 
         resp = self.partida.si3repetidas()
         if resp:

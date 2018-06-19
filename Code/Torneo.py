@@ -16,7 +16,7 @@ class Engine(MotoresExternos.MotorExterno):
         self._depth = 0
         self._time = 0
 
-        self._book = "*"  # "*":por defecto "-":el propio del motor otro:path to libro polyglot
+        self._book = "-"  # "*":por defecto "-":el propio del motor otro:path to libro polyglot
         self._bookRR = "ap"
 
     def ponHuella(self, liEngines):
@@ -168,6 +168,7 @@ class Game:
         self._segundosJugada = None
         self._result = None
         self._date = None
+        self._termination = None
 
     def hwhite(self, valor=None):
         if valor is not None:
@@ -206,6 +207,11 @@ class Game:
             self.date(Util.hoy())
         return self._result
 
+    def termination(self, valor=None):
+        if valor is not None:
+            self._termination = valor
+        return self._termination
+
     def date(self, valor=None):
         if valor is not None:
             self._date = valor
@@ -227,6 +233,8 @@ class Game:
         self._result = dic["RESULT"]
         self._date = dic["DATE"]
 
+        self._termination = dic.get("TERMINATION", "normal")
+
     def grabarDIC(self):
         dic = {}
         dic["HWHITE"] = self._hwhite
@@ -235,6 +243,7 @@ class Game:
         dic["DATE"] = self._date
         dic["MINUTOS"] = self._minutos
         dic["SEGUNDOSJUGADA"] = self._segundosJugada
+        dic["TERMINATION"] = self._termination
 
         dic["PARTIDA"] = None if self._partida is None else self._partida.guardaEnTexto()
         return dic
@@ -268,6 +277,9 @@ class Game:
             li.append(("ECO", ap.eco))
             li.append(("Opening", ap.nombre))
 
+        if self._termination:
+            li.append(("Termination", self._termination))
+
         cabecera = ""
         for campo, valor in li:
             cabecera += '[%s "%s"]\n' % (campo, valor)
@@ -289,6 +301,7 @@ class Torneo:
         self._ultMinutos = 15
         self._ultSegundosJugada = 0
         self._book = ""  # "":por defecto otro:path to libro polyglot
+        self._bookDepth = 0
         self._fen = ""
         self._norman = True
 
@@ -355,6 +368,11 @@ class Torneo:
             self._book = valor
         return self._book
 
+    def bookDepth(self, valor=None):
+        if valor is not None:
+            self._bookDepth = valor
+        return self._bookDepth
+
     def fichero(self):
         if self._nombre:
             return os.path.join(VarGen.configuracion.carpeta, self._nombre + ".mvm")
@@ -379,6 +397,9 @@ class Torneo:
         self._ultSegundosJugada = dic["ULTSEGUNDOSJUGADA"]
         self._fen = dic.get("FEN", "")
         self._norman = dic.get("NORMAN", False)
+
+        self._book = dic.get("BOOK", "")
+        self._bookDepth = dic.get("BOOKDEPTH", "")
 
         liTxt = dic["ENGINES"]
         li = []
@@ -412,6 +433,9 @@ class Torneo:
         dic["ULTSEGUNDOSJUGADA"] = self._ultSegundosJugada
         dic["FEN"] = self._fen
         dic["NORMAN"] = self._norman
+
+        dic["BOOK"] = self._book
+        dic["BOOKDEPTH"] = self._bookDepth
 
         dic["ENGINES"] = [en.grabarTXT() for en in self._liEngines]
         dic["GAMES"] = [gm.grabarDIC() for gm in self._liGames]

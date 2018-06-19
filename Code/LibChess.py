@@ -1,6 +1,6 @@
 import random
 
-import LCEngine
+import LCEngineV1 as LCEngine
 import chess
 import chess.syzygy
 
@@ -54,6 +54,7 @@ class T4:
     def wdl_dtz(self, fen):
         board = chess.Board(fen)
         wdl = self.tb.probe_wdl(board)
+        board = chess.Board(fen)
         dtz = self.tb.probe_dtz(board)
         return wdl, dtz
 

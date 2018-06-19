@@ -28,7 +28,6 @@ class WBase(QtWidgets.QWidget):
         self.procesandoEventos = None
 
         self.setWindowIcon(Iconos.Aplicacion())
-        self.setStyleSheet("QToolButton { padding: 0px; }")
 
         self.creaToolBar()
         self.creaTablero()
@@ -39,12 +38,17 @@ class WBase(QtWidgets.QWidget):
 
         lyT = Colocacion.V().control(self.tablero).relleno()
 
+        self.conAtajos = True
+
+
         lyAI = Colocacion.H().relleno(1).control(self.capturas).otroi(lyT).otroi(lyBI).relleno(1).margen(0)
         ly = Colocacion.V().control(self.tb).relleno().otro(lyAI).relleno().margen(2)
 
         self.setLayout(ly)
 
         self.preparaColoresPGN()
+
+        self.setAutoFillBackground(True)
 
     def preparaColoresPGN(self):
         self.colorMateNegativo = QTUtil.qtColorRGB(0, 0, 0)
@@ -63,8 +67,23 @@ class WBase(QtWidgets.QWidget):
         self.tb.setToolButtonStyle(iconsTB)
         sz = 32 if iconsTB == QtCore.Qt.ToolButtonTextUnderIcon else 16
         self.tb.setIconSize(QtCore.QSize(sz, sz))
-        self.tb.setStyleSheet("QToolBar {border-bottom: 1px solid gray; border-top: 1px solid gray;}");
+        style = "QToolBar {border-bottom: 1px solid gray; border-top: 1px solid gray;}"
+        self.tb.setStyleSheet(style)
+        sp = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.tb.setSizePolicy(sp)
+        self.tb.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tb.customContextMenuRequested.connect(self.lanzaAtajos)
+
         self.preparaTB()
+
+    def lanzaAtajos(self):
+        if self.conAtajos:
+            self.gestor.procesarAccion(k_atajos)
+
+    def lanzaAtajosALT(self, key):
+        if self.conAtajos:
+            self.gestor.lanzaAtajosALT(key)
+
 
     def creaTablero(self):
         ae = QTUtil.altoEscritorio()
@@ -88,14 +107,20 @@ class WBase(QtWidgets.QWidget):
 
         self.pgn.seleccionaFilas(siPoner, False)
 
+    def ponWhiteBlack(self, white, black):
+        oColumnas = self.pgn.oColumnas
+        oColumnas.liColumnas[1].cabecera = white if white else _("White")
+        oColumnas.liColumnas[2].cabecera = black if black else _("Black")
+
+
     def creaBloqueInformacion(self):
-        nAnchoPgn = self.gestor.configuracion.anchoPGN
+        configuracion = self.gestor.configuracion
+        nAnchoPgn = configuracion.anchoPGN
         nAnchoColor = (nAnchoPgn - 35 - 20) / 2
         nAnchoLabels = max(int((nAnchoPgn - 3) / 2), 140)
         # # Pgn
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("NUMERO", _("N."), 35, siCentrado=True)
-        configuracion = self.gestor.configuracion
         siFigurinesPGN = configuracion.figurinesPGN
         oColumnas.nueva("BLANCAS", _("White"), nAnchoColor,
                         edicion=Delegados.EtiquetaPGN(True if siFigurinesPGN else None))
@@ -238,7 +263,6 @@ class WBase(QtWidgets.QWidget):
                       (_("Show text"), Iconos.Modificar(), k_showtext),
                       (_("Help to move"), Iconos.BotonAyuda(), k_ayudaMover),
                       (_("Send"), Iconos.Enviar(), k_enviar),
-                      # ( "Debug", Iconos.Camara(), 999),# Martin debug
                       )
 
         cf = self.gestor.configuracion
@@ -259,31 +283,22 @@ class WBase(QtWidgets.QWidget):
     def procesarAccion(self):
         self.gestor.procesarAccion(self.sender().clave)
 
-    def ponToolBar(self, liAcciones, separator=False):
+    def ponToolBar(self, liAcciones, separator=False, conAtajos=False):
 
-        # liAcciones = list(liAcciones) # Martin debug
-        # liAcciones.append( 999 )
+        self.conAtajos = conAtajos
 
         self.tb.clear()
-        for k in liAcciones:
+        last = len(liAcciones)-1
+        for n, k in enumerate(liAcciones):
             self.dicTB[k].setVisible(True)
             self.dicTB[k].setEnabled(True)
             self.tb.addAction(self.dicTB[k])
-            if separator:
+            if separator and n != last:
                 self.tb.addSeparator()
 
         self.tb.liAcciones = liAcciones
         self.tb.update()
         QTUtil.refreshGUI()
-
-        # if getattr( self, "problemTB", True ):
-        # x = self.tb.height()
-        # if x > 50:
-        # x+= 2
-        # self.problemTB = False
-        # self.tb.setFixedHeight(x)
-        # self.tb.update()
-        # QTUtil.refreshGUI()
 
     def dameToolBar(self):
         return self.tb.liAcciones
@@ -312,7 +327,7 @@ class WBase(QtWidgets.QWidget):
 
     def gridBotonDerecho(self, grid, fila, columna, modificadores):
         self.gestor.pgnMueveBase(fila, columna.clave)
-        self.gestor.rightMouse(modificadores.siShift, modificadores.siControl, modificadores.siAlt)
+        self.gestor.gridRightMouse(modificadores.siShift, modificadores.siControl, modificadores.siAlt)
 
     def boardRightMouse(self, siShift, siControl, siAlt):
         if hasattr(self.gestor, "boardRightMouse"):
@@ -369,6 +384,8 @@ class WBase(QtWidgets.QWidget):
         # NAG_1=Jugada buena NAG_2=Jugada mala NAG_3=Muy buena jugada NAG_4=Muy mala jugada
         NAG_0, NAG_1, NAG_2, NAG_3, NAG_4, NAG_5, NAG_6 = range(7)
 
+        nag = NAG_0
+
         color_nag = NAG_0
         stNAGS = set(jg.critica.strip().split(" ") if jg.critica else [])
         for critica in stNAGS:
@@ -407,12 +424,10 @@ class WBase(QtWidgets.QWidget):
             stNAGS.add(str(nag))
             color_nag = nag
 
-
-
         if jg.siApertura or jg.critica or jg.comentario or jg.variantes:
             siA = jg.siApertura
             nR = 0
-            if jg.critica:
+            if jg.critica and nag == NAG_0:
                 nR += 1
             if jg.comentario:
                 nR += 1
@@ -431,7 +446,7 @@ class WBase(QtWidgets.QWidget):
             color = \
                 {NAG_1: c.color_nag1, NAG_2: c.color_nag2, NAG_3: c.color_nag3, NAG_4: c.color_nag4,
                  NAG_5: c.color_nag5,
-                 NAG_6: c.color_nag6}[color_nag]
+                 NAG_6: c.color_nag6}[int(color_nag)]
 
         return pgn, color, info, indicadorInicial, stNAGS
 
@@ -440,6 +455,13 @@ class WBase(QtWidgets.QWidget):
         pass
 
     def keyPressEvent(self, event):
+        k = event.key()
+        if self.conAtajos:
+            if 49 <= k <= 57:
+                m = int(event.modifiers())
+                if (m & QtCore.Qt.AltModifier) > 0:
+                    self.lanzaAtajosALT(k-48)
+                    return
         self.teclaPulsada("V", event.key())
 
     def tableroWheelEvent(self, tablero, siAdelante):

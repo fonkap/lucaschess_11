@@ -1,7 +1,7 @@
 import random
 import time
 
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from Code import Util
 from Code import Books
@@ -141,7 +141,7 @@ class GestorRoutes(Gestor.Gestor):
     def masJugada(self, jg, siNuestra):
         self.partida.append_jg(jg)
         if self.partida.pendienteApertura:
-            self.listaAperturasStd.asignaApertura(self.partida)
+            self.partida.asignaApertura()
 
         resp = self.partida.si3repetidas()
         if resp:
@@ -508,6 +508,12 @@ class GestorRoutesEndings(GestorRoutes):
             self.siJuegaHumano = True
             self.activaColor(siBlancas)
 
+    def show_error(self, mens):
+        QTUtil2.mensajeTemporal(self.pantalla, mens, 4, background="#FF9B00", posicion="tb")
+
+    def show_mens(self, mens):
+        QTUtil2.mensajeTemporal(self.pantalla, mens, 4, posicion="tb", background="#C3D6E8")
+
     def mueveHumano(self, desde, hasta, coronacion=None):
         jgSel = self.checkMueveHumano(desde, hasta, coronacion)
         if not jgSel:
@@ -520,9 +526,11 @@ class GestorRoutesEndings(GestorRoutes):
             if li[0] != pvSel:
                 if pvSel in li:
                     pgn = Partida.pv_pgn(jgSel.posicionBase.fen(), pvObj)
-                    QTUtil2.mensajeTemporal(self.pantalla, _("You have selected one correct move, but the line use %s") % pgn, 4)
+                    self.show_mens(_("You have selected one correct move, but the line use %s") % pgn)
+                    self.ponFlechaSC(pvObj[:2], pvObj[2:4])
+                    self.ayuda(False)
                 else:
-                    QTUtil2.mensajeTemporal(self.pantalla, _("Wrong move"), 1)
+                    self.show_error(_("Wrong move"))
                     self.warnings += 1
                     self.ponWarnings()
                 self.sigueHumano()
@@ -534,12 +542,26 @@ class GestorRoutesEndings(GestorRoutes):
             b_wdl, b_dtz = self.t4.wdl_dtz(fen)
             m_wdl, m_dtz = self.t4.wd_move(fen, pv)
             if b_wdl != m_wdl:
-                QTUtil2.mensajeTemporal(self.pantalla, _("Wrong move"), 2)
+                self.show_error(_("Wrong move"))
                 self.warnings += 1
                 self.ponWarnings()
                 self.ponPosicion(self.partida.ultPosicion)
                 self.sigueHumano()
                 return False
+            if b_wdl == 2:
+                numjug = self.partida.ultPosicion.jugadas
+                if b_dtz % 2 == 1:
+                    b_dtz += 1
+                numjug += b_dtz / 2
+                if numjug >= 50:
+                    mens = "%s\n%s" % (_("Wrong move"), _("Draw according to the 50 move rule"))
+                    self.show_error(mens)
+                    QTUtil2.mensajeTemporal(self.pantalla,mens, 2)
+                    self.warnings += 1
+                    self.ponWarnings()
+                    self.ponPosicion(self.partida.ultPosicion)
+                    self.sigueHumano()
+                    return False
 
         self.movimientosPiezas(jgSel.liMovs)
 
@@ -555,22 +577,12 @@ class GestorRoutesEndings(GestorRoutes):
         self.movimientosPiezas(jg.liMovs, True)
         return True
 
-    def ayuda(self):
-        liMovs = None
-        if self.is_guided:
-            pvObj = self.liPV[self.posPV]
-            li = pvObj.split("-")
-            liMovs = [(pv[:2], pv[2:4], n == 0) for n, pv in enumerate(li)]
-        else:
-            fen = self.partida.ultPosicion.fen()
-            um = self.unMomento()
-            mrm = self.xanalyzer.analiza(fen)
-            um.final()
-            li = mrm.bestmoves()
-            if li:
-                liMovs = [(rm.desde, rm.hasta, True) for rm in li]
-        if liMovs:
-            self.tablero.ponFlechasTmp(liMovs)
+    def ayuda(self, siWarning = True):
+        pvObj = self.liPV[self.posPV]
+        li = pvObj.split("-")
+        liMovs = [(pv[:2], pv[2:4], n == 0) for n, pv in enumerate(li)]
+        self.tablero.ponFlechasTmp(liMovs)
+        if siWarning:
             self.warnings += self.max_warnings
             self.ponWarnings()
 
@@ -716,6 +728,7 @@ class GestorRoutesTactics(GestorRoutes):
             for pvar in jgObj.pvariantes:
                 jgObjV = pvar.jugada(0)
                 if jgObjV.movimiento() == jgSel.movimiento():
+
                     QTUtil2.mensajeTemporal(self.pantalla, _("You have selected one correct move, but the line use %s") % jgObj.pgnSP(), 3, posicion="ad")
                     self.ayuda(False)
                     self.sigueHumano()

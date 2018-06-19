@@ -14,6 +14,7 @@ import sqlite3
 import time
 import zlib
 import threading
+import scandir
 from itertools import cycle
 
 import chardet.universaldetector
@@ -57,13 +58,13 @@ def guardaVar(fich, v):
         q.write(pickle.dumps(v))
 
 
-def recuperaVar(fich):
+def recuperaVar(fich, default=None):
     try:
         with open(fich, "rb") as f:
             s = f.read()
         v = pickle.loads(s)
     except FileNotFoundError as e:
-        v = None
+        v = default
     return v
 
 
@@ -363,10 +364,11 @@ def dic8iniBase(fichero, dic):
 
 
 def creaCarpeta(carpeta):
-    try:
-        os.mkdir(carpeta)
-    except:
-        pass
+    if not os.path.isdir(carpeta):
+        try:
+            os.mkdir(carpeta)
+        except:
+            pass
 
 
 def secs2str(s):
@@ -562,10 +564,32 @@ class Rondo:
 
 def validNomFichero(nombre):
     nombre = nombre.strip()
-    for x in "\\:/|?*^%><()":
+    for x in "\\:/|?*^%><(),;\"":
         if x in nombre:
             nombre = nombre.replace(x, "_")
     return nombre
+
+
+def asciiNomFichero(nombre):
+    nombre = validNomFichero(nombre)
+    li = []
+    for x in nombre:
+        if not(31 < ord(x) < 127):
+            li.append("_")
+        else:
+            li.append(x)
+    nombre = "".join(li)
+    while "__" in nombre:
+        nombre = nombre.replace("__", "_")
+    return nombre
+
+
+def datefile(pathfile):
+    try:
+        mtime = os.path.getmtime(pathfile)
+        return datetime.datetime.fromtimestamp(mtime)
+    except:
+        return None
 
 
 class Timer:
@@ -713,7 +737,7 @@ def listfiles(*lista):
 
 
 def listdir(txt, siUnicode=True):
-    return os.listdir(txt) if siUnicode else os.listdir(txt.encode("utf-8"))
+    return scandir.scandir(txt if siUnicode else txt.encode("utf-8"))
 
 
 def dirRelativo(dr):
@@ -987,7 +1011,6 @@ class DicSQL(object):
 
 class LIdisk:
     def __init__(self, nomFichero):
-
         self.nomFichero = nomFichero
         self._conexion = sqlite3.connect(nomFichero)
         atexit.register(self.close)
@@ -1130,7 +1153,7 @@ class DicBLOB(object):
             self._conexion.commit()
             cursor.close()
 
-        self.dic = {}
+        self.stdic = set()
         self.tabla = tabla
         self.leeClaves()
 
@@ -1140,11 +1163,11 @@ class DicBLOB(object):
         cursor.execute(sql)
         li = cursor.fetchall()
         for clave, in li:
-            self.dic[clave] = True
+            self.stdic.add(clave)
         cursor.close()
 
     def __contains__(self, clave):
-        return clave in self.dic
+        return clave in self.stdic
 
     def __setitem__(self, clave, wav):
         cursor = self._conexion.cursor()
@@ -1154,7 +1177,7 @@ class DicBLOB(object):
             sql = "UPDATE %s SET dato=? WHERE clave = ?" % self.tabla
         else:
             sql = "INSERT INTO %s (dato,clave) values(?,?)" % self.tabla
-            self.dic[clave] = True
+            self.stdic.add(clave)
         cursor.execute(sql, liValores)
         cursor.close()
         self._conexion.commit()
@@ -1167,11 +1190,10 @@ class DicBLOB(object):
         cursor.close()
         self._conexion.commit()
 
-        if self.dic.get(clave):
-            del self.dic[clave]
+        self.stdic.remove(clave)
 
     def __getitem__(self, clave):
-        if clave in self.dic:
+        if clave in self.stdic:
             cursor = self._conexion.cursor()
             sql = "SELECT dato FROM %s WHERE clave= ?" % self.tabla
             liValores = [clave, ]
@@ -1184,7 +1206,7 @@ class DicBLOB(object):
             return None
 
     def __len__(self):
-        return len(self.dic)
+        return len(self.stdic)
 
     def close(self):
         if self._conexion:
@@ -1192,10 +1214,10 @@ class DicBLOB(object):
             self._conexion = None
 
     def keys(self):
-        return self.dic.keys()
+        return list(self.stdic)
 
     def get(self, clave, default):
-        if clave in self.dic:
+        if clave in self.stdic:
             return self.__getitem__(clave)
         else:
             return default

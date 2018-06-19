@@ -1,3 +1,5 @@
+import LCEngineV1 as LCEngine
+
 from operator import attrgetter
 
 from Code import TrListas
@@ -34,6 +36,7 @@ class AperturaStd:
 class ListaAperturasStd:
     def __init__(self):
         self.dic = None
+        self.dicFenM2 = None
         self.hijos = None
         self.lia1h8 = None
 
@@ -48,6 +51,19 @@ class ListaAperturasStd:
             for bl in self.dic.values():
                 bl.trOrdena = ("A" if bl.siBasic else "B") + bl.trNombre.upper()
             self.hijos = self.ordena(self.hijos, 0)
+
+        dfen = {}
+        makePV = LCEngine.makePV
+        fen2fenM2 = LCEngine.fen2fenM2
+
+        mx = 0
+        for n, (pv, ap) in enumerate(self.dic.iteritems(), 1):
+            fen = makePV(pv)
+            dfen[fen2fenM2(fen)] = ap
+            if n > mx:
+                mx = n
+        self.dicFenM2 = dfen
+        self.max_ply = mx
 
     def ordena(self, hijos, n):
         if hijos:
@@ -131,6 +147,16 @@ class ListaAperturasStd:
             if n <= 0:
                 self.hijos.append(bloque)
 
+    def asignaTransposition(self, partida):
+        partida.transposition = None
+        if not (partida.apertura is None or partida.pendienteApertura):
+            for nj, jg in enumerate(partida.liJugadas):
+                if not jg.siApertura:
+                    fenm2 = jg.posicion.fenM2()
+                    if fenm2 in self.dicFenM2:
+                        partida.transposition = self.dicFenM2[fenm2]
+                        partida.jg_transposition = jg
+
     def asignaApertura(self, partida):
         partida.apertura = None
         if not partida.siFenInicial():
@@ -203,6 +229,27 @@ class ListaAperturasStd:
                     li.append(ap)
 
         return li if li else None
+
+    def baseXPV(self, xpv):
+        lipv = LCEngine.xpv2pv(xpv).split(" ")
+        last_ap = None
+
+        LCEngine.setFenInicial()
+        mx = self.max_ply + 3
+        for n, pv in enumerate(lipv):
+            if n > mx:
+                break
+            LCEngine.makeMove(pv)
+            fen = LCEngine.getFen()
+            fenM2 = LCEngine.fen2fenM2(fen)
+            if fenM2 in self.dicFenM2:
+                last_ap = self.dicFenM2[fenM2]
+        return last_ap
+
+    def XPV(self, xpv):
+        last_ap = self.baseXPV(xpv)
+        return last_ap.trNombre if last_ap else ""
+
 
 ap = ListaAperturasStd()
 apTrain = ListaAperturasStd()

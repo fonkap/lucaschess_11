@@ -20,17 +20,23 @@ from Code import VarGen
 
 
 class WGM(QTVarios.WDialogo):
-    def __init__(self, procesador):
+    def __init__(self, procesador, siWoman):
         self.configuracion = procesador.configuracion
         self.procesador = procesador
+        self.siWoman = siWoman
 
         self.dbHisto = Util.DicSQL(self.configuracion.ficheroGMhisto)
         self.bloqueApertura = None
         self.liAperturasFavoritas = []
 
         wParent = procesador.pantalla
-        titulo = _("Play like a grandmaster")
-        icono = Iconos.GranMaestro()
+        if siWoman:
+            titulo = _("Play like a Woman Grandmaster")
+            icono = Iconos.WGranMaestro()
+        else:
+            titulo = _("Play like a Grandmaster")
+            icono = Iconos.GranMaestro()
+
         extparam = "gm"
         super().__init__(parent=wParent, titulo=titulo, icono=icono, extparam=extparam)
 
@@ -45,13 +51,13 @@ class WGM(QTVarios.WDialogo):
         tb = Controles.TBrutina(self, liAcciones)
 
         # Grandes maestros
-        self.liGM = GM.listaGM()
+        self.liGM = GM.listaGM(siWoman)
         li = [(x[0], x[1]) for x in self.liGM]
         li.insert(0, ("-", None))
         self.cbGM = QTUtil2.comboBoxLB(self, li, li[0][1] if len(self.liGM) == 0 else li[1][1])
         self.cbGM.capturaCambiado(self.compruebaGM)
         hbox = Colocacion.H().relleno().control(self.cbGM).relleno()
-        gbGM = Controles.GB(self, _("Choose a grandmaster"), hbox).ponFuente(flb)
+        gbGM = Controles.GB(self, _("Choose a Grandmaster"), hbox).ponFuente(flb)
 
         # Personales
         self.liPersonal = GM.listaGMpersonal(self.procesador.configuracion.dirPersonalTraining)
@@ -186,7 +192,10 @@ class WGM(QTVarios.WDialogo):
         self.recuperarVideo(anchoDefecto=450)
 
     def cambiadoDepth(self, num):
-        self.edJtiempo.ponFloat(0.0 if num > 0 else 3.0)
+        tiempo = self.edJtiempo.textoFloat()
+        if int(tiempo)*10 == 0:
+            tiempo = 3.0
+        self.edJtiempo.ponFloat(0.0 if num > 0 else tiempo)
         self.edJtiempo.setEnabled(num == 0)
 
     def closeEvent(self, event):
@@ -315,7 +324,7 @@ class WGM(QTVarios.WDialogo):
         if not self.grabaDic():  # crea self.ogm
             return
 
-        w = SelectGame(self, self.ogm)
+        w = SelectGame(self, self.ogm, self.siWoman)
         if w.exec_():
             if w.partidaElegida is not None:
                 self.record.partidaElegida = w.partidaElegida
@@ -326,8 +335,8 @@ class WGM(QTVarios.WDialogo):
         self.reject()
 
     def importar(self):
-        if importarGM(self):
-            liC = GM.listaGM()
+        if importarGM(self, self.siWoman):
+            liC = GM.listaGM(self.siWoman)
             self.cbGM.clear()
             for tp in liC:
                 self.cbGM.addItem(tp[0], tp[1])
@@ -370,7 +379,9 @@ class WGM(QTVarios.WDialogo):
         rk.bypassBook = self.cbBooks.valor()
         rk.apertura = self.bloqueApertura
 
-        carpeta = "GM" if rk.modo == "estandar" else self.configuracion.dirPersonalTraining
+        default = "WGM" if self.siWoman else "GM"
+
+        carpeta = default if rk.modo == "estandar" else self.configuracion.dirPersonalTraining
         self.ogm = GM.GM(carpeta, rk.gm)
         self.ogm.colorFilter(rk.siBlancas)
         if not len(self.ogm):
@@ -379,6 +390,7 @@ class WGM(QTVarios.WDialogo):
 
         self.ogm.isErasable = rk.modo == "personal" # para saber si se puede borrar
         self.record = rk
+        self.record.siWoman = self.siWoman
         dic = {}
 
         for atr in dir(self.record):
@@ -593,17 +605,24 @@ class WImportar(QtWidgets.QDialog):
         return self.liGM[fila][oColumna.clave]
 
 
-def importarGM(ownerGM):
+def importarGM(ownerGM, siWoman):
     # Primero nos tenemos que traer la lista de la web
     fichz = "_listaGM.zip"
     ficht = "_listaGM.txt"
-    fichtg = "gm/listaGM.txt"
+    fichtg = "GM/listaGM.txt"
+    if siWoman:
+        fichtg = "w" + fichtg
     try:
         os.remove(ficht)
     except:
         pass
-    web = "http://lucaschess.pythonanywhere.com/static/gm"
-    me = QTUtil2.mensEspera.inicio(ownerGM, _("Reading the list of grandmasters from the web"))
+    if siWoman:
+        web = "http://lucaschess.pythonanywhere.com/static/wgm"
+        message = _("Reading the list of Women Grandmaster from the web")
+    else:
+        web = "http://lucaschess.pythonanywhere.com/static/gm"
+        message = _("Reading the list of Grandmasters from the web")
+    me = QTUtil2.mensEspera.inicio(ownerGM, message)
     siError = False
     try:
         urllib.urlretrieve("%s/%s" % (web, fichz), fichz)
@@ -619,7 +638,7 @@ def importarGM(ownerGM):
     me.final()
 
     if siError:
-        QTUtil2.mensError(ownerGM, _("List of grandmasters currently unavailable; please check Internet connectivity"))
+        QTUtil2.mensError(ownerGM, _("List of Grandmasters currently unavailable; please check Internet connectivity"))
         return False
 
     shutil.copy(ficht, fichtg)
@@ -631,13 +650,16 @@ def importarGM(ownerGM):
         linea = linea.strip()
         if linea:
             gm, nombre, ctam, cpart = linea.split(VarGen.XSEP)
-            if Util.tamFichero("gm/%s.xgm" % gm) != int(ctam):  # si no existe tam = -1
+            fichero = "GM/%s.xgm" % gm
+            if siWoman:
+                fichero = "w" + fichero
+            if Util.tamFichero(fichero) != int(ctam):  # si no existe tam = -1
                 dic = {"GM": gm, "NOMBRE": nombre, "PARTIDAS": cpart, "ELEGIDO": False}
                 liGM.append(dic)
     f.close()
 
     if len(liGM) == 0:
-        QTUtil2.mensaje(ownerGM, _("You have all grandmasters installed."))
+        QTUtil2.mensaje(ownerGM, _("You have all Grandmasters installed."))
         return False
 
     w = WImportar(ownerGM, liGM)
@@ -654,7 +676,10 @@ def importarGM(ownerGM):
 
                 zfobj = zipfile.ZipFile(fzip)
                 for name in zfobj.namelist():
-                    outfile = open("gm/%s" % name, 'wb')
+                    fichero = "GM/%s" % name
+                    if siWoman:
+                        fichero = "w" + fichero
+                    outfile = open(fichero, 'wb')
                     outfile.write(zfobj.read(name))
                     outfile.close()
                 zfobj.close()
@@ -666,15 +691,14 @@ def importarGM(ownerGM):
 
     return False
 
-
 class SelectGame(QTVarios.WDialogo):
-    def __init__(self, wgm, ogm):
+    def __init__(self, wgm, ogm, siWoman):
         self.ogm = ogm
         self.liRegs = ogm.genToSelect()
         self.siReverse = False
         self.claveSort = None
 
-        dgm = GM.dicGM()
+        dgm = GM.dicGM(siWoman)
         nombre = dgm.get(ogm.gm, ogm.gm)
         titulo = "%s - %s" % (_("One game"), nombre)
         icono = Iconos.Uno()

@@ -3,7 +3,7 @@ import copy
 import datetime
 import random
 
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from Code import Apertura
 from Code import Gestor
@@ -16,10 +16,10 @@ from Code.Constantes import *
 
 
 class GestorFideFics(Gestor.Gestor):
-    def selecciona(self, tipo):
-        if tipo == "Fics":
+    def selecciona(self, tipoJuego):
+        self.tipoJuego = tipoJuego
+        if tipoJuego == kJugFics:
             self._db = "./IntFiles/FicsElo.db"
-            self.tipoJuego = kJugFics
             self._activo = self.configuracion.ficsActivo
             self._ponActivo = self.configuracion.ponFicsActivo
             self.nombreObj = _("Fics-player")  # self.cabs[ "White" if self.siJugamosConBlancas else "Black" ]
@@ -28,9 +28,8 @@ class GestorFideFics(Gestor.Gestor):
             self._newTitulo = _("New Fics-Elo")
             self._TIPO = "FICS"
 
-        else:
+        elif tipoJuego == kJugFide:
             self._db = "./IntFiles/FideElo.db"
-            self.tipoJuego = kJugFide
             self._activo = self.configuracion.fideActivo
             self._ponActivo = self.configuracion.ponFideActivo
             self.nombreObj = _("Fide-player")  # self.cabs[ "White" if self.siJugamosConBlancas else "Black" ]
@@ -38,6 +37,16 @@ class GestorFideFics(Gestor.Gestor):
             self._titulo = _("Fide-Elo")
             self._newTitulo = _("New Fide-Elo")
             self._TIPO = "FIDE"
+
+        elif tipoJuego == kJugLichess:
+            self._db = "./IntFiles/LichessElo.db"
+            self._activo = self.configuracion.lichessActivo
+            self._ponActivo = self.configuracion.ponLichessActivo
+            self.nombreObj = _("Lichess-player")
+            self._fichEstad = self.configuracion.fichEstadLichessElo
+            self._titulo = _("Lichess-Elo")
+            self._newTitulo = _("New Lichess-Elo")
+            self._TIPO = "LICHESS"
 
     def eligeJuego(self, siCompetitivo, nivel):
         self.siCompetitivo = siCompetitivo
@@ -405,7 +414,7 @@ class GestorFideFics(Gestor.Gestor):
 
         self.partida.append_jg(jg)
         if self.partida.pendienteApertura:
-            self.listaAperturasStd.asignaApertura(self.partida)
+            self.partida.asignaApertura()
         self.movimientosPiezas(jg.liMovs, True)
         self.tablero.ponPosicion(jg.posicion)
         self.ponFlechaSC(jg.desde, jg.hasta)
@@ -497,7 +506,7 @@ class GestorFideFics(Gestor.Gestor):
         if self.partida.numJugadas() > 2:
             self.analizaFinal()
             ndel = self.partida.anulaUltimoMovimiento(self.siJugamosConBlancas)
-            self.listaAperturasStd.asignaApertura(self.partida)
+            self.partida.asignaApertura()
             self.posJugadaObj -= ndel
             self.analisis = None
             self.ponteAlFinal()

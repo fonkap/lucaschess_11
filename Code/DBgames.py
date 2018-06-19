@@ -4,7 +4,7 @@ import sqlite3
 import time
 import random
 
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from Code import ControlPosicion
 from Code import Partida
@@ -403,10 +403,132 @@ class TreeSTAT:
         f.close()
         return fich
 
+    def getSummary(self, pvBase, dicAnalisis, siFigurinesPGN, allmoves=True):
+        liMoves = []
+        siBlancas = pvBase.count(" ") % 2 == 1 if pvBase else True
+
+        liChildren = self.children(pvBase, allmoves)
+
+        tt = 0
+
+        lipvmove = []
+        for alm in liChildren:
+            w, d, b, o = alm.W, alm.D, alm.B, alm.O
+            t = w + d + b + o
+            # if t == 0:
+            # continue
+
+            dic = {}
+            pvmove = alm.move
+            pv = pvBase + " " + pvmove
+            pv = pv.strip()
+            lipvmove.append(pvmove)
+            dic["numero"] = ""
+            dic["pvmove"] = pvmove
+            dic["pv"] = pv
+            dic["analisis"] = dicAnalisis.get(pvmove, None)
+            dic["games"] = t
+            tt += t
+            dic["white"] = w
+            dic["draw"] = d
+            dic["black"] = b
+            dic["other"] = o
+            dic["pwhite"] = w * 100.0 / t if t else 0.0
+            dic["pdraw"] = d * 100.0 / t if t else 0.0
+            dic["pblack"] = b * 100.0 / t if t else 0.0
+            dic["pother"] = o * 100.0 / t if t else 0.0
+
+            dic["alm"] = alm
+
+            liMoves.append(dic)
+
+        if allmoves:
+            for pvmove in dicAnalisis:
+                if pvmove not in lipvmove:
+                    dic = {}
+                    pv = pvBase + " " + pvmove
+                    pv = pv.strip()
+                    dic["pvmove"] = pvmove
+                    dic["pv"] = pv
+                    dic["analisis"] = dicAnalisis[pvmove]
+                    dic["games"] = 0
+                    dic["white"] = 0
+                    dic["draw"] = 0
+                    dic["black"] = 0
+                    dic["other"] = 0
+                    dic["pwhite"] = 0.00
+                    dic["pdraw"] = 0.00
+                    dic["pblack"] = 0.00
+                    dic["pother"] = 0.00
+                    dic["alm"] = None
+
+                    liMoves.append(dic)
+
+        liMoves = sorted(liMoves, key=lambda dic: -dic["games"])
+
+        tg = w = d = l = 0
+        for dic in liMoves:
+            dic["pgames"] = dic["games"] * 100.0 / tt if tt else 0.0
+            dic["pdrawwhite"] = dic["pwhite"] + dic["pdraw"]
+            dic["pdrawblack"] = dic["pblack"] + dic["pdraw"]
+            if siBlancas:
+                dic["win"] = dic["white"]
+                dic["lost"] = dic["black"]
+                dic["pwin"] = dic["pwhite"]
+                dic["plost"] = dic["pblack"]
+                dic["pdrawwin"] = dic["pdrawwhite"]
+                dic["pdrawlost"] = dic["pdrawblack"]
+            else:
+                dic["lost"] = dic["white"]
+                dic["win"] = dic["black"]
+                dic["pdrawlost"] = dic["pdrawwhite"]
+                dic["pdrawwin"] = dic["pdrawblack"]
+                dic["plost"] = dic["pwhite"]
+                dic["pwin"] = dic["pblack"]
+
+            g = dic["games"]
+            tg += g
+            w += dic["win"]
+            l += dic["lost"]
+            d += dic["draw"]
+
+            pvmove = dic["pvmove"]
+            if pvmove:
+                pv = dic["pv"]
+                p = Partida.Partida()
+                p.leerPV(pv)
+                if p.numJugadas():
+                    jg = p.last_jg()
+                    jugadas = jg.numMove()
+                    pgn = jg.pgnFigurinesSP() if siFigurinesPGN else jg.pgnSP()
+                    dic["move"] = pgn
+                    dic["numero"] = "%d." % jugadas
+                    if not jg.siBlancas():
+                        # dic["move"] = pgnSP.lower()
+                        dic["numero"] += ".."
+                else:
+                    dic["move"] = pvmove
+                dic["partida"] = p
+
+        dic = {}
+        dic["games"] = tg
+        dic["win"] = w
+        dic["draw"] = d
+        dic["lost"] = l
+        dic["pwin"] = w*100.0/tg if tg else 0.0
+        dic["pdraw"] = d*100.0/tg if tg else 0.0
+        dic["plost"] = l*100.0/tg if tg else 0.0
+        dic["pdrawwin"] = (w+d)*100.0/tg if tg else 0.0
+        dic["pdrawlost"] = (l+d)*100.0/tg if tg else 0.0
+        liMoves.append(dic)
+
+        return liMoves
+
 
 class DBgames:
-    def __init__(self, nomFichero):
+    def __init__(self, nomFichero, with_dbSTAT=True):
         self.nomFichero = Util.dirRelativo(nomFichero)
+        self.with_dbSTAT = with_dbSTAT
         self.liCamposBase = ["EVENT", "SITE", "DATE", "WHITE", "BLACK", "RESULT", "ECO", "WHITEELO", "BLACKELO", "PLIES"]
         self.liCamposWork = ["XPV", ]
         self.liCamposBLOB = ["PGN", ]
@@ -437,7 +559,10 @@ class DBgames:
 
         self.liOrden = []
 
-        self.dbSTAT = TreeSTAT(self.nomFichero + "_s1")
+        if self.with_dbSTAT:
+            self.dbSTAT = TreeSTAT(self.nomFichero + "_s1")
+        else:
+            self.dbSTAT = None
 
         self.liRowids = []
 
@@ -625,7 +750,11 @@ class DBgames:
         return xpv2pv(xpv)
 
     def ponOrden(self, liOrden):
-        li = ["%s %s" % (campo, tipo) for campo, tipo in liOrden]
+        li = []
+        for campo, tipo in liOrden:
+            if campo == "PLIES":
+                campo =  "CAST(PLIES AS INTEGER)"
+            li.append( "%s %s" % (campo, tipo))
         self.order = ",".join(li)
         self.liRowids = []
         self.rowidReader.run(self.liRowids, self.filter, self.order)
@@ -640,132 +769,16 @@ class DBgames:
         for recno in lista:
             pv = self.damePV(recno)
             result = self.field(recno, "RESULT")
-            self.dbSTAT.append(pv, result, -1)
+            if self.with_dbSTAT:
+                self.dbSTAT.append(pv, result, -1)
             self._cursor.execute(cSQL,(self.liRowids[recno],))
             del self.liRowids[recno]
-        self.dbSTAT.commit()
+        if self.with_dbSTAT:
+            self.dbSTAT.commit()
         self._conexion.commit()
 
     def getSummary(self, pvBase, dicAnalisis, siFigurinesPGN, allmoves=True):
-        liMoves = []
-        siBlancas = pvBase.count(" ") % 2 == 1 if pvBase else True
-
-        liChildren = self.dbSTAT.children(pvBase, allmoves)
-
-        tt = 0
-
-        lipvmove = []
-        for alm in liChildren:
-            w, d, b, o = alm.W, alm.D, alm.B, alm.O
-            t = w + d + b + o
-            # if t == 0:
-            # continue
-
-            dic = {}
-            pvmove = alm.move
-            pv = pvBase + " " + pvmove
-            pv = pv.strip()
-            lipvmove.append(pvmove)
-            dic["numero"] = ""
-            dic["pvmove"] = pvmove
-            dic["pv"] = pv
-            dic["analisis"] = dicAnalisis.get(pvmove, None)
-            dic["games"] = t
-            tt += t
-            dic["white"] = w
-            dic["draw"] = d
-            dic["black"] = b
-            dic["other"] = o
-            dic["pwhite"] = w * 100.0 / t if t else 0.0
-            dic["pdraw"] = d * 100.0 / t if t else 0.0
-            dic["pblack"] = b * 100.0 / t if t else 0.0
-            dic["pother"] = o * 100.0 / t if t else 0.0
-
-            dic["alm"] = alm
-
-            liMoves.append(dic)
-
-        if allmoves:
-            for pvmove in dicAnalisis:
-                if pvmove not in lipvmove:
-                    dic = {}
-                    pv = pvBase + " " + pvmove
-                    pv = pv.strip()
-                    dic["pvmove"] = pvmove
-                    dic["pv"] = pv
-                    dic["analisis"] = dicAnalisis[pvmove]
-                    dic["games"] = 0
-                    dic["white"] = 0
-                    dic["draw"] = 0
-                    dic["black"] = 0
-                    dic["other"] = 0
-                    dic["pwhite"] = 0.00
-                    dic["pdraw"] = 0.00
-                    dic["pblack"] = 0.00
-                    dic["pother"] = 0.00
-                    dic["alm"] = None
-
-                    liMoves.append(dic)
-
-        liMoves = sorted(liMoves, key=lambda dic: -dic["games"])
-
-        tg = w = d = l = 0
-        for dic in liMoves:
-            dic["pgames"] = dic["games"] * 100.0 / tt if tt else 0.0
-            dic["pdrawwhite"] = dic["pwhite"] + dic["pdraw"]
-            dic["pdrawblack"] = dic["pblack"] + dic["pdraw"]
-            if siBlancas:
-                dic["win"] = dic["white"]
-                dic["lost"] = dic["black"]
-                dic["pwin"] = dic["pwhite"]
-                dic["plost"] = dic["pblack"]
-                dic["pdrawwin"] = dic["pdrawwhite"]
-                dic["pdrawlost"] = dic["pdrawblack"]
-            else:
-                dic["lost"] = dic["white"]
-                dic["win"] = dic["black"]
-                dic["pdrawlost"] = dic["pdrawwhite"]
-                dic["pdrawwin"] = dic["pdrawblack"]
-                dic["plost"] = dic["pwhite"]
-                dic["pwin"] = dic["pblack"]
-
-            g = dic["games"]
-            tg += g
-            w += dic["win"]
-            l += dic["lost"]
-            d += dic["draw"]
-
-            pvmove = dic["pvmove"]
-            if pvmove:
-                pv = dic["pv"]
-                p = Partida.Partida()
-                p.leerPV(pv)
-                if p.numJugadas():
-                    jg = p.last_jg()
-                    jugadas = jg.numMove()
-                    pgn = jg.pgnFigurinesSP() if siFigurinesPGN else jg.pgnSP()
-                    dic["move"] = pgn
-                    dic["numero"] = "%d." % jugadas
-                    if not jg.siBlancas():
-                        # dic["move"] = pgnSP.lower()
-                        dic["numero"] += ".."
-                else:
-                    dic["move"] = pvmove
-                dic["partida"] = p
-
-        dic = {}
-        dic["games"] = tg
-        dic["win"] = w
-        dic["draw"] = d
-        dic["lost"] = l
-        dic["pwin"] = w*100.0/tg if tg else 0.0
-        dic["pdraw"] = d*100.0/tg if tg else 0.0
-        dic["plost"] = l*100.0/tg if tg else 0.0
-        dic["pdrawwin"] = (w+d)*100.0/tg if tg else 0.0
-        dic["pdrawlost"] = (l+d)*100.0/tg if tg else 0.0
-        liMoves.append(dic)
-
-        return liMoves
+        return self.dbSTAT.getSummary(pvBase, dicAnalisis, siFigurinesPGN, allmoves)
 
     def recrearSTAT(self, dispatch, depth):
         self.dbSTAT.reset(depth)
@@ -802,11 +815,13 @@ class DBgames:
 
         t1 = time.time()-0.7  # para que empiece enseguida
 
-        next_n = random.randint(100, 200)
+        if self.with_dbSTAT:
+            self.dbSTAT.massive_append_set(True)
 
-        self.dbSTAT.massive_append_set(True)
-
-        # fich_erroneos = "UsrData/fich_erroneos.pgn"
+        def write_logs(fich, pgn):
+            with open(fich, "ab") as ferr:
+                ferr.write(pgn)
+                ferr.write("\n")
 
         codec = Util.file_encoding(ficheros[0])
         sicodec = codec not in ("utf-8", "ascii")
@@ -823,11 +838,16 @@ class DBgames:
         liCabs.append("PLYCOUNT")
 
         for fichero in ficheros:
-            dlTmp.pon_titulo(os.path.basename(fichero))
+            nomfichero = os.path.basename(fichero)
+            fich_erroneos = os.path.join(VarGen.configuracion.carpetaTemporal(), nomfichero[:-3] + "errors.pgn")
+            fich_duplicados = os.path.join(VarGen.configuracion.carpetaTemporal(), nomfichero[:-3] + "duplicates.pgn")
+            dlTmp.pon_titulo(nomfichero)
+            next_n = random.randint(100, 200)
             with LCEngine.PGNreader(fichero, self.depthStat()) as fpgn:
                 for n, (pgn, pv, dCab, raw, liFens) in enumerate(fpgn, 1):
                     if not pv:
                         erroneos += 1
+                        write_logs(fich_erroneos, pgn)
                     else:
                         fen = dCab.get("FEN", None)
                         if fen and fen != ControlPosicion.FEN_INICIAL:
@@ -842,6 +862,7 @@ class DBgames:
                                 dup = num > 0
                             if dup:
                                 duplicados += 1
+                                write_logs(fich_duplicados, pgn)
                             else:
                                 stRegs.add(xpv)
                                 if sicodec:
@@ -872,15 +893,21 @@ class DBgames:
                                     pgn = Util.var2blob(pgn)
 
                                 reg = (xpv, event, site, date, white, black, result, eco, whiteelo, blackelo, pgn, plies)
-                                self.dbSTAT.append_fen(pv, result, liFens)
+                                if self.with_dbSTAT:
+                                    self.dbSTAT.append_fen(pv, result, liFens)
                                 liRegs.append(reg)
                                 nRegs += 1
                                 importados += 1
                                 if nRegs == 10000:
+                                    nRegs = 0
                                     cursor.executemany(sql, liRegs)
                                     liRegs = []
                                     stRegs = set()
                                     conexion.commit()
+                                    if self.with_dbSTAT:
+                                        self.dbSTAT.massive_append_set(False)
+                                        self.dbSTAT.commit()
+                                        self.dbSTAT.massive_append_set(True)
                     if n == next_n:
                         if time.time()-t1> 0.8:
                             if not dlTmp.actualiza(erroneos+duplicados+importados, erroneos, duplicados, importados):
@@ -891,19 +918,20 @@ class DBgames:
         if liRegs:
             cursor.executemany(sql, liRegs)
             conexion.commit()
-
         dlTmp.actualiza(erroneos+duplicados+importados, erroneos, duplicados, importados)
         dlTmp.ponSaving()
 
-        self.dbSTAT.massive_append_set(False)
-        self.dbSTAT.commit()
+        if self.with_dbSTAT:
+            self.dbSTAT.massive_append_set(False)
+            self.dbSTAT.commit()
         conexion.commit()
         dlTmp.ponContinuar()
 
     def appendDB(self, db, liRecnos, dlTmp):
         duplicados = importados = 0
 
-        self.dbSTAT.massive_append_set(True)
+        if self.with_dbSTAT:
+            self.dbSTAT.massive_append_set(True)
 
         t1 = time.time() - 0.7  # para que empiece enseguida
 
@@ -930,7 +958,8 @@ class DBgames:
                 pv = xpv2pv(xpv)
                 reg = (xpv, raw["EVENT"], raw["SITE"], raw["DATE"], raw["WHITE"], raw["BLACK"], raw["RESULT"], raw["ECO"], raw["WHITEELO"],
                        raw["BLACKELO"], raw["PGN"], raw["PLIES"])
-                self.dbSTAT.append(pv, raw["RESULT"])
+                if self.with_dbSTAT:
+                    self.dbSTAT.append(pv, raw["RESULT"])
                 liRegs.append(reg)
                 nRegs += 1
                 importados += 1
@@ -938,6 +967,10 @@ class DBgames:
                     cursor.executemany(sql, liRegs)
                     liRegs = []
                     conexion.commit()
+                    if self.with_dbSTAT:
+                        self.dbSTAT.massive_append_set(False)
+                        self.dbSTAT.commit()
+                        self.dbSTAT.massive_append_set(True)
 
             if pos == next_n:
                 if time.time() - t1 > 0.8:
@@ -953,8 +986,9 @@ class DBgames:
         dlTmp.actualiza(duplicados + importados, duplicados, importados)
         dlTmp.ponSaving()
 
-        self.dbSTAT.massive_append_set(False)
-        self.dbSTAT.commit()
+        if self.with_dbSTAT:
+            self.dbSTAT.massive_append_set(False)
+            self.dbSTAT.commit()
         conexion.commit()
 
         dlTmp.ponContinuar()
@@ -971,6 +1005,56 @@ class DBgames:
         for campo in self.liCamposAll:
             setattr(alm, campo, raw[campo])
         return alm, raw
+
+    def countData(self, filtro):
+        sql = "SELECT COUNT(*) FROM %s"%self.tabla
+        if self.filter:
+            sql += " WHERE %s"%self.filter
+            if filtro:
+                sql += " AND %s" % filtro
+        else:
+            if filtro:
+                sql += " WHERE %s"% filtro
+
+        self._cursor.execute(sql)
+        return self._cursor.fetchone()[0]
+
+    def yieldData(self, liFields, filtro):
+        select = ",".join(liFields)
+        sql = "SELECT %s FROM %s"%(select, self.tabla)
+        if self.filter:
+            sql += " WHERE %s"%self.filter
+            if filtro:
+                sql += " AND %s" % filtro
+        else:
+            if filtro:
+                sql += " WHERE %s"% filtro
+
+        self._cursor.execute(sql)
+        while True:
+            raw = self._cursor.fetchone()
+            if raw:
+                alm = Util.Almacen()
+                for campo in liFields:
+                    setattr(alm, campo, raw[campo])
+                yield alm
+            else:
+                return
+
+    def players(self):
+        sql = "SELECT DISTINCT WHITE FROM %s"%self.tabla
+        self._cursor.execute(sql)
+        listaw = [raw[0] for raw in self._cursor.fetchall()]
+
+        sql = "SELECT DISTINCT BLACK FROM %s" % self.tabla
+        self._cursor.execute(sql)
+        listab = [raw[0] for raw in self._cursor.fetchall()]
+
+        listaw.extend(listab)
+
+        lista = list(set(listaw))
+        lista.sort()
+        return lista
 
     def leePartidaRecno(self, recno):
         raw = self.leeAllRecno(recno)
@@ -1003,12 +1087,12 @@ class DBgames:
         for field in self.liCamposBase:
              v = raw[field]
              if v:
-                 litags.append( (drots.get(field, field), str(v) ) )
+                 litags.append((drots.get(field, field), v if type(v) == unicode else str(v)))
         if rtags:
             litags.extend(rtags)
 
         p.setTags(litags)
-        p.asignaApertura(VarGen.configuracion)
+        p.asignaApertura()
         return p
 
     def leePGNRecno(self, recno):
@@ -1088,9 +1172,10 @@ class DBgames:
         self._conexion.commit()
         pvAnt = xpv2pv(reg_ant["XPV"])
         resNue = dTags.get("RESULT", "*")
-        self.dbSTAT.append(pvAnt, resAnt, -1)
-        self.dbSTAT.append(pvNue, resNue, +1)
-        self.dbSTAT.commit()
+        if self.with_dbSTAT:
+            self.dbSTAT.append(pvAnt, resAnt, -1)
+            self.dbSTAT.append(pvNue, resNue, +1)
+            self.dbSTAT.commit()
 
         del self.cache[rowid]
 
@@ -1122,8 +1207,9 @@ class DBgames:
         sql = "insert into games (XPV,EVENT,SITE,DATE,WHITE,BLACK,RESULT,ECO,WHITEELO,BLACKELO,PLIES,PGN) values (?,?,?,?,?,?,?,?,?,?,?,?);"
         self._cursor.execute(sql, data)
         self._conexion.commit()
-        self.dbSTAT.append(pv, dTags.get("RESULT", "*"), +1)
-        self.dbSTAT.commit()
+        if self.with_dbSTAT:
+            self.dbSTAT.append(pv, dTags.get("RESULT", "*"), +1)
+            self.dbSTAT.commit()
 
         self.liRowids.append(self._cursor.lastrowid)
 
@@ -1183,6 +1269,11 @@ class DBgames:
         self._conexion.commit()
 
         self.reset_cache()
+
+    def pack(self):
+        self._conexion.execute("VACUUM")
+        if self.with_dbSTAT:
+            self.dbSTAT._conexion.execute("VACUUM")
 
     def insert_pks(self, path_pks):
         f = open(path_pks, "rb")

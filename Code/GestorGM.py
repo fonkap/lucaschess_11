@@ -23,6 +23,8 @@ class GestorGM(Gestor.Gestor):
 
         self.record = record
 
+        self.siWoman = self.record.siWoman
+
         self.gm = record.gm
         self.siBlancas = record.siBlancas
         self.modo = record.modo
@@ -57,7 +59,8 @@ class GestorGM(Gestor.Gestor):
 
         self.pensando(True)
 
-        carpeta = "GM" if self.modo == "estandar" else self.configuracion.dirPersonalTraining
+        default = "WGM" if self.siWoman else "GM"
+        carpeta = default if self.modo == "estandar" else self.configuracion.dirPersonalTraining
         self.motorGM = GM.GM(carpeta, self.gm)
         self.motorGM.colorFilter(self.siBlancas)
         if self.partidaElegida is not None:
@@ -74,9 +77,10 @@ class GestorGM(Gestor.Gestor):
         self.mostrarIndicador(True)
         self.quitaAyudas()
         self.ponPiezasAbajo(self.siBlancas)
-        dic = GM.dicGM()
+        dic = GM.dicGM(self.siWoman)
         self.nombreGM = dic[self.gm.lower()] if self.modo == "estandar" else self.gm
-        rotulo1 = _("Grandmaster") + ": <b>%s</b>" if self.modo == "estandar" else "<b>%s</b>"
+        rot = _("Woman Grandmaster") if self.siWoman else _("Grandmaster")
+        rotulo1 = rot + ": <b>%s</b>" if self.modo == "estandar" else "<b>%s</b>"
         self.ponRotulo1(rotulo1 % self.nombreGM)
 
         self.nombreRival = ""
@@ -304,10 +308,12 @@ class GestorGM(Gestor.Gestor):
 
             rmUsu, nada = mrm.buscaRM(jgUsu.movimiento())
             if rmUsu is None:
+                um = QTUtil2.analizando(self.pantalla)
                 self.analizaFinal()
                 rmUsu = self.xtutor.valora(posicion, desde, hasta, coronacion)
                 mrm.agregaRM(rmUsu)
                 self.analizaInicio()
+                um.final()
 
             rmGM, posGM = mrm.buscaRM(jgGM.movimiento())
             if rmGM is None:
@@ -386,7 +392,7 @@ class GestorGM(Gestor.Gestor):
 
         self.partida.append_jg(jg)
         if self.partida.pendienteApertura:
-            self.listaAperturasStd.asignaApertura(self.partida)
+            self.partida.asignaApertura()
 
         self.ponFlechaSC(jg.desde, jg.hasta)
         self.beepExtendido(siNuestra)

@@ -1,34 +1,35 @@
 /*
-  Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
-  Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad
-  Copyright (C) 2015-2017 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
-
-  Stockfish is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Stockfish is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ McBrain, a UCI chess playing engine derived from Stockfish and Glaurung 2.1
+ Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
+ Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad (Stockfish Authors)
+ Copyright (C) 2015-2016 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad (Stockfish Authors)
+ Copyright (C) 2017-2018 Michael Byrne, Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad (McBrain Authors)
+ 
+ McBrain is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ McBrain is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <algorithm>
 #include <cassert>
 #include <ostream>
 
 #include "misc.h"
+#include "polybook.h"
 #include "search.h"
 #include "thread.h"
 #include "tt.h"
-#include "tzbook.h"
 #include "uci.h"
-#include "tbprobe.h"
+#include "syzygy/tbprobe.h"
 
 using std::string;
 
@@ -42,8 +43,10 @@ void on_hash_size(const Option& o) { TT.resize(o); }
 void on_logger(const Option& o) { start_logger(o); }
 void on_threads(const Option& o) { Threads.set(o); }
 void on_tb_path(const Option& o) { Tablebases::init(o); }
-void on_brainbook_path(const Option& o) { tzbook.init(o); }
-void on_book_move2_prob(const Option& o) { tzbook.set_book_move2_probability(o); }
+	
+void on_book_file(const Option& o) { polybook.init(o); }
+void on_best_book_move(const Option& o) { polybook.set_best_book_move(o); }
+void on_book_depth(const Option& o) { polybook.set_book_depth(o); }
 
 
 /// Our case insensitive less() function as required by UCI protocol
@@ -58,35 +61,43 @@ bool CaseInsensitiveLess::operator() (const string& s1, const string& s2) const 
 
 void init(OptionsMap& o) {
 
-  const int MaxHashMB = Is64Bit ? 1024 * 1024 : 2048;
+  // at most 2^32 clusters.
+  constexpr int MaxHashMB = Is64Bit ? 131072 : 2048;
 
-  o["Hash"]                  << Option(16, 1, MaxHashMB, on_hash_size);
-  o["Ponder"]                << Option(false);
+  o["Debug Log File"]        << Option("", on_logger);
+  o["Contempt"]              << Option(12, -150, 150);
+  o["Analysis Contempt"]     << Option("Both var Off var White var Black var Both", "Off");
+  o["UCI_AnalyseMode"]       << Option(false);
   o["Threads"]               << Option(1, 1, 512, on_threads);
+  o["Hash"]                  << Option(16, 1, MaxHashMB, on_hash_size);
+  o["Clear_Hash"]            << Option(on_clear_hash);
+  o["Clean_Search"]          << Option(false);
 
-  o["Clear Hash"]            << Option(on_clear_hash);
-  o["Clean Search"]          << Option(false);
+  o["Tactical"]              << Option(0, 0,  8);
+  o["Ponder"]                << Option(false);
+  o["MultiPV"]               << Option(1, 1, 256);
   o["BruteForce"]            << Option(false);
   o["FastPlay"]              << Option(false);
   o["No_Null_Moves"]         << Option(false);
   o["UCI_LimitStrength"]     << Option(false);
-  o["UCI_ELO"]               << Option(1500, 1500, 2800);
-  o["Book Move2 Probability"]<< Option(0, 0, 100, on_book_move2_prob);
-  o["BookPath"]              << Option("<empty>", on_brainbook_path);
-  o["Respect"]               << Option(0, -300, 300);
-  o["Respect White POV"]     << Option(0, -300, 300);
-  o["Tactical"]              << Option(0, 0,  8);
 
-  o["MultiPV"]               << Option(1, 1, 500);
+  o["UCI_ELO"]               << Option(1500, 1500, 2800);
   o["Skill Level"]           << Option(20, 0, 20);
-  o["Move Overhead"]         << Option(60, 0, 5000);
+  o["Move Overhead"]         << Option(30, 0, 5000);
+  o["Minimum Thinking Time"] << Option(20, 0, 5000);
+  o["Slow Mover"]            << Option(84, 10, 1000);
   o["nodestime"]             << Option(0, 0, 10000);
   o["UCI_Chess960"]          << Option(false);
+  o["UCI_AnalyseMode"]       << Option(false);
   o["SyzygyPath"]            << Option("<empty>", on_tb_path);
   o["SyzygyProbeDepth"]      << Option(1, 1, 100);
   o["Syzygy50MoveRule"]      << Option(true);
   o["SyzygyProbeLimit"]      << Option(6, 0, 6);
-  o["Debug Log File"]        << Option("", on_logger);
+  o["Book_Enabled"]          << Option(true);
+  o["BookFile"]              << Option("<empty>", on_book_file);
+  o["BestBookMove"]          << Option(true, on_best_book_move);
+  o["BookDepth"]             << Option(255, 1, 255, on_book_depth);
+  o["Debug Log File"]                 << Option("", on_logger);
 }
 
 
@@ -102,11 +113,13 @@ std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
               const Option& o = it.second;
               os << "\noption name " << it.first << " type " << o.type;
 
-              if (o.type != "button")
+              if (o.type == "string" || o.type == "check" || o.type == "combo")
                   os << " default " << o.defaultValue;
 
               if (o.type == "spin")
-                  os << " min " << o.min << " max " << o.max;
+                  os << " default " << int(stof(o.defaultValue))
+                     << " min "     << o.min
+                     << " max "     << o.max;
 
               break;
           }
@@ -126,17 +139,26 @@ Option::Option(bool v, OnChange f) : type("check"), min(0), max(0), on_change(f)
 Option::Option(OnChange f) : type("button"), min(0), max(0), on_change(f)
 {}
 
-Option::Option(int v, int minv, int maxv, OnChange f) : type("spin"), min(minv), max(maxv), on_change(f)
+Option::Option(double v, int minv, int maxv, OnChange f) : type("spin"), min(minv), max(maxv), on_change(f)
 { defaultValue = currentValue = std::to_string(v); }
 
-Option::operator int() const {
+Option::Option(const char* v, const char* cur, OnChange f) : type("combo"), min(0), max(0), on_change(f)
+{ defaultValue = v; currentValue = cur; }
+
+Option::operator double() const {
   assert(type == "check" || type == "spin");
-  return (type == "spin" ? stoi(currentValue) : currentValue == "true");
+  return (type == "spin" ? stof(currentValue) : currentValue == "true");
 }
 
 Option::operator std::string() const {
   assert(type == "string");
   return currentValue;
+}
+
+bool Option::operator==(const char* s) {
+  assert(type == "combo");
+  return    !CaseInsensitiveLess()(currentValue, s)
+         && !CaseInsensitiveLess()(s, currentValue);
 }
 
 
@@ -161,7 +183,7 @@ Option& Option::operator=(const string& v) {
 
   if (   (type != "button" && v.empty())
       || (type == "check" && v != "true" && v != "false")
-      || (type == "spin" && (stoi(v) < min || stoi(v) > max)))
+      || (type == "spin" && (stof(v) < min || stof(v) > max)))
       return *this;
 
   if (type != "button")

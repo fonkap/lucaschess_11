@@ -1,7 +1,8 @@
 import operator
 import os
+import sys
 
-from LCEngine import xpv2pv, pv2xpv
+from LCEngineV1 import xpv2pv, pv2xpv
 
 from Code import Jugada
 from Code import Util
@@ -67,7 +68,9 @@ class GM:
         return self.lastGame
 
     def read(self):
-        ficheroGM = self.gm + ".xgm"
+        #linux is case sensitive and can't find the xgm file because ficheroGM is all lower-case, but all
+        #the xgm files have the first letter capitalized (including ones recently downloaded)
+        ficheroGM = self.gm[0].upper() + self.gm[1:] + ".xgm"
         f = open(os.path.join(self.carpeta, ficheroGM), "r")
         li = []
         for linea in f:
@@ -191,9 +194,12 @@ class GM:
         self.write()
 
 
-def dicGM():
+def dicGM(siWoman):
     dic = {}
-    f = open("gm/listaGM.txt", "r")
+    nomfich = "GM/listaGM.txt"
+    if siWoman:
+        nomfich = "W" + nomfich
+    f = open(nomfich, "r")
     for linea in f:
         if linea:
             li = linea.split(VarGen.XSEP)
@@ -205,11 +211,12 @@ def dicGM():
     return dic
 
 
-def listaGM():
-    dic = dicGM()
+def listaGM(siWoman):
+    dic = dicGM(siWoman)
     li = []
-    for fich in Util.listdir("GM"):
-        fich = fich.lower()
+
+    for entry in Util.listdir("WGM" if siWoman else "GM"):
+        fich = entry.name.lower()
         if fich.endswith(".xgm"):
             gm = fich[:-4].lower()
             try:
@@ -222,8 +229,8 @@ def listaGM():
 
 def listaGMpersonal(carpeta):
     li = []
-    for fich in Util.listdir(carpeta):
-        fich = fich.lower()
+    for entry in Util.listdir(carpeta):
+        fich = entry.name.lower()
         if fich.endswith(".xgm"):
             gm = fich[:-4]
 

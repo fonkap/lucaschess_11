@@ -4,7 +4,7 @@ import sqlite3
 import time
 import random
 
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from Code import Partida
 from Code import Util
@@ -100,10 +100,15 @@ class DBgamesFEN():
             self._conexion = None
 
     def ponOrden(self, liOrden):
-        li = ["%s %s" % (campo, tipo) for campo, tipo in liOrden]
+        li = []
+        for campo, tipo in liOrden:
+            if campo == "PLIES":
+                campo =  "CAST(PLIES AS INTEGER)"
+            li.append( "%s %s" % (campo, tipo))
         self.order = ",".join(li)
+        self.liRowids = []
+        self.rowidReader.run(self.liRowids, self.filter, self.order)
         self.liOrden = liOrden
-        self.lee_rowids()
 
     def dameOrden(self):
         return self.liOrden
@@ -377,11 +382,17 @@ class DBgamesFEN():
         return True
 
     def si_existe_fen(self, fen):
-        self._cursor.execute("SELECT COUNT(*) FROM GAMES WHERE FEN = ?", (fen,))
+        li = fen.split(" ")
+        busca = " ".join(li[:-2]) + "%"
+        self._cursor.execute("SELECT COUNT(*) FROM GAMES WHERE FEN LIKE ?", (busca,))
         num = self._cursor.fetchone()[0]
         return num
 
     def inserta(self, partidaCompleta):
+        fen = partidaCompleta.iniPosicion.fen()
+        if self.si_existe_fen(fen):
+            return False
+
         pgn = {}
         pgn["FULLGAME"] = partidaCompleta.save()
         xpgn = Util.var2blob(pgn)

@@ -25,7 +25,7 @@ class ThanksTo:
 
     def listaMotores(self, bloque):
         li = [
-            ["Acqua 20160918", "Giovanni Di Maria", "http://www.elektrosoft.it/scacchi/acqua/acqua.asp"],
+            ["Acqua 2.0", "Giovanni Di Maria", "http://www.elektrosoft.it/scacchi/acqua/acqua.asp"],
             ["Tarrasch ToyEngine Beta V0.905", "Bill Forster", "http://www.triplehappy.com/"],
             ["Rocinante 2.0", "Antonio Torrecillas", "http://sites.google.com/site/barajandotrebejos/"],
             ["Roce 0.0390", "Roman Hartmann", "http://www.rocechess.ch/rocee.html"],
@@ -47,7 +47,7 @@ class ThanksTo:
             ["Alaric 707", "Peter Fendrich", "http://alaric.fendrich.se/index.html"],
             ["Cyrano 06B17", "Harald Johnsen", "http://sites.estvideo.net/tipunch/cyrano/"],
             ["Daydreamer 1.75 JA", "Aaron Becker", "http://github.com/AaronBecker/daydreamer/downloads"],
-            ["Gödel 3.4.9", "Juan Manuel Vazquez", "https://sites.google.com/site/godelchessengine"],
+            ["Gödel 4.0.7", "Juan Manuel Vazquez", "https://sites.google.com/site/godelchessengine"],
             ["Rhetoric 1.4.3", "Alberto Sanjuan", "http://www.chessrhetoric.com/"],
             ["Cheng 4 0.39", "Martin Sedlák", "http://www.vlasak.biz/cheng"],
             ["Glaurung 2.2 JA", "Tord RomsTad", "http://www.glaurungchess.com/"],
@@ -61,22 +61,23 @@ class ThanksTo:
             ["Rybka 2.3.2a 32-bit", "Vasik Rajlich", "http://rybkachess.com/"],
             ["Critter 1.6a 32bits", "Richard Vida", "http://www.vlasak.biz/critter/"],
             ["Texel 1.07", "Peter Österlund", "http://hem.bredband.net/petero2b/javachess/index.html#texel"],
-            ["Stockfish 8", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
-            ["McBrain 2.7", "Michael Byrne (based on stockfish)", "https://github.com/MichaelB7/Stockfish/releases"],
+            ["Stockfish 9", "Tord Romstad, Marco Costalba, Joona Kiiski", "http://stockfishchess.org/"],
+            ["McBrain 9.1", "Michael Byrne", "https://github.com/MichaelB7/Stockfish/releases"],
             ["Gull 3", "Vadim Demichev", "https://sourceforge.net/projects/gullchess/"],
             ["Delfi 5.4", "Fabio Cavicchio", "http://www.msbsoftware.it/delfi/"],
             # ["SmartThink 1.97", "Sergei S. Markoff", "http://genes1s.net/smarthink.php"],
+            ["Hannibal 1.4b", "Samuel N. Hamilton and Edsel G. Apostol", "http://sites.google.com/site/edapostol/hannibal"],
             ["Monarch 1.7", "Steve Maughan", "http://www.monarchchess.com/"],
             ["Andscacs 0.9032n", "Daniel José Queraltó", "http://www.andscacs.com/"],
             ["Arminius 2017-01-01", "Volker Annus", "http://www.nnuss.de/Hermann/Arminius2017-01-01.zip"],
             ["WildCat", "Igor Korshunov", "http://www.igorkorshunov.narod.ru/WildCat"],
             ["Demolito", "Lucas Braesch", "https://github.com/lucasart/Demolito"],
-            ["Hannibal 1.7", "Samuel N. Hamilton and Edsel G. Apostol", "http://sites.google.com/site/edapostol/hannibal"],
             ["Spike 1.4", "Volker Böhm and Ralf Schäfer", "http://spike.lazypics.de/index_en.html"],
             ["Zappa 1.1", "Anthony Cozzie", "http://www.acoz.net/zappa/"],
             ["Irina 0.15", "Lucas Monge", "https://github.com/lukasmonk/irina"],
             ["Houdini 1.5a", "Robert Houdart", "http://www.cruxis.com/chess/houdini.htm"],
             ["Paladin 0.1", "Ankan Banerjee", "https://github.com/ankan-ban/chess_cpu"],
+            ["Cdrill 1800", "Ferdinand Mosca", "https://sites.google.com/view/cdrill"]
         ]
         li.sort(key=lambda x: x[0])
         n = len(li)
@@ -123,7 +124,7 @@ class ThanksTo:
             return txt
 
         # Version 11
-        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob", "Giovanni di Maria", "vga", "Remes", "Péter Rabi"]
+        liBase = ["Alfonso Solbes", "Max Aloyau", "tico-tico", "Nils Andersson", "Bernhard", "Ed Smith", "Rob", "Giovanni di Maria", "vga", "Remes", "Péter Rabi", "Iñaki Rodriguez"]
         liResto = ["Immortalchess forum",]
         txt += version(11, liBase, liResto)
 
@@ -232,7 +233,7 @@ class ThanksTo:
 
         li = [
             ("Nuvola", '<a href="http://icon-king.com/?p=15">David Vignoni</a>', 'http://www.icon-king.com/projects/nuvola/', "LGPL"),
-            ("Gnome", 'Gnome', "http://svn.gnome.org/viewvc/gnome-icon-theme/", "GPL"),
+            ("Gnome", 'Gnome', "https://github.com/GNOME/gnome-icon-theme", "GPL"),
             ("Silk icon set 1.3", 'Mark James', 'http://www.famfamfam.com/lab/icons/silk/', "Creative Commons Attribution 2.5 License"),
             ("Wooicons1", 'Janik Baumgartner', 'http://www.woothemes.com/2010/08/woocons1/', "GPL"),
             ("Ultimate Gnome 0.5.1", 'Marco Tessarotto', 'http://gnome-look.org/content/show.php/Ultimate+Gnome?content=75000', "GPL"),
@@ -271,6 +272,7 @@ class ThanksTo:
             ("Mohammed Abdalazez", _("Permission of author")),
             ("Red Hood", _("Permission of author")),
             ("Michael Byrne", _("Permission of author")),
+            ("Ben Citak", _("Permission of author")),
         ]
         for autor, licencia in li:
             txt += "<tr>"
@@ -317,48 +319,23 @@ class ThanksTo:
         txt += "</tr>"
 
         li = [
-            ("ChessiconsV3.5", '<a href=mailto:peterwong@virtualpieces.net>Peter Wong</a>',
-             '<a href="http://www.virtualpieces.net">http://www.virtualpieces.net</a>', _("Permission of author")),
-            ("Merida-Internet", 'Felix Kling', '<a href="http://www.rybkachess.com">http://www.rybkachess.com</a>',
-             _("Permission of author")),
-            ("Spatial-Fantasy\nSKulls-Freak-Prmi", 'Maurizio Monge',
-             '<a href="http://poisson.phc.unipi.it/~monge/chess_art.php">Maurizio Monge\'s homepage</a>', "GPL"),
-            ("Cburnett", 'Cburnett',
-             '<a href="http://en.wikipedia.org/wiki/User:Cburnett/GFDL_images/Chess">Wikimedia Commons</a>',
-             "Creative Commons Attribution 2.5 License"),
-            ("Chess Alpha", 'Eric Bentzen',
-             '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>',
-             _("Permission of author")),
-            ("Montreal", 'Gary Katch',
-             '<a href="http://alcor.concordia.ca/~gpkatch/montreal_font.html">http://alcor.concordia.ca/~gpkatch/montreal_font.html</a>',
-             _("Permission of author")),
-            ("Magnetic-Leipzig<br>AlfonsoX-Maya<br>Condal", 'Armando H. Marroquín',
-             '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>',
-             _("Freeware")),
-            ("Chess Pirat", 'Klaus Wolf',
-             '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>',
-             _("Freeware")),
-            ("Chess Regular", 'Alastair Scott',
-             '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>',
-             _("Freeware")),
-            ("Kilfiger", 'James Kilfiger',
-             '<a href="https://sites.google.com/site/jameskilfiger/">https://sites.google.com/site/jameskilfiger/</a>',
-             "SIL open font licence"),
-            ("Cartoon", "Based on work by Martin Bérubé",
-             '<a href="http://www.how-to-draw-funny-cartoons.com">http://www.how-to-draw-funny-cartoons.com</a>',
-             _("Free for personal non-commercial use")),
-            ("Qwertyxp2000", "Qwertyxp2000",
-             '<a href="http://commons.wikimedia.org/wiki/File%3AChess_pieces_(qwertyxp2000).svg">http://commons.wikimedia.org/wiki/File%3AChess_pieces_(qwertyxp2000).svg</a>',
-             "Creative Commons Attribution 2.5 License"),
-            ("Jin Alpha", "Eric De Mund",
-             '<a href="http://ixian.com/chess/jin-piece-sets/">http://ixian.com/chess/jin-piece-sets/</a>',
-             "Creative Commons Attribution-Share Alike 3.0 Unported"),
-            ("Etruscan<br>Etruscan clear", "Fabrice",
-             '<a href="http://zipanatura.fr/">http://zipanatura.fr/</a>',
-             "CC BY-NC-ND 4.0"),
-            ("Stauton 3D", "Marc Graziani", '<a href="<https://plus.google.com/101635611158475796811/about">Marc Graziani</a>', _("Permission of author")),
-            ("Kidsdraw", "Marc Graziani", '<a href="<https://plus.google.com/101635611158475796811/about">Marc Graziani</a>', _("Permission of author")),
-        ]
+            ("ChessiconsV3.5", '<a href=mailto:peterwong@virtualpieces.net>Peter Wong</a>', '<a href="http://www.virtualpieces.net">http://www.virtualpieces.net</a>', _("Permission of author")),
+            ("Merida-Internet", 'Felix Kling', '<a href="http://www.rybkachess.com">http://www.rybkachess.com</a>', _("Permission of author")),
+            ("Spatial-Fantasy<br>SKulls-Freak-Prmi", 'Maurizio Monge', '<a href="http://poisson.phc.unipi.it/~monge/chess_art.php">Maurizio Monge\'s homepage</a>', "GPL"),
+            ("Cburnett", 'Cburnett', '<a href="http://en.wikipedia.org/wiki/User:Cburnett/GFDL_images/Chess">Wikimedia Commons</a>', "Creative Commons Attribution 2.5 License"),
+            ("Chess Alpha", 'Eric Bentzen', '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>', _("Permission of author")),
+            ("Montreal", 'Gary Katch', '<a href="http://alcor.concordia.ca/~gpkatch/montreal_font.html">http://alcor.concordia.ca/~gpkatch/montreal_font.html</a>', _("Permission of author")),
+            ("Magnetic-Leipzig<br>AlfonsoX-Maya<br>Condal", 'Armando H. Marroquín', '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>', _("Freeware")),
+            ("Chess Pirat", 'Klaus Wolf', '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>', _("Freeware")),
+            ("Chess Regular", 'Alastair Scott', '<a href="http://www.enpassant.dk/chess/fonteng.htm">http://www.enpassant.dk/chess/fonteng.htm</a>', _("Freeware")),
+            ("Kilfiger", 'James Kilfiger', '<a href="https://sites.google.com/site/jameskilfiger/">https://sites.google.com/site/jameskilfiger/</a>', "SIL open font licence"),
+            ("Cartoon", "Based on work by Martin Bérubé", '<a href="http://www.how-to-draw-funny-cartoons.com">http://www.how-to-draw-funny-cartoons.com</a>', _("Free for personal non-commercial use")),
+            ("Qwertyxp2000", "Qwertyxp2000", '<a href="http://commons.wikimedia.org/wiki/File%3AChess_pieces_(qwertyxp2000).svg">http://commons.wikimedia.org/wiki/File%3AChess_pieces_(qwertyxp2000).svg</a>', "Creative Commons Attribution 2.5 License"),
+            ("Jin Alpha", "Eric De Mund", '<a href="http://ixian.com/chess/jin-piece-sets/">http://ixian.com/chess/jin-piece-sets/</a>', "Creative Commons Attribution-Share Alike 3.0 Unported"),
+            ("Etruscan<br>Etruscan clear", "Fabrice", '<a href="http://zipanatura.fr/">http://zipanatura.fr/</a>', "CC BY-NC-ND 4.0"),
+            ("Stauton 3D<br>Kidsdraw", "Marc Graziani", '<a href="https://plus.google.com/101635611158475796811/about">https://plus.google.com/101635611158475796811/about</a>', _("Permission of author")),
+            ("Book Diagram<br>Book Engraved<br>Book Good Companions<br>Book Leipzig", "Ben Citak", '<a href="https://www.linkedin.com/in/benjamin-citak-04982714">LinkedIn</a>', _("Permission of author")),
+            ]
 
         for tipo, autor, web, licencia in li:
             txt += "<tr>"
@@ -413,7 +390,7 @@ class ThanksTo:
             txt += "<tr>"
             if "McBrain" in nombre:
                 txt += '<th><font color="darkred">%s (%s)</font></th>' % (nombre, _("default"))
-                txt += '<th><font color="darkred">%s</font></th>' % autor
+                txt += '<td><font color="darkred">%s</font></td>' % autor
             else:
                 txt += "<td>%s</td>" % nombre
                 txt += "<td>%s</td>" % autor
@@ -447,7 +424,6 @@ class ThanksTo:
             (_("GUI"), "PyQt4 - GPL", "http://www.riverbankcomputing.co.uk"),
             (_("Audio"), "PyAudio v0.2.4 - MIT License", "http://people.csail.mit.edu/hubert/pyaudio/"),
             ("psutil", _X(_("Created by %1"), "Giampaolo Rodola"), "http://code.google.com/p/psutil/"),
-            ("pygal", _X(_("Created by %1"), "Kozea"), "http://pygal.org"),
             ("chardet", _X(_("Created by %1"), "Ian Cordasco"), "https://github.com/chardet/chardet"),
             (_("Polyglot books"), _X(_("Based on work by %1"), "Michel Van den Bergh"), "http://alpha.uhasselt.be/Research/Algebra/Toga/book_format.html"),
             ("Polyglot1.4w", _X(_("Created by %1"), "Fabien Letouzy") + ". " + _X(_("Modified by %1"), "Fonzy Bluemers"), "http://www.geenvis.net/"),

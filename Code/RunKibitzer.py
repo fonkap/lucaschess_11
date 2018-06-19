@@ -2,7 +2,7 @@ import os
 import sys
 import time
 
-import LCEngine
+import LCEngineV1 as LCEngine
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import struct
@@ -43,8 +43,9 @@ class VentanaMultiPV(QtWidgets.QDialog):
 
         self.cpu = cpu
 
-        self.ficheroVideo = cpu.ficheroVideo
-        dicVideo = self.dicVideo()
+        dicVideo = self.cpu.dic_video
+        if not dicVideo:
+            dicVideo = {}
 
         self.siTop = dicVideo.get("SITOP", True)
         self.siShowTablero = dicVideo.get("SHOW_TABLERO", True)
@@ -321,11 +322,7 @@ class VentanaMultiPV(QtWidgets.QDialog):
 
         self.grid.guardarVideo(dic)
 
-        Util.guardaDIC(dic, self.ficheroVideo)
-
-    def dicVideo(self):
-        dic = Util.recuperaDIC(self.ficheroVideo)
-        return dic if dic else {}
+        self.cpu.save_video(dic)
 
     def recuperarVideo(self, dicVideo):
         if dicVideo:
@@ -378,6 +375,8 @@ class VentanaMultiPV(QtWidgets.QDialog):
                     self.si_read_multipv = False
                     self.mrm.ordena()
                     self.liData = self.mrm.liMultiPV
+                    if len(self.liData) == 0:
+                        continue
                     rm = self.mrm.liMultiPV[0]
                     self.lbDepth.ponTexto("%s: %d" % (_("Depth"), rm.depth))
                     partida = Partida.Partida(fen=self.fen)
@@ -510,7 +509,6 @@ class Ventana(QtWidgets.QDialog):
         QtWidgets.QDialog.__init__(self)
 
         self.cpu = cpu
-        self.ficheroVideo = cpu.ficheroVideo
         self.motor = None
 
         self.liData = []
@@ -657,6 +655,7 @@ class Ventana(QtWidgets.QDialog):
     def finalizar(self):
         self.guardarVideo()
         if self.motor:
+            self.escribe("quit")
             self.motor.close()
             self.motor = None
 
@@ -692,46 +691,45 @@ class Ventana(QtWidgets.QDialog):
 
         dic["SITOP"] = self.siTop
 
-        Util.guardaDIC(dic, self.ficheroVideo)
+        self.cpu.save_video(dic)
 
     def recuperarVideo(self):
-        if Util.tamFichero(self.ficheroVideo) > 0:
-            dic = Util.recuperaDIC(self.ficheroVideo)
-            if dic:
-                wE, hE = QTUtil.tamEscritorio()
-                x, y = dic["_POSICION_"].split(",")
-                x = int(x)
-                y = int(y)
-                if not (0 <= x <= (wE - 50)):
-                    x = 0
-                if not (0 <= y <= (hE - 50)):
-                    y = 0
-                self.move(x, y)
-                if "_SIZE_" not in dic:
-                    w, h = self.width(), self.height()
-                    for k in dic:
-                        if k.startswith("_TAMA"):
-                            w, h = dic[k].split(",")
-                else:
-                    w, h = dic["_SIZE_"].split(",")
-                w = int(w)
-                h = int(h)
-                if w > wE:
-                    w = wE
-                elif w < 20:
-                    w = 20
-                if h > hE:
-                    h = hE
-                elif h < 20:
-                    h = 20
-                self.resize(w, h)
-                self.siShowTablero = dic.get("SHOW_TABLERO", self.siShowTablero)
-                self.nArrows = dic.get("NARROWS", self.nArrows)
-                self.siTop = dic.get("SITOP", self.siTop)
+        dic = self.cpu.dic_video
+        if dic:
+            wE, hE = QTUtil.tamEscritorio()
+            x, y = dic["_POSICION_"].split(",")
+            x = int(x)
+            y = int(y)
+            if not (0 <= x <= (wE - 50)):
+                x = 0
+            if not (0 <= y <= (hE - 50)):
+                y = 0
+            self.move(x, y)
+            if "_SIZE_" not in dic:
+                w, h = self.width(), self.height()
+                for k in dic:
+                    if k.startswith("_TAMA"):
+                        w, h = dic[k].split(",")
+            else:
+                w, h = dic["_SIZE_"].split(",")
+            w = int(w)
+            h = int(h)
+            if w > wE:
+                w = wE
+            elif w < 20:
+                w = 20
+            if h > hE:
+                h = hE
+            elif h < 20:
+                h = 20
+            self.resize(w, h)
+            self.siShowTablero = dic.get("SHOW_TABLERO", self.siShowTablero)
+            self.nArrows = dic.get("NARROWS", self.nArrows)
+            self.siTop = dic.get("SITOP", self.siTop)
 
-                if not self.siShowTablero:
-                    if self.siWidgets:
-                        self.tablero.hide()
+            if not self.siShowTablero:
+                if self.siWidgets:
+                    self.tablero.hide()
 
     def lanzaMotor(self, siMultiPV=False):
         self.motor = QtCore.QProcess()
@@ -760,7 +758,7 @@ class Ventana(QtWidgets.QDialog):
             p = psutil.Process(pid)
             p.nice(self.cpu.prioridad)
 
-        if siMultiPV:
+        if siMultiPV and configMotor.maxMultiPV:
             configMotor.liUCI.append(("MultiPV", str(configMotor.maxMultiPV)))
 
         self.orden_ok("uci", "uciok")
@@ -1280,7 +1278,7 @@ class VentanaIndices(Ventana):
 
         self.setLayout(layout)
 
-        self.lanzaMotor(True)
+        self.lanzaMotor(False)
 
     def ponFen(self, fen):
         if fen:
@@ -1677,7 +1675,9 @@ class CPU:
 
             self.configMotor = self.kibitzer.configMotor()
 
-            self.ficheroVideo = self.configuracion.plantillaVideo % ("KIB%s" % self.kibitzer.huella,)
+            self.key_video = "KIB%s" % self.kibitzer.huella
+            self.dic_video = self.configuracion.restore_video(self.key_video)
+
             self.tipo = self.kibitzer.tipo
             self.posicionBase = self.kibitzer.posicionBase
             self.lanzaVentana()
@@ -1696,6 +1696,9 @@ class CPU:
             self.ipc.close()
             self.ventana.finalizar()
             self.ventana.reject()
+
+    def save_video(self, dic):
+        self.configuracion.save_video(self.key_video, dic)
 
     def lanzaVentana(self):
         app = QtWidgets.QApplication([])

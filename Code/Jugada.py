@@ -7,25 +7,25 @@ from Code import VarGen
 NOABANDONO, ABANDONO, ABANDONORIVAL = "N", "S", "R"
 
 
-def creaDicHTML():
-    base = '<img src="IntFiles/Figs/%s%s.png">'
-    dic = {}
-    for x in "nbrqk":
-        dic[x.upper()] = base % ("w", x)
-        dic[x] = base % ("b", x)
-    return dic
-
 # def creaDicHTML():
-#     base = '<span style="font-family:Chess Diagramm Pirat;font-size:18pt">%s</span>'
-#     ori = "KQRBNPkqrbnp"
-#     des = "rstuvw" + chr(126) + chr(130) + chr(131) + chr(132) + chr(133) + chr(134)
-#     def haz(c):
-#         return des[ori.index(c)]
+#     base = '<img src="IntFiles/Figs/%s%s.png">'
 #     dic = {}
 #     for x in "nbrqk":
-#         dic[x.upper()] = base % haz(x.upper())
-#         dic[x] = base % haz(x)
+#         dic[x.upper()] = base % ("w", x)
+#         dic[x] = base % ("b", x)
 #     return dic
+
+def creaDicHTML():
+    base = '<span style="font-family:Chess Diagramm Pirat">%s</span>'
+    ori = "KQRBNPkqrbnp"
+    des = "rstuvw" + chr(126) + chr(130) + chr(131) + chr(132) + chr(133) + chr(134)
+    def haz(c):
+        return des[ori.index(c)]
+    dic = {}
+    for x in "nbrqk":
+        dic[x.upper()] = base % haz(x.upper())
+        dic[x] = base % haz(x)
+    return dic
 
 dicHTMLFigs = creaDicHTML()
 
@@ -113,14 +113,18 @@ class Jugada:
     def pgnFigurinesSP(self):
         return self.pgnBase + self.resultadoSP()
 
-    def pgnHTML(self):
+    def pgnHTML(self, siFigurines):
         siBlancas = self.siBlancas()
-        li = []
-        for c in self.pgnBase:
-            if c in "NBRQK":
-                c = dicHTMLFigs[c if siBlancas else c.lower()]
-            li.append(c)
-        resp = "".join(li) + self.resto()
+        if siFigurines:
+            li = []
+            for c in self.pgnBase:
+                if c in "NBRQK":
+                    c = dicHTMLFigs[c if siBlancas else c.lower()]
+                li.append(c)
+            resp = "".join(li)
+        else:
+            resp = self.pgnBaseSP()
+        resp += self.resto()
         result = self.resultado()
         if result:
             resp += " " + result
@@ -406,12 +410,12 @@ class Jugada:
     def calc_elo(self, perfomance):
         if self.analisis:
             mrm, pos = self.analisis
-            pts = mrm.liMultiPV[pos].puntosABS_5()
-            pts0 = mrm.liMultiPV[0].puntosABS_5()
+            pts = mrm.liMultiPV[pos].puntosABS()
+            pts0 = mrm.liMultiPV[0].puntosABS()
             lostp_abs = pts0 - pts
             self.elo, self.bad_move, self.verybad_move = perfomance.elo_bad_vbad(lostp_abs)
 
-            li = list({rm.puntosABS_5() for rm in mrm.liMultiPV})
+            li = list({rm.puntosABS() for rm in mrm.liMultiPV})
             li.sort()
             ant = li[0]
             nfactor = 1
@@ -426,6 +430,9 @@ class Jugada:
             self.elo = 0
             self.bad_move = False
             self.verybad_move = False
+
+    def distancia(self):
+        return ControlPosicion.distancia(self.desde, self.hasta)
 
 
 def dameJugada(posicionBase, desde, hasta, coronacion):

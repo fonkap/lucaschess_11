@@ -26,6 +26,7 @@ class GestorTurnOnLights(Gestor.Gestor):
         self.calculation_mode = self.tol.is_calculation_mode()
         self.penaltyError = self.block.penaltyError(self.calculation_mode)
         self.penaltyHelp = self.block.penaltyHelp(self.calculation_mode)
+        # self.factorDistancia = self.block.factorDistancia() # No se usa es menor que 1.0
 
         self.av_seconds = self.block.av_seconds()
         if self.av_seconds:
@@ -40,6 +41,7 @@ class GestorTurnOnLights(Gestor.Gestor):
         self.total_time_used = 0.0
         self.ayudas = 0
         self.errores = 0
+        self.dicFENayudas = {} # se muestra la flecha a partir de dos del mismo
 
         self.tipoJuego = kJugEntLight
 
@@ -132,7 +134,7 @@ class GestorTurnOnLights(Gestor.Gestor):
             if self.ini_time:
                 self.total_time_used += time.time() - self.ini_time
         if self.total_time_used:
-            self.block.new_reinit(self.total_time_used)
+            self.block.new_reinit(self.total_time_used, self.errores, self.ayudas)
             self.total_time_used = 0.0
             TurnOnLights.write_tol(self.tol)
         self.inicio(self.num_theme, self.num_block, self.tol)
@@ -166,8 +168,9 @@ class GestorTurnOnLights(Gestor.Gestor):
 
         else:
             self.siJuegaHumano = True
+            self.base_time = time.time()
             if not (self.calculation_mode and self.ini_time is None):  # Se inicia salvo que sea el principio de la linea
-                self.ini_time = time.time()
+                self.ini_time = self.base_time
             self.activaColor(siBlancas)
             if self.calculation_mode:
                 self.tablero.setDispatchMove(self.dispatchMove)
@@ -190,7 +193,7 @@ class GestorTurnOnLights(Gestor.Gestor):
             num_moves = self.block.num_moves()
             ta = self.total_time_used + self.errores*self.penaltyError + self.ayudas*self.penaltyHelp
             tm = ta/num_moves
-            self.block.new_result(tm)
+            self.block.new_result(tm, self.total_time_used, self.errores, self.ayudas)
             TurnOnLights.write_tol(self.tol)
             cat_block, ico = TurnOnLights.qualification(tm, self.calculation_mode)
             cat_level, ico = self.tol.cat_num_level()
@@ -249,10 +252,11 @@ class GestorTurnOnLights(Gestor.Gestor):
         self.pantalla.ponToolBar(liOpciones)
 
     def mueveHumano(self, desde, hasta, coronacion=None):
+        if self.ini_time is None:
+            self.ini_time = self.base_time
         end_time = time.time()
         jg = self.checkMueveHumano(desde, hasta, coronacion)
         if not jg:
-            self.errores += 1
             return False
 
         movimiento = jg.movimiento().lower()
@@ -310,6 +314,13 @@ class GestorTurnOnLights(Gestor.Gestor):
         self.ayudas += 1
         mov = self.line.get_move(self.num_move).lower()
         self.tablero.markPosition(mov[:2])
+        fen = self.partida.ultPosicion.fen()
+        if fen not in self.dicFENayudas:
+            self.dicFENayudas[fen] = 1
+        else:
+            self.dicFENayudas[fen] += 1
+            if self.dicFENayudas[fen] > 2:
+                self.ponFlechaSC(mov[:2], mov[2:4])
 
     def finPartida(self):
         self.procesador.inicio()

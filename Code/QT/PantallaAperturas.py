@@ -150,7 +150,7 @@ class WAperturas(QTVarios.WDialogo):
 
         self.tablero.ponPosicion(self.partida.ultPosicion)
 
-        self.apStd.asignaApertura(self.partida)
+        self.partida.asignaApertura()
         txt = self.partida.pgnSP()
         if self.partida.apertura:
             txt = '<span style="color:gray;">%s</span><br>%s' % (self.partida.apertura.nombre, txt)
@@ -333,7 +333,7 @@ class EntrenamientoApertura(QTVarios.WDialogo):
         for pv in liPV:
             p = Partida.Partida()
             p.leerPV(pv)
-            self.listaAperturasStd.asignaApertura(p)
+            p.asignaApertura()
             ap = p.apertura
             if ap is None:
                 ap = AperturasStd.AperturasStd(_("Unknown"))
@@ -505,7 +505,7 @@ class EntrenamientoAperturas(QTVarios.WDialogo):
         if VarGen.isWindows:
             exe = 'Engines/Windows/_tools/polyglot/polyglot.exe'
         else:
-            exe = 'Engines/Linux/_tools/polyglot/polyglot'
+            exe = '%s/_tools/polyglot/polyglot' % VarGen.folder_engines
         li = [os.path.abspath(exe),
               'make-book',
               "-pgn", fichTMP,

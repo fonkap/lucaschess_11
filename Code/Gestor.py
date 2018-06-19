@@ -3,7 +3,7 @@ import os
 import random
 import time
 
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from Code import Analisis
 from Code import AnalisisIndexes
@@ -43,6 +43,7 @@ class Gestor:
         self.procesador = procesador
         self.pantalla = procesador.pantalla
         self.tablero = procesador.tablero
+        self.tablero.setAcceptDropPGNs(None)
         # self.tablero.mostrarPiezas(True, True)
         self.configuracion = procesador.configuracion
         self.runSound = VarGen.runSound
@@ -494,7 +495,7 @@ class Gestor:
                self.tipoJuego in (kJugEntPos, kJugPGN, kJugEntMaq, kJugEntTac, kJugGM, kJugSolo, kJugBooks, kJugAperturas) or
                (self.tipoJuego in (kJugElo, kJugMicElo) and not self.siCompetitivo))
 
-    def miraKibitzers(self, jg, columnaClave):
+    def miraKibitzers(self, jg, columnaClave, soloNuevo=False):
         if jg:
             fenBase = jg.posicionBase.fen()
             fen = fenBase if columnaClave == "NUMERO" else jg.posicion.fen()
@@ -502,8 +503,11 @@ class Gestor:
             fen = self.partida.ultPosicion.fen()
             fenBase = fen
         liApagadas = []
+        last = len(self.liKibitzersActivas) - 1
         for n, xkibitzer in enumerate(self.liKibitzersActivas):
             if xkibitzer.siActiva():
+                if soloNuevo and n != last:
+                    continue
                 xkibitzer.ponFen(fen, fenBase)
             else:
                 liApagadas.append(n)
@@ -515,7 +519,7 @@ class Gestor:
 
     def paraKibitzers(self):
         for n, xkibitzer in enumerate(self.liKibitzersActivas):
-            xkibitzer.ponFen(None)
+            xkibitzer.terminar() #ponFen(None)
 
     def ponPiezasAbajo(self, siBlancas):
         self.tablero.ponerPiezasAbajo(siBlancas)
@@ -809,7 +813,14 @@ class Gestor:
         self.pantalla.activaCapturas(False)
         self.ponVista()
 
-    def rightMouse(self, siShift, siControl, siAlt):
+    def nonDistractMode(self):
+        self.nonDistract = self.pantalla.base.nonDistractMode(self.nonDistract)
+        self.pantalla.ajustaTam()
+
+    def boardRightMouse(self, siShift, siControl, siAlt):
+        self.tablero.lanzaDirector()
+
+    def gridRightMouse(self, siShift, siControl, siAlt):
         if siControl:
             self.capturas()
         elif siAlt:
@@ -818,11 +829,6 @@ class Gestor:
             self.pgnInformacion()
         self.pantalla.ajustaTam()
 
-    def boardRightMouse(self, siShift, siControl, siAlt):
-        self.rightMouse(siShift, siControl, siAlt)
-
-    def gridRightMouse(self, siShift, siControl, siAlt):
-        self.rightMouse(siShift, siControl, siAlt)
 
     def listado(self, tipo):
         if tipo == "pgn":
@@ -851,10 +857,6 @@ class Gestor:
         return jg.posicion.fen() if jg else self.fenUltimo()
 
     def fenActivoConInicio(self):
-        """
-        Incluye la posicion inicial
-        """
-
         pos, jg = self.jugadaActiva()
         if pos == 0:
             fila, columna = self.pantalla.pgnPosActual()
@@ -979,9 +981,13 @@ class Gestor:
         li_del.append((_("Comments") + ":", False))
         li_del.append(separador)
         li_del.append((_("Analysis") + ":", False))
+        li_del.append(separador)
+        li_del.append((_("All") + ":", False))
         resultado = FormLayout.fedit(li_del, title=_("Remove"), parent=self.pantalla, icon=Iconos.Delete())
         if resultado:
-            variants, ratings, comments, analysis = resultado[1]
+            variants, ratings, comments, analysis, all = resultado[1]
+            if all:
+                variants, ratings, comments, analysis = True, True, True, True
             for jg in self.partida.liJugadas:
                 if variants:
                     jg.variantes = ""
@@ -1065,7 +1071,9 @@ class Gestor:
             nkibitzer = int(orden)
             xkibitzer = Kibitzers.IPCKibitzer(self, nkibitzer)
             self.liKibitzersActivas.append(xkibitzer)
-            self.ponVista()
+            fila, columna = self.pantalla.pgnPosActual()
+            posJugada, jg = self.pgn.jugada(fila, columna.clave)
+            self.miraKibitzers(jg, columna.clave, True)
 
     def paraHumano(self):
         self.siJuegaHumano = False
@@ -1173,7 +1181,7 @@ class Gestor:
 
         # DGT
         if self.configuracion.siDGT:
-            menu.opcion("dgt", _("Disable %1") if DGT.siON() else _("Enable %1"), _("DGT board"), Iconos.DGT())
+            menu.opcion("dgt", (_("Disable %1") if DGT.siON() else _("Enable %1")).replace("%1", _("DGT board")), Iconos.DGT())
             menu.separador()
 
         # Ciega - Mostrar todas - Ocultar blancas - Ocultar negras
@@ -1281,7 +1289,13 @@ class Gestor:
                     self.pgn.siMostrar = not self.pgn.siMostrar
                     self.pantalla.base.pgnRefresh()
                 elif orden == "change":
-                    self.tablero.blindfoldChange()
+                    x = str(self)
+                    modoPosicionBlind = False
+                    for tipo in ("GestorEntPos",):
+                        if tipo in x:
+                            modoPosicionBlind = True
+                    self.tablero.blindfoldChange(modoPosicionBlind)
+
 
                 elif orden == "conf":
                     self.tablero.blindfoldConfig()
@@ -1366,8 +1380,9 @@ class Gestor:
 
         menuSave.separador()
 
-        menuSave.opcion("dbfichero", _("Database"), Iconos.DatabaseCNew())
-
+        menuDB = menuSave.submenu(_("Database"), Iconos.DatabaseCNew())
+        siFen = not self.partida.siFenInicial()
+        QTVarios.menuDB(menuDB, self.configuracion, siFen, True)
         menuSave.separador()
 
         menuV = menuSave.submenu(_("Board -> Image"), icoCamara)
@@ -1480,8 +1495,8 @@ class Gestor:
         elif resp == "pgnfichero":
             self.salvaPGN()
 
-        elif resp == "dbfichero":
-            self.salvaDB()
+        elif resp.startswith("dbf_"):
+            self.salvaDB(resp[4:])
 
         elif resp.startswith("fen") or resp.startswith("fns"):
             extension = resp[:3]
@@ -1493,17 +1508,14 @@ class Gestor:
     def showAnalisis(self):
         um = self.procesador.unMomento()
         elos = self.partida.calc_elos(self.configuracion)
+        elosFORM = self.partida.calc_elosFORM(self.configuracion)
         alm = Histogram.genHistograms(self.partida, self.configuracion.centipawns)
-        alm.indexesHTML, alm.indexesRAW, alm.eloW, alm.eloB, alm.eloT = AnalisisIndexes.genIndexes(self.partida, elos, alm)
+        alm.indexesHTML, alm.indexesRAW, alm.eloW, alm.eloB, alm.eloT = AnalisisIndexes.genIndexes(self.partida, elos, elosFORM, alm)
+        alm.siBlancasAbajo = self.tablero.siBlancasAbajo
         um.final()
         PantallaAnalisis.showGraph(self.pantalla, self, alm, Analisis.muestraAnalisis)
 
-    def salvaDB(self):
-        siFen = not self.partida.siFenInicial()
-        database = QTVarios.selectDB(self.pantalla, self.configuracion, siFen)
-        if database is None:
-            return
-
+    def salvaDB(self, database):
         pgn = self.listado("pgn")
         liTags = []
         for linea in pgn.split("\n"):
@@ -1519,6 +1531,7 @@ class Gestor:
         pc = Partida.PartidaCompleta(liTags=liTags)
         pc.leeOtra(self.partida)
 
+        siFen = not self.partida.siFenInicial()
         db = DBgamesFEN.DBgamesFEN(database) if siFen else DBgames.DBgames(database)
         resp = db.inserta(pc)
         db.close()
@@ -1800,3 +1813,21 @@ class Gestor:
                 cambio = salto
             tipo = "ms" if tipo == "mt" else "mt"
         return True
+
+    def ponFlechasTutor(self, mrm, nArrows):
+        self.tablero.quitaFlechas()
+        if self.tablero.flechaSC:
+            self.tablero.flechaSC.hide()
+
+        rm_mejor = mrm.mejorMov()
+        if not rm_mejor:
+            return
+        rm_peor = mrm.liMultiPV[-1]
+        peso0 = rm_mejor.puntosABS()
+        rango = peso0 - rm_peor.puntosABS()
+        for n, rm in enumerate(mrm.liMultiPV, 1):
+            peso = rm.puntosABS()
+            factor = 1.0 - (peso0-peso)*1.0/rango
+            self.tablero.creaFlechaTutor(rm.desde, rm.hasta, factor)
+            if n >= nArrows:
+                return

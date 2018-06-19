@@ -22,7 +22,7 @@ class Pantalla():
 
         self.owner = owner
 
-        self.setBackgroundRole(QtGui.QPalette.Light)
+        # self.setBackgroundRole(QtGui.QPalette.Midlight)
         # self.setStyleSheet( "QToolButton { padding: 2px;}" )
         # self.setStyleSheet( "QWidget { background-color: yellow; }")
         self.base = WBase.WBase(self, gestor)
@@ -245,6 +245,9 @@ class Pantalla():
     def alturaRotulo3(self, px):
         return self.base.alturaRotulo3(px)
 
+    def ponWhiteBlack(self, white=None, black=None):
+        self.base.ponWhiteBlack(white, black)
+
     def ponRevision(self, siponer):
         return
         # if siponer:
@@ -255,8 +258,8 @@ class Pantalla():
     def ponActivarTutor(self, siActivar):
         self.base.ponActivarTutor(siActivar)
 
-    def ponToolBar(self, liAcciones, separator=True):
-        self.base.ponToolBar(liAcciones, separator)
+    def ponToolBar(self, liAcciones, separator=True, atajos=False):
+        self.base.ponToolBar(liAcciones, separator, atajos)
 
     def dameToolBar(self):
         return self.base.dameToolBar()

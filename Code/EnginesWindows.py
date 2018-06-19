@@ -13,7 +13,7 @@ def leeRivales():
         # p-rint """["%s", "%s", "%s"],"""%(cm.nombre, cm.autor, cm.url)
 
     ConfigMotor = BaseConfig.ConfigMotor
-    cm = ConfigMotor("acqua", "Giovanni Di Maria", "20160918", "http://www.elektrosoft.it/scacchi/acqua/acqua.asp")
+    cm = ConfigMotor("acqua", "Giovanni Di Maria", "2.0", "http://www.elektrosoft.it/scacchi/acqua/acqua.asp")
     cm.path = "acqua.exe"
     cm.elo = 844
     mas(cm)
@@ -121,12 +121,12 @@ def leeRivales():
     cm.ordenUCI("Hash", "32")
     mas(cm)
 
-    cm = ConfigMotor("godel", "Juan Manuel Vazquez", "3.4.9", "https://sites.google.com/site/godelchessengine")
-    cm.path = "godel.exe"
+    cm = ConfigMotor("godel", "Juan Manuel Vazquez", "4.0.7", "https://sites.google.com/site/godelchessengine")
+    cm.path = "Godel32.exe"
     cm.elo = 2720
     cm.ordenUCI("Hash", "32")
     cm.ordenUCI("Ponder", "false")
-    cm.nombre = "Gödel 3.4.9"
+    cm.nombre = "Gödel 4.0.7"
 
     mas(cm)
 
@@ -208,9 +208,9 @@ def leeRivales():
     cm.ponMultiPV(20, 256)
     mas(cm)
 
-    cm = ConfigMotor("stockfish", "Tord Romstad, Marco Costalba, Joona Kiiski", "8 32bits", "http://stockfishchess.org/")
-    cm.path = "Windows/stockfish_8_x32.exe"
-    cm.path_64 = "Windows/stockfish_8_x64_bmi2.exe", "8 64bits bmi2"
+    cm = ConfigMotor("stockfish", "Tord Romstad, Marco Costalba, Joona Kiiski", "9 32bits", "http://stockfishchess.org/")
+    cm.path = "Windows/stockfish_9_x32.exe"
+    cm.path_64 = "Windows/stockfish_9_x64_bmi2.exe", "9 64bits bmi2"
     cm.elo = 3300
     cm.ordenUCI("Ponder", "false")
     cm.ordenUCI("Hash", "64")
@@ -218,13 +218,12 @@ def leeRivales():
     cm.ponMultiPV(20, 500)
     mas(cm)
 
-    cm = ConfigMotor("mcbrain", "Michael Byrne (based on stockfish)", "2.7 32bit", "https://github.com/MichaelB7/Stockfish/releases")
-    cm.path = "SF-McBrain-27_x32_old.exe"
-    cm.path_64 = "SF-McBrain-27_x64_bmi2.exe", "2.7 64bit bmi2"
+    cm = ConfigMotor("mcbrain", "Michael Byrne", "9.1 32bit", "https://github.com/MichaelB7/Stockfish/releases")
+    cm.path = "McBrain-91_x32_old.exe"
+    cm.path_64 = "McBrain-91_x64_bmi2.exe", "9.1 64bit bmi2"
     cm.elo = 3200
-    cm.ordenUCI("Respect", "30")
+    cm.ordenUCI("Contempt", "0")
     cm.ordenUCI("Hash", "64")
-    cm.ordenUCI("Threads", "1")
     cm.ponMultiPV(20, 256)
     mas(cm)
 
@@ -309,12 +308,6 @@ def leeRivales():
     cm.elo = 2627
     mas(cm)
 
-    cm = ConfigMotor("hannibal", "Samuel N. Hamilton and Edsel G. Apostol", "1.7", "http://sites.google.com/site/edapostol/hannibal")
-    cm.path = "Hannibal1.7w32.exe"
-    cm.elo = 3050
-    cm.removeLog("log.txt")
-    mas(cm)
-
     cm = ConfigMotor("spike", "Volker Böhm and Ralf Schäfer", "1.4", "http://spike.lazypics.de/index_en.html")
     cm.path = "Spike1.4.exe"
     cm.elo = 2921
@@ -331,9 +324,20 @@ def leeRivales():
     cm.elo = 3093
     mas(cm)
 
+    cm = ConfigMotor("hannibal", "Samuel N. Hamilton and Edsel G. Apostol", "1.4b", "http://sites.google.com/site/edapostol/hannibal")
+    cm.path = "Hannibal1.4bx32.exe"
+    cm.elo = 3000
+    cm.removeLog("logfile.txt")
+    mas(cm)
+
     cm = ConfigMotor("paladin", "Ankan Banerjee", "0.1", "https://github.com/ankan-ban/chess_cpu")
-    cm.path = "Paladin_32bit.exe"
+    cm.path = "Paladin_32bits_old.exe"
     cm.elo = 2254
+    mas(cm)
+
+    cm = ConfigMotor("cdrill", "Ferdinand Mosca", "1800 Build 4", "https://sites.google.com/view/cdrill")
+    cm.path = "CDrill_1800_Build_4.exe"
+    cm.elo = 1800
     mas(cm)
 
     return dicRivales

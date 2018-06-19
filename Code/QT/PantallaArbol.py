@@ -1,6 +1,6 @@
 import collections
 
-import LCEngine
+import LCEngineV1 as LCEngine
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 
@@ -756,9 +756,6 @@ class InfoMove(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.movActual = None
-
-    def cambioTablero(self):
-        pass
 
     def ponValores(self):
         posicion, desde, hasta = self.movActual.damePosicion()

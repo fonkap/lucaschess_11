@@ -1,22 +1,23 @@
 /*
-  Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
-  Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad
-  Copyright (C) 2015-2017 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad
-
-  Stockfish is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Stockfish is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ McBrain, a UCI chess playing engine derived from Stockfish and Glaurung 2.1
+ Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
+ Copyright (C) 2008-2015 Marco Costalba, Joona Kiiski, Tord Romstad (Stockfish Authors)
+ Copyright (C) 2015-2016 Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad (Stockfish Authors)
+ Copyright (C) 2017-2018 Michael Byrne, Marco Costalba, Joona Kiiski, Gary Linscott, Tord Romstad (McBrain Authors)
+ 
+ McBrain is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ McBrain is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef SEARCH_H_INCLUDED
 #define SEARCH_H_INCLUDED
@@ -30,6 +31,10 @@
 class Position;
 
 namespace Search {
+
+/// Threshold used for countermoves based pruning
+constexpr int CounterMovePruneThreshold = 0;
+
 
 /// Stack struct keeps track of the information we need to remember from nodes
 /// shallower and deeper in the tree during the search. Each search thread has
@@ -45,10 +50,6 @@ struct Stack {
   Value staticEval;
   int statScore;
   int moveCount;
-  Depth newDepth;
-  uint8_t forcedMove;
-  uint8_t forcingTree;
-	
 };
 
 
@@ -69,6 +70,8 @@ struct RootMove {
   Value score = -VALUE_INFINITE;
   Value previousScore = -VALUE_INFINITE;
   int selDepth = 0;
+  int TBRank;
+  Value TBScore;
   std::vector<Move> pv;
 };
 
@@ -81,8 +84,9 @@ typedef std::vector<RootMove> RootMoves;
 struct LimitsType {
 
   LimitsType() { // Init explicitly due to broken value-initialization of non POD in MSVC
-    nodes = time[WHITE] = time[BLACK] = inc[WHITE] = inc[BLACK] =
-    npmsec = movestogo = depth = movetime = mate = perft = infinite = 0;
+    time[WHITE] = time[BLACK] = inc[WHITE] = inc[BLACK] = npmsec = movetime = TimePoint(0);
+    movestogo = depth = mate = perft = infinite = 0;
+    nodes = 0;
   }
 
   bool use_time_management() const {
@@ -90,10 +94,9 @@ struct LimitsType {
   }
 
   std::vector<Move> searchmoves;
-  int time[COLOR_NB], inc[COLOR_NB], npmsec, movestogo, depth,
-      movetime, mate, perft, infinite;
+  TimePoint time[COLOR_NB], inc[COLOR_NB], npmsec, movetime, startTime;
+  int movestogo, depth, mate, perft, infinite;
   int64_t nodes;
-  TimePoint startTime;
 };
 
 extern LimitsType Limits;

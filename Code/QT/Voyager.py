@@ -181,11 +181,18 @@ class WPosicion(QtWidgets.QWidget):
                 sik = True
         if siK and sik:
             self.wparent.setPosicion(self.posicion)
-        self.scanner_write()
-        if self.is_game:
-            self.wparent.ponModo(MODO_PARTIDA)
+            self.scanner_write()
+            if self.is_game:
+                self.wparent.ponModo(MODO_PARTIDA)
+            else:
+                self.wparent.save()
         else:
-            self.wparent.save()
+            if not siK:
+                QTUtil2.mensError(self, _("King") + "-" + _("White") + "???")
+                return
+            if not sik:
+                QTUtil2.mensError(self, _("King") + "-" + _("Black") + "???")
+                return
 
     def cancelar(self):
         self.scanner_write()
@@ -292,9 +299,9 @@ class WPosicion(QtWidgets.QWidget):
 
     def leeDatos(self):
         siBlancas = self.rbWhite.isChecked()
-        EnPassant = self.edEnPassant.texto().strip()
-        if not EnPassant:
-            EnPassant = "-"
+        alPaso = self.edEnPassant.texto().strip()
+        if not alPaso:
+            alPaso = "-"
         jugadas = self.edFullMoves.value()
         movPeonCap = self.edMovesPawn.value()
 
@@ -304,31 +311,31 @@ class WPosicion(QtWidgets.QWidget):
                 enroques += pieza
         if not enroques:
             enroques = "-"
-        return siBlancas, EnPassant, jugadas, movPeonCap, enroques
+        return siBlancas, alPaso, jugadas, movPeonCap, enroques
 
     def actPosicion(self):
-        self.posicion.siBlancas, self.posicion.EnPassant, \
+        self.posicion.siBlancas, self.posicion.alPaso, \
         self.posicion.jugadas, self.posicion.movPeonCap, self.posicion.enroques = self.leeDatos()
 
     def setPosicion(self, posicion):
         self.posicion = posicion.copia()
         self.resetPosicion()
 
-    def aceptar(self):
-        if self.posicion.siExistePieza("K") != 1:
-            QTUtil2.mensError(self, _("King") + "-" + _("White") + "???")
-            return
-        if self.posicion.siExistePieza("k") != 1:
-            QTUtil2.mensError(self, _("King") + "-" + _("Black") + "???")
-            return
-
-        self.actPosicion()
-
-        self.fen = self.posicion.fen()  # Hace control de enroques y EnPassant
-        if self.fen == ControlPosicion.FEN_INICIAL:
-            self.fen = ""
-        self.cierra()
-        self.accept()
+    # def aceptar(self):
+    #     if self.posicion.siExistePieza("K") != 1:
+    #         QTUtil2.mensError(self, _("King") + "-" + _("White") + "???")
+    #         return
+    #     if self.posicion.siExistePieza("k") != 1:
+    #         QTUtil2.mensError(self, _("King") + "-" + _("Black") + "???")
+    #         return
+    #
+    #     self.actPosicion()
+    #
+    #     self.fen = self.posicion.fen()  # Hace control de enroques y EnPassant
+    #     if self.fen == ControlPosicion.FEN_INICIAL:
+    #         self.fen = ""
+    #     self.cierra()
+    #     self.accept()
 
     def pegar(self):
         cb = QtWidgets.QApplication.clipboard()

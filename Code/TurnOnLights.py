@@ -3,6 +3,7 @@ import codecs
 import random
 import datetime
 
+from Code import ControlPosicion
 from Code import PGNreader
 from Code import Util
 from Code import VarGen
@@ -58,17 +59,28 @@ class TOL_Block:
         else:
             return 10.0
 
+    def factorDistancia(self):
+        nummoves = 0
+        distancia = 0.0
+        for line in self.lines:
+            d, n = line.distancia_moves()
+            nummoves += n
+            distancia += d
+        base_dist = ControlPosicion.distancia("a1", "a4")
+
+        return (distancia/nummoves)/base_dist
+
     def add_line(self, line):
         self.lines.append(line)
 
-    def new_result(self, seconds):
+    def new_result(self, seconds, true_time_used, errores, ayudas):
         today = datetime.datetime.now()
-        self.times.append((seconds, today))
+        self.times.append((seconds, today, true_time_used, errores, ayudas))
         self.times.sort(key=lambda x: x[0])
 
-    def new_reinit(self, seconds):
+    def new_reinit(self, seconds, errores, ayudas):
         today = datetime.datetime.now()
-        self.reinits.append((seconds, today))
+        self.reinits.append((seconds, today, errores, ayudas))
 
     def av_seconds(self):
         return self.times[0][0] if self.times else None
@@ -135,6 +147,10 @@ class TOL_Line:
 
     def total_moves(self):
         return len(self.limoves)
+
+    def distancia_moves(self):
+        dt = sum( ControlPosicion.distancia(pv[:2], pv[2:4]) for pv in self.limoves )
+        return dt, len(self.limoves)
 
 
 class TOL_level:
@@ -243,16 +259,21 @@ class TurnOnLights:
             for theme in self.themes:
                 level.set_theme_blocks(theme)
             self.levels.append(level)
+        self.work_level = 0
+        write_tol(self)
 
     def prev_next(self):
         prev, next = False, False
         if self.work_level > 0:
             prev = True
+        level = self.levels[self.work_level]
+        terminado = False
         if self.work_level < (len(self.levels)-1):
-            level = self.levels[self.work_level]
             if level.done(self.calculation_mode):
                 next = True
-        return prev, next
+        else:
+            terminado = level.done(self.calculation_mode)
+        return prev, next, terminado
 
     @property
     def num_blocks(self):
@@ -298,6 +319,68 @@ class TurnOnLights:
         return cat
 
 
+class TurnOnLightsOneLine(TurnOnLights):
+    def __init__(self):
+        self.name = "oneline"
+        title = _("In one line")
+        folder = None
+        self.fns = "Trainings/Tactics by UNED chess school/Interception-blocade.fns"
+        self.calculation_mode = True
+        self.auto_day = False
+        self.last_date = self.hoy()
+        self.set_num_pos(12)
+        TurnOnLights.__init__(self, self.name, title, folder, self.li_tam_blocks)
+        self.recupera()
+
+    def hoy(self):
+        return datetime.date.today()
+
+    def is_calculation_mode(self):
+        return self.calculation_mode
+
+    def set_num_pos(self, num_pos):
+        self.num_pos = num_pos
+        k = num_pos/6
+        self.li_tam_blocks = [k, 2*k, 3*k, num_pos]
+
+    def recupera(self):
+        filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % self.name)
+        tolr = Util.recuperaVar(filepath)
+        if tolr is None:
+            self.new()
+        else:
+            self.themes = tolr.themes
+            self.levels = tolr.levels
+            for level in self.levels:
+                level.update()
+
+            self.fns = tolr.fns
+            self.work_level = tolr.work_level
+            self.num_pos = tolr.num_pos
+            self.go_fast = tolr.go_fast
+            self.calculation_mode = tolr.calculation_mode
+            self.num_pos = tolr.num_pos
+            self.li_tam_blocks = tolr.li_tam_blocks
+            self.auto_day = tolr.auto_day
+            self.last_date = tolr.last_date
+            if self.auto_day and (self.hoy() > self.last_date):
+                return self.new()
+
+    def new(self):
+        folder = os.path.dirname(self.fns)
+        fich = os.path.basename(self.fns)
+        theme = TOL_Theme(folder, fich, self.num_pos)
+        self.themes = [theme]
+        self.levels = []
+        for num_level, lines_per_block in enumerate(self.li_tam_blocks):
+            level = TOL_level(lines_per_block, num_level)
+            level.set_theme_blocks(theme)
+            self.levels.append(level)
+        self.last_date = self.hoy()
+        self.work_level = 0
+        write_tol(self)
+
+
 def read_tol(name, title, folder, li_tam_blocks):
     tol = TurnOnLights(name, title, folder, li_tam_blocks)
     tol.recupera()
@@ -305,6 +388,7 @@ def read_tol(name, title, folder, li_tam_blocks):
 
 
 def write_tol(tol):
+    tol.last_date = datetime.date.today()
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % tol.name)
     Util.guardaVar(filepath, tol)
 
@@ -312,6 +396,12 @@ def write_tol(tol):
 def remove_tol(tol):
     filepath = os.path.join(VarGen.configuracion.carpeta, "%s.tol" % tol.name)
     Util.borraFichero(filepath)
+
+
+def read_oneline_tol():
+    tol = TurnOnLightsOneLine()
+    tol.recupera()
+    return tol
 
 
 def numColorMinimum(tol):
