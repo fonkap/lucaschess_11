@@ -598,9 +598,9 @@ class WSummary(QtWidgets.QWidget):
         self.actualizaPV(self.pvBase)
 
 
-class WSummaryBase(QtGui.QWidget):
+class WSummaryBase(QtWidgets.QWidget):
     def __init__(self, procesador, dbSTAT):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.dbSTAT = dbSTAT
         self.liMoves = []

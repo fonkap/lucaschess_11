@@ -357,9 +357,8 @@ class WHorses(QTVarios.WDialogo):
         for x in range(8):
             li = range(p, f + s, s)
             for t in range(7, -1, -1):
-                if li[t] in celdas_ocupadas:
-                    del li[t]
-            self.camino.extend(li)
+                if li[t] not in celdas_ocupadas:
+                    self.camino.append(li[t])
             if s == 1:
                 s = -1
                 p += 15

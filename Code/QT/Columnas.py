@@ -2,7 +2,7 @@ import copy
 
 from PyQt5 import QtCore, QtGui
 
-from Code import VarGen
+from Code import VarGen, Util
 
 
 class Columna:
@@ -210,7 +210,8 @@ class Columna:
                         resultado = "Error, falta proporcionar la respuesta en la variable resultado"
             else:
                 resultado = str(eval(self.formula, {}, dicLocals))
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             resultado = "Error" if siError else ""
 
         return resultado

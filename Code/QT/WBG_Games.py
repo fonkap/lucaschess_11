@@ -161,6 +161,9 @@ class WGames(QtWidgets.QWidget):
             return str(self.dbGames.getROWID(nfila))
         elif clave == "opening":
             xpv = self.dbGames.field(nfila, "XPV")
+            if type(xpv) is bytes:  #TODO temporal
+                print("type(xpv) is bytes")
+                xpv = xpv.decode("latin1")
             return self.ap.XPV(xpv)
         return self.dbGames.field(nfila, clave)
 

@@ -561,6 +561,7 @@ class GestorEntMaq(Gestor.Gestor):
                             self.ponFlechasTutor(mrm, self.nArrowsTt)
                         QtCore.QTimer.singleShot(4000 if self.childmode else 2000, self.analizaSiguiente)
 
+
     def analizaFinal(self):
         estado = self.siAnalizando
         self.siAnalizando = False

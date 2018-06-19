@@ -803,7 +803,8 @@ class WPanelDirector(QTVarios.WDialogo):
                 for campo in dicCampos[tp]:
                     setattr(bd, campo, getattr(bdn, campo))
                 sc.update()
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
         self.refresh_guion()
 

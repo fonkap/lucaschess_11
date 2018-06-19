@@ -2,7 +2,7 @@ import time
 
 from PyQt5.QtCore import Qt
 
-from Code import Partida
+from Code import Partida, Util
 from Code import ControlPosicion
 from Code import Gestor
 from Code import PGN
@@ -356,7 +356,8 @@ class GestorPartida(Gestor.Gestor):
                     self.fen = cp.fen()
                     self.posicApertura = None
                     self.reiniciar()
-                except:
+                except Exception as err:
+                    Util.log_exception(err)
                     pass
 
         elif resp == "leerpgn":

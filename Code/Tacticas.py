@@ -437,10 +437,10 @@ class Tactica(BaseTactica):
     def puestosPenalizacion(self, posic, total):
         if self.PENALIZATION:
             li = self.PENALIZATION
-            n = total / len(li)
+            n = total // len(li)
             if n == 0:
                 return 0
-            n1 = posic / n
+            n1 = posic // n
             if n1 >= len(li):
                 n1 = len(li) - 1
             return li[n1]

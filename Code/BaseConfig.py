@@ -268,7 +268,10 @@ class ConfigMotor(ConfigMotorBase):
         self._nombre = None
 
     def removeLog(self, fich):
-        Util.borraFichero(os.path.join(VarGen.folder_engines, self.carpeta, fich))
+        path = os.path.join(VarGen.folder_engines, self.carpeta, fich)
+        if os.path.isfile(path):
+            Util.borraFichero(path)
+
 
     def graba(self):
         return self.clave + "#" + self.categorias.graba()

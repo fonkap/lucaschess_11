@@ -1,6 +1,6 @@
 import LCEngineV1 as LCEngine
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Partida
 from Code import AperturasStd
@@ -18,9 +18,9 @@ from Code.QT import QTVarios
 OPENINGS_WHITE, OPENINGS_BLACK, MOVES_WHITE, MOVES_BLACK = range(4)
 
 
-class ToolbarMoves(QtGui.QWidget):
+class ToolbarMoves(QtWidgets.QWidget):
     def __init__(self, side, rutina):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.dispatch = rutina
         self.side = side
@@ -91,9 +91,9 @@ class ToolbarMoves(QtGui.QWidget):
         self.dispatch(self.side, "p%d" % v)
 
 
-class WPlayer(QtGui.QWidget):
+class WPlayer(QtWidgets.QWidget):
     def __init__(self, procesador, winBookGuide, dbGames):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.winBookGuide = winBookGuide
         self.procesador = procesador
@@ -147,12 +147,12 @@ class WPlayer(QtGui.QWidget):
         self.gridMovesWhite = Grid.Grid(self, oColumnas, siSelecFilas=True)
         self.gridMovesBlack = Grid.Grid(self, oColumnas, siSelecFilas=True)
 
-        wWhite = QtGui.QWidget(self)
+        wWhite = QtWidgets.QWidget(self)
         tbmovesw = ToolbarMoves("white", self.dispatchMoves)
         ly = Colocacion.V().control(tbmovesw).control(self.gridMovesWhite).margen(3)
         wWhite.setLayout(ly)
 
-        wblack = QtGui.QWidget(self)
+        wblack = QtWidgets.QWidget(self)
         tbmovesb = ToolbarMoves("black", self.dispatchMoves)
         ly = Colocacion.V().control(tbmovesb).control(self.gridMovesBlack).margen(3)
         wblack.setLayout(ly)
@@ -270,18 +270,19 @@ class WPlayer(QtGui.QWidget):
 
     def gridCambiadoRegistro(self, grid, nfila, oCol):
         dt = self.dataGrid(grid)
-        if grid == self.gridMovesWhite:
-            nfila = self.movesWhite[nfila]
-        elif grid == self.gridMovesBlack:
-            nfila = self.movesBlack[nfila]
-        if len(dt) > nfila >= 0:
-            partida = dt[nfila]["partida"]
-            if partida is None:
-                pv = dt[nfila]["pv"]
-                partida = Partida.Partida()
-                partida.leerPV(pv)
-            self.infoMove.modoPartida(partida, partida.numJugadas()-1)
-            self.setFocus()
+        if dt:
+            if grid == self.gridMovesWhite:
+                nfila = self.movesWhite[nfila]
+            elif grid == self.gridMovesBlack:
+                nfila = self.movesBlack[nfila]
+            if len(dt) > nfila >= 0:
+                partida = dt[nfila]["partida"]
+                if partida is None:
+                    pv = dt[nfila]["pv"]
+                    partida = Partida.Partida()
+                    partida.leerPV(pv)
+                self.infoMove.modoPartida(partida, partida.numJugadas()-1)
+                self.setFocus()
 
     def gridColorFondo(self, grid, nfila, ocol):
         dt = self.dataGrid(grid)
@@ -503,7 +504,7 @@ class WPlayer(QtGui.QWidget):
             st_rem = set()
 
             listapvs = dicMoves[side].keys()
-            listapvs.sort()
+            listapvs = sorted(listapvs)
 
             sipar = 1 if side == "white" else 0
 
@@ -520,7 +521,7 @@ class WPlayer(QtGui.QWidget):
                 del dc[pv]
 
             listapvs = dicMoves[side].keys()
-            listapvs.sort()
+            listapvs = sorted(listapvs)
             antlipv = []
             for npv, pv in enumerate(listapvs):
                 dt = dicMoves[side][pv]

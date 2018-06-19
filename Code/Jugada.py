@@ -264,7 +264,9 @@ class Jugada:
         txt += mas(self.critica)
         txt += masL(self.siDesconocido)
 
-        txt += mas((pickle.dumps(self.analisis).replace(b"\r\n", b"#&").replace(b"\n", b"#&")).decode("latin1") if self.analisis else "")
+        # higher protocols than 0 can be problematic. A value 128 will be serialized as a char 128
+        # and will be confused with the separator character (VarGen.XSEP)
+        txt += mas((pickle.dumps(self.analisis, protocol=0).replace(b"\r\n", b"#&").replace(b"\n", b"#&")).decode("latin1") if self.analisis else "")
 
         txt += mas(self.criticaDirecta)
         txt += masL(self.siTablasAcuerdo)

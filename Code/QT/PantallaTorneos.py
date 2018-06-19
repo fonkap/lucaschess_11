@@ -348,7 +348,8 @@ class WUnTorneo(QTVarios.WDialogo):
                 if self.fen == ControlPosicion.FEN_INICIAL:
                     self.fen = ""
                 self.muestraPosicion()
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
 
     def nuevoBook(self):

@@ -62,7 +62,7 @@ class WTurnOnLights(QTVarios.WDialogo):
 
         edicionIconos = Delegados.PmIconosColor()
         self.dicIconos = {}
-        for k, pm in edicionIconos.dicpmIconos.iteritems():
+        for k, pm in edicionIconos.dicpmIconos.items():
             self.dicIconos[k] = QtGui.QIcon(pm)
 
         for x in range(self.tol.num_blocks):
@@ -260,7 +260,7 @@ class WConfigOneLineTOL(QTVarios.WDialogo):
         titulo = _("Turn on the lights") + ": " + title
         extparam = "tolconfoneline"
         icono = Iconos.TOLchange()
-        QTVarios.WDialogo.__init__(self, owner, titulo, icono, extparam)
+        super().__init__(parent=owner, titulo=titulo, icono=icono, extparam=extparam)
 
         self.tol = TurnOnLights.read_oneline_tol()
         self.procesador = procesador

@@ -221,7 +221,8 @@ def listaGM(siWoman):
             gm = fich[:-4].lower()
             try:
                 li.append((dic[gm], gm, True, True))
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
     li = sorted(li, key=operator.itemgetter(0))
     return li
@@ -239,7 +240,8 @@ def listaGMpersonal(carpeta):
                 for linea in f:
                     try:
                         gmp = GMpartida(linea.strip())
-                    except:
+                    except Exception as err:
+                        Util.log_exception(err)
                         continue
                     if not siW:
                         siW = gmp.isWhite(True)

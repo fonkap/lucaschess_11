@@ -234,7 +234,8 @@ class Expeditions:
             self.dbf.goto(nfila)
             reg = self.dbf.registroActual()
             return getattr(reg, name)
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             return ""
 
     def new(self, reg_base):

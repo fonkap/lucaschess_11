@@ -42,8 +42,11 @@ class Partida:
 
     def jugada(self, num):
         try:
+            if num < 0:
+                return self.liJugadas[-1] if len(self) > 0 else None
             return self.liJugadas[num]
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             return self.liJugadas[-1] if len(self) > 0 else None
 
     def append_jg(self, jg):
@@ -700,7 +703,7 @@ def calc_formula_elo(jg):  # , limit=200.0):
     mat = 0.0
     matw = matb = 0.0
     dmat = {"k": 3.0, "q": 9.9, "r": 5.5, "b": 3.5, "n": 3.1, "p": 1.0}
-    for k, v in cp.casillas.iteritems():
+    for k, v in cp.casillas.items():
         if v:
             m = dmat[v.lower()]
             mat += m
@@ -775,5 +778,6 @@ def calc_formula_elo(jg):  # , limit=200.0):
         #     q.write(",".join(dataLG) + "\r\n")
 
         return min(3500, max(0, x))
-    except:
+    except Exception as err:
+        Util.log_exception(err)
         return 0.0

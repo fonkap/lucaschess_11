@@ -36,7 +36,7 @@ class XMotor:
         if not os.path.isfile(exe):
             return
 
-        self.engine = EngineThread.Engine(exe, priority, args)
+        self.engine = EngineThread.Engine(exe, priority, args, id=nombre)
         self.engine.start()
 
         self.lockAC = True
@@ -360,7 +360,8 @@ class XMotor:
         if self.pid:
             try:
                 self.engine.close()
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 os.kill(self.pid, signal.SIGTERM)
                 sys.stderr.write("INFO X CLOSE: except - the engine %s won't close properly.\n" % self.nombre)
             self.pid = None
@@ -496,6 +497,7 @@ class FastEngine(object):
 
     def put_line(self, line):
         self.stdin.write(line + "\n")
+        self.stdin.flush()
         if self.log:
             self.log_write(">>> %s" % line)
 

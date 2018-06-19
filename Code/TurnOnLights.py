@@ -340,7 +340,7 @@ class TurnOnLightsOneLine(TurnOnLights):
 
     def set_num_pos(self, num_pos):
         self.num_pos = num_pos
-        k = num_pos/6
+        k = num_pos//6
         self.li_tam_blocks = [k, 2*k, 3*k, num_pos]
 
     def recupera(self):
@@ -420,7 +420,7 @@ def compruebaUweEasy(configuracion, name):
     folderOri = "Trainings/Tactics by Uwe Auerswald"
     for fich in os.listdir(folderOri):
         if fich.endswith(".fns"):
-            with open(os.path.join(folderOri, fich)) as f, open(os.path.join(folderDest, fich), "wb") as q:
+            with open(os.path.join(folderOri, fich)) as f, open(os.path.join(folderDest, fich), "w") as q:
                 for linea in f:
                     if linea.count("*") < 3:
                         q.write(linea)

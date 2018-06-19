@@ -160,7 +160,8 @@ class Kibitzer(MotoresExternos.MotorExterno):
             try:
                 fdest = os.path.join(os.path.dirname(fvideo), "KIB%s.video" % self.huella)
                 os.rename(fvideo, fdest)
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
 
         return os.path.isfile(self.exe)
@@ -311,7 +312,8 @@ class IPCKibitzer:
             self.escribe(orden)
             self.ipc.close()
             self.close()
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
 
     def close(self):
@@ -319,5 +321,6 @@ class IPCKibitzer:
             try:
                 self.popen.terminate()
                 self.popen = None
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass

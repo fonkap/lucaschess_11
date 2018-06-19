@@ -57,7 +57,8 @@ class ListaAperturasStd:
         fen2fenM2 = LCEngine.fen2fenM2
 
         mx = 0
-        for n, (pv, ap) in enumerate(self.dic.iteritems(), 1):
+        for n, (pv, ap) in enumerate(self.dic.items(), 1):
+            # fen = makePV(pv.encode("latin1"))
             fen = makePV(pv)
             dfen[fen2fenM2(fen)] = ap
             if n > mx:

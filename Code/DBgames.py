@@ -192,9 +192,12 @@ class TreeSTAT:
     def commit(self):
         self._conexion.commit()
 
+    def hash(self, str):
+        return int.from_bytes(hashlib.md5(str.encode("utf-8")).digest()[:4], byteorder='big')
+
     def _fen2hash(self, fen):
         fenm2 = fen2fenM2(fen)
-        return int.from_bytes(hashlib.md5(fenm2.encode("utf-8")).digest()[:4], byteorder='big')
+        return self.hash(fenm2)
 
     def _sum(self, hfen, rfather, xmove, w, b, d, o, tdepth ):
         alm = self._readRow(hfen, rfather, xmove)
@@ -206,7 +209,8 @@ class TreeSTAT:
             alm.D += d
         else:
             alm.O += o
-        return self._writeRow(hfen, alm)
+        row = self._writeRow(hfen, alm)
+        return row
 
     def append(self, pv, result, r=+1, siCommit=False):
         w = b = d = o = 0
@@ -248,7 +252,7 @@ class TreeSTAT:
         for depth, move in enumerate(liPV):
             if depth >= self.depth:
                 break
-            hfen = hash(liFens[depth])
+            hfen = self.hash(liFens[depth])
             rfather = self.fsum(hfen, rfather, move2num(move), w, b, d, o, depth)
 
     def massive_append_set(self, start):
@@ -819,12 +823,12 @@ class DBgames:
             self.dbSTAT.massive_append_set(True)
 
         def write_logs(fich, pgn):
-            with open(fich, "ab") as ferr:
+            with open(fich, "a") as ferr:
                 ferr.write(pgn)
                 ferr.write("\n")
 
         codec = Util.file_encoding(ficheros[0])
-        sicodec = codec not in ("utf-8", "ascii")
+        codec = "utf-8" if codec in ("utf-8", "ascii") else codec # utf8 is a safer guess because all ascii is utf8
 
         liRegs = []
         stRegs = set()
@@ -843,7 +847,7 @@ class DBgames:
             fich_duplicados = os.path.join(VarGen.configuracion.carpetaTemporal(), nomfichero[:-3] + "duplicates.pgn")
             dlTmp.pon_titulo(nomfichero)
             next_n = random.randint(100, 200)
-            with LCEngine.PGNreader(fichero, self.depthStat()) as fpgn:
+            with LCEngine.PGNreader(fichero, self.depthStat(), codec) as fpgn:
                 for n, (pgn, pv, dCab, raw, liFens) in enumerate(fpgn, 1):
                     if not pv:
                         erroneos += 1
@@ -865,11 +869,6 @@ class DBgames:
                                 write_logs(fich_duplicados, pgn)
                             else:
                                 stRegs.add(xpv)
-                                if sicodec:
-                                    for k, v in dCab.items():
-                                        dCab[k] = unicode(v, encoding=codec, errors="ignore")
-                                    if pgn:
-                                        pgn = unicode(pgn, encoding=codec, errors="ignore")
 
                                 if raw: # si no tiene variantes ni comentarios, se graba solo las tags que faltan
                                     liRTags = [(k,v) for k, v in dCab.items() if k not in liCabs] # k is always upper

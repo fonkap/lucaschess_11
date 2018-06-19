@@ -1478,7 +1478,7 @@ class WBMT(QTVarios.WDialogo):
             return
 
         fns = resp[3:]
-        f = open(fns, "rb")
+        f = open(fns, "r")
         liFEN = []
         for linea in f:
             linea = linea.strip()

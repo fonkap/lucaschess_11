@@ -615,7 +615,7 @@ class WPotencia(QTVarios.WDialogo):
 
     def consultar(self):
         pgn = ""
-        for k, v in self.dicPGN.iteritems():
+        for k, v in self.dicPGN.items():
             pgn += '[%s "%s"]\n' % (k, v)
         pgn += "\n" + self.partida.pgnBaseRAW()
 

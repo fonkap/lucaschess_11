@@ -738,7 +738,8 @@ class Tablero(QtWidgets.QGraphicsView):
                     if x.is_dir():
                         ico = VarGen.todasPiezas.icono("K", x.name)
                         li.append((x.name, ico))
-                except:
+                except Exception as err:
+                    Util.log_exception(err)
                     pass
             li.sort(key=lambda x: x[0])
             for x, ico in li:
@@ -2114,7 +2115,7 @@ class PosTablero(Tablero):
             cy = self.punto2fila(y)
             if cx in range(1, 9) and cy in range(1, 9):
                 a1h8 = self.num2alg(cy, cx)
-                self.dispatchDrop(a1h8, str(dato))
+                self.dispatchDrop(a1h8, dato.data().decode("latin1"))
             event.setDropAction(QtCore.Qt.IgnoreAction)
         event.ignore()
 

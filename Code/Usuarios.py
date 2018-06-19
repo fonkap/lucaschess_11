@@ -24,7 +24,8 @@ class Usuarios:
                 s = f.read()
                 self.lista = pickle.loads(s)
                 self.save()
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
         Util.borraFichero(ant)
 

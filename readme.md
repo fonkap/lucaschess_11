@@ -1,6 +1,8 @@
 Lucas Chess
 ===========
 
+Lucas Chess fork for Python 3 and QT5
+
 Lucas Chess is a GUI of chess:
 
 1. To learn to play chess.
@@ -9,8 +11,8 @@ Lucas Chess is a GUI of chess:
 Dependencies
 ------------
 
-* Python 2.7
-* PyQt4
+* Python 3.6
+* PyQt5
 * PyAudio
 * psutil
 * Python for windows extensions

@@ -174,7 +174,7 @@ class WPosicion(QtWidgets.QWidget):
         self.actPosicion()
         siK = False
         sik = False
-        for p in self.casillas.itervalues():
+        for p in self.casillas.values():
             if p == "K":
                 siK = True
             elif p == "k":
@@ -344,7 +344,8 @@ class WPosicion(QtWidgets.QWidget):
             try:
                 self.posicion.leeFen(str(fen))
                 self.resetPosicion()
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
 
     def copiar(self):

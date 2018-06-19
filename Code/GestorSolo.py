@@ -756,7 +756,7 @@ class GestorSolo(Gestor.Gestor):
             if texto:
                 cp = ControlPosicion.ControlPosicion()
                 try:
-                    cp.leeFen(str(texto))
+                    cp.leeFen(texto.decode("latin1"))
                     self.xfichero = None
                     self.xpgn = None
                     self.xjugadaInicial = None
@@ -764,7 +764,8 @@ class GestorSolo(Gestor.Gestor):
                     self.bloqueApertura = None
                     self.posicApertura = None
                     self.reiniciar()
-                except:
+                except Exception as err:
+                    Util.log_exception(err)
                     pass
 
         elif resp == "leerpgn":
@@ -834,7 +835,7 @@ class GestorSolo(Gestor.Gestor):
 
     def controlTeclado(self, nkey):
         if nkey == Qt.Key_V:
-            self.paste(QTUtil.traePortapapeles())
+            self.paste(QTUtil.traePortapapeles().decode("latin1"))
         elif nkey == Qt.Key_T:
             li = [self.fen if self.fen else ControlPosicion.FEN_INICIAL,"",self.partida.pgnBaseRAW()]
             self.saveSelectedPosition("|".join(li))
@@ -881,7 +882,7 @@ class GestorSolo(Gestor.Gestor):
                 dic["SIBLANCASABAJO"] = unpgn.partida.ultPosicion.siBlancas
                 self.reiniciar(dic)
             else:
-                cp.leeFen(str(texto))
+                cp.leeFen(texto)
                 self.xfichero = None
                 self.xpgn = None
                 self.xjugadaInicial = None
@@ -889,7 +890,8 @@ class GestorSolo(Gestor.Gestor):
                 self.bloqueApertura = None
                 self.posicApertura = None
                 self.reiniciar()
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
 
     def juegaRival(self):

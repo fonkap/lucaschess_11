@@ -70,7 +70,8 @@ def dicDisk(configuracion):
     backup = configuracion.carpeta + "/__BACKUP__"
     try:
         os.mkdir(backup)
-    except:
+    except Exception as err:
+        Util.log_exception(err)
         pass
     # comprobar si la tabla es unica si es asi crear nuevo fichero, sino, borrar tabla y generar nueva
 
@@ -156,7 +157,8 @@ def dicDisk_SQL(backup, path, tabla=None, siAllTables=False, pickle=True):
             try:
                 cursor.execute(sql)
                 conexion.commit()
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
             sql = "INSERT INTO %s (KEY,VALUE) values(?,?)" % table
             for row in liDatos:
@@ -436,7 +438,8 @@ class GMconvert:
         dbak = os.path.join(self.carpeta, "bak_gm")
         try:
             os.mkdir(dbak)
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
         for fich in os.listdir(self.carpeta):
             f4 = fich[-4:].lower()
@@ -444,7 +447,8 @@ class GMconvert:
             if os.path.isfile(fichero) and f4 in (".gmi", ".gmb", ".gmw"):
                 try:
                     shutil.move(fichero, os.path.join(dbak, fich))
-                except:
+                except Exception as err:
+                    Util.log_exception(err)
                     pass
 
     def borraFicheros(self):
@@ -454,7 +458,8 @@ class GMconvert:
                 fichero = os.path.join(self.carpeta, fich)
                 try:
                     os.remove(fichero)
-                except:
+                except Exception as err:
+                    Util.log_exception(err)
                     pass
 
     def validFile(self, fichero):

@@ -47,6 +47,9 @@ kControlTableroNo, kControlTableroGeneral, kControlTableroParticular = range(3)
 
 kNoBlindfold, kBlindfoldConfig, kBlindfoldWhite, kBlindfoldBlack, kBlindfoldAll = range(5)
 
+DEBUG = True
+LOG_EXCEPTIONS = True
+VERSION = "11.08a"
 
 class KRegistro:
     pass
@@ -76,3 +79,4 @@ def stack(siPrevio=False):
         prlk("\n" + "-" * 80 + "\n")
     for line in traceback.format_stack()[:-1]:
         prlk(line.strip() + "\n")
+

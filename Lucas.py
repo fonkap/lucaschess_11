@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # ==============================================================================
@@ -55,7 +55,7 @@ if EXCEPTION_HOOK:
 
     sys.excepthook = my_exception_hook
 
-#reload(sys)
+# reload(sys)
 # sys.setdefaultencoding("latin-1")
 sys.path.insert(0, os.curdir)
 
@@ -75,7 +75,6 @@ from Code import VarGen
 
 sys.path.append(os.path.join(current_dir, "Code"))
 sys.path.append(os.path.join(current_dir, VarGen.folder_engines, "_tools"))
-
 import Code.Traducir as Traducir
 Traducir.install()
 
@@ -86,6 +85,7 @@ if nArgs == 1:
     Code.Init.init()
 
 elif nArgs >= 2:
+    print("lucas argv[1] " + sys.argv[1])
     arg = sys.argv[1].lower()
     if (arg.endswith(".pgn") or arg.endswith(".pks") or
             arg.endswith(".lcg") or arg.endswith(".lcf") or

@@ -125,7 +125,7 @@ class WBooksCrear(QtWidgets.QDialog):
             li.append("-uniform")
 
         # Ejecutamos
-        process = subprocess.Popen(li, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        process = subprocess.Popen(li, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="latin1")
 
         # Mostramos el resultado
         txt = process.stdout.read()
@@ -196,13 +196,14 @@ def polyglotUnir(owner):
         li = [os.path.abspath(exe), 'merge-book', "-in1", f1, "-in2", f2, "-out", fr]
         try:
             os.remove(fr)
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
 
         # Ejecutamos
         me = QTUtil2.unMomento(owner)
 
-        process = subprocess.Popen(li, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        process = subprocess.Popen(li, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="latin1")
 
         # Mostramos el resultado
         txt = process.stdout.read()

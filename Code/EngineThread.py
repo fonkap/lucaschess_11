@@ -5,7 +5,7 @@ import time
 
 import psutil
 
-from Code import VarGen
+from Code import VarGen, Util
 from Code.Constantes import *
 
 DEBUG_ENGINE = True
@@ -17,6 +17,12 @@ def xpr(line):
         tdbg[0] = t
     return True
 
+def xpr2(line):
+    if DEBUG_ENGINE:
+        t = time.time()
+        prlk("%0.04f %s" % (t - tdbg[0], line))
+        tdbg[0] = t
+    return True
 
 def xprli(li):
     if DEBUG_ENGINE:
@@ -24,6 +30,7 @@ def xprli(li):
         dif = t - tdbg[0]
         for line in li:
             prlk("%0.04f %s" % (dif, line))
+            pass
         tdbg[0] = t
     return True
 
@@ -66,10 +73,13 @@ import subprocess
 import threading
 import collections
 
-
+engine_id = 0
 class Engine(object):
-    def __init__(self, exe, priority, args):
+    def __init__(self, exe, priority, args, id="engine_thread_default"):
+        global engine_id
+        engine_id += 1
         self.pid = None
+        self.id = id + str(engine_id)
         self.exe = os.path.abspath(exe)
         self.direxe = os.path.dirname(exe)
         self.priority = priority
@@ -87,7 +97,7 @@ class Engine(object):
         self.working = False
 
     def put_line(self, line):
-        assert xpr("put>>> %s\n" % line)
+        assert xpr2("put %s >>> %s\n" % (self.id, line))
         self.stdin_lock.acquire()
         self.stdin.write((line + "\n"))
         self.stdin.flush()
@@ -110,13 +120,15 @@ class Engine(object):
         try:
             while self.working:
                 line = stdout.readline()
-                assert xpr(line)
+                assert xpr(self.id + ' ' + line)
                 if not line:
                     break
                 lock.acquire()
+                idt = threading.current_thread().ident
                 self.liBuffer.append(line)
                 lock.release()
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
         finally:
             stdout.close()

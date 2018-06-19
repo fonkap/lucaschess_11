@@ -1,6 +1,6 @@
 import LCEngineV1 as LCEngine
 
-from Code import VarGen
+from Code import VarGen, Util
 from Code import Partida
 
 
@@ -73,7 +73,8 @@ def calc_formula(cual, cp, mrm):  # , limit=200.0):
         # if x > limit:
         # x = limit
         return x
-    except:
+    except Exception as err:
+        Util.log_exception(err)
         return 0.0
 
 

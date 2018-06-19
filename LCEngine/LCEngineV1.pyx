@@ -39,8 +39,9 @@ cdef extern from "irina.h":
 
 
 class PGNreader:
-    def __init__(self, fich, depth):
-        self.fich = fich
+    def __init__(self, fich, depth, codec="utf8"):
+        self.codec = codec
+        self.fich = fich.encode(self.codec)
         self.depth = depth
 
     def __enter__(self):
@@ -53,6 +54,12 @@ class PGNreader:
     def __iter__(self):
         return self
 
+    def __decode__(self, bytes):
+        return bytes.decode(self.codec, 'replace')
+
+    def __encode__(self, str):
+        return str.encode(self.codec, 'replace')
+
     def next(self):
         n = pgn_read()
         if n:
@@ -61,13 +68,15 @@ class PGNreader:
             d = {}
             n = pgn_numlabels()
             r = pgn_raw()
-            fens = [ pgn_fen(num) for num in range(pgn_numfens()) ]
+            fens = [ self.__decode__(pgn_fen(num)) for num in range(pgn_numfens()) ]
             if n:
                 for x in range(n):
-                    d[pgn_label(x).upper()] = pgn_value(x)
-            return pgn, pv, d, r, fens
+                    d[self.__decode__(pgn_label(x).upper())] = self.__decode__(pgn_value(x))
+            return self.__decode__(pgn), self.__decode__(pv), d, r, fens
         else:
             raise StopIteration
+
+    __next__ = next
 
 
 def lc_pgn2pv(pgn1):

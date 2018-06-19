@@ -1,6 +1,7 @@
 import copy
 
 import Code.SQL.Base as SQLBase
+from Code import Util
 
 
 class BMT(SQLBase.DBBase):
@@ -60,7 +61,8 @@ class BMT_Uno:
     def condiciones(self):
         try:
             return "%s - %d %s" % (self.mrm.nombre, self.mrm.tiempo / 1000, _("Second(s)")) if self.mrm.nombre else ""
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             return ""
 
     def actualizaEstado(self):

@@ -255,7 +255,7 @@ class Opening:
         if not siRepetir:
             stBorrar = set()
             xanalyzer = procesador.XAnalyzer()
-            for stpv, fenM2 in dicFENm2.iteritems():
+            for stpv, fenM2 in dicFENm2.items():
                 if len(stpv) > 1:
                     siW = " w " in fenM2
                     if siW and siBlancas:

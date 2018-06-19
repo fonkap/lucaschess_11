@@ -446,7 +446,7 @@ class EtiquetaPOS(QtWidgets.QStyledItemDelegate):
             painter.drawPixmap(0, 0, dicPM[indicadorInicial])
             painter.restore()
 
-        documentPGN = QtWidgets.QTextDocument()
+        documentPGN = QtGui.QTextDocument()
         documentPGN.setDefaultFont(option.font)
         if color:
             pgn = '<font color="%s"><b>%s</b></font>' % (color, pgn)
@@ -457,7 +457,7 @@ class EtiquetaPOS(QtWidgets.QStyledItemDelegate):
         wpz = int(hx * 0.8)
 
         if info:
-            documentINFO = QtWidgets.QTextDocument()
+            documentINFO = QtGui.QTextDocument()
             documentINFO.setDefaultFont(option.font)
             if color:
                 info = '<font color="%s"><b>%s</b></font>' % (color, info)

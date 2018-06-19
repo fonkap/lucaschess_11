@@ -276,13 +276,13 @@ class BarraProgreso2(QtWidgets.QDialog):
         self.setWindowTitle(titulo)
 
         # gb1 + progress
-        self.bp1 = QtGui.QProgressBar()
+        self.bp1 = QtWidgets.QProgressBar()
         self.bp1.setFormat(formato1)
         ly = Colocacion.H().control(self.bp1)
         self.gb1 = Controles.GB(self, "", ly)
 
         # gb2 + progress
-        self.bp2 = QtGui.QProgressBar()
+        self.bp2 = QtWidgets.QProgressBar()
         self.bp2.setFormat(formato2)
         ly = Colocacion.H().control(self.bp2)
         self.gb2 = Controles.GB(self, "", ly)
@@ -346,7 +346,7 @@ class BarraProgreso1(QtWidgets.QDialog):
         self.setWindowTitle(titulo)
 
         # gb1 + progress
-        self.bp1 = QtGui.QProgressBar()
+        self.bp1 = QtWidgets.QProgressBar()
         self.bp1.setFormat(formato1)
         ly = Colocacion.H().control(self.bp1)
         self.gb1 = Controles.GB(self, "", ly)

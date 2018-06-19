@@ -1,6 +1,6 @@
 import collections
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Jugada
 from Code import Partida
@@ -17,9 +17,9 @@ V_SIN, V_IGUAL, V_BLANCAS, V_NEGRAS, V_BLANCAS_MAS, V_NEGRAS_MAS, V_BLANCAS_MAS_
     0, 11, 14, 15, 16, 17, 18, 19)
 
 
-class BoardLines(QtGui.QWidget):
+class BoardLines(QtWidgets.QWidget):
     def __init__(self, panelOpening, configuracion):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.panelOpening = panelOpening
         self.dbop = panelOpening.dbop
@@ -52,7 +52,8 @@ class BoardLines(QtGui.QWidget):
         self.lbPGN.setOpenExternalLinks(False)
         def muestraPos(txt):
             self.colocatePartida(int(txt))
-        self.connect(self.lbPGN, QtCore.SIGNAL("linkActivated(QString)"), muestraPos)
+
+        self.lbPGN.linkActivated.connect(muestraPos)
 
         self.siFigurines = configuracion.figurinesPGN
 
@@ -77,12 +78,12 @@ class BoardLines(QtGui.QWidget):
         self.dicVentaja[V_NEGRAS_MAS_MAS] = (dicNAGs[19], Iconos.V_Negras_Mas_Mas())
 
         # Valoracion
-        liOpciones = [(tit[0], k, tit[1]) for k, tit in self.dicValoracion.iteritems()]
+        liOpciones = [(tit[0], k, tit[1]) for k, tit in self.dicValoracion.items()]
         self.cbValoracion = Controles.CB(self, liOpciones, 0).capturaCambiado(self.cambiadoValoracion)
         self.cbValoracion.ponFuente(tipoLetra)
 
         # Ventaja
-        liOpciones = [(tit, k, icon) for k, (tit, icon) in self.dicVentaja.iteritems()]
+        liOpciones = [(tit, k, icon) for k, (tit, icon) in self.dicVentaja.items()]
         self.cbVentaja = Controles.CB(self, liOpciones, 0).capturaCambiado(self.cambiadoVentaja)
         self.cbVentaja.ponFuente(tipoLetra)
 
@@ -191,6 +192,8 @@ class BoardLines(QtGui.QWidget):
             self.activaPiezas()
             return
 
+        if pos is None:
+            pos = 0
         if pos >= num_jugadas:
             self.siReloj = False
             pos = num_jugadas - 1

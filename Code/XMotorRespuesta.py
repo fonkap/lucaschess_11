@@ -235,9 +235,13 @@ class RespuestaMotor:
 st_uci_claves = {"multipv", "depth", "seldepth", "score", "time", "nodes", "pv", "hashfull", "tbhits", "nps",
                      "currmove", "currmovenumber", "cpuload", "string", "refutation", "currline"}
 
-
+MRespuestaMotorId = 0
 class MRespuestaMotor:
     def __init__(self, nombre, siBlancas):
+        global MRespuestaMotorId
+
+        MRespuestaMotorId+= 1
+        self.id = MRespuestaMotorId
         self.nombre = nombre
         self.siBlancas = siBlancas
 
@@ -439,6 +443,7 @@ class MRespuestaMotor:
         n = 1
         while True:
             if str(n) not in self.dicMultiPV:
+                print("agregaRM ", len(self.dicMultiPV))
                 self.dicMultiPV[str(n)] = rm
                 break
             n += 1

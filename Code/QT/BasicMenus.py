@@ -200,7 +200,7 @@ class WAtajos(QTVarios.WDialogo):
         self.liFavoritos = self.procesador.configuracion.liFavoritos
         self.dicDatos = dicDatos
 
-        QTVarios.WDialogo.__init__(self, self.procesador.pantalla, _("Shortcuts"), Iconos.Atajos(), "atajos")
+        super().__init__(parent=self.procesador.pantalla, titulo=_("Shortcuts"), icono=Iconos.Atajos(), extparam="atajos")
 
         liAcciones = [
             (_("Close"), Iconos.MainMenu(), self.terminar), None,

@@ -254,7 +254,8 @@ class WPlay(QTVarios.WDialogo):
         mas = "x" if self.intervaloPorPieza else ""
         titulo = "%s (%s%d\")" % (site, mas, self.intervalo)
 
-        super(WPlay, self).__init__(owner, titulo, Iconos.Gafas(), "visualplay")
+        super().__init__(parent=owner, titulo=titulo, icono=Iconos.Gafas(), extparam="visualplay")
+        # super(WPlay, self).__init__(owner, titulo, Iconos.Gafas(), "visualplay")
 
         self.procesador = owner.procesador
         self.configuracion = self.procesador.configuracion

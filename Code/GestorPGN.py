@@ -151,7 +151,8 @@ class GestorPGN(Gestor.Gestor):
                 texto = texto.decode(encoding)
             try:
                 pgn.leeTexto(texto)
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pgn.siError = True
             if pgn.siError:
                 QTUtil2.mensError(self.pantalla,

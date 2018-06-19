@@ -69,7 +69,7 @@ class WBase(QtWidgets.QWidget):
         self.tb.setIconSize(QtCore.QSize(sz, sz))
         style = "QToolBar {border-bottom: 1px solid gray; border-top: 1px solid gray;}"
         self.tb.setStyleSheet(style)
-        sp = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sp = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.tb.setSizePolicy(sp)
         self.tb.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.tb.customContextMenuRequested.connect(self.lanzaAtajos)

@@ -207,7 +207,7 @@ class DBgamesFEN():
         next_n = random.randint(100, 200)
 
         codec = Util.file_encoding(fichero)
-        sicodec = codec not in ("utf-8", "ascii")
+        codec = "utf-8" if codec in ("utf-8", "ascii") else codec  # utf8 is a safer guess because all ascii is utf8
 
         liRegs = []
         nRegs = 0
@@ -223,7 +223,7 @@ class DBgamesFEN():
         liCabs = self.liCamposBase[:-1]  # all except PLIES PGN, TAGS
         liCabs.append("PLYCOUNT")
 
-        with LCEngine.PGNreader(fichero, 0) as fpgn:
+        with LCEngine.PGNreader(fichero, 0, codec) as fpgn:
             for n, (pgn, pv, dCab, raw, liFens) in enumerate(fpgn, 1):
                 if "FEN" not in dCab:
                     erroneos += 1
@@ -239,11 +239,6 @@ class DBgamesFEN():
                         duplicados += 1
                     else:
                         stRegs.add(fen)
-                        if sicodec:
-                            for k, v in dCab.items():
-                                dCab[k] = unicode(v, encoding=codec, errors="ignore")
-                            if pgn:
-                                pgn = unicode(pgn, encoding=codec, errors="ignore")
 
                         event = dCab.get("EVENT", "")
                         site = dCab.get("SITE", "")

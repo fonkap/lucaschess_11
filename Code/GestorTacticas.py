@@ -87,7 +87,7 @@ class GestorTacticas(Gestor.Gestor):
                         self.partida = partida
                         self.pgn.partida = partida
                         self.dicEtiquetasPGN = pgn.dic
-                        # for k, v in pgn.dic.iteritems():
+                        # for k, v in pgn.dic.items():
                         # if k.upper() != "FEN":
                         # if etiDirigido:
                         # etiDirigido += "<br>"

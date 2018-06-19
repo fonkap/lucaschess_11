@@ -1,7 +1,7 @@
 import os.path
 import copy
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Code import Util
 from Code import Partida
@@ -27,7 +27,7 @@ from Code.QT import FormLayout
 class WOpeningLines(QTVarios.WDialogo):
     def __init__(self, procesador):
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla,  _("Opening lines"), Iconos.OpeningLines(), "openingLines")
+        super().__init__(parent=procesador.pantalla, titulo=_("Opening lines"), icono=Iconos.OpeningLines(), extparam="openingLines")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion
@@ -42,7 +42,7 @@ class WOpeningLines(QTVarios.WDialogo):
         oColumnas.nueva("FILE", _("File"), 200)
         self.glista = Grid.Grid(self, oColumnas, siSelecFilas=True, siSeleccionMultiple=True)
 
-        sp = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sp = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         liAcciones = (
             (_("Close"), Iconos.MainMenu(), self.terminar), None,
@@ -67,11 +67,11 @@ class WOpeningLines(QTVarios.WDialogo):
 
         lbtrain = Controles.LB(self, _("Trainings")).alinCentrado().ponFondoN("lightgray")
         lytrain = Colocacion.V().control(lbtrain).control(tbtrain).margen(0)
-        self.wtrain = QtGui.QWidget()
+        self.wtrain = QtWidgets.QWidget()
         self.wtrain.setLayout(lytrain)
 
         lytb = Colocacion.H().control(tb).control(self.wtrain).margen(0)
-        wtb = QtGui.QWidget()
+        wtb = QtWidgets.QWidget()
         wtb.setFixedHeight(62)
         wtb.setLayout(lytb)
 
@@ -218,7 +218,9 @@ class WOpeningLines(QTVarios.WDialogo):
             op = self.listaOpenings[fila]
             ok = op["withtrainings"]
 
-        self.wtrain.setVisible(ok)
+        if hasattr(self, "wtrain"):
+            self.wtrain.setVisible(ok)
+
 
     def closeEvent(self, event):  # Cierre con X
         self.guardarVideo()
@@ -233,7 +235,7 @@ class WLines(QTVarios.WDialogo):
         self.dbop = dbop
         title = dbop.gettitle()
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, title, Iconos.OpeningLines(), "studyOpening")
+        super().__init__(parent=procesador.pantalla, titulo=title, icono=Iconos.OpeningLines(), extparam="studyOpening")
 
         self.procesador = procesador
         self.configuracion = procesador.configuracion
@@ -256,7 +258,7 @@ class WLines(QTVarios.WDialogo):
 
         oColumnas = Columnas.ListaColumnas()
         oColumnas.nueva("LINE", _("Line"), 35, edicion=Delegados.EtiquetaPOS(False, True))
-        inicio = self.partidabase.numJugadas()/2+1
+        inicio = self.partidabase.numJugadas()//2+1
         ancho_col = ((self.configuracion.anchoPGN - 35 - 20) / 2)*80//100
         for x in range(inicio, 75):
             oColumnas.nueva(str(x), str(x), ancho_col, edicion=Delegados.EtiquetaPOS(siFigurinesPGN, True))
@@ -269,12 +271,12 @@ class WLines(QTVarios.WDialogo):
 
         self.tabsanalisis = POLAnalisis.TabsAnalisis(self, self.procesador, self.configuracion)
 
-        splitter = QtGui.QSplitter(self)
+        splitter = QtWidgets.QSplitter(self)
         splitter.setOrientation(QtCore.Qt.Vertical)
         splitter.addWidget(self.glines)
         splitter.addWidget(self.tabsanalisis)
 
-        sp = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sp = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         splitter.setSizePolicy(sp)
 
         self.registrarSplitter(splitter, "SPLITTER")
@@ -669,20 +671,21 @@ class WLines(QTVarios.WDialogo):
             return self.colorPar if linea % 2 == 0 else self.colorNon
 
     def gridCambiadoRegistro(self, grid, fila, oColumna):
-        col = oColumna.clave
-        linea = fila//2
-        self.partida = self.dbop[linea]
-        iswhite = fila % 2 == 0
-        if col.isdigit():
-            njug = (int(col)-1)*2
-            if not iswhite:
-                njug += 1
-        else:
-            njug = None
-        self.num_jg_actual = njug
-        self.pboard.ponPartida(self.partida)
-        self.pboard.colocatePartida(njug)
-        self.glines.setFocus()
+        if fila>=0:
+            col = oColumna.clave
+            linea = fila//2
+            self.partida = self.dbop[linea]
+            iswhite = fila % 2 == 0
+            if col.isdigit():
+                njug = (int(col)-1)*2
+                if not iswhite:
+                    njug += 1
+            else:
+                njug = None
+            self.num_jg_actual = njug
+            self.pboard.ponPartida(self.partida)
+            self.pboard.colocatePartida(njug)
+            self.glines.setFocus()
 
     def setJugada(self, njug):
         """Recibimos informacion del panel del tablero"""
@@ -939,7 +942,7 @@ class WStaticTraining(QTVarios.WDialogo):
 
         extparam = "openlines_static_%s" % dbop.nomFichero
 
-        QTVarios.WDialogo.__init__(self, procesador.pantalla, titulo, Iconos.TrainStatic(), extparam)
+        super().__init__(parent=procesador.pantalla, titulo=titulo, icono=Iconos.TrainStatic(), extparam=extparam)
 
         lb = Controles.LB(self,  dbop.gettitle())
         lb.ponFondoN("#BDDBE8").alinCentrado().ponTipoLetra(puntos=14)

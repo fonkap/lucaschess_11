@@ -2,7 +2,7 @@ import os
 
 import LCEngineV1 as LCEngine
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Code import Books
 from Code import ControlPosicion
@@ -19,9 +19,9 @@ from Code.QT import Delegados
 from Code.QT import WBG_Summary
 
 
-class TabEngine(QtGui.QWidget):
+class TabEngine(QtWidgets.QWidget):
     def __init__(self, tabsAnalisis, procesador, configuracion):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.analyzing = False
         self.posicion = None
@@ -199,9 +199,9 @@ class TabEngine(QtGui.QWidget):
         self.dbop.setconfig("ENGINE_MULTIPV", self.sb_multipv.valor())
 
 
-class TabBook(QtGui.QWidget):
+class TabBook(QtWidgets.QWidget):
     def __init__(self, tabsanalisis, book, configuracion):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.tabsanalisis = tabsanalisis
         self.posicion = None
@@ -308,9 +308,9 @@ class TabBook(QtGui.QWidget):
         pass
 
 
-class TabDatabase(QtGui.QWidget):
+class TabDatabase(QtWidgets.QWidget):
     def __init__(self, tabsanalisis, procesador, dbstat):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.tabsanalisis = tabsanalisis
 
@@ -335,9 +335,9 @@ class TabDatabase(QtGui.QWidget):
         self.dbstat.close()
 
 
-class TabsAnalisis(QtGui.QWidget):
+class TabsAnalisis(QtWidgets.QWidget):
     def __init__(self, panelOpening, procesador, configuracion):
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.panelOpening = panelOpening
         self.dbop = panelOpening.dbop
@@ -357,13 +357,13 @@ class TabsAnalisis(QtGui.QWidget):
         self.tabs.setTabIcon(0, Iconos.Motor())
         self.tabs.dispatchChange(self.tabChanged)
 
-        tabButton = QtGui.QToolButton(self)
+        tabButton = QtWidgets.QToolButton(self)
         tabButton.setIcon(Iconos.Nuevo())
         tabButton.clicked.connect(self.creaTab)
         li = [(_("Analysis of next move"), True), (_("Analysis of current move"), False)]
         self.cb_nextmove = Controles.CB(self, li, True).capturaCambiado(self.changedNextMove)
 
-        corner_widget = QtGui.QWidget(self)
+        corner_widget = QtWidgets.QWidget(self)
         lyCorner = Colocacion.H().control(self.cb_nextmove).control(tabButton).margen(0)
         corner_widget.setLayout(lyCorner)
 

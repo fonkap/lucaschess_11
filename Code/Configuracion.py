@@ -794,7 +794,8 @@ class Configuracion:
                     self.siAplazada = True
                     try:
                         self.aplazamiento = Util.txt2dic(dic["APLAZAMIENTO"])
-                    except:
+                    except Exception as err:
+                        Util.log_exception(err)
                         self.aplazamiento = None
                         self.siAplazada = False
                     self.graba()
@@ -920,7 +921,8 @@ class Configuracion:
             dirTmp = os.path.join(self.carpeta, "tmp")
             for entry in Util.listdir(dirTmp):
                 Util.borraFichero(entry.path)
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
 
     def leeVariables(self, nomVar):
@@ -1030,7 +1032,8 @@ class Configuracion:
                                 db[key] = dic
                     db.pack()
                     db.close()
-            except:
+            except Exception as err:
+                Util.log_exception(err)
                 pass
             shutil.rmtree(folder)
 

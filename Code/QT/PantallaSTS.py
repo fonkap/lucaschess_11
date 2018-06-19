@@ -150,7 +150,7 @@ class WRun(QTVarios.WDialogo):
         # if columna.startswith("OTHER") or columna == "WORK":
         # mx_col = []
         # mx_pt = 0
-        # for col, work in self.dworks.iteritems():
+        # for col, work in self.dworks.items():
         # pt = self.sts.xdonePoints(work, fila)
         # if pt:
         # if pt == mx_pt:

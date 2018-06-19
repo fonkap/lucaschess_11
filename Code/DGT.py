@@ -102,7 +102,8 @@ def activar():
         try:
             dgt = ctypes.WinDLL(path + "DGTEBDLL.dll")
             break
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
     if dgt is None:
         return False

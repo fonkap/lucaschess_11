@@ -125,7 +125,7 @@ class EscondeWindow:
 
     def __enter__(self):
         self.pos = self.window.pos()
-        screen = QtGui.QDesktopWidget().screenGeometry()
+        screen = QtWidgets.QDesktopWidget().screenGeometry()
         self.window.move(screen.width()*2, 0)
         return self
 

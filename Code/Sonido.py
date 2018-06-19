@@ -134,7 +134,8 @@ class TallerSonido:
             self.wav = f.read()
             f.close()
             return True
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             self.wav = None
             self.centesimas = 0
             return False
@@ -229,7 +230,8 @@ class Replay:
             orden.clave = TERMINAR
             self.push(orden)
             self.io.close()
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass
 
     def playClave(self, clave, siEspera):

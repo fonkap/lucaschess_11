@@ -101,7 +101,8 @@ class JuegaApertura:
         try:
             jg = self.dicFEN[fen]
             return True, jg.desde, jg.hasta, jg.coronacion
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             self.activa = False
             return False, None, None, None
 

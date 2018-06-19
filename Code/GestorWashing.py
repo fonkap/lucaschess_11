@@ -683,6 +683,7 @@ class GestorWashingCreate(Gestor.Gestor):
             self.sigueHumano()
             return False
 
+        print("")
         self.analizaFinal()  # tiene que acabar siempre
         if not siElegido:
             rmUser, n = self.mrmTutor.buscaRM(movimiento)
@@ -828,6 +829,7 @@ class GestorWashingCreate(Gestor.Gestor):
         if not QTUtil2.pregunta(self.pantalla, _("Restart the game?")):
             return
 
+        self.analizaTerminar()
         self.addTime()
         self.addGame()
         self.partida.reset()

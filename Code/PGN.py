@@ -22,7 +22,7 @@ class UnPGN:
 
     def listaCabeceras(self):
         li = []
-        for k, v in self.dic.iteritems():  #TODO para GestorSolo:33, comprobar.
+        for k, v in self.dic.items():  #TODO para GestorSolo:33, comprobar.
             li.append([k, v])
         return li
 
@@ -122,7 +122,8 @@ class PGN:
                     if uno["FECHA"] < fecha:
                         fecha = uno["FECHA"]
                         nPrimero = n
-                except:
+                except Exception as err:
+                    Util.log_exception(err)
                     return n
             return nPrimero
 
@@ -215,14 +216,14 @@ class PGN:
                 continue
 
             if not dbf:
-                for clave, valor in g.labels.iteritems():
+                for clave, valor in g.labels.items():
                     if valor == "?":
                         continue
                     dClaves[clave] = len(valor)
                 bd, dbf = iniDB()
 
             else:
-                for clave, valor in g.labels.iteritems():
+                for clave, valor in g.labels.items():
                     if valor == "?":
                         continue
                     tam = len(valor)
@@ -234,7 +235,7 @@ class PGN:
                             dClaves[clave] = tam
 
             dic = {}
-            for k, v in g.labels.iteritems():
+            for k, v in g.labels.items():
                 if v == "?":
                     continue
                 dic[k] = v

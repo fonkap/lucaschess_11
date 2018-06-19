@@ -208,7 +208,7 @@ class WDailyTestBase(QTVarios.WDialogo):
 class WDailyTest(QTVarios.WDialogo):
     def __init__(self, owner, liFens, motor, segundos, fns):
 
-        super(WDailyTest, self).__init__(owner, _("Your daily test"), Iconos.DailyTest(), "nivel")
+        super().__init__(parent=owner, titulo=_("Your daily test"), icono=Iconos.DailyTest(), extparam="nivel")
 
         self.procesador = owner.procesador
         self.configuracion = self.procesador.configuracion

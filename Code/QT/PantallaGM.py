@@ -614,7 +614,8 @@ def importarGM(ownerGM, siWoman):
         fichtg = "w" + fichtg
     try:
         os.remove(ficht)
-    except:
+    except Exception as err:
+        Util.log_exception(err)
         pass
     if siWoman:
         web = "http://lucaschess.pythonanywhere.com/static/wgm"
@@ -633,7 +634,8 @@ def importarGM(ownerGM, siWoman):
             outfile.close()
         zfobj.close()
         os.remove(fichz)
-    except:
+    except Exception as err:
+        Util.log_exception(err)
         siError = True
     me.final()
 

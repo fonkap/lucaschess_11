@@ -289,9 +289,11 @@ class ListaMotoresExternos:
 
     def grabar(self):
         f = open(self.fichero, "wb")
-        f.write(Util.dirRelativo(self.ultCarpeta) + "\n")
+        f.write(Util.dirRelativo(self.ultCarpeta).encode("latin1"))
+        f.write(b"\n")
         for me in self.liMotores:
-            f.write(me.grabarTXT() + "\n")
+            f.write(me.grabarTXT())
+            f.write(b"\n")
         f.close()
 
     def numDatos(self):

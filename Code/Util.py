@@ -17,8 +17,12 @@ import threading
 import scandir
 from itertools import cycle
 
+from Code.Constantes import *
+
 import chardet.universaldetector
 
+if LOG_EXCEPTIONS:
+    prlkn("LOG_EXCEPTIONS " * 4)
 
 def xor_crypt(data, key):
     """
@@ -61,8 +65,7 @@ def guardaVar(fich, v):
 def recuperaVar(fich, default=None):
     try:
         with open(fich, "rb") as f:
-            s = f.read()
-        v = pickle.loads(s)
+            v = pickle.load(f)
     except FileNotFoundError as e:
         v = default
     return v
@@ -95,14 +98,14 @@ def blob2dic(blob):
 
 
 def str2blob(varp):
-    varz = zlib.compress(varp, 7)
+    varz = zlib.compress(varp.encode("latin1"), 7)
     return sqlite3.Binary(varz)
 
 
 def blob2str(blob):
     if blob is None:
         return ""
-    return str(zlib.decompress(blob))
+    return zlib.decompress(blob).decode("latin1")
 
 
 def dic2txt(dic):
@@ -234,7 +237,8 @@ def renombraFichero(origen, destino):
 def borraFichero(fichero):
     try:
         os.remove(fichero)
-    except:
+    except Exception as err:
+        log_exception(err)
         pass
     return not os.path.isfile(fichero)
 
@@ -367,7 +371,8 @@ def creaCarpeta(carpeta):
     if not os.path.isdir(carpeta):
         try:
             os.mkdir(carpeta)
-        except:
+        except Exception as err:
+            log_exception(err)
             pass
 
 
@@ -482,7 +487,7 @@ class SymbolDict:
             return default
         return self.__getitem__(clave)
 
-    def iteritems(self):
+    def items(self):
         for k in self._keys:
             yield k, self.__getitem__(k)
 
@@ -501,7 +506,8 @@ class IPC(object):
         if siPush and os.path.isfile(nomFichero):
             try:
                 os.remove(nomFichero)
-            except:
+            except Exception as err:
+                log_exception(err)
                 pass
         self._conexion = sqlite3.connect(nomFichero)
         atexit.register(self.close)
@@ -588,7 +594,8 @@ def datefile(pathfile):
     try:
         mtime = os.path.getmtime(pathfile)
         return datetime.datetime.fromtimestamp(mtime)
-    except:
+    except Exception as err:
+        log_exception(err)
         return None
 
 
@@ -746,7 +753,8 @@ def dirRelativo(dr):
             nr = os.path.relpath(dr)
             if not nr.startswith(".."):
                 dr = nr
-        except:
+        except Exception as err:
+            log_exception(err)
             pass
     else:
         dr = ""
@@ -1016,9 +1024,10 @@ class LIdisk:
         atexit.register(self.close)
 
         try:
-            sql = "CREATE TABLE datos( DATO TEXT );"
+            sql = "CREATE TABLE IF NOT EXISTS datos( DATO TEXT );"
             self._conexion.cursor().execute(sql)
-        except:
+        except Exception as err:
+            log_exception(err)
             pass
 
     def append(self, valor):
@@ -1265,9 +1274,10 @@ def txt_encoding(txt):
 
 
 def file_encoding(fich, chunk=3000):
-    with open(fich) as f:
+    with open(fich, "rb") as f:
         u = chardet.universaldetector.UniversalDetector()
-        u.feed(f.read(chunk))
+        c = f.read(chunk)
+        u.feed(c)
         u.close()
 
     return u.result.get("encoding", "ascii")
@@ -1348,3 +1358,8 @@ class Log:
         ferr = open(self.logname, "at")
         ferr.write(buf)
         ferr.close()
+
+def log_exception(err):
+    if LOG_EXCEPTIONS:
+        import logging
+        logging.error(err, exc_info=True)

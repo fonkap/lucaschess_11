@@ -429,5 +429,6 @@ class Tutor:
                 fecha, hora, fen, suggested_move, suggested_move_puntos, suggested_move_mate,
                 player_move, player_move_puntos, player_move_mate, tutor, tutor_tiempo))
             f.close()
-        except:
+        except Exception as err:
+            Util.log_exception(err)
             pass

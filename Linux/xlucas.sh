@@ -7,4 +7,4 @@ else
 	export LD_LIBRARY_PATH=$(pwd)/../Engines/Linux32/_tools
 fi
 cd ..
-python2.7 ./Lucas.py
+python3 ./Lucas.py
